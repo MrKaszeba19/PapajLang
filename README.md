@@ -23,12 +23,22 @@ Ordinary expression | RPN Expression
 ((8 - 2) / 3 + (1 + 4) * 2) / 6 | 8 2 - 3 / 1 4 + 2 * + 6 /
 
 ## How to use it
-In order to solve an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. Remember that all values and operands must be delimited with 1 space char.
 
-### Implemented operations:
+### Console application
+- Execute a command **rpn** with a quoted RPN expression (e.g. _rpn "2 3 + 4 *"_).
+- Remember that all values and operands must be delimited with 1 space char.
+- In order to specify your output, you can execute rpn with a flag (e.g. _rpn "2 3.4 + 4.5 *" -i_ provides an output of rounded integer). Type a command _rpn expression_ to check out the available flags in this program. 
+- If you need help, you can type _rpn help_.
 
-#### Binary operations
-- value1 value2 operand
+### GUI Application
+- Open an app executable.
+- In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. 
+- Remember that all values and operands must be delimited with 1 space char.
+
+## Implemented operations:
+
+### Binary operations
+- expr1 expr2 operand
 
 Name | Programme Operand
 ---- | -----------------
@@ -40,12 +50,12 @@ power | ^
 root | root
 logarithm | log
 
-#### Unary operations
-- value0 operand
+### Unary operations
+- expr0 operand
 
 *to be implemented*
 
-#### Available constant values:
+### Available constant values:
 - e.g. 2*π -> 2 PI *
 
 Name | Symbol | Approximated value | Programme Operand
