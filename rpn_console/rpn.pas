@@ -96,7 +96,7 @@ begin
         			writeln('RPN Calculator. Version 1.0');
      				writeln('Paul Lipkowski. November 24, 2017.');
      				writeln('');
-     				writeln('Unknown flag - run ''rpn expression''');
+     				writeln('Unknown flag - run ''rpn help''');
         		end;
         	end;
         end;
