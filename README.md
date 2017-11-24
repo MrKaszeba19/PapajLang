@@ -45,7 +45,8 @@ logarithm | log
 
 *to be implemented*
 
-Available constants:
+#### Available constant values:
+- e.g. 2*π -> 2 PI *
 
 Name | Symbol | Approximated value | Programme Operand
 ---- | ------ | ------------------ | -----------------
