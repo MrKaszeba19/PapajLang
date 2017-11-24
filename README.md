@@ -34,10 +34,12 @@ Possible operations:
 - root (root)
 - logarithm (log)
 
-Possible constants:
-- Pi "π" (PI)
-- Euler number "e" (EU)
-- Golden number "φ" (FI)
+Available constants:
+Name | Symbol | Approximated value | Programme Operand
+---- | ------ | ------------------ | -----------------
+Pi | π | 3.1415926535897 | PI
+Euler number | e  | 2.7182818284590 | EU
+Golden number | φ | 1.6180339887498 | FI
 
 ## Languages
 - **English** (*default*)
