@@ -26,13 +26,16 @@ Ordinary expression | RPN Expression
 In order to solve an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. Remember that all values and operands must be delimited with 1 space char.
 
 Possible operations:
-- add (+)
-- substract (-)
-- multiply (*)
-- divide (/)
-- power (^)
-- root (root)
-- logarithm (log)
+
+Name | Programme Operand
+---- | -----------------
+add | +
+substract | -
+multiply | *
+divide | /
+power | ^
+root | root
+logarithm | log
 
 Available constants:
 
@@ -44,4 +47,5 @@ Golden number | φ | 1.6180339887498 | FI
 
 ## Languages
 - **English** (*default*)
+- Polish (Polski, *to be implemented*) 
 
