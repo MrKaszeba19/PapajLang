@@ -6,12 +6,12 @@ by *Paul Lipkowski* (RooiGevaar19)
 
 > Pascal is not dead. It's just a Force that remains forever, just like it does in Luke Skywalker. 
 
-## About
+## About RPN
 **Reverse Polish Notation** (RPN) is a mathematical notation in which operators follow their operands. It allows to evaluate the mathematical expressions without using parentheses.
 
 **More info:** https://en.wikipedia.org/wiki/Reverse_Polish_notation
 
-## Examples of RPN expressions
+### Examples of RPN expressions
 
 Ordinary expression | RPN Expression
 ------------------- | --------------
