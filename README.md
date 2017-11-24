@@ -35,10 +35,11 @@ Possible operations:
 - logarithm (log)
 
 Available constants:
+
 Name | Symbol | Approximated value | Programme Operand
 ---- | ------ | ------------------ | -----------------
 Pi | π | 3.1415926535897 | PI
-Euler number | e  | 2.7182818284590 | EU
+Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
 ## Languages
