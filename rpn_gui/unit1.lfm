@@ -1,13 +1,15 @@
 object Form1: TForm1
-  Left = 547
+  Left = 175
   Height = 160
-  Top = 217
+  Top = 113
   Width = 800
   Caption = 'RPN Calculator'
-  ClientHeight = 160
+  ClientHeight = 137
   ClientWidth = 800
   Constraints.MinHeight = 160
   Constraints.MinWidth = 800
+  Menu = MainMenu1
+  OnCreate = FormCreate
   LCLVersion = '1.6.0.4'
   object Edit1: TEdit
     Left = 16
@@ -44,5 +46,28 @@ object Form1: TForm1
     ReadOnly = True
     TabOrder = 2
     TextHint = 'Result'
+  end
+  object MainMenu1: TMainMenu
+    left = 16
+    top = 104
+    object MenuItem1: TMenuItem
+      Caption = 'Application'
+      object MenuItem3: TMenuItem
+        Caption = 'Close'
+        ShortCut = 16465
+        OnClick = MenuItem3Click
+      end
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Language'
+      object MenuItem4: TMenuItem
+        Caption = 'English'
+        OnClick = MenuItem4Click
+      end
+      object MenuItem5: TMenuItem
+        Caption = 'Polski'
+        OnClick = MenuItem5Click
+      end
+    end
   end
 end
