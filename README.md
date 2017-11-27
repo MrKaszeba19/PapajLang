@@ -66,11 +66,12 @@ Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
 ## Languages
-- **English** (*default*)
+- **English** - *default*
 - **Polish** (Polski) 
-- German (Deutsch, *to be implemented*)
-- Afrikaans (Afrikaans, *to be implemented*)
-- Hebrew (עברית, *to be implemented*)
+- German (Deutsch) - *to be implemented*)
+- Afrikaans (Afrikaans) - *to be implemented*
+- Danish (Dansk) - *to be implemented*
+- Hebrew (עברית) - *to be implemented*
 
 ## Improvements
 
