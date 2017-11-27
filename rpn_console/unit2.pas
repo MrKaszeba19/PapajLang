@@ -19,19 +19,32 @@ type PStos = ^TStos;
 end;
 
 function pow(x,y:extended):extended;
+function pow2(x,y:extended):extended;
 procedure calc_stack_add(var pocz:PStos; number:extended);
 function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
 function calc_parseRPN(input : string) : extended;
 
 implementation
+//uses Unit1;
 
 function pow(x,y:extended):extended;
 var
-        s : real;
+        s : extended;
+        i : integer;
+begin
+        s := 1;
+        for i := 1 to trunc(abs(y)) do s := s * x;
+        if (y < 0) then s := 1 / s;
+        pow := s;
+end;
+
+function pow2(x,y:extended):extended;
+var
+        s : extended;
 begin
         s := exp(y*ln(x));
-        pow := s;
+        pow2 := s;
 end;
 
 procedure calc_stack_add(var pocz:PStos; number:extended);
@@ -128,7 +141,24 @@ begin
                          calc_stack_remove(pocz);
                          x := pocz^.Liczba;
                          calc_stack_remove(pocz);
-                         z := pow(x,y);
+                         if (y = trunc(y)) then begin
+                            z := pow(x,y);
+                         end else begin
+                             z := pow2(x,y);
+                         end;
+                         calc_stack_add(pocz, z);
+                         continue;
+                     end;
+                     'pow' : begin
+                         y := pocz^.Liczba;
+                         calc_stack_remove(pocz);
+                         x := pocz^.Liczba;
+                         calc_stack_remove(pocz);
+                         if (y = trunc(y)) then begin
+                            z := pow(x,y);
+                         end else begin
+                             z := pow2(x,y);
+                         end;
                          calc_stack_add(pocz, z);
                          continue;
                      end;

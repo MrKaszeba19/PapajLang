@@ -41,7 +41,7 @@ begin
      				writeln('Binary operands model: (expr1) (expr2) (operand), e.g. 2 4 +');
      				writeln('Available binary operands:');
      				writeln('       +       -       *       /');
-     				writeln('       ^    root     log        ');
+     				writeln('       ^     pow    root     log');
      				writeln('');
      				writeln('Available constants: ');
      				writeln('      PI = ~3.1415926535897');
