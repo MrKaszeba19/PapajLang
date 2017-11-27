@@ -1,11 +1,8 @@
 # RPN Calculator
-Reversed Polish Notation Calculator
-
-Version 0.2.0
-
-November 24, 2017
-
-by Paul Lipkowski (RooiGevaar19)
+**Reversed Polish Notation Calculator**  
+Version 0.2.0  
+November 24, 2017  
+by Paul Lipkowski (RooiGevaar19)  
 
 > Pascal is not dead. It's just a Force that remains forever, just like it does in Luke Skywalker. 
 
@@ -70,7 +67,10 @@ Golden number | φ | 1.6180339887498 | FI
 
 ## Languages
 - **English** (*default*)
-- Polish (Polski, *to be implemented*) 
+- **Polish** (Polski) 
+- German (Deutsch, *to be implemented*)
+- Afrikaans (Afrikaans, *to be implemented*)
+- Hebrew (עברית, *to be implemented*)
 
 ## Improvements
 
