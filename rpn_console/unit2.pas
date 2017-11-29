@@ -192,6 +192,70 @@ begin
                            calc_stack_add(pocz, FI);
                            continue;
                      end;
+                     'exp' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := exp(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'abs' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := abs(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'sqrt' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := sqrt(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'sin' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := sin(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'cos' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := cos(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'csc' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := 1/sin(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'sec' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := 1/cos(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'tan' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := sin(y)/cos(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'cot' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := cos(y)/sin(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+
                      end;
              end else begin
                  begin

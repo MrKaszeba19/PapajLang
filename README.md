@@ -54,7 +54,17 @@ logarithm | log
 ### Unary operations
 - expr0 operand
 
-*to be implemented*
+Name | Programme Operand
+---- | -----------------
+absolute value | abs
+suqare root | sqrt
+exponential | exp
+sine | sin
+cosine | cos
+tangent | tan
+cotangent | cot
+secans | sec
+cosecans | csc
 
 ### Available constant values:
 - e.g. 2*π -> 2 PI *

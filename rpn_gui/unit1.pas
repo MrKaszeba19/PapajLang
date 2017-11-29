@@ -49,7 +49,11 @@ begin
      try
         Edit2.Text := FloatToStr(calc_parseRPN(Edit1.Text));
      except
-     on Exception do begin
+     on E : EAccessViolation do begin
+       Edit1.Text := '';
+       Edit2.Text := 'Wrong RPN.';
+     end;
+     on E : Exception do begin
        Edit1.Text := '';
        Edit2.Text := '';
      end;
