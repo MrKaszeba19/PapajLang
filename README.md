@@ -1,8 +1,10 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
-Version 0.2.0  
-November 24, 2017  
+Version 0.2.1  
+November 29, 2017  
 by Paul Lipkowski (RooiGevaar19)  
+
+Since 11/24/2017, proudly written in FreePascal. :smile:
 
 > Pascal is not dead. It's just a Force that remains forever, just like it does in Luke Skywalker. 
 
@@ -75,7 +77,7 @@ Pi | π | 3.1415926535897 | PI
 Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
-## Languages
+## Languages support for the GUI application
 - :uk: **English** - *default*
 - :poland: **Polish** (Polski) 
 - :de: German (Deutsch) - *to be implemented*)
@@ -85,7 +87,8 @@ Golden number | φ | 1.6180339887498 | FI
 
 ## Improvements
 
-Version | Version Name | Improvements
-------- | ------------ | ------------
-0.1.0 | Aleph | basic version
-0.2.0 | Bet | improved computing power of integer values
+Version | Version Name | Date of Release | Improvements
+------- | ------------ | --------------- | ------------
+0.1.0 | Aleph | 11/24/2017 | Basic version
+0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
+0.2.1 | Gimel | 11/29/2017 | Unary operands
