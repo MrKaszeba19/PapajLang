@@ -27,10 +27,10 @@ Ordinary expression | RPN Expression
 ## How to use it
 
 ### Console application
-- Execute a command **rpn** with a quoted RPN expression (e.g. _rpn "2 3 + 4 *"_).
+- Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with 1 space char.
-- In order to specify your output, you can execute rpn with a flag (e.g. _rpn "2 3.4 + 4.5 *" -i_ provides an output of rounded integer). Type a command _rpn expression_ to check out the available flags in this program. 
-- If you need help, you can type _rpn help_.
+- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program. 
+- If you need help, you can type `rpn help`.
 
 ### GUI Application
 - Open an app executable.
@@ -65,8 +65,10 @@ sine | sin
 cosine | cos
 tangent | tan
 cotangent | cot
-secans | sec
-cosecans | csc
+secant | sec
+cosecant | csc
+
+*to be extended*
 
 ### Available constant values:
 - e.g. 2*π -> 2 PI *
@@ -80,7 +82,7 @@ Golden number | φ | 1.6180339887498 | FI
 ## Languages support for the GUI application
 - :uk: **English** - *default*
 - :poland: **Polish** (Polski) 
-- :de: German (Deutsch) - *to be implemented*)
+- :de: German (Deutsch) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :denmark: Danish (Dansk) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
@@ -91,4 +93,4 @@ Version | Version Name | Date of Release | Improvements
 ------- | ------------ | --------------- | ------------
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
-0.2.1 | Gimel | 11/29/2017 | Unary operands
+0.2.1 | Gimel | under construction | Unary operands
