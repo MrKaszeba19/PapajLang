@@ -4,7 +4,7 @@ uses Unit2, Sysutils;
 procedure show_version();
 begin
 	writeln('RPN Calculator. Version 0.2.1');
-    writeln('Paul Lipkowski. November 29, 2017.');
+    writeln('Paul Lipkowski. November 30, 2017.');
     writeln('Proudly written in FPC. :)');
     writeln('');
 end;
@@ -61,9 +61,9 @@ begin
      				writeln('');
      				writeln('Unary operands model: (expr0) (operand), e.g. 2 sin');
      				writeln('Available unary operands:');
-     				writeln('     abs    sqrt     exp');
-     				writeln('     sin     cos     tan');
-     				writeln('     csc     sec     cot');
+     				writeln('     abs    sqrt     exp     sin');
+     				writeln('     cos     tan     csc     sec');
+     				writeln('     cot       !    fact');
      				writeln('');
      				writeln('Available constants: ');
      				writeln('      PI = ~3.1415926535897');

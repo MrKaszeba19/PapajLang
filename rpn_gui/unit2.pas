@@ -20,6 +20,7 @@ end;
 
 function pow(x,y:extended):extended;
 function pow2(x,y:extended):extended;
+function fact(x:extended):extended;
 procedure calc_stack_add(var pocz:PStos; number:extended);
 function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
@@ -45,6 +46,16 @@ var
 begin
         s := exp(y*ln(x));
         pow2 := s;
+end;
+
+function fact(x:extended):extended;
+var
+        s : extended;
+        i : integer;
+begin
+     s := 1;
+     for i := 1 to trunc(abs(x)) do s := s * i;
+     fact := s;
 end;
 
 procedure calc_stack_add(var pocz:PStos; number:extended);
@@ -252,6 +263,20 @@ begin
                            y := pocz^.Liczba;
                            calc_stack_remove(pocz);
                            z := cos(y)/sin(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     '!' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := fact(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'fact' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := fact(y);
                            calc_stack_add(pocz, z);
                            continue;
                      end;

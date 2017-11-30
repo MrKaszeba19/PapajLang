@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version 0.2.1  
-November 29, 2017  
+November 30, 2017  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -61,6 +61,8 @@ Name | Programme Operand
 absolute value | abs
 suqare root | sqrt
 exponential | exp
+factorial | !
+factorial | fact
 sine | sin
 cosine | cos
 tangent | tan
