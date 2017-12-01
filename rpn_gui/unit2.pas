@@ -111,6 +111,7 @@ begin
                 //Writeln ('Error at position ',code,' : ',Paramstr(1)[Code])
                 begin
                      case i of
+                     // unary
                      '+' : begin
                          y := pocz^.Liczba;
                          calc_stack_remove(pocz);
@@ -182,15 +183,29 @@ begin
                             calc_stack_add(pocz, z);
                             continue;
                      end;
-                     'log' : begin
+                     'mod' : begin
                            y := pocz^.Liczba;
                            calc_stack_remove(pocz);
                            x := pocz^.Liczba;
                            calc_stack_remove(pocz);
-                           z := ln(y)/ln(x);
+                           z := trunc(x) mod trunc(y);
                            calc_stack_add(pocz, z);
                            continue;
                      end;
+                     'div' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           x := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           if trunc(x/y) < 0 then begin
+                              z := trunc(x/y)-1;
+                           end else begin
+                              z := trunc(x/y);
+                           end;
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     // constants
                      'PI' : begin
                            calc_stack_add(pocz, PI);
                            continue;
@@ -203,6 +218,8 @@ begin
                            calc_stack_add(pocz, FI);
                            continue;
                      end;
+
+                     // unary
                      'exp' : begin
                            y := pocz^.Liczba;
                            calc_stack_remove(pocz);
@@ -277,6 +294,27 @@ begin
                            y := pocz^.Liczba;
                            calc_stack_remove(pocz);
                            z := fact(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'ln' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := ln(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'trunc' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := trunc(y);
+                           calc_stack_add(pocz, z);
+                           continue;
+                     end;
+                     'round' : begin
+                           y := pocz^.Liczba;
+                           calc_stack_remove(pocz);
+                           z := round(y);
                            calc_stack_add(pocz, z);
                            continue;
                      end;

@@ -3,6 +3,7 @@ object Form1: TForm1
   Height = 160
   Top = 113
   Width = 800
+  BorderStyle = bsSingle
   Caption = 'RPN Calculator'
   ClientHeight = 137
   ClientWidth = 800
