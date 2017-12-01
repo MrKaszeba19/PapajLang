@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version 0.2.1  
-November 30, 2017  
+December 1, 2017  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -110,7 +110,7 @@ Golden number | φ | 1.6180339887498 | FI
 ## Improvements
 
 Version | Version Name | Date of Release | Improvements
-------- | ------------ | --------------- | ------------
+------- | ------------ |:---------------:| ------------
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
-0.2.1 | Gimel | under construction | Unary operands
+0.2.1 | Gimel | 12/1/2017 | Unary operands
