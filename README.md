@@ -52,6 +52,10 @@ power | ^
 power | pow
 root | root
 logarithm | log
+integer division | div
+modulo | mod
+
+*to be extended*
 
 ### Unary operations
 - expr0 operand
@@ -69,6 +73,9 @@ tangent | tan
 cotangent | cot
 secant | sec
 cosecant | csc
+natural logarithm | ln 
+truncate | trunc
+round | round
 
 *to be extended*
 
