@@ -24,10 +24,11 @@ function fact(x:extended):extended;
 procedure calc_stack_add(var pocz:PStos; number:extended);
 function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
+procedure evaluate(i : String; var pocz : PStos);
 function calc_parseRPN(input : string) : extended;
 
 implementation
-//uses Unit1;
+uses Unit5;
 
 function pow(x,y:extended):extended;
 var
@@ -78,22 +79,223 @@ procedure calc_stack_remove(var pocz:PStos);
 var
     Pom: PStos;
   begin
-    //while Pocz <> nil do
-    //begin
       Pom := Pocz^.Nastepny;
       Dispose(Pocz);
       Pocz := Pom;
-    //end;
   end;
+
+procedure evaluate(i : String; var pocz : PStos);
+var
+    x, y, z        : extended;
+    Im             : Extended;
+    Code           : Integer;
+begin
+    Val (i,Im,Code);
+    If Code<>0 then
+        begin
+             case i of
+             // binary
+             '+' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 z := x+y;
+                 calc_stack_add(pocz, z);
+             end;
+             '-' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 z := x-y;
+                 calc_stack_add(pocz, z);
+             end;
+             '*' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 z := x*y;
+                 calc_stack_add(pocz, z);
+             end;
+             '/' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 z := x/y;
+                 calc_stack_add(pocz, z);
+             end;
+             '^' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 if (y = trunc(y)) then begin
+                    z := pow(x,y);
+                 end else begin
+                     z := pow2(x,y);
+                 end;
+                 calc_stack_add(pocz, z);
+             end;
+             'pow' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 if (y = trunc(y)) then begin
+                    z := pow(x,y);
+                 end else begin
+                     z := pow2(x,y);
+                 end;
+                 calc_stack_add(pocz, z);
+             end;
+             'root' : begin
+                    y := pocz^.Liczba;
+                    calc_stack_remove(pocz);
+                    x := pocz^.Liczba;
+                    calc_stack_remove(pocz);
+                    z := pow(x,1/y);
+                    calc_stack_add(pocz, z);
+             end;
+             'mod' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := trunc(x) mod trunc(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'div' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   if trunc(x/y) < 0 then begin
+                      z := trunc(x/y)-1;
+                   end else begin
+                      z := trunc(x/y);
+                   end;
+                   calc_stack_add(pocz, z);
+             end;
+             // constants
+             'PI' : begin
+                   calc_stack_add(pocz, PI);
+             end;
+             'EU' : begin
+                   calc_stack_add(pocz, EU);
+             end;
+             'FI' : begin
+                   calc_stack_add(pocz, FI);
+             end;
+
+             // unary
+             'exp' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := exp(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'abs' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := abs(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'sqrt' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := sqrt(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'sin' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := sin(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'cos' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := cos(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'csc' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := 1/sin(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'sec' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := 1/cos(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'tan' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := sin(y)/cos(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'cot' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := cos(y)/sin(y);
+                   calc_stack_add(pocz, z);
+             end;
+             '!' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := fact(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'fact' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := fact(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'ln' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := ln(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'trunc' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := trunc(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'round' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := round(y);
+                   calc_stack_add(pocz, z);
+             end;
+             // single operands
+             '>' : begin
+                   z := scan_value();
+                   calc_stack_add(pocz, z);
+             end;
+
+             end;
+             end else begin
+        begin
+            calc_stack_add(pocz, Im);
+        end;
+    end;
+
+end;
 
 function calc_parseRPN(input : string) : extended;
 var
-        x, y, z        : extended;
-        pocz           : PStos;
         L              : TStrings;
         i              : String;
-        Im             : Extended;
-        Code           : Integer;
+        pocz           : PStos;
+        z              : Extended;
 begin
         // delimites string
         //https://forum.lazarus.freepascal.org/index.php?topic=33644.0
@@ -106,226 +308,7 @@ begin
         pocz := nil;
         for i in L do
         begin
-             Val (i,Im,Code);
-             If Code<>0 then
-                //Writeln ('Error at position ',code,' : ',Paramstr(1)[Code])
-                begin
-                     case i of
-                     // unary
-                     '+' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         z := x+y;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     '-' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         z := x-y;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     '*' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         z := x*y;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     '/' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         z := x/y;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     '^' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         if (y = trunc(y)) then begin
-                            z := pow(x,y);
-                         end else begin
-                             z := pow2(x,y);
-                         end;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     'pow' : begin
-                         y := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         x := pocz^.Liczba;
-                         calc_stack_remove(pocz);
-                         if (y = trunc(y)) then begin
-                            z := pow(x,y);
-                         end else begin
-                             z := pow2(x,y);
-                         end;
-                         calc_stack_add(pocz, z);
-                         continue;
-                     end;
-                     'root' : begin
-                            y := pocz^.Liczba;
-                            calc_stack_remove(pocz);
-                            x := pocz^.Liczba;
-                            calc_stack_remove(pocz);
-                            z := pow(x,1/y);
-                            calc_stack_add(pocz, z);
-                            continue;
-                     end;
-                     'mod' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           x := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := trunc(x) mod trunc(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'div' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           x := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           if trunc(x/y) < 0 then begin
-                              z := trunc(x/y)-1;
-                           end else begin
-                              z := trunc(x/y);
-                           end;
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     // constants
-                     'PI' : begin
-                           calc_stack_add(pocz, PI);
-                           continue;
-                     end;
-                     'EU' : begin
-                           calc_stack_add(pocz, EU);
-                           continue;
-                     end;
-                     'FI' : begin
-                           calc_stack_add(pocz, FI);
-                           continue;
-                     end;
-
-                     // unary
-                     'exp' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := exp(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'abs' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := abs(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'sqrt' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := sqrt(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'sin' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := sin(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'cos' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := cos(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'csc' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := 1/sin(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'sec' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := 1/cos(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'tan' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := sin(y)/cos(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'cot' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := cos(y)/sin(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     '!' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := fact(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'fact' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := fact(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'ln' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := ln(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'trunc' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := trunc(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-                     'round' : begin
-                           y := pocz^.Liczba;
-                           calc_stack_remove(pocz);
-                           z := round(y);
-                           calc_stack_add(pocz, z);
-                           continue;
-                     end;
-
-                     end;
-             end else begin
-                 begin
-                      calc_stack_add(pocz, Im);
-                 end;
-             end;
-
+             evaluate(i, pocz);
         end;
         z := pocz^.Liczba;
 
@@ -337,4 +320,3 @@ end;
 
 
 end.
-

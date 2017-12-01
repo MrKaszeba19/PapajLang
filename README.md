@@ -79,6 +79,17 @@ round | round
 
 *to be extended*
 
+### Operands without any arguments
+Those operands may 
+
+| Operand | Purpose                                                                                       |
+|:-------:| --------------------------------------------------------------------------------------------- |
+| >       | Scan a value from an input (e.g. standard input) and add it on the top of the stack of values |
+
+*to be extended*
+
+- Example: `> > +` scans 2 values and adds them
+
 ### Available constant values:
 - e.g. 2*π -> 2 PI *
 

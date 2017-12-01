@@ -1,5 +1,5 @@
 program rpn;
-uses Unit2, Sysutils;
+uses Unit2, Unit5, Sysutils;
 
 procedure show_version();
 begin
@@ -58,13 +58,12 @@ begin
      				writeln('Available binary operands:');
      				writeln('       +       -       *       /     div');
      				writeln('       ^     pow    root     log     mod');
-     				writeln('');
      				writeln('Unary operands model: (expr0) (operand), e.g. 2 sin');
      				writeln('Available unary operands:');
      				writeln('     abs    sqrt     exp      ln       !    fact');
      				writeln('     sin     cos     tan     csc     sec     cot');
      				writeln('   trunc   round');
-     				writeln('');
+     				writeln('Scan a value with a ''>'' operand.');
      				writeln('Available constants: ');
      				writeln('      PI = ~3.1415926535897');
 					writeln('      EU = ~2.7182818284590');
@@ -80,31 +79,31 @@ begin
         	case ParamStr(2) of
         		'-e' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);	
+        			writeln(x);
         		end;
         		'-it' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(trunc(x));	
+        			writeln(trunc(x));
         		end;
         		'-i' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(round(x));	
+        			writeln(round(x));
         		end;
         		'-ir' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(round(x));	
+        			writeln(round(x));
         		end;
         		'-f' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(FloatToStr(x));	
+        			writeln(FloatToStr(x));
         		end;
         		'-f2' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(x:2:2);	
+        			writeln(x:2:2);
         		end;
         		'-fp' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(x:2:16);	
+        			writeln(x:2:16);
         		end;
         		else begin
         			show_version();

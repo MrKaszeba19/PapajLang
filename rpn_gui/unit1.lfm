@@ -11,6 +11,7 @@ object Form1: TForm1
   Constraints.MinWidth = 800
   Menu = MainMenu1
   OnCreate = FormCreate
+  Position = poMainFormCenter
   LCLVersion = '1.6.0.4'
   object Edit1: TEdit
     Left = 16
