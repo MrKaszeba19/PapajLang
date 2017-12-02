@@ -35,7 +35,13 @@ type
   end;
 
 var
-  Form1: TForm1;
+  Form1    : TForm1;
+  language : string;
+
+{$IFDEF MSWINDOWS}
+function GetLocaleInformation(Flag: integer): string;
+{$ENDIF}
+function GetLocaleLanguage: string;
 
 implementation
 uses Unit2, Unit3;
@@ -43,6 +49,30 @@ uses Unit2, Unit3;
 {$R *.lfm}
 
 { TForm1 }
+
+{$IFDEF MSWINDOWS}
+function GetLocaleInformation(Flag: integer): string;
+var
+ pcLCA: array[0..20] of char;
+begin
+ if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
+ begin
+   pcLCA[0] := #0;
+ end;
+ Result := pcLCA;
+end;
+
+{$ENDIF}
+
+function GetLocaleLanguage: string;
+begin
+ {$IFDEF MSWINDOWS}
+  Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
+ {$ELSE}
+  Result := SysUtils.GetEnvironmentVariable('LANG');
+ {$ENDIF}
+end;
+
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -62,7 +92,20 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     Unit3.setENG();
+     // https://docs.moodle.org/dev/Table_of_locales
+     // showmessage(GetLocaleLanguage);
+     case (GetLocaleLanguage) of
+          'en.UTF-8' : language := 'eng';
+          'English_Australia.1252' : language := 'eng';
+          'pl.UTF-8' : language := 'pol';
+          'Polish_Poland.1250' : language := 'pol';
+          else language := 'eng';
+     end;
+     case language of
+          'eng' : set1ENG();
+          'pol' : set1POL();
+          else set1ENG();
+     end;
 end;
 
 procedure TForm1.MenuItem3Click(Sender: TObject);
@@ -72,12 +115,12 @@ end;
 
 procedure TForm1.MenuItem4Click(Sender: TObject);
 begin
-     Unit3.setENG();
+     Unit3.set1ENG();
 end;
 
 procedure TForm1.MenuItem5Click(Sender: TObject);
 begin
-     Unit3.setPOL();
+     Unit3.set1POL();
 end;
 
 end.

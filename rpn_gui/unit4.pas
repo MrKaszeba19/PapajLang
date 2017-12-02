@@ -16,6 +16,7 @@ type
     Edit1: TEdit;
     Label1: TLabel;
     procedure Button1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { private declarations }
@@ -28,7 +29,7 @@ var
 
 implementation
 uses
-    Unit2, Unit5;
+    Unit1, Unit2, Unit3, Unit5;
 
 {$R *.lfm}
 
@@ -41,6 +42,16 @@ begin
         Close;
      except
         ShowMessage('Error!');
+     end;
+end;
+
+procedure TForm2.FormActivate(Sender: TObject);
+begin
+     Edit1.Text := '';
+     case Unit1.language of
+          'eng' : Unit3.set2ENG();
+          'pol' : Unit3.set2POL();
+          else Unit3.set2ENG();
      end;
 end;
 

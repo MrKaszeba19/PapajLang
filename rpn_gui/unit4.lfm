@@ -8,6 +8,7 @@ object Form2: TForm2
   Caption = 'Scan an expression'
   ClientHeight = 96
   ClientWidth = 320
+  OnActivate = FormActivate
   OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '1.6.0.4'

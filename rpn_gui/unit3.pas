@@ -7,13 +7,16 @@ interface
 uses
   Classes, SysUtils;
 
-procedure setENG();
-procedure setPOL();
+procedure set1ENG();
+procedure set1POL();
+
+procedure set2ENG();
+procedure set2POL();
 
 implementation
-uses Unit1;
+uses Unit1, Unit4;
 
-procedure setENG();
+procedure set1ENG();
 begin
      Unit1.Form1.Caption := 'RPN Calculator';
      Unit1.Form1.Label1.Caption := 'RPN Expression';
@@ -25,7 +28,7 @@ begin
      Unit1.Form1.MenuItem3.Caption := 'Close';
 end;
 
-procedure setPOL();
+procedure set1POL();
 begin
      Unit1.Form1.Caption := 'Kalkulator ONP';
      Unit1.Form1.Label1.Caption := 'Wyrażenie ONP';
@@ -35,6 +38,20 @@ begin
      Unit1.Form1.MenuItem1.Caption := 'Aplikacja';
      Unit1.Form1.MenuItem2.Caption := 'Język';
      Unit1.Form1.MenuItem3.Caption := 'Zamknij';
+end;
+
+procedure set2ENG();
+begin
+     Unit4.Form2.Caption := 'Scan an expression';
+     Unit4.Form2.Label1.Caption := 'Expression';
+     Unit4.Form2.Button1.Caption := 'Submit';
+end;
+
+procedure set2POL();
+begin
+     Unit4.Form2.Caption := 'Wczytaaj wyrażenie';
+     Unit4.Form2.Label1.Caption := 'Wyrażenie';
+     Unit4.Form2.Button1.Caption := 'Zatwierdź';
 end;
 
 end.
