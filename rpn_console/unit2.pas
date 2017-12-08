@@ -151,12 +151,20 @@ begin
                  end;
                  calc_stack_add(pocz, z);
              end;
+             'log' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 z := ln(y)/ln(x);
+                 calc_stack_add(pocz, z);
+             end;
              'root' : begin
                     y := pocz^.Liczba;
                     calc_stack_remove(pocz);
                     x := pocz^.Liczba;
                     calc_stack_remove(pocz);
-                    z := pow(x,1/y);
+                    z := pow2(x,1/y);
                     calc_stack_add(pocz, z);
              end;
              'mod' : begin
