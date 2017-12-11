@@ -156,7 +156,7 @@ begin
                  calc_stack_remove(pocz);
                  x := pocz^.Liczba;
                  calc_stack_remove(pocz);
-                 z := ln(y)/ln(x);
+                 z := ln(x)/ln(y);
                  calc_stack_add(pocz, z);
              end;
              'root' : begin
