@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version 0.3.0  
-December 11, 2017  
+December 13, 2017  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -54,6 +54,7 @@ root | root
 logarithm | log
 integer division | div
 modulo | mod
+newton | newton
 
 *to be extended*
 
@@ -106,6 +107,8 @@ Golden number | φ | 1.6180339887498 | FI
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :denmark: Danish (Dansk) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
+
+__Locales don't work on Windows 10, to be corrected__
 
 ## Improvements
 

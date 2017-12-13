@@ -59,6 +59,15 @@ begin
      fact := s;
 end;
 
+function newton_int(n, k : extended) : extended;
+begin
+     //newton (n, 0) = 1;
+     //newton (n, n) = 1;
+     //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
+     if (k = 0) or (k = n) then newton_int := 1
+     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
+end;
+
 procedure calc_stack_add(var pocz:PStos; number:extended);
 var
     Nowy: PStos;
@@ -186,6 +195,19 @@ begin
                       z := trunc(x/y);
                    end;
                    calc_stack_add(pocz, z);
+             end;
+             'newton' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 if (x = trunc(x)) then begin
+                    z := newton_int(x,y);
+                 end else begin
+                     // insert newton for real x
+                     z := pow2(y,x);
+                 end;
+                 calc_stack_add(pocz, z);
              end;
              // constants
              'PI' : begin
