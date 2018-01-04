@@ -24,11 +24,14 @@ function fact(x:extended):extended;
 procedure calc_stack_add(var pocz:PStos; number:extended);
 function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
-procedure evaluate(i : String; var pocz : PStos);
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer);
 function calc_parseRPN(input : string) : extended;
 
 implementation
 uses Unit5;
+
+var
+        Steps : Integer;
 
 function pow(x,y:extended):extended;
 var
@@ -59,6 +62,15 @@ begin
      fact := s;
 end;
 
+function newton_int(n, k : extended) : extended;
+begin
+     //newton (n, 0) = 1;
+     //newton (n, n) = 1;
+     //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
+     if (k = 0) or (k = n) then newton_int := 1
+     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
+end;
+
 procedure calc_stack_add(var pocz:PStos; number:extended);
 var
     Nowy: PStos;
@@ -84,12 +96,13 @@ var
       Pocz := Pom;
   end;
 
-procedure evaluate(i : String; var pocz : PStos);
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer);
 var
     x, y, z        : extended;
     Im             : Extended;
     Code           : Integer;
 begin
+    Steps := 1;
     Val (i,Im,Code);
     If Code<>0 then
         begin
@@ -186,6 +199,19 @@ begin
                       z := trunc(x/y);
                    end;
                    calc_stack_add(pocz, z);
+             end;
+             'newton' : begin
+                 y := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 x := pocz^.Liczba;
+                 calc_stack_remove(pocz);
+                 if (x = trunc(x)) then begin
+                    z := newton_int(x,y);
+                 end else begin
+                     // insert newton for real x
+                     z := pow2(y,x);
+                 end;
+                 calc_stack_add(pocz, z);
              end;
              // constants
              'PI' : begin
@@ -288,6 +314,19 @@ begin
                    z := scan_value();
                    calc_stack_add(pocz, z);
              end;
+             'times' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   if (y >= 1) then Steps := trunc(y);
+
+             end;
+             else begin
+                 case LeftStr(i, 1) of
+                      'X' : begin
+                          Steps := StrToInt(RightStr(i, Length(i)-1));
+                      end;
+                 end;
+             end;
 
              end;
              end else begin
@@ -304,6 +343,7 @@ var
         i              : String;
         pocz           : PStos;
         z              : Extended;
+        step           : Integer;
 begin
         // delimites string
         //https://forum.lazarus.freepascal.org/index.php?topic=33644.0
@@ -314,9 +354,10 @@ begin
         L.DelimitedText := input;
 
         pocz := nil;
+        Steps := 1;
         for i in L do
         begin
-             evaluate(i, pocz);
+             for step := 1 to Steps do evaluate(i, pocz, Steps);
         end;
         z := pocz^.Liczba;
 

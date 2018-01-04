@@ -67,7 +67,8 @@ end;
 function GetLocaleLanguage: string;
 begin
  {$IFDEF MSWINDOWS}
-  Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
+  //Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
+  Result := '';
  {$ELSE}
   Result := SysUtils.GetEnvironmentVariable('LANG');
  {$ENDIF}

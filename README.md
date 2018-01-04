@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version 0.3.0  
-December 13, 2017  
+January 4, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -61,22 +61,23 @@ newton | newton
 ### Unary operations
 - expr0 operand
 
-Name | Programme Operand
----- | -----------------
-absolute value | abs
-suqare root | sqrt
-exponential | exp
-factorial | !
-factorial | fact
-sine | sin
-cosine | cos
-tangent | tan
-cotangent | cot
-secant | sec
-cosecant | csc
-natural logarithm | ln 
-truncate | trunc
+Programme Operand | Name 
+----------------- | ----
+abs | absolute value
+sqrt | suqare root
+exp | exponential
+! | factorial
+fact | factorial
+sin | sine
+cos | cosine
+tan | tangent
+cot | cotangent
+sec | secant
+csc | cosecant
+ln | natural logarithm 
+trunc | truncate
 round | round
+times | do the following operand/value N times (N is an integer value, N >= 1)
 
 *to be extended*
 
@@ -86,6 +87,7 @@ Those operands may
 | Operand | Purpose                                                                                       |
 |:-------:| --------------------------------------------------------------------------------------------- |
 | >       | Scan a value from an input (e.g. standard input) and add it on the top of the stack of values |
+| Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                          |
 
 *to be extended*
 
@@ -117,4 +119,4 @@ Version | Version Name | Date of Release | Improvements
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
 0.2.1 | Gimel | 12/1/2017 | Unary operands
-0.3.0 | Dalet | being built | Detect system language (GUI), fix of some bugs
+0.3.0 | Dalet | being built | Detect system language (GUI, Linux), fix of some bugs
