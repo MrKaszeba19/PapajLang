@@ -7,21 +7,18 @@ interface
 uses
   Classes, SysUtils;
 var
-   arax : Extended;
+   arax : String;
 
-function scan_value() : Extended;
+function scan_value() : String;
 
 implementation
 uses Unit4;
 
-function scan_value() : Extended;
-var
-   x : Extended;
+function scan_value() : String;
 begin
-     arax := 0;
+     arax := '';
      Form2.ShowModal;
      scan_value := arax;
 end;
 
 end.
-

@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version 0.3.0  
-January 4, 2018  
+January 12, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -74,10 +74,29 @@ tan | tangent
 cot | cotangent
 sec | secant
 csc | cosecant
-ln | natural logarithm 
+ln | natural logarithm
+fib | Fibonacci number 
 trunc | truncate
 round | round
 times | do the following operand/value N times (N is an integer value, N >= 1)
+
+*to be extended*
+
+### Stack operations
+- If you already own some values on the stack, e.g. after solving some minor expressions (`2 3 +  9 5 -` leaves 5 and 4 on the stack respectively), you may use stack operations on them by taking **ALL** its values.
+
+
+**Note 1:** Values themselves are put on the stack when solving the expression.
+**Note 2:** The stack operations clear entire stack after execution.
+
+Programme Operand | Name 
+----------------- | ----
+sum | sum of all values
+product | product of all values
+count | amount of values put on the stack (stack's size)
+
+**Examples:** 
+- `5 3 8 9 2 5 1 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
 
 *to be extended*
 
@@ -86,12 +105,16 @@ Those operands may
 
 | Operand | Purpose                                                                                       |
 |:-------:| --------------------------------------------------------------------------------------------- |
-| >       | Scan a value from an input (e.g. standard input) and add it on the top of the stack of values |
+| >       | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values |
 | Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                          |
+| X*      | Do the next thing until the end of input                                                      |
 
 *to be extended*
 
-- Example: `> > +` scans 2 values and adds them
+**Examples:** 
+- `> > +` scans 2 values and adds them
+- `X2 > +` equivalent of the expression above
+- `X* > sum` read all values from an input and sums them
 
 ### Available constant values:
 - e.g. 2*π -> 2 PI *
@@ -102,15 +125,13 @@ Pi | π | 3.1415926535897 | PI
 Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
-## Languages support for the GUI application
+## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*
 - :poland: **Polish** (Polski) 
 - :de: German (Deutsch) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :denmark: Danish (Dansk) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
-
-__Locales don't work on Windows 10, to be corrected__
 
 ## Improvements
 
@@ -119,4 +140,5 @@ Version | Version Name | Date of Release | Improvements
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
 0.2.1 | Gimel | 12/1/2017 | Unary operands
-0.3.0 | Dalet | being built | Detect system language (GUI, Linux), fix of some bugs
+0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
+X.X.X | Leviathan | 1 day after Universe dies | Development Edition, may be sometimes unstable

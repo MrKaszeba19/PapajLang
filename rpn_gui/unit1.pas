@@ -78,7 +78,7 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 begin
      try
-        Edit2.Text := FloatToStr(calc_parseRPN(Edit1.Text));
+        Edit2.Text := calc_parseRPN(Edit1.Text);
      except
      on E : EAccessViolation do begin
        Edit1.Text := '';
@@ -125,4 +125,3 @@ begin
 end;
 
 end.
-

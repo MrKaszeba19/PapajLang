@@ -4,13 +4,13 @@ uses Unit2, Unit5, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version 0.3.0');
-     writeln('Paul Lipkowski. January 4, 2018.');
+     writeln('Paul Lipkowski. January 12, 2018.');
      writeln('Proudly written in FPC. :)');
      writeln('');
 end;
 
 var
-   x : Extended;
+   x : String;
 begin
 	case ParamCount of
 		0 : begin
@@ -24,16 +24,16 @@ begin
      				writeln('SYNTAX: rpn "quoted_rpn_expression" [flags]');
      				writeln('');
      				writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-     				writeln('Flags: ');
-     				writeln('    -e        Provides an output in scientific notation');
-     				writeln('    -it       Provides an integer output (truncated)');
-     				writeln('    -i, -ir   Provides an integer output (rounded)');
-     				writeln('    -f        DEFAULT - Provides a decimal output');
-     				writeln('              except for large numbers (more than 2E+49)');
-     				writeln('    -f2       Provides a decimal output truncated to 2 digits');
-     				writeln('    -fp       Provides a decimal output for all numbers');
-     				writeln('              (with a constant precision of 15 digits)');
-     				writeln('No flag provided - works on the ''-f'' flag by default.')
+     				//writeln('Flags: ');
+     				//writeln('    -e        Provides an output in scientific notation');
+     				//writeln('    -it       Provides an integer output (truncated)');
+     				//writeln('    -i, -ir   Provides an integer output (rounded)');
+     				//writeln('    -f        DEFAULT - Provides a decimal output');
+     				//writeln('              except for large numbers (more than 2E+49)');
+     				//writeln('    -f2       Provides a decimal output truncated to 2 digits');
+     				//writeln('    -fp       Provides a decimal output for all numbers');
+     				//writeln('              (with a constant precision of 15 digits)');
+     				//writeln('No flag provided - works on the ''-f'' flag by default.')
      			end;
      			'expression' : begin
      				show_version();
@@ -70,12 +70,20 @@ begin
 					writeln('      FI = ~1.6180339887498');
      			end;
      			else begin
-     				x := calc_parseRPN(ParamStr(1));
-        			writeln(FloatToStr(x));
+            try
+     				  x := calc_parseRPN(ParamStr(1));
+        			writeln(x);
+              except
+              On E : Exception do
+                 begin
+                      writeln(E.ToString);
+                 end;
+              end;
      			end;
      		end;
         end;
         2 : begin
+          try
         	case ParamStr(2) of
         		'-e' : begin
         			x := calc_parseRPN(ParamStr(1));
@@ -83,34 +91,39 @@ begin
         		end;
         		'-it' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(trunc(x));
+        			writeln(x);
         		end;
         		'-i' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(round(x));
+              x := calc_parseRPN(ParamStr(1));
+              writeln(x);
         		end;
         		'-ir' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(round(x));
+        			writeln(x);
         		end;
         		'-f' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(FloatToStr(x));
+        			writeln(x);
         		end;
         		'-f2' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(x:2:2);
+        			writeln(x);
         		end;
         		'-fp' : begin
         			x := calc_parseRPN(ParamStr(1));
-        			writeln(x:2:16);
+        			writeln(x);
         		end;
         		else begin
         			show_version();
      				writeln('Unknown flag - run ''rpn help''');
         		end;
         	end;
+          except
+          On E : Exception do
+             begin
+                  writeln(E.ToString);
+             end;
+          end;
         end;
     end;
 end.
-
