@@ -1,6 +1,6 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
-Version 0.3.0  
+Version X.X.X (Leviathan)  
 January 12, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
