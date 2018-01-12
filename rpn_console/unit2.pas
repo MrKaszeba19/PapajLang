@@ -373,7 +373,7 @@ begin
              else begin
                  case LeftStr(i, 1) of
                       'X' : begin
-                          if (RightStr(i, Length(i)-1) = '*') then Steps := -1
+                          if (RightStr(i, Length(i)-1) = '*') and (not (Unit5.is_gui)) then Steps := -1
                           else Steps := StrToInt(RightStr(i, Length(i)-1));
                       end;
                  end;
@@ -413,7 +413,7 @@ begin
                 repeat
                   evaluate(i, pocz, Steps);
                 until EOF;
-                calc_stack_remove(pocz); 
+                calc_stack_remove(pocz);
              end
              else for step := 1 to Steps do evaluate(i, pocz, Steps);
         end;

@@ -7,6 +7,9 @@ interface
 uses
   Classes, SysUtils;
 
+const
+  is_gui = false;
+
 function scan_value() : Extended;
 
 implementation

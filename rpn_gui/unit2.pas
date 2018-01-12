@@ -329,7 +329,7 @@ begin
 
              // single operands
              '>' : begin
-                   z := StrToFloat(scan_value());
+                   z := scan_value();
                    calc_stack_add(pocz, z);
              end;
              'times' : begin
@@ -373,7 +373,7 @@ begin
              else begin
                  case LeftStr(i, 1) of
                       'X' : begin
-                          if (RightStr(i, Length(i)-1) = '*') then Steps := -1
+                          if (RightStr(i, Length(i)-1) = '*') and (not (Unit5.is_gui)) then Steps := -1
                           else Steps := StrToInt(RightStr(i, Length(i)-1));
                       end;
                  end;
