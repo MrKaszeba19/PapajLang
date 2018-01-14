@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-January 12, 2018  
+January 14, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
