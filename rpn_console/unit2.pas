@@ -22,6 +22,7 @@ function pow(x,y:extended):extended;
 function pow2(x,y:extended):extended;
 function fact(x:extended):extended;
 function newton_int(n, k: extended) : extended;
+function newton_real(n, k: extended) : extended;
 function fib(n: extended) : extended;
 
 procedure calc_stack_add(var pocz:PStos; number:extended);
@@ -73,6 +74,23 @@ begin
      //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
      if (k = 0.0) or (k = n) then newton_int := 1.0
      else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
+end;
+
+function newton_real(n, k : extended) : extended;
+var s, j : extended;
+begin
+  s := 1;
+  if (n < 0) then
+    newton_real := pow(-1.0, k) * newton_real(k-n-1, k)
+  else begin
+    j := 1.0;
+    while (j <= k) do
+    begin
+      s := s * (n-k+j)/j;
+      j := j + 1;
+    end;
+    newton_real := s;
+  end;
 end;
 
 function fib(n: extended) : extended;
@@ -217,10 +235,9 @@ begin
                  x := pocz^.Liczba;
                  calc_stack_remove(pocz);
                  if (x = trunc(x)) then begin
-                    z := newton_int(x,y);
+                     z := newton_int(x,y);
                  end else begin
-                     // insert newton for real x
-                     z := pow2(y,x);
+                     z := newton_real(x,y);
                  end;
                  calc_stack_add(pocz, z);
              end;

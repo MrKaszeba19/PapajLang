@@ -42,19 +42,19 @@ Ordinary expression | RPN Expression
 ### Binary operations
 - expr1 expr2 operand
 
-Name | Programme Operand
----- | -----------------
-add | +
-substract | -
-multiply | *
-divide | /
-power | ^
-power | pow
-root | root
-logarithm | log
-integer division | div
-modulo | mod
-newton | newton
+| Name    | Programme Operand    |
+|:-------:| -------------------- |
+| +       | add                  |
+| -       | substract            |
+| *       | multiply             | 
+| /       | divide               |
+| ^       | power                |
+| pow     | power                |
+| root    | root                 |
+| log     | logarithm            |
+| div     | integer division     |
+| mod     | modulo               |
+| newton  | Binomial coefficient |
 
 *to be extended*
 
@@ -96,18 +96,18 @@ product | product of all values
 count | amount of values put on the stack (stack's size)
 
 **Examples:** 
-- `5 3 8 9 2 5 1 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
+- `5 3 8 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
 
 *to be extended*
 
 ### Operands without any arguments
 Those operands may 
 
-| Operand | Purpose                                                                                       |
-|:-------:| --------------------------------------------------------------------------------------------- |
-| >       | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values |
-| Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                          |
-| X*      | Do the next thing until the end of input                                                      |
+| Operand | Purpose                                                                                                         |
+|:-------:| --------------------------------------------------------------------------------------------------------------- |
+| >       | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
+| Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                                            |
+| X*      | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
 
 *to be extended*
 
@@ -141,4 +141,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
 0.2.1 | Gimel | 12/1/2017 | Unary operands
 0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
+0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations)
 X.X.X | Leviathan | 1 day after Universe dies | Development Edition, may be sometimes unstable
