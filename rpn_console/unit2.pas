@@ -128,6 +128,7 @@ var
 procedure evaluate(i : String; var pocz : PStos; var Steps : Integer);
 var
     x, y, z        : extended;
+    a              : extended;
     Im             : Extended;
     Code           : Integer;
 begin
@@ -229,7 +230,7 @@ begin
                    end;
                    calc_stack_add(pocz, z);
              end;
-             'newton' : begin
+             'choose' : begin
                  y := pocz^.Liczba;
                  calc_stack_remove(pocz);
                  x := pocz^.Liczba;
@@ -385,6 +386,115 @@ begin
                        calc_stack_remove(pocz);
                    end;
                    calc_stack_add(pocz, z);
+             end;
+             'avg' : begin
+                   z := 0.0;
+                   a := 0.0;
+                   while (pocz <> nil) do
+                   begin
+                        y := pocz^.Liczba;
+                        calc_stack_remove(pocz);
+                        z := z + y;
+                        a := a + 1.0;
+                   end;
+                   calc_stack_add(pocz, z/a);
+             end;
+             'min' : begin
+                   a := pocz^.Liczba;
+                   while (pocz <> nil) do
+                   begin
+                   		if a > pocz^.Liczba then a := pocz^.Liczba;
+                    	calc_stack_remove(pocz);
+                   end;
+                   calc_stack_add(pocz, a);
+             end;
+             'max' : begin
+                   a := pocz^.Liczba;
+                   while (pocz <> nil) do
+                   begin
+                   		if a < pocz^.Liczba then a := pocz^.Liczba;
+                    	calc_stack_remove(pocz);
+                   end;
+                   calc_stack_add(pocz, a);
+             end;
+             
+             // stack creators
+             'seq' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                if (x <= z) then
+                begin
+                	while (x <= z) do 
+                	begin
+                		calc_stack_add(pocz, x);
+                		x := x + y;
+                	end;
+                end else begin
+                	while (x >= z) do 
+                	begin
+                		calc_stack_add(pocz, x);
+                		x := x - y;
+                	end;
+                end;
+             end;
+
+             'seql' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                a := 1.0;
+          		while (a <= z) do 
+                begin
+                	calc_stack_add(pocz, x);
+                	x := x + y;
+                	a := a + 1.0;
+                end;
+             end;
+
+             'gseq' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                if (x <= z) then
+                begin
+                	while (x <= z) do 
+                	begin
+                		calc_stack_add(pocz, x);
+                		x := x * y;
+                	end;
+                end else begin
+                	while (x >= z) do 
+                	begin
+                		calc_stack_add(pocz, x);
+                		x := x / y;
+                	end;
+                end;
+             end;
+
+             'gseql' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                a := 1.0;
+          		while (a <= z) do 
+                begin
+                	calc_stack_add(pocz, x);
+                	x := x * y;
+                	a := a + 1.0;
+                end;
              end;
 
              else begin

@@ -41,7 +41,7 @@ var
   language : string;
 
 {$IFDEF MSWINDOWS}
-function GetLocaleInformation(Flag: integer): string;
+//function GetLocaleInformation(Flag: integer): string;
 {$ENDIF}
 function GetLocaleLanguage: string;
 
@@ -53,16 +53,16 @@ uses Unit2, Unit3;
 { TForm1 }
 
 {$IFDEF MSWINDOWS}
-function GetLocaleInformation(Flag: integer): string;
-var
- pcLCA: array[0..20] of char;
-begin
- if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
- begin
-   pcLCA[0] := #0;
- end;
- Result := pcLCA;
-end;
+//function GetLocaleInformation(Flag: integer): string;
+//var
+// pcLCA: array[0..20] of char;
+//begin
+// if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
+// begin
+//   pcLCA[0] := #0;
+// end;
+// Result := pcLCA;
+//end;
 
 {$ENDIF}
 

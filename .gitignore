@@ -4,3 +4,6 @@
 *.ppu
 plans.md
 *.rpn
+rpn_console/rpn
+rpn_gui/rpncalculator
+rpn_gui/rpncalculator.exe

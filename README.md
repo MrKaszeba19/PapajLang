@@ -32,6 +32,8 @@ Ordinary expression | RPN Expression
 - In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program. 
 - If you need help, you can type `rpn help`.
 
+**Flags' functionalities don't work right now, they will be reimplemented and improved by the version of 0.4.0**
+
 ### GUI Application
 - Open an app executable.
 - In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. 
@@ -54,7 +56,7 @@ Ordinary expression | RPN Expression
 | log     | logarithm            |
 | div     | integer division     |
 | mod     | modulo               |
-| newton  | Binomial coefficient |
+| choose  | Binomial coefficient |
 
 *to be extended*
 
@@ -93,10 +95,21 @@ Programme Operand | Name
 ----------------- | ----
 sum | sum of all values
 product | product of all values
-count | amount of values put on the stack (stack's size)
+count | amount of the values put on the stack (stack's size)
+avg | mean of the values put on the stack
+max | maximum value of the values put on the stack
+min | minimal value of the values put on the stack
+seq | generates an arithmetical sequence from A to B and puts it on the stack (syntax: `A STEP B seq`)
+gseq | generates a geometical sequence from A to B and puts it on the stack (syntax: `A STEP B gseq`)
+seql | generates an arithmetical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N seq`)
+gseq | generates a geometical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
 
 **Examples:** 
 - `5 3 8 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
+- `1 1 8 seq` generates "1 2 3 4 5 6 7 8"
+- `1 3 8 seql` generates "1 4 7 10 13 16 19 22"
+- `8 2 1 gseq` generates "8 4 2 1"
+- `8 -1 10 gseql` generates "8 -8 8 -8 8 -8 8 -8 8 -8"
 
 *to be extended*
 
@@ -142,4 +155,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.1 | Gimel | 12/1/2017 | Unary operands
 0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
+0.4.0 | Vav | a bit later | Core improvements for console app *and more*
 X.X.X | Leviathan | 1 day after Universe dies | Development Edition, may be sometimes unstable
