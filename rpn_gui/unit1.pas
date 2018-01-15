@@ -23,11 +23,13 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
+    procedure MenuItem6Click(Sender: TObject);
   private
     { private declarations }
   public
@@ -96,6 +98,7 @@ begin
      // https://docs.moodle.org/dev/Table_of_locales
      // showmessage(GetLocaleLanguage);
      case (GetLocaleLanguage) of
+          'da_DK.UTF-8' : language := 'den';
           'en.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
           'pl.UTF-8' : language := 'pol';
@@ -103,6 +106,7 @@ begin
           else language := 'eng';
      end;
      case language of
+          'den' : set1DEN();
           'eng' : set1ENG();
           'pol' : set1POL();
           else set1ENG();
@@ -122,6 +126,11 @@ end;
 procedure TForm1.MenuItem5Click(Sender: TObject);
 begin
      Unit3.set1POL();
+end;
+
+procedure TForm1.MenuItem6Click(Sender: TObject);
+begin
+     Unit3.set1DEN();
 end;
 
 end.

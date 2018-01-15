@@ -345,7 +345,7 @@ begin
              end;
 
              // single operands
-             '>' : begin
+             'scan' : begin
                    z := scan_value();
                    calc_stack_add(pocz, z);
              end;

@@ -49,6 +49,7 @@ procedure TForm2.FormActivate(Sender: TObject);
 begin
      Edit1.Text := '';
      case Unit1.language of
+          'den' : Unit3.set2DEN();
           'eng' : Unit3.set2ENG();
           'pol' : Unit3.set2POL();
           else Unit3.set2ENG();

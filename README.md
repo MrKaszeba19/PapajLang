@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-January 14, 2018  
+January 15, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -105,16 +105,16 @@ Those operands may
 
 | Operand | Purpose                                                                                                         |
 |:-------:| --------------------------------------------------------------------------------------------------------------- |
-| >       | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
+| scan    | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
 | Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                                            |
 | X*      | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
 
 *to be extended*
 
 **Examples:** 
-- `> > +` scans 2 values and adds them
-- `X2 > +` equivalent of the expression above
-- `X* > sum` read all values from an input and sums them
+- `scan scan +` scans 2 values and adds them
+- `X2 scan +` equivalent of the expression above
+- `X* scan sum` read all values from an input and sums them
 
 ### Available constant values:
 - e.g. 2*π -> 2 PI *
@@ -127,10 +127,10 @@ Golden number | φ | 1.6180339887498 | FI
 
 ## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*
-- :poland: **Polish** (Polski) 
+- :denmark: **Danish** (Dansk)
+- :poland: **Polish** (Polski)
 - :de: German (Deutsch) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
-- :denmark: Danish (Dansk) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
 
 ## Improvements
@@ -141,5 +141,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
 0.2.1 | Gimel | 12/1/2017 | Unary operands
 0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
-0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations)
+0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 X.X.X | Leviathan | 1 day after Universe dies | Development Edition, may be sometimes unstable
