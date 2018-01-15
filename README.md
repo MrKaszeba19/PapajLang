@@ -155,5 +155,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.1 | Gimel | 12/1/2017 | Unary operands
 0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
-0.4.0 | Vav | a bit later | Core improvements for console app *and more*
-X.X.X | Leviathan | 1 day after Universe dies | Development Edition, may be sometimes unstable
+0.4.0 | Vav | a few moments later | Core improvements for console app *and more*
+X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes unstable
