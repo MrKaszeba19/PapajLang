@@ -30,7 +30,7 @@ function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
 
 procedure evaluate(i : String; var pocz : PStos; var Steps : Integer);
-function calc_parseRPN(input : string) : String;
+function calc_parseRPN(input : string; flag : String) : String;
 
 implementation
 uses Unit5;
@@ -515,7 +515,7 @@ begin
 
 end;
 
-function calc_parseRPN(input : string) : String;
+function calc_parseRPN(input : string; flag : String) : String;
 var
         L              : TStrings;
         i              : String;
@@ -546,7 +546,7 @@ begin
         end;
         z := '';
         while pocz <> nil do begin
-          z := FloatToStr(pocz^.Liczba) + ' ' + z;
+          z := FormatFloat(flag, pocz^.Liczba) + ' ' + z;
           calc_stack_remove(pocz);
         end;
         L.Free;

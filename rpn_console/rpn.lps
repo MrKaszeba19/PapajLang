@@ -7,18 +7,18 @@
       <Unit0>
         <Filename Value="rpn.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="75"/>
-        <CursorPos X="14" Y="118"/>
+        <CursorPos X="22" Y="76"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit2.pas"/>
         <UnitName Value="Unit2"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="58"/>
-        <CursorPos X="15" Y="81"/>
+        <TopLine Value="514"/>
+        <CursorPos X="27" Y="549"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit1>
@@ -30,7 +30,7 @@
         <Loaded Value="True"/>
       </Unit2>
     </Units>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
         <Filename Value="unit2.pas"/>
         <Caret Line="17" Column="13"/>
@@ -39,6 +39,10 @@
         <Filename Value="unit2.pas"/>
         <Caret Line="325" Column="34" TopLine="287"/>
       </Position2>
+      <Position3>
+        <Filename Value="unit2.pas"/>
+        <Caret Line="551" Column="17" TopLine="514"/>
+      </Position3>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

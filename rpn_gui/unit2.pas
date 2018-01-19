@@ -30,7 +30,7 @@ function calc_stack_show(pocz:PStos) : extended;
 procedure calc_stack_remove(var pocz:PStos);
 
 procedure evaluate(i : String; var pocz : PStos; var Steps : Integer);
-function calc_parseRPN(input : string) : String;
+function calc_parseRPN(input : string; flag : String) : String;
 
 implementation
 uses Unit5;
@@ -399,6 +399,24 @@ begin
                    end;
                    calc_stack_add(pocz, z/a);
              end;
+             'min' : begin
+                   a := pocz^.Liczba;
+                   while (pocz <> nil) do
+                   begin
+                   		if a > pocz^.Liczba then a := pocz^.Liczba;
+                    	calc_stack_remove(pocz);
+                   end;
+                   calc_stack_add(pocz, a);
+             end;
+             'max' : begin
+                   a := pocz^.Liczba;
+                   while (pocz <> nil) do
+                   begin
+                   		if a < pocz^.Liczba then a := pocz^.Liczba;
+                    	calc_stack_remove(pocz);
+                   end;
+                   calc_stack_add(pocz, a);
+             end;
              
              // stack creators
              'seq' : begin
@@ -421,6 +439,22 @@ begin
                 		calc_stack_add(pocz, x);
                 		x := x - y;
                 	end;
+                end;
+             end;
+
+             'seql' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                a := 1.0;
+          		while (a <= z) do 
+                begin
+                	calc_stack_add(pocz, x);
+                	x := x + y;
+                	a := a + 1.0;
                 end;
              end;
 
@@ -447,6 +481,22 @@ begin
                 end;
              end;
 
+             'gseql' : begin
+             	z := pocz^.Liczba;
+                calc_stack_remove(pocz);
+             	y := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                x := pocz^.Liczba;
+                calc_stack_remove(pocz);
+                a := 1.0;
+          		while (a <= z) do 
+                begin
+                	calc_stack_add(pocz, x);
+                	x := x * y;
+                	a := a + 1.0;
+                end;
+             end;
+
              else begin
                  case LeftStr(i, 1) of
                       'X' : begin
@@ -465,7 +515,7 @@ begin
 
 end;
 
-function calc_parseRPN(input : string) : String;
+function calc_parseRPN(input : string; flag : String) : String;
 var
         L              : TStrings;
         i              : String;
@@ -496,7 +546,7 @@ begin
         end;
         z := '';
         while pocz <> nil do begin
-          z := FloatToStr(pocz^.Liczba) + ' ' + z;
+          z := FormatFloat(flag, pocz^.Liczba) + ' ' + z;
           calc_stack_remove(pocz);
         end;
         L.Free;

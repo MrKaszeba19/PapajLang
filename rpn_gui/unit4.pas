@@ -38,7 +38,7 @@ uses
 procedure TForm2.Button1Click(Sender: TObject);
 begin
      try
-        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text);
+        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text, '0.################');
         Close;
      except
         ShowMessage('Error!');

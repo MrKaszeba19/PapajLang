@@ -80,7 +80,7 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 begin
      try
-        Edit2.Text := calc_parseRPN(Edit1.Text);
+        Edit2.Text := calc_parseRPN(Edit1.Text, '0.################');
      except
      on E : EAccessViolation do begin
        Edit1.Text := '';

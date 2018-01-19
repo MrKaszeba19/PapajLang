@@ -28,7 +28,7 @@ Ordinary expression | RPN Expression
 
 ### Console application
 - Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
-- Remember that all values and operands must be delimited with 1 space char.
+- Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program. 
 - If you need help, you can type `rpn help`.
 
@@ -37,7 +37,7 @@ Ordinary expression | RPN Expression
 ### GUI Application
 - Open an app executable.
 - In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. 
-- Remember that all values and operands must be delimited with 1 space char.
+- Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
 ## Implemented operations:
 
