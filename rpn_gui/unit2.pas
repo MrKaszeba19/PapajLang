@@ -93,6 +93,21 @@ begin
   end;
 end;
 
+function gcd(a, b : extended) : extended;
+begin
+	while (a <> b) do
+	begin
+        if (a > b) then a := a - b
+        else b := b - a;
+    end;
+	gcd := a;
+end;
+
+function lcm(a, b : extended) : extended;
+begin
+	lcm := (a*b)/gcd(a, b);
+end;
+
 function fib(n: extended) : extended;
 begin
      if n = 0.0 then fib := 0.0
@@ -223,10 +238,32 @@ begin
                    calc_stack_remove(pocz);
                    x := pocz^.Liczba;
                    calc_stack_remove(pocz);
+                   z := trunc(x) div trunc(y);
+                   calc_stack_add(pocz, z);
+             end;
+             'cdiv' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
                    if trunc(x/y) < 0 then begin
                       z := trunc(x/y)-1;
                    end else begin
                       z := trunc(x/y);
+                   end;
+                   calc_stack_add(pocz, z);
+             end;
+             'cmod' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   if (x > 0) and (y < 0) then begin
+                      z := ((trunc(x) mod trunc(y))+3)*(-1);
+                   end else if (x < 0) and (y > 0) then begin
+                      z := (trunc(x) mod trunc(y))+3;
+                   end else begin
+                      z := trunc(x) mod trunc(y);
                    end;
                    calc_stack_add(pocz, z);
              end;
@@ -242,6 +279,24 @@ begin
                  end;
                  calc_stack_add(pocz, z);
              end;
+             'gcd' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := gcd(x, y);
+                   calc_stack_add(pocz, z);
+             end;
+             'lcm' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   x := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := lcm(x, y);
+                   calc_stack_add(pocz, z);
+             end;
+
+
              // constants
              'PI' : begin
                    calc_stack_add(pocz, PI);
@@ -342,6 +397,30 @@ begin
                    y := pocz^.Liczba;
                    calc_stack_remove(pocz);
                    z := fib(trunc(y));
+                   calc_stack_add(pocz, z);
+             end;
+             'inc' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := y + 1;
+                   calc_stack_add(pocz, z);
+             end;
+             'dec' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := y - 1;
+                   calc_stack_add(pocz, z);
+             end;
+             '++' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := y + 1;
+                   calc_stack_add(pocz, z);
+             end;
+             '--' : begin
+                   y := pocz^.Liczba;
+                   calc_stack_remove(pocz);
+                   z := y - 1;
                    calc_stack_add(pocz, z);
              end;
 

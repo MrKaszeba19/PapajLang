@@ -44,27 +44,33 @@ Ordinary expression | RPN Expression
 ### Binary operations
 - expr1 expr2 operand
 
-| Name    | Programme Operand    |
-|:-------:| -------------------- |
-| +       | add                  |
-| -       | substract            |
-| *       | multiply             | 
-| /       | divide               |
-| ^       | power                |
-| pow     | power                |
-| root    | root                 |
-| log     | logarithm            |
-| div     | integer division     |
-| mod     | modulo               |
-| choose  | Binomial coefficient |
-
-*to be extended*
+| Name    | Programme Operand       |
+|:-------:| ----------------------- |
+| +       | add                     |
+| -       | substract               |
+| *       | multiply                | 
+| /       | divide                  |
+| ^       | power                   |
+| pow     | power                   |
+| root    | root                    |
+| log     | logarithm               |
+| div     | integer division (`-5 3 div` returns `-1`) |
+| mod     | modulo (`-5 3 mod` returns `-2`)           |
+| cdiv    | integer division (`-5 3 div` returns `-2`) |
+| cmod    | modulo (`-5 3 div` returns `1`)            |
+| choose  | Binomial coefficient                       |
+| gcd     | Greatest Common Divisor                    |
+| lcm     | Least Common Multiplier                    |
 
 ### Unary operations
 - expr0 operand
 
 Programme Operand | Name 
 ----------------- | ----
+++ | increment
+inc | increment
+-- | decrement
+dec | decrement
 abs | absolute value
 sqrt | suqare root
 exp | exponential
