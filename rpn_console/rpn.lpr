@@ -3,8 +3,8 @@ uses Unit2, Unit5, Sysutils;
 
 procedure show_version();
 begin
-     writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. January 15, 2018.');
+     writeln('RPN Calculator. Version 0.3.1 (Hey)');
+     writeln('Paul Lipkowski. January 24, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
