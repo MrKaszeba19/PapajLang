@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-January 15, 2018  
+January 24, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -158,8 +158,8 @@ Version | Version Name | Date of Release | Improvements
 ------- | ------------ |:---------------:| ------------
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
-0.2.1 | Gimel | 12/1/2017 | Unary operands
-0.3.0 | Dalet | 1/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
-0.3.1 | Hey | soon | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
-0.4.0 | Vav | a few moments later | Core improvements for console app *and more*
+0.2.1 | Gimel | 12/10/2017 | Unary operands
+0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
+0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
+0.4.0 | Vav | soon | Core improvements for console app *and more*
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes unstable
