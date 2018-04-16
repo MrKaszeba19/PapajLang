@@ -31,6 +31,7 @@ Ordinary expression | RPN Expression
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program. 
 - If you need help, you can type `rpn help`.
+- If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
 
 **Flags' functionalities don't work right now, they will be reimplemented and improved by the version of 0.4.0**
 
@@ -105,10 +106,19 @@ count | amount of the values put on the stack (stack's size)
 avg | mean of the values put on the stack
 max | maximum value of the values put on the stack
 min | minimal value of the values put on the stack
+
+#### Stack maniuplation
+
+Programme Operand | Name 
+----------------- | ----
+clone | Clone the value being on the top of the stack
+rem | Remove a value from the top of the stack
+clear | Clear entire stack
 seq | generates an arithmetical sequence from A to B and puts it on the stack (syntax: `A STEP B seq`)
 gseq | generates a geometical sequence from A to B and puts it on the stack (syntax: `A STEP B gseq`)
 seql | generates an arithmetical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N seq`)
-gseq | generates a geometical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
+gseql | generates a geometical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
+rev | reverses the stack
 
 **Examples:** 
 - `5 3 8 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
@@ -116,24 +126,37 @@ gseq | generates a geometical sequence of N numbers and puts it on the stack (sy
 - `1 3 8 seql` generates "1 4 7 10 13 16 19 22"
 - `8 2 1 gseq` generates "8 4 2 1"
 - `8 -1 10 gseql` generates "8 -8 8 -8 8 -8 8 -8 8 -8"
+- `1 2 3 4 rev` transforms into "4 3 2 1"
+- `5 10 times clone` generates "5 5 5 5 5 5 5 5 5 5 5"
 
 *to be extended*
 
 ### Operands without any arguments
-Those operands may 
 
-| Operand | Purpose                                                                                                         |
-|:-------:| --------------------------------------------------------------------------------------------------------------- |
-| scan    | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
-| Xn      | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                                            |
-| X*      | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
-
-*to be extended*
+| Operand   | Purpose                                                                                                         |
+|:---------:| --------------------------------------------------------------------------------------------------------------- |
+| scan      | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
+| print     | Print a value being on the top of the stack                                                                     |
+| println   | Same as above and end the line.                                                                                 |
+| rprint    | Print a value being on the top of the stack and remove it from this stack.                                      |
+| rprintln  | Same as above and end the line.                                                                                 |
+| Xn        | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                                            |
+| X*        | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
+| //        | One-line comment (only parsing text files)                                                                      |
 
 **Examples:** 
 - `scan scan +` scans 2 values and adds them
 - `X2 scan +` equivalent of the expression above
 - `X* scan sum` read all values from an input and sums them
+
+*to be extended*
+
+### Parsing directives
+
+| Operand  | Purpose                                     |
+|:--------:| ------------------------------------------- |
+| #silent  | Prevents from displaying final stack output |
+
 
 ### Available constant values:
 - e.g. 2*π -> 2 PI *
@@ -161,5 +184,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.1 | Gimel | 12/10/2017 | Unary operands
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
-0.4.0 | Vav | soon | Core improvements for console app *and more*
+0.4.0 | Vav | soon | Core improvements for console app, more stack commands and other various abilities *and more*
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes unstable

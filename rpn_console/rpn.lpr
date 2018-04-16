@@ -4,7 +4,7 @@ uses Unit2, Unit5, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. January 24, 2018.');
+     writeln('Paul Lipkowski. April 16, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
@@ -13,22 +13,25 @@ procedure show_help();
 begin
      writeln('SYNTAX: rpn "quoted_rpn_expression" [flags]');
      writeln('');
+     writeln('Run ''rpn help'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
      writeln('Run ''rpn flags'' to obtain info about flags.');
+     writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
 end;
 
 procedure show_flags();
 begin
  	writeln('Flags: ');
- 	writeln('    -e        Provides an output in scientific notation');
- 	writeln('    -it       Provides an integer output (truncated)');
- 	writeln('    -i, -ir   Provides an integer output (rounded)');
+ 	//writeln('    -e        Provides an output in scientific notation');
+ 	writeln('    -i        Provides an integer output (truncated)');
  	writeln('    -f        DEFAULT - Provides a decimal output');
  	writeln('              except for large numbers (more than 2E+49)');
  	writeln('    -f2       Provides a decimal output truncated to 2 digits');
- 	writeln('    -fp       Provides a decimal output for all numbers');
+ 	writeln('    -f15      Provides a decimal output for all numbers');
  	writeln('              (with a constant precision of 15 digits)');
+ 	writeln('    -d        Provides a decimal output with thousands separators');
+ 	writeln('    -m        Provides a decimal 2-digit-precise output with thousands separators (money output)');
  	writeln('No flag provided - works on the ''-f'' flag by default.')
 end;
 
@@ -60,32 +63,127 @@ begin
 	writeln('Page 5: Other');
 	writeln;
 	writeln('Type ''rpn operands [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
+	writeln('Type ''rpn operands all'' to print all pages at once.');
 end;
 
+// binary
 procedure show_operands1();
 begin
 	writeln('Binary operands model: (expr1) (expr2) (operand), e.g. 2 4 +');
     writeln('Available binary operands:');
     writeln('       +       -       *       /     div');
     writeln('       ^     pow    root     log     mod');
+    writeln('    cdiv    cmod  choose     gcd     lcm');
+end;
+
+// unary
+procedure show_operands2();
+begin
     writeln('Unary operands model: (expr0) (operand), e.g. 2 sin');
     writeln('Available unary operands:');
     writeln('     abs    sqrt     exp      ln       !    fact');
     writeln('     sin     cos     tan     csc     sec     cot');
-    writeln('   trunc   round');
-    writeln('Scan a value with a ''scan'' operand.');
+    writeln('   trunc   round     inc     dec      ++      --');
+    writeln();
+    writeln(' X times - do the next thing X times');
+end;
+
+// stacks
+procedure show_operands3();
+begin
+	writeln('Stack operations model (set of expressions put on the stack) (operand),'); 
+	writeln('e.g. 5 2 3 + 7 sum => 5 5 7 sum');
+	writeln('Available stack operations:');
+	writeln('       sum   product     count       avg');
+	writeln('       min       max');
+	writeln('Stack generators:');
+	writeln('     seq    gseq    seql   gseql');
+	writeln('Stack transformations:');
+	writeln('   clone     rev');
+end;
+
+// constants
+procedure show_operands4();
+begin
     writeln('Available constants: ');
     writeln('      PI = ~3.1415926535897');
 	writeln('      EU = ~2.7182818284590');
 	writeln('      FI = ~1.6180339887498');
 end;
 
+procedure show_operands5();
+begin
+    writeln('Other operations: ');
+    writeln('      scan : Scan a value from input');
+    writeln('     print : Print a value being on the top of the stack');
+    writeln('   println : Same as above and end the line.');
+    writeln('    rprint : Print a value being on the top of the stack and remove it from this stack.');
+    writeln('  rprintln : Same as above and end the line.');
+    writeln('     clone : Clone the value being on the top of the stack');
+    writeln('       rem : Remove a value from the top of the stack');
+    writeln('        Xn : Do the next thing n times');
+    writeln('        X* : Scan all the values from input (pre-made input usage recommended)');
+    writeln('        // : One-line comment (when parsing files)');
+    writeln(' no-output : Prevent from displaying final stack values (not recommended unless parsing files)');
+end;
+
 
 //work in progress
-{*
-var
-   x : String;
+
+function commentcut(input : String) : String;
+var 
+	pom : String;
+	i   : Integer;
 begin
+	pom := '';
+	for i := 0 to Length(input) do begin
+		if not ((input[i] = '/') and (input[i+1] = '/')) then begin
+			pom := concat(pom, input[i]);
+		end else begin
+			break;
+		end;
+	end;
+	commentcut := pom;
+end;
+
+function check_flags(input : String) : String;
+begin
+	case input of
+		'-f' : check_flags := '0.################';
+		'-f2' : check_flags := '0.00';
+		'-f15' : check_flags := '0.000000000000000';
+		'-d' : check_flags := '#,###.################';
+		'-m' : check_flags := '#,###.00';
+		'-i' : check_flags := '0';
+		'-e' : check_flags := '0.000E+00';
+	end;
+end;
+
+function read_file(filename, pattern : String; var prevent : Integer) : String;
+var
+	fun, S : String;
+	fp     : Text;
+begin
+	fun := '';
+	assignfile(fp, filename);
+    reset(fp);
+    while not eof(fp) do
+    begin
+    	readln(fp, S);
+    	S := commentcut(S);
+    	fun := fun + ' ' + S;
+    end;
+    closefile(fp);
+	read_file := calc_parseRPN(fun, pattern, prevent);
+end;
+
+// main
+
+var
+   x, mask : String;
+   prevent : Integer;
+begin
+	prevent := 0;
 	case ParamCount of
 		0 : begin
 			show_version();
@@ -105,10 +203,14 @@ begin
      				show_version();
      				show_operands();
      			end;
+     			'flags' : begin
+     				show_version();
+     				show_flags();
+     			end;
      			else begin
      				try
-     					x := calc_parseRPN(ParamStr(1), '0.################');
-        				writeln(x);
+     					x := calc_parseRPN(ParamStr(1), '0.################', prevent);
+        				if (prevent = 0) then writeln(x);
               		except
               			On E : Exception do
                  		begin
@@ -123,96 +225,61 @@ begin
 				'operands' : begin
      				show_version();
      				case ParamStr(2) of
-     					
+     					'1'	: show_operands1();
+     					'2'	: show_operands2();
+     					'3'	: show_operands3();
+     					'4'	: show_operands4();
+     					'5'	: show_operands5();
+     					'all': begin 
+     						show_operands1(); writeln();
+     						show_operands2(); writeln();
+     						show_operands3(); writeln();
+     						show_operands4(); writeln();
+     						show_operands5(); writeln();
+     					end;
      				end;
+     			end;
+     			'parse' : begin
+     				try
+     					x := read_file(ParamStr(2), '0.################', prevent);
+        				if (prevent = 0) then writeln(x);
+              		except
+              			On E : Exception do
+                 		begin
+                      		writeln(E.ToString);
+                 		end;
+              		end;
+     			end;
+     			else begin
+     				mask := check_flags(ParamStr(2));
+     				try
+     					x := calc_parseRPN(ParamStr(1), mask, prevent);
+        				if (prevent = 0) then writeln(x);
+              		except
+              			On E : Exception do
+                 		begin
+                      		writeln(E.ToString);
+                 		end;
+              		end;
+     			end;
+			end;
+		end;
+		3 : begin
+			case ParamStr(1) of
+				'parse' : begin
+     				mask := check_flags(ParamStr(3));
+     				try
+     					x := read_file(ParamStr(2), mask, prevent);
+        				if (prevent = 0) then writeln(x);
+              		except
+              			On E : Exception do
+                 		begin
+                      		writeln(E.ToString);
+                 		end;
+              		end;
      			end;
 			end;
 		end;
 	end;
-	*}
-
-
-
-     //=============== OLDE =============================================================
-var
-	x : String;
-begin
-	case ParamCount of
-		0 : begin
-			show_version();
-     		writeln('No arguments provided - run ''rpn help''');
-		end;
-    	1 : begin
-     		case ParamStr(1) of
-     			'help' : begin
-     				show_version();
-     				show_help();
- 					//writeln('Run ''rpn flags'' to obtain info about flags.');
-
-     			end;
-     			'expression' : begin
-     				show_version();
-     				show_expressions();
-     			end;
-     			'operands' : begin
-     				show_version();
-     				show_operands1();
-     			end;
-     			else begin
-            		try
-     					x := calc_parseRPN(ParamStr(1), '0.################');
-        				writeln(x);
-            		except
-            			On E : Exception do
-                		begin
-                			writeln(E.ToString);
-                		end;
-              		end;
-     			end;
-     		end;
-        end;
-        {*2 : begin
-          try
-        	case ParamStr(2) of
-        		'-e' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		'-it' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		'-i' : begin
-              x := calc_parseRPN(ParamStr(1));
-              writeln(x);
-        		end;
-        		'-ir' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		'-f' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		'-f2' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		'-fp' : begin
-        			x := calc_parseRPN(ParamStr(1));
-        			writeln(x);
-        		end;
-        		else begin
-        			show_version();
-     				writeln('Unknown flag - run ''rpn help''');
-        		end;
-        	end;
-          except
-          On E : Exception do
-             begin
-                  writeln(E.ToString);
-             end;
-          end;
-        end;*}
-    end;
+	
 end.
