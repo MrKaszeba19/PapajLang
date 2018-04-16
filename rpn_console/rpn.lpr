@@ -23,7 +23,7 @@ end;
 procedure show_flags();
 begin
  	writeln('Flags: ');
- 	//writeln('    -e        Provides an output in scientific notation');
+ 	writeln('    -e        Provides an output in scientific notation');
  	writeln('    -i        Provides an integer output (truncated)');
  	writeln('    -f        DEFAULT - Provides a decimal output');
  	writeln('              except for large numbers (more than 2E+49)');
@@ -60,7 +60,8 @@ begin
 	writeln('Page 2: Unary operands');
 	writeln('Page 3: Stack operations');
 	writeln('Page 4: Constants');
-	writeln('Page 5: Other');
+	writeln('Page 5: Parsing directives');
+	writeln('Page 6: Other');
 	writeln;
 	writeln('Type ''rpn operands [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
 	writeln('Type ''rpn operands all'' to print all pages at once.');
@@ -113,6 +114,21 @@ end;
 
 procedure show_operands5();
 begin
+	writeln('Available directives: ');
+	writeln('  #real       : Output is a decimal (set by default)');
+	writeln('  #milli      : Output is a decimal with fixed precision of 3 digits');
+	writeln('  #float      : Output is a decimal with fixed precision of 6 digits');
+	writeln('  #double     : Output is a decimal with fixed precision of 15 digits');
+	writeln('  #int        : Output is rounded to an integer value.');
+	writeln('  #decimal    : Output is a decimal number with thousands separator');
+	writeln('  #scientific : Output is in a scientific notation (e.g. 2,137 -> 2.137E+03)');
+	writeln('  #money      : Output is a decimal with fixed precision of 2 digits');
+	writeln('  #amoney     : Output is a decimal with thousands separator and a fixed precision of 2 digits');
+	writeln('  #silent     : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+end;
+
+procedure show_operands6();
+begin
     writeln('Other operations: ');
     writeln('      scan : Scan a value from input');
     writeln('     print : Print a value being on the top of the stack');
@@ -124,7 +140,6 @@ begin
     writeln('        Xn : Do the next thing n times');
     writeln('        X* : Scan all the values from input (pre-made input usage recommended)');
     writeln('        // : One-line comment (when parsing files)');
-    writeln(' no-output : Prevent from displaying final stack values (not recommended unless parsing files)');
 end;
 
 
@@ -209,7 +224,8 @@ begin
      			end;
      			else begin
      				try
-     					x := calc_parseRPN(ParamStr(1), '0.################', prevent);
+     					mask := '0.################';
+     					x := calc_parseRPN(ParamStr(1), mask, prevent);
         				if (prevent = 0) then writeln(x);
               		except
               			On E : Exception do
@@ -230,18 +246,21 @@ begin
      					'3'	: show_operands3();
      					'4'	: show_operands4();
      					'5'	: show_operands5();
+     					'6' : show_operands6();
      					'all': begin 
      						show_operands1(); writeln();
      						show_operands2(); writeln();
      						show_operands3(); writeln();
      						show_operands4(); writeln();
      						show_operands5(); writeln();
+     						show_operands6();
      					end;
      				end;
      			end;
      			'parse' : begin
      				try
-     					x := read_file(ParamStr(2), '0.################', prevent);
+     					mask := '0.################';
+     					x := read_file(ParamStr(2), mask, prevent);
         				if (prevent = 0) then writeln(x);
               		except
               			On E : Exception do

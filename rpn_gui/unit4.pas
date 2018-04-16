@@ -36,11 +36,14 @@ uses
 { TForm2 }
 
 procedure TForm2.Button1Click(Sender: TObject);
-var prevent : Integer;
+var 
+	prevent : Integer;
+	mask    : String;
 begin
      try
         prevent := 0;
-        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text, '0.################', prevent);
+        mask := '0.################';
+        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text, mask, prevent);
         Close;
      except
         ShowMessage('Error!');

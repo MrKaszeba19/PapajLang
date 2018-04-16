@@ -6,7 +6,7 @@ by Paul Lipkowski (RooiGevaar19)
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 
-> Pascal is not dead. It's just a Force that remains forever, just like it does in Luke Skywalker. 
+> Pascal is not dead. It's just a Force that remains forever, just like it does in Luke Skywalker.
 
 ## About RPN
 **Reverse Polish Notation** (RPN) is a mathematical notation in which operators follow their operands. It allows to evaluate the mathematical expressions without using parentheses.
@@ -29,7 +29,7 @@ Ordinary expression | RPN Expression
 ### Console application
 - Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program. 
+- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program.
 - If you need help, you can type `rpn help`.
 - If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
 
@@ -37,7 +37,7 @@ Ordinary expression | RPN Expression
 
 ### GUI Application
 - Open an app executable.
-- In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below. 
+- In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
 ## Implemented operations:
@@ -49,7 +49,7 @@ Ordinary expression | RPN Expression
 |:-------:| ----------------------- |
 | +       | add                     |
 | -       | substract               |
-| *       | multiply                | 
+| *       | multiply                |
 | /       | divide                  |
 | ^       | power                   |
 | pow     | power                   |
@@ -66,7 +66,7 @@ Ordinary expression | RPN Expression
 ### Unary operations
 - expr0 operand
 
-Programme Operand | Name 
+Programme Operand | Name
 ----------------- | ----
 ++ | increment
 inc | increment
@@ -84,7 +84,7 @@ cot | cotangent
 sec | secant
 csc | cosecant
 ln | natural logarithm
-fib | Fibonacci number 
+fib | Fibonacci number
 trunc | truncate
 round | round
 times | do the following operand/value N times (N is an integer value, N >= 1)
@@ -99,7 +99,7 @@ times | do the following operand/value N times (N is an integer value, N >= 1)
 **Note 1:** Values themselves are put on the stack when solving the expression.
 **Note 2:** The stack operations clear entire stack after execution.
 
-Programme Operand | Name 
+Programme Operand | Name
 ----------------- | ----
 sum | sum of all values
 product | product of all values
@@ -110,7 +110,7 @@ min | minimal value of the values put on the stack
 
 #### Stack manipulation
 
-Programme Operand | Name 
+Programme Operand | Name
 ----------------- | ----
 size | Get the size of current stack without clearing that stack
 clone | Clone the value being on the top of the stack
@@ -122,7 +122,7 @@ seql | generates an arithmetical sequence of N numbers and puts it on the stack 
 gseql | generates a geometical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
 rev | reverses the stack
 
-**Examples:** 
+**Examples:**
 - `5 3 8 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
 - `1 1 8 seq` generates "1 2 3 4 5 6 7 8"
 - `1 3 8 seql` generates "1 4 7 10 13 16 19 22"
@@ -146,7 +146,7 @@ rev | reverses the stack
 | X*        | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
 | //        | One-line comment (only parsing text files)                                                                      |
 
-**Examples:** 
+**Examples:**
 - `scan scan +` scans 2 values and adds them
 - `X2 scan +` equivalent of the expression above
 - `X* scan sum` read all values from an input and sums them
@@ -155,9 +155,18 @@ rev | reverses the stack
 
 ### Parsing directives
 
-| Operand  | Purpose                                     |
-|:--------:| ------------------------------------------- |
-| #silent  | Prevents from displaying final stack output |
+| Operand     | Purpose                                                                                       |
+|:----------- | --------------------------------------------------------------------------------------------- |
+| #real       | Output is a decimal (set by default)                                                          |
+| #milli      | Output is a decimal with fixed precision of 3 digits                                          |
+| #float      | Output is a decimal with fixed precision of 6 digits                                          |
+| #double     | Output is a decimal with fixed precision of 15 digits                                         |
+| #int        | Output is rounded to an integer value.                                                        |
+| #decimal    | Output is a decimal number with thousands separator                                           |
+| #scientific | Output is in a scientific notation (e.g. 2,137 -> 2.137E+03)                                  |
+| #money      | Output is a decimal with fixed precision of 2 digits                                          |
+| #amoney     | Output is a decimal with thousands separator and a fixed precision of 2 digits                |
+| #silent     | Don't print the final stack output (it does not affect the outputs invoked by script before)  |
 
 
 ### Available constant values:

@@ -80,10 +80,12 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 var
   prevent : Integer;
+  mask    : String;
 begin
      try
         prevent := 0;
-        Edit2.Text := calc_parseRPN(Edit1.Text, '0.################', prevent);
+        mask := '0.################';
+        Edit2.Text := calc_parseRPN(Edit1.Text, mask, prevent);
      except
      on E : EAccessViolation do begin
        Edit1.Text := '';

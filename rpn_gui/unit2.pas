@@ -31,8 +31,8 @@ function stack_reverse(poc : PStos) : PStos;
 procedure stack_remove(var pocz:PStos);
 procedure stack_clear(var pocz:PStos);
 
-procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; mask : String);
-function calc_parseRPN(input : string; flag : String; var prev : Integer) : String;
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var mask : String);
+function calc_parseRPN(input : string; var flag : String; var prev : Integer) : String;
 
 implementation
 uses Unit5;
@@ -164,7 +164,7 @@ end;
 
 // EVALUATION
 
-procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; mask : String);
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var mask : String);
 var
     x, y, z        : extended;
     a              : extended;
@@ -449,6 +449,39 @@ begin
                    stack_add(pocz, z);
              end;
 
+             // Directives
+             '#silent' : begin
+                Prevent := 1;
+             end;
+             '#real' : begin
+                mask := '0.################';
+             end;
+             '#decimal' : begin
+                mask := '#,###.################';
+             end;
+             '#milli' : begin
+                mask := '0.000';
+             end;
+             '#float' : begin
+                mask := '0.000000';
+             end;
+             '#double' : begin
+                mask := '0.000000000000000';
+             end;
+             '#money' : begin
+                mask := '0.00';
+             end;
+             '#amoney' : begin
+                mask := '#,###.00';
+             end;
+             '#int' : begin
+                mask := '0';
+             end;
+             '#scientific' : begin
+                mask := '0.000E+00';
+             end;
+
+
              // single operands
              'scan' : begin
                    z := scan_value();
@@ -458,9 +491,6 @@ begin
                    y := pocz^.Liczba;
                    stack_remove(pocz);
                    if (y >= 1) then Steps := trunc(y);
-             end;
-             '#silent' : begin
-                Prevent := 1;
              end;
 
              'clone' : begin
@@ -673,7 +703,7 @@ begin
 
 end;
 
-function calc_parseRPN(input : string; flag : String; var prev : Integer) : String;
+function calc_parseRPN(input : string; var flag : String; var prev : Integer) : String;
 var
         L              : TStrings;
         i              : String;
