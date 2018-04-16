@@ -92,8 +92,9 @@ times | do the following operand/value N times (N is an integer value, N >= 1)
 *to be extended*
 
 ### Stack operations
-- If you already own some values on the stack, e.g. after solving some minor expressions (`2 3 +  9 5 -` leaves 5 and 4 on the stack respectively), you may use stack operations on them by taking **ALL** its values.
 
+#### Stack calculating functions
+- If you already own some values on the stack, e.g. after solving some minor expressions (`2 3 +  9 5 -` leaves 5 and 4 on the stack respectively), you may use stack operations on them by taking **ALL** its values.
 
 **Note 1:** Values themselves are put on the stack when solving the expression.
 **Note 2:** The stack operations clear entire stack after execution.
@@ -107,10 +108,11 @@ avg | mean of the values put on the stack
 max | maximum value of the values put on the stack
 min | minimal value of the values put on the stack
 
-#### Stack maniuplation
+#### Stack manipulation
 
 Programme Operand | Name 
 ----------------- | ----
+size | Get the size of current stack without clearing that stack
 clone | Clone the value being on the top of the stack
 rem | Remove a value from the top of the stack
 clear | Clear entire stack
