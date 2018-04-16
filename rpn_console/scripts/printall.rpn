@@ -1,0 +1,3 @@
+#silent
+X* scan rev
+size times rprintln
