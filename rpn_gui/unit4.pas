@@ -39,11 +39,11 @@ procedure TForm2.Button1Click(Sender: TObject);
 var 
 	prevent : Integer;
 	mask    : String;
+  sets    : TSettings;
 begin
      try
-        prevent := 0;
-        mask := '0.################';
-        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text, mask, prevent);
+        sets := default_settings();
+        Unit5.arax := Unit2.calc_parseRPN(Form2.Edit1.Text, sets);
         Close;
      except
         ShowMessage('Error!');

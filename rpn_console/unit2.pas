@@ -14,36 +14,43 @@ const
 
 type PStos = ^TStos;
      TStos    = record
-     Liczba   : extended;
-     Nastepny : PStos;
+     Val   : Extended;
+     Next  : PStos;
 end;
 
-function pow(x,y:extended):extended;
-function pow2(x,y:extended):extended;
-function fact(x:extended):extended;
-function newton_int(n, k: extended) : extended;
-function newton_real(n, k: extended) : extended;
-function fib(n: extended) : extended;
+type TSettings = record
+    Prevent   : Boolean;
+    Autoclear : Boolean;
+    Mask      : String;
+end;
 
-procedure stack_add(var pocz:PStos; number:extended);
+function pow(x,y:Extended):Extended;
+function pow2(x,y:Extended):Extended;
+function fact(x:Extended):Extended;
+function newton_int(n, k: Extended) : Extended;
+function newton_real(n, k: Extended) : Extended;
+function fib(n: Extended) : Extended;
+
+procedure stack_add(var pocz:PStos; number:Extended);
 function stack_clone(poc : PStos) : PStos;
 function stack_reverse(poc : PStos) : PStos;
 procedure stack_remove(var pocz:PStos);
 procedure stack_clear(var pocz:PStos);
 
-procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var mask : String);
-function calc_parseRPN(input : string; var flag : String; var prev : Integer) : String;
+function default_settings() : TSettings;
+
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var sets : TSettings);
+function calc_parseRPN(input : string; var sets : TSettings) : String;
 
 implementation
 uses Unit5;
 
 var
         Steps   : Integer;
-        Prevent : Integer;
 
-function pow(x,y:extended):extended;
+function pow(x,y:Extended):Extended;
 var
-        s : extended;
+        s : Extended;
         i : integer;
 begin
         s := 1;
@@ -52,17 +59,17 @@ begin
         pow := s;
 end;
 
-function pow2(x,y:extended):extended;
+function pow2(x,y:Extended):Extended;
 var
-        s : extended;
+        s : Extended;
 begin
         s := exp(y*ln(x));
         pow2 := s;
 end;
 
-function fact(x:extended):extended;
+function fact(x:Extended):Extended;
 var
-        s : extended;
+        s : Extended;
         i : integer;
 begin
      s := 1;
@@ -70,7 +77,7 @@ begin
      fact := s;
 end;
 
-function newton_int(n, k : extended) : extended;
+function newton_int(n, k : Extended) : Extended;
 begin
      //newton (n, 0) = 1;
      //newton (n, n) = 1;
@@ -79,8 +86,8 @@ begin
      else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
 end;
 
-function newton_real(n, k : extended) : extended;
-var s, j : extended;
+function newton_real(n, k : Extended) : Extended;
+var s, j : Extended;
 begin
   s := 1;
   if (n < 0) then
@@ -96,7 +103,7 @@ begin
   end;
 end;
 
-function gcd(a, b : extended) : extended;
+function gcd(a, b : Extended) : Extended;
 begin
 	while (a <> b) do
 	begin
@@ -106,12 +113,12 @@ begin
 	gcd := a;
 end;
 
-function lcm(a, b : extended) : extended;
+function lcm(a, b : Extended) : Extended;
 begin
 	lcm := (a*b)/gcd(a, b);
 end;
 
-function fib(n: extended) : extended;
+function fib(n: Extended) : Extended;
 begin
      if n = 0.0 then fib := 0.0
      else if n = 1.0 then fib := 1.0
@@ -120,13 +127,13 @@ end;
 
 // STACK OPERATIONS
 
-procedure stack_add(var pocz:PStos; number:extended);
+procedure stack_add(var pocz:PStos; number:Extended);
 var
     Nowy: PStos;
   begin
     New(Nowy);
-    Nowy^.Liczba := number;
-    Nowy^.Nastepny := Pocz;
+    Nowy^.Val := number;
+    Nowy^.Next := Pocz;
     Pocz := Nowy;
   end;
 
@@ -134,7 +141,7 @@ procedure stack_remove(var pocz:PStos);
 var
     Pom: PStos;
 begin
-    Pom := Pocz^.Nastepny;
+    Pom := Pocz^.Next;
     Dispose(Pocz);
     Pocz := Pom;
 end;
@@ -154,134 +161,190 @@ var
   pom : PStos;
 begin
     while (poc <> nil) do begin
-      stack_add(pom, poc^.Liczba);
-      poc := poc^.Nastepny;
+      stack_add(pom, poc^.Val);
+      poc := poc^.Next;
     end;
     stack_reverse := pom;
+end;
+
+function default_settings() : TSettings;
+var pom : TSettings;
+begin
+  pom.Prevent := false;
+  pom.Autoclear := true;
+  pom.Mask := '0.################';
+  default_settings := pom;
 end;
 
 
 
 // EVALUATION
 
-procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var mask : String);
+procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var sets : TSettings);
 var
-    x, y, z        : extended;
-    a              : extended;
+    x, y, z        : Extended;
+    a              : Extended;
     Im             : Extended;
-    Code           : Integer;
+    Code, index    : Integer;
     Sizer          : PStos;
+    HelpTable      : array of Extended;
 begin
     Steps := 1;
+    SetLength(HelpTable, 0);
+
     Val (i,Im,Code);
     If Code<>0 then
         begin
              case i of
              // binary
              '+' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  z := x+y;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              '-' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  z := x-y;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              '*' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  z := x*y;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              '/' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  z := x/y;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              '^' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  if (y = trunc(y)) then begin
                     z := pow(x,y);
                  end else begin
                      z := pow2(x,y);
+                 end;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
                  end;
                  stack_add(pocz, z);
              end;
              'pow' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  if (y = trunc(y)) then begin
                     z := pow(x,y);
                  end else begin
                      z := pow2(x,y);
                  end;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              'log' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  z := ln(x)/ln(y);
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              'root' : begin
-                    y := pocz^.Liczba;
+                    y := pocz^.Val;
                     stack_remove(pocz);
-                    x := pocz^.Liczba;
+                    x := pocz^.Val;
                     stack_remove(pocz);
                     z := pow2(x,1/y);
+                    if not (sets.Autoclear) then begin
+                        stack_add(pocz, x);
+                        stack_add(pocz, y);
+                    end;
                     stack_add(pocz, z);
              end;
              'mod' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    z := trunc(x) mod trunc(y);
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
              'div' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    z := trunc(x) div trunc(y);
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
              'cdiv' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    if trunc(x/y) < 0 then begin
                       z := trunc(x/y)-1;
                    end else begin
                       z := trunc(x/y);
                    end;
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
              'cmod' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    if (x > 0) and (y < 0) then begin
                       z := ((trunc(x) mod trunc(y))+3)*(-1);
@@ -290,34 +353,50 @@ begin
                    end else begin
                       z := trunc(x) mod trunc(y);
                    end;
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
              'choose' : begin
-                 y := pocz^.Liczba;
+                 y := pocz^.Val;
                  stack_remove(pocz);
-                 x := pocz^.Liczba;
+                 x := pocz^.Val;
                  stack_remove(pocz);
                  if (x = trunc(x)) then begin
                      z := newton_int(x,y);
                  end else begin
                      z := newton_real(x,y);
                  end;
+                 if not (sets.Autoclear) then begin
+                     stack_add(pocz, x);
+                     stack_add(pocz, y);
+                 end;
                  stack_add(pocz, z);
              end;
              'gcd' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    z := gcd(x, y);
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
              'lcm' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   x := pocz^.Liczba;
+                   x := pocz^.Val;
                    stack_remove(pocz);
                    z := lcm(x, y);
+                   if not (sets.Autoclear) then begin
+                       stack_add(pocz, x);
+                       stack_add(pocz, y);
+                   end;
                    stack_add(pocz, z);
              end;
 
@@ -335,115 +414,132 @@ begin
 
              // unary
              'exp' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := exp(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'abs' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := abs(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'sqrt' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := sqrt(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'sin' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := sin(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'cos' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := cos(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'csc' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := 1/sin(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'sec' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := 1/cos(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'tan' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := sin(y)/cos(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'cot' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := cos(y)/sin(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              '!' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := fact(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'fact' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := fact(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'ln' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := ln(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'trunc' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := trunc(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'round' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := round(y);
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'fib' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := fib(trunc(y));
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'inc' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := y + 1;
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              'dec' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := y - 1;
+                   if not (sets.Autoclear) then stack_add(pocz, y);
                    stack_add(pocz, z);
              end;
              '++' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := y + 1;
                    stack_add(pocz, z);
              end;
              '--' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
                    z := y - 1;
                    stack_add(pocz, z);
@@ -451,34 +547,43 @@ begin
 
              // Directives
              '#silent' : begin
-                Prevent := 1;
+                sets.Prevent := true;
+             end;
+             '#autoclear=true' : begin
+                sets.Autoclear := true;
+             end;
+             '#autoclear=false' : begin
+                sets.Autoclear := false;
              end;
              '#real' : begin
-                mask := '0.################';
+                sets.Mask := '0.################';
              end;
              '#decimal' : begin
-                mask := '#,###.################';
+                sets.Mask := '#,###.################';
              end;
              '#milli' : begin
-                mask := '0.000';
+                sets.Mask := '0.000';
              end;
              '#float' : begin
-                mask := '0.000000';
+                sets.Mask := '0.000000';
              end;
              '#double' : begin
-                mask := '0.000000000000000';
+                sets.Mask := '0.000000000000000';
              end;
              '#money' : begin
-                mask := '0.00';
+                sets.Mask := '0.00';
              end;
              '#amoney' : begin
-                mask := '#,###.00';
+                sets.Mask := '#,###.00';
              end;
              '#int' : begin
-                mask := '0';
+                sets.Mask := '0';
              end;
              '#scientific' : begin
-                mask := '0.000E+00';
+                sets.Mask := '0.################E+00';
+             end;
+             '#scientific1' : begin
+                sets.Mask := '0.000000000000000E+0000';
              end;
 
 
@@ -488,35 +593,35 @@ begin
                    stack_add(pocz, z);
              end;
              'times' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_remove(pocz);
-                   if (y >= 1) then Steps := trunc(y);
+                   if (y >= 0) then Steps := trunc(y);
              end;
 
              'clone' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    stack_add(pocz, y);
              end;
              'print' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    //write(y);
-                   write(FormatFloat(mask, y));
+                   write(FormatFloat(sets.Mask, y));
              end;
              'println' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    //writeln(y);
-                   writeln(FormatFloat(mask, y));
+                   writeln(FormatFloat(sets.Mask, y));
              end;
              'rprint' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    //write(y);
-                   write(FormatFloat(mask, y));
+                   write(FormatFloat(sets.Mask, y));
                    stack_remove(pocz);
              end;
              'rprintln' : begin
-                   y := pocz^.Liczba;
+                   y := pocz^.Val;
                    //writeln(y);
-                   writeln(FormatFloat(mask, y));
+                   writeln(FormatFloat(sets.Mask, y));
                    stack_remove(pocz);
              end;
              'rem' : begin
@@ -525,6 +630,55 @@ begin
              'clear' : begin
                    stack_clear(pocz);
              end;
+             'keep' : begin
+                  y := pocz^.Val;
+                  stack_remove(pocz);
+                  if (y >= 1) then begin
+                      SetLength(HelpTable, trunc(y));
+                      for index := 0 to trunc(y)-1 do begin
+                        HelpTable[index] := pocz^.Val;
+                        stack_remove(pocz);
+                      end;
+                      stack_clear(pocz);
+                      for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
+                      SetLength(HelpTable, 0);
+                  end else if (y = 0) then begin
+                      stack_clear(pocz);
+                  end;
+             end;
+             'copy' : begin
+                  y := pocz^.Val;
+                  stack_remove(pocz);
+                  if (y >= 1) then begin
+                      SetLength(HelpTable, trunc(y));
+                      for index := 0 to trunc(y)-1 do begin
+                        HelpTable[index] := pocz^.Val;
+                        stack_remove(pocz);
+                      end;
+                      for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
+                      for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
+                      SetLength(HelpTable, 0);
+                  end else if (y = 0) then begin
+                      stack_clear(pocz);
+                  end;
+             end;
+             'mcopy' : begin
+                  y := pocz^.Val;
+                  stack_remove(pocz);
+                  if (y >= 1) then begin
+                      SetLength(HelpTable, trunc(y));
+                      for index := 0 to trunc(y)-1 do begin
+                        HelpTable[index] := pocz^.Val;
+                        stack_remove(pocz);
+                      end;
+                      for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
+                      for index := 0 to trunc(y)-1 do stack_add(pocz, HelpTable[index]);
+                      SetLength(HelpTable, 0);
+                  end else if (y = 0) then begin
+                      stack_clear(pocz);
+                  end;
+             end;
+             
 
 
              // stack operands
@@ -532,7 +686,7 @@ begin
                    z := 0.0;
                    while (pocz <> nil) do
                    begin
-                        y := pocz^.Liczba;
+                        y := pocz^.Val;
                         stack_remove(pocz);
                         z := z + y;
                    end;
@@ -542,7 +696,7 @@ begin
                    z := 1.0;
                    while (pocz <> nil) do
                    begin
-                        y := pocz^.Liczba;
+                        y := pocz^.Val;
                         stack_remove(pocz);
                         z := z * y;
                    end;
@@ -572,7 +726,7 @@ begin
                    a := 0.0;
                    while (pocz <> nil) do
                    begin
-                        y := pocz^.Liczba;
+                        y := pocz^.Val;
                         stack_remove(pocz);
                         z := z + y;
                         a := a + 1.0;
@@ -580,19 +734,19 @@ begin
                    stack_add(pocz, z/a);
              end;
              'min' : begin
-                   a := pocz^.Liczba;
+                   a := pocz^.Val;
                    while (pocz <> nil) do
                    begin
-                   		if a > pocz^.Liczba then a := pocz^.Liczba;
+                   		if a > pocz^.Val then a := pocz^.Val;
                     	stack_remove(pocz);
                    end;
                    stack_add(pocz, a);
              end;
              'max' : begin
-                   a := pocz^.Liczba;
+                   a := pocz^.Val;
                    while (pocz <> nil) do
                    begin
-                   		if a < pocz^.Liczba then a := pocz^.Liczba;
+                   		if a < pocz^.Val then a := pocz^.Val;
                     	stack_remove(pocz);
                    end;
                    stack_add(pocz, a);
@@ -608,11 +762,11 @@ begin
              
              // stack creators
              'seq' : begin
-             	z := pocz^.Liczba;
+             	z := pocz^.Val;
                 stack_remove(pocz);
-             	y := pocz^.Liczba;
+             	y := pocz^.Val;
                 stack_remove(pocz);
-                x := pocz^.Liczba;
+                x := pocz^.Val;
                 stack_remove(pocz);
                 if (x <= z) then
                 begin
@@ -631,12 +785,12 @@ begin
              end;
 
              'seql' : begin
-             	z := pocz^.Liczba;
-                stack_remove(pocz);
-             	y := pocz^.Liczba;
-                stack_remove(pocz);
-                x := pocz^.Liczba;
-                stack_remove(pocz);
+             	z := pocz^.Val;
+                if (sets.Autoclear) then stack_remove(pocz);
+             	y := pocz^.Val;
+                if (sets.Autoclear) then stack_remove(pocz);
+                x := pocz^.Val;
+                if (sets.Autoclear) then stack_remove(pocz);
                 a := 1.0;
           		while (a <= z) do 
                 begin
@@ -647,11 +801,11 @@ begin
              end;
 
              'gseq' : begin
-             	z := pocz^.Liczba;
+             	z := pocz^.Val;
                 stack_remove(pocz);
-             	y := pocz^.Liczba;
+             	y := pocz^.Val;
                 stack_remove(pocz);
-                x := pocz^.Liczba;
+                x := pocz^.Val;
                 stack_remove(pocz);
                 if (x <= z) then
                 begin
@@ -670,11 +824,11 @@ begin
              end;
 
              'gseql' : begin
-             	z := pocz^.Liczba;
+             	z := pocz^.Val;
                 stack_remove(pocz);
-             	y := pocz^.Liczba;
+             	y := pocz^.Val;
                 stack_remove(pocz);
-                x := pocz^.Liczba;
+                x := pocz^.Val;
                 stack_remove(pocz);
                 a := 1.0;
           		while (a <= z) do 
@@ -703,7 +857,7 @@ begin
 
 end;
 
-function calc_parseRPN(input : string; var flag : String; var prev : Integer) : String;
+function calc_parseRPN(input : string; var sets : TSettings) : String;
 var
         L              : TStrings;
         i              : String;
@@ -726,20 +880,18 @@ begin
              if Steps = -1 then
              begin
                 repeat
-                  evaluate(i, pocz, Steps, flag);
+                  evaluate(i, pocz, Steps, sets);
                 until EOF;
                 stack_remove(pocz);
              end
-             else for step := 1 to Steps do evaluate(i, pocz, Steps, flag);
+             else for step := 1 to Steps do evaluate(i, pocz, Steps, sets);
         end;
         z := '';
         while pocz <> nil do begin
-          z := FormatFloat(flag, pocz^.Liczba) + ' ' + z;
+          z := FormatFloat(sets.Mask, pocz^.Val) + ' ' + z;
           stack_remove(pocz);
         end;
         L.Free;
-
-        prev := Prevent;
 
         calc_parseRPN := z;
 end;

@@ -1,0 +1,7 @@
+#silent
+#autoclear=false 
+0 1
+scan -- 
+times +
+println
+clear

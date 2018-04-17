@@ -3,6 +3,7 @@
 #real println
 #milli println
 #scientific println
+#scientific1 println
 #decimal println
 #money println
 #amoney println

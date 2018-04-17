@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-January 24, 2018  
+April 17, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -29,11 +29,11 @@ Ordinary expression | RPN Expression
 ### Console application
 - Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn help` to check out the available flags in this program.
+- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn flags` to check out the available flags in this program.
 - If you need help, you can type `rpn help`.
 - If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
 
-**Flags' functionalities don't work right now, they will be reimplemented and improved by the version of 0.4.0**
+**Flags are working now, but due to existence of the directives, they are supposed to be removed**
 
 ### GUI Application
 - Open an app executable.
@@ -41,6 +41,15 @@ Ordinary expression | RPN Expression
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
 ## Implemented operations:
+
+### Available constant values:
+- e.g. 2*π -> 2 PI *
+
+Name | Symbol | Approximated value | Programme Operand
+---- | ------ | ------------------ | -----------------
+Pi | π | 3.1415926535897 | PI
+Euler number | e | 2.7182818284590 | EU
+Golden number | φ | 1.6180339887498 | FI
 
 ### Binary operations
 - expr1 expr2 operand
@@ -87,17 +96,21 @@ ln | natural logarithm
 fib | Fibonacci number
 trunc | truncate
 round | round
-times | do the following operand/value N times (N is an integer value, N >= 1)
+times | do the following operand/value N times (N is an integer value)
 
-*to be extended*
+**Examples:**
+- `5 times 2 sum` sums five 2's
+- `5 times scan sum` sums five numbers scanned by an input
 
 ### Stack operations
 
-#### Stack calculating functions
+#### Stack aggregating functions
 - If you already own some values on the stack, e.g. after solving some minor expressions (`2 3 +  9 5 -` leaves 5 and 4 on the stack respectively), you may use stack operations on them by taking **ALL** its values.
 
-**Note 1:** Values themselves are put on the stack when solving the expression.
-**Note 2:** The stack operations clear entire stack after execution.
+**Notes:**
+- Values themselves are put on the stack when solving the expression.
+- The stack operations clear entire stack after execution.
+- The stack aggregating functions will clear entire stack, even though autoclear is disabled.
 
 Programme Operand | Name
 ----------------- | ----
@@ -108,12 +121,15 @@ avg | mean of the values put on the stack
 max | maximum value of the values put on the stack
 min | minimal value of the values put on the stack
 
-#### Stack manipulation
+#### Stack manipulators
 
 Programme Operand | Name
 ----------------- | ----
 size | Get the size of current stack without clearing that stack
 clone | Clone the value being on the top of the stack
+keep | keeps the top n values on the stack
+copy | copies the top n values on the stack and puts them on the stack
+mcopy | copies the top n values on the stack and puts them on the stack in reversed order
 rem | Remove a value from the top of the stack
 clear | Clear entire stack
 seq | generates an arithmetical sequence from A to B and puts it on the stack (syntax: `A STEP B seq`)
@@ -130,10 +146,17 @@ rev | reverses the stack
 - `8 -1 10 gseql` generates "8 -8 8 -8 8 -8 8 -8 8 -8"
 - `1 2 3 4 rev` transforms into "4 3 2 1"
 - `5 10 times clone` generates "5 5 5 5 5 5 5 5 5 5 5"
+- `5 4 3 2 1 2 keep` results in a stack of "2 1"
+- `5 4 3 2 1 2 copy` results in a stack of "5 4 3 2 1 2 1"
+- `5 4 3 2 1 2 mcopy` results in a stack of "5 4 3 2 1 1 2"
 
-*to be extended*
+**Protips:**
+- `size copy` replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `rev size 2 / keep rev` - assuming the sizes "old stack" and the "new stack" are the same.
+- `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
 ### Operands without any arguments
+
+#### Input-output operands
 
 | Operand   | Purpose                                                                                                         |
 |:---------:| --------------------------------------------------------------------------------------------------------------- |
@@ -153,30 +176,36 @@ rev | reverses the stack
 
 *to be extended*
 
-### Parsing directives
+#### Parsing directives
 
-| Operand     | Purpose                                                                                       |
-|:----------- | --------------------------------------------------------------------------------------------- |
-| #real       | Output is a decimal (set by default)                                                          |
-| #milli      | Output is a decimal with fixed precision of 3 digits                                          |
-| #float      | Output is a decimal with fixed precision of 6 digits                                          |
-| #double     | Output is a decimal with fixed precision of 15 digits                                         |
-| #int        | Output is rounded to an integer value.                                                        |
-| #decimal    | Output is a decimal number with thousands separator                                           |
-| #scientific | Output is in a scientific notation (e.g. 2,137 -> 2.137E+03)                                  |
-| #money      | Output is a decimal with fixed precision of 2 digits                                          |
-| #amoney     | Output is a decimal with thousands separator and a fixed precision of 2 digits                |
-| #silent     | Don't print the final stack output (it does not affect the outputs invoked by script before)  |
+- *bool* needs to be replaced with a value of "true" or "false"
 
+| Operand         | Purpose                                                                                                 |
+|:--------------- | ------------------------------------------------------------------------------------------------------- |
+| #real           | Output is a decimal (set by default)                                                                    |
+| #milli          | Output is a decimal with fixed precision of 3 digits                                                    |
+| #float          | Output is a decimal with fixed precision of 6 digits                                                    |
+| #double         | Output is a decimal with fixed precision of 15 digits                                                   |
+| #int            | Output is rounded to an integer value.                                                                  |
+| #decimal        | Output is a decimal number with thousands separator                                                     |
+| #scientific     | Output is in a scientific notation (e.g. 2,137 -> 2.137E+03)                                            |
+| #scientific1    | Output is in a scientific notation (fixed precision of 15 digits, e.g. 2,137 -> 2.1370000000000000E+03) |
+| #money          | Output is a decimal with fixed precision of 2 digits                                                    |
+| #amoney         | Output is a decimal with thousands separator and a fixed precision of 2 digits                          |
+| #autoclear=bool | Stack is wisely cleared after every operation (bool=true by default)                                    |
+| #silent         | Don't print the final stack output (it does not affect the outputs invoked by script before)            |
 
-### Available constant values:
-- e.g. 2*π -> 2 PI *
+**Examples:**
+- `#int 14.89` prints a stack with "15"
+- `#int trunc 14.89` prints stack with "14"
+- `#silent #int trunc 14.89` doesn't print the stack
+- `2 3 +` prints a stack with "5"
+- `#autoclear=true 2 3 +` prints a stack with "5" - as 2 and 3 were removed automatically after usage
+- `#autoclear=false 2 3 +` prints a stack with "2 3 5"
 
-Name | Symbol | Approximated value | Programme Operand
----- | ------ | ------------------ | -----------------
-Pi | π | 3.1415926535897 | PI
-Euler number | e | 2.7182818284590 | EU
-Golden number | φ | 1.6180339887498 | FI
+**Notes**
+- Disabling autoclear does not apply to instructions of `times`, `rprint`, `rprintln`, `++`, `--`, stack manipulators and stack aggregating functions
+- `inc`, `dec` do the same thing as `++`, `--` mentioned above and are vulnerable to autoclear=false (*protip*)
 
 ## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*

@@ -4,7 +4,7 @@ uses Unit2, Unit5, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. April 16, 2018.');
+     writeln('Paul Lipkowski. April 17, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
@@ -87,6 +87,9 @@ begin
     writeln('   trunc   round     inc     dec      ++      --');
     writeln();
     writeln(' X times - do the next thing X times');
+    writeln('  X keep - Keep the top n values on the stack (e.g. "2 3 1 4 5 3 keep" results in a stack of "1 4 5")');
+    writeln('  X copy - Copy the top n values on the stack (e.g. "2 3 1 4 5 3 copy" results in a stack of "2 3 1 4 5 1 4 5")');
+    writeln(' X mcopy - Copy the top n values on the stack in reversed order (e.g. "2 3 1 4 5 3 mcopy" results in a stack of "2 3 1 4 5 5 4 1")');
 end;
 
 // stacks
@@ -114,17 +117,16 @@ end;
 
 procedure show_operands5();
 begin
-	writeln('Available directives: ');
-	writeln('  #real       : Output is a decimal (set by default)');
-	writeln('  #milli      : Output is a decimal with fixed precision of 3 digits');
-	writeln('  #float      : Output is a decimal with fixed precision of 6 digits');
-	writeln('  #double     : Output is a decimal with fixed precision of 15 digits');
-	writeln('  #int        : Output is rounded to an integer value.');
-	writeln('  #decimal    : Output is a decimal number with thousands separator');
-	writeln('  #scientific : Output is in a scientific notation (e.g. 2,137 -> 2.137E+03)');
-	writeln('  #money      : Output is a decimal with fixed precision of 2 digits');
-	writeln('  #amoney     : Output is a decimal with thousands separator and a fixed precision of 2 digits');
-	writeln('  #silent     : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+	writeln('Data directives: ');
+	writeln('#real        #milli       #float');
+	writeln('#double      #int         #decimal');
+	writeln('#scientific  #scientific1 #money');
+	writeln('#amoney');
+	writeln('Parsing controllers:');
+	writeln('  #autoclear=BOOL  : Stack is wisely cleared after every operation (BOOL=true by default)');
+	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
+	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
+	writeln('  #silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
 end;
 
 procedure show_operands6();
@@ -137,6 +139,7 @@ begin
     writeln('  rprintln : Same as above and end the line.');
     writeln('     clone : Clone the value being on the top of the stack');
     writeln('       rem : Remove a value from the top of the stack');
+    writeln('      keep : Keep the top n values on the stack (e.g. "2 3 1 4 5  3 keep" results in a stack of "1 4 5")');
     writeln('        Xn : Do the next thing n times');
     writeln('        X* : Scan all the values from input (pre-made input usage recommended)');
     writeln('        // : One-line comment (when parsing files)');
@@ -174,7 +177,7 @@ begin
 	end;
 end;
 
-function read_file(filename, pattern : String; var prevent : Integer) : String;
+function read_file(filename : String; var sets : TSettings) : String;
 var
 	fun, S : String;
 	fp     : Text;
@@ -189,14 +192,15 @@ begin
     	fun := fun + ' ' + S;
     end;
     closefile(fp);
-	read_file := calc_parseRPN(fun, pattern, prevent);
+	read_file := calc_parseRPN(fun, sets);
 end;
 
 // main
 
 var
-   x, mask : String;
-   prevent : Integer;
+   x, maska : String;
+   prevent  : Integer;
+   sets     : TSettings;
 begin
 	prevent := 0;
 	case ParamCount of
@@ -224,9 +228,9 @@ begin
      			end;
      			else begin
      				try
-     					mask := '0.################';
-     					x := calc_parseRPN(ParamStr(1), mask, prevent);
-        				if (prevent = 0) then writeln(x);
+     					sets := default_settings();
+     					x := calc_parseRPN(ParamStr(1), sets);
+        				if (sets.Prevent = false) then writeln(x);
               		except
               			On E : Exception do
                  		begin
@@ -259,9 +263,9 @@ begin
      			end;
      			'parse' : begin
      				try
-     					mask := '0.################';
-     					x := read_file(ParamStr(2), mask, prevent);
-        				if (prevent = 0) then writeln(x);
+     					sets := default_settings();
+     					x := read_file(ParamStr(2), sets);
+        				if (sets.Prevent = false) then writeln(x);
               		except
               			On E : Exception do
                  		begin
@@ -270,10 +274,12 @@ begin
               		end;
      			end;
      			else begin
-     				mask := check_flags(ParamStr(2));
+     				maska := check_flags(ParamStr(2));
+     				sets := default_settings();
+     				sets.mask := maska;
      				try
-     					x := calc_parseRPN(ParamStr(1), mask, prevent);
-        				if (prevent = 0) then writeln(x);
+     					x := calc_parseRPN(ParamStr(1), sets);
+        				if (sets.Prevent = false) then writeln(x);
               		except
               			On E : Exception do
                  		begin
@@ -286,10 +292,12 @@ begin
 		3 : begin
 			case ParamStr(1) of
 				'parse' : begin
-     				mask := check_flags(ParamStr(3));
+     				maska := check_flags(ParamStr(3));
+     				sets := default_settings();
+     				sets.mask := maska;
      				try
-     					x := read_file(ParamStr(2), mask, prevent);
-        				if (prevent = 0) then writeln(x);
+     					x := read_file(ParamStr(2), sets);
+        				if (sets.Prevent = false) then writeln(x);
               		except
               			On E : Exception do
                  		begin
