@@ -900,6 +900,13 @@ begin
              for index := 0 to size-1 do stack_add(pocz, HelpTable[index]);         
              SetLength(HelpTable, 0);
           end;
+          'rand' : begin
+            y := pocz^.Val;
+            stack_remove(pocz);
+            z := random(trunc(y));
+            if not (sets.Autoclear) then stack_add(pocz, y);
+            stack_add(pocz, z);
+          end;
              
 
 

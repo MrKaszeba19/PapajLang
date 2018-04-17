@@ -122,7 +122,7 @@ begin
 	writeln('#double      #int         #decimal');
 	writeln('#scientific  #scientific1 #money');
 	writeln('#amoney');
-	writeln('Parsing controllers:');
+	writeln('Parsing directives:');
 	writeln('  #autoclear=BOOL  : Stack is wisely cleared after every operation (BOOL=true by default)');
 	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
 	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
@@ -134,6 +134,7 @@ end;
 procedure show_operands6();
 begin
     writeln('Other operations: ');
+    writeln('      rand : Get a random integer value from 0 to N-1 (execute "N rand")');
     writeln('      scan : Scan a value from input');
     writeln('     print : Print a value being on the top of the stack');
     writeln('   println : Same as above and end the line.');
@@ -185,10 +186,9 @@ end;
 
 var
    x, maska : String;
-   prevent  : Integer;
    sets     : TSettings;
 begin
-	prevent := 0;
+	randomize();
 	case ParamCount of
 		0 : begin
 			show_version();

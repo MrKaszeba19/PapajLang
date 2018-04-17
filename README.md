@@ -136,7 +136,7 @@ clear | Clear entire stack
 seq | generates an arithmetical sequence from A to B and puts it on the stack (syntax: `A STEP B seq`)
 gseq | generates a geometical sequence from A to B and puts it on the stack (syntax: `A STEP B gseq`)
 seql | generates an arithmetical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N seq`)
-gseql | generates a geometical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
+gseql | generates a geometrical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
 rev | reverses the stack
 
 **Examples:**
@@ -163,6 +163,7 @@ rev | reverses the stack
 Operand  | Purpose
 -------- | -------
 scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
+rand | Generate a random integer value within a range [0..N-1]
 print | Print a value being on the top of the stack
 println | Same as above and end the line.
 rprint | Print a value being on the top of the stack and remove it from this stack.
@@ -177,6 +178,7 @@ X* | Do the next thing until the end of input (very risky and permitted only in 
 - `scan scan +` scans 2 values and adds them
 - `X2 scan +` equivalent of the expression above
 - `X* scan sum` read all values from an input and sums them
+- `scan 3 rand +` scans a value, generates a random number from a range [0..3] and adds the numbers
 
 *to be extended*
 
