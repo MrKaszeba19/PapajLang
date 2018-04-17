@@ -216,9 +216,9 @@ Operand | Purpose
 *BOOL* available values are `true` or `false`
 *STYPE* available values are
 - `qsort` - quicksort
-- `msort` - mergesort *working on it*
+- `msort` - mergesort
 - `bsort` - bubblesort
-- `rsort` - random sort/bogosort (_for devils and masochists only, use at **your own** risk_) *working on it, it's really worth it XD*
+- `rsort` - random sort/bogosort (_for devils and masochists only, use at **your own** risk_)
 
 
 **Examples:**
