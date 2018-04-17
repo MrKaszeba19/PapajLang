@@ -129,6 +129,7 @@ size | Get the size of current stack without clearing that stack
 clone | Clone the value being on the top of the stack
 keep | keeps the top n values on the stack
 copy | copies the top n values on the stack and puts them on the stack
+sort | Sorts a stack
 mcopy | copies the top n values on the stack and puts them on the stack in reversed order
 rem | Remove a value from the top of the stack
 clear | Clear entire stack
@@ -149,25 +150,28 @@ rev | reverses the stack
 - `5 4 3 2 1 2 keep` results in a stack of "2 1"
 - `5 4 3 2 1 2 copy` results in a stack of "5 4 3 2 1 2 1"
 - `5 4 3 2 1 2 mcopy` results in a stack of "5 4 3 2 1 1 2"
+- `5 4 3 2 1 2 sort` results in a stack of "1 2 2 3 4 5"
 
 **Protips:**
 - `size copy` replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `rev size 2 / keep rev` - assuming the sizes "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
-### Operands without any arguments
+### Other operands ans directives
 
 #### Input-output operands
 
-| Operand   | Purpose                                                                                                         |
-|:---------:| --------------------------------------------------------------------------------------------------------------- |
-| scan      | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values                   |
-| print     | Print a value being on the top of the stack                                                                     |
-| println   | Same as above and end the line.                                                                                 |
-| rprint    | Print a value being on the top of the stack and remove it from this stack.                                      |
-| rprintln  | Same as above and end the line.                                                                                 |
-| Xn        | Do the next thing n-times. ('n' is a constant integer value, n >= 1)                                            |
-| X*        | Do the next thing until the end of input (very risky and permitted only in console app, *to be replaced*)       |
-| //        | One-line comment (only parsing text files)                                                                      |
+Operand  | Purpose
+-------- | -------
+scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
+print | Print a value being on the top of the stack
+println | Same as above and end the line.
+rprint | Print a value being on the top of the stack and remove it from this stack.
+rprintln | Same as above and end the line.
+status | Print the stack.
+statusln | Same as above and end the line.
+Xn | Do the next thing n-times. ('n' is a constant integer value, n >= 1)
+X* | Do the next thing until the end of input (very risky and permitted only in console app)
+
 
 **Examples:**
 - `scan scan +` scans 2 values and adds them
@@ -176,12 +180,25 @@ rev | reverses the stack
 
 *to be extended*
 
-#### Parsing directives
+#### Files management directives
 
-- *bool* needs to be replaced with a value of "true" or "false"
+Operand | Purpose
+------- | -------
+@source="FNAME" | Use an another RPN script and execute its code directly on the main stack
+
+**Notes:**
+- FNAME is a path to a script file, must be quoted
+- Any input/output instructions in a script included by a `@source` command work with the same rights as the instructions in the main script. It means that `clear` clears the main stack and `scan` stops the main program to obtain a value
+
+**Protips:**
+- `@source` is recommended when you use a file that consists only of values and you want to put them on the stack.
+
+
+#### Parsing directives
 
 | Operand         | Purpose                                                                                                 |
 |:--------------- | ------------------------------------------------------------------------------------------------------- |
+| #silent         | Don't print the final stack output (it does not affect the outputs invoked by script before)            |
 | #real           | Output is a decimal (set by default)                                                                    |
 | #milli          | Output is a decimal with fixed precision of 3 digits                                                    |
 | #float          | Output is a decimal with fixed precision of 6 digits                                                    |
@@ -192,8 +209,17 @@ rev | reverses the stack
 | #scientific1    | Output is in a scientific notation (fixed precision of 15 digits, e.g. 2,137 -> 2.1370000000000000E+03) |
 | #money          | Output is a decimal with fixed precision of 2 digits                                                    |
 | #amoney         | Output is a decimal with thousands separator and a fixed precision of 2 digits                          |
-| #autoclear=bool | Stack is wisely cleared after every operation (bool=true by default)                                    |
-| #silent         | Don't print the final stack output (it does not affect the outputs invoked by script before)            |
+| #autoclear=BOOL | Stack is wisely cleared after every operation (BOOL=true by default)                                    |
+| #sorttype=STYPE | Set a type of sorting a stack                                                                           |
+| //              | One-line comment (only parsing text files)                                                              |
+
+*BOOL* available values are `true` or `false`
+*STYPE* available values are
+- `qsort` - quicksort
+- `msort` - mergesort *working on it*
+- `bsort` - bubblesort
+- `rsort` - random sort/bogosort (_for devils and masochists only, use at **your own** risk_) *working on it, it's really worth it XD*
+
 
 **Examples:**
 - `#int 14.89` prints a stack with "15"
@@ -225,4 +251,4 @@ Version | Version Name | Date of Release | Improvements
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | soon | Core improvements for console app, more stack commands and other various abilities *and more*
-X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes unstable
+X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

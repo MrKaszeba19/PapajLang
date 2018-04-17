@@ -127,6 +127,8 @@ begin
 	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
 	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
 	writeln('  #silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+	writeln('  #sorttype=VAL    : Choose a sorting algorithm (VAL=[0..3], 1 is default)');
+	writeln('  #source="FNAME"  : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
 end;
 
 procedure show_operands6();
@@ -148,22 +150,6 @@ end;
 
 //work in progress
 
-function commentcut(input : String) : String;
-var 
-	pom : String;
-	i   : Integer;
-begin
-	pom := '';
-	for i := 0 to Length(input) do begin
-		if not ((input[i] = '/') and (input[i+1] = '/')) then begin
-			pom := concat(pom, input[i]);
-		end else begin
-			break;
-		end;
-	end;
-	commentcut := pom;
-end;
-
 function check_flags(input : String) : String;
 begin
 	case input of
@@ -179,20 +165,20 @@ end;
 
 function read_file(filename : String; var sets : TSettings) : String;
 var
-	fun, S : String;
-	fp     : Text;
+  fun, S : String;
+  fp     : Text;
 begin
-	fun := '';
-	assignfile(fp, filename);
+  fun := '';
+  assignfile(fp, filename);
     reset(fp);
     while not eof(fp) do
     begin
-    	readln(fp, S);
-    	S := commentcut(S);
-    	fun := fun + ' ' + S;
+      readln(fp, S);
+      if (S <> '') then S := commentcut(S);
+      fun := fun + ' ' + S;
     end;
     closefile(fp);
-	read_file := calc_parseRPN(fun, sets);
+  read_file := calc_parseRPN(fun, sets);
 end;
 
 // main

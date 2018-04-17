@@ -1,0 +1,20 @@
+#silent
+
+@source="data.rpn"
+statusln clear
+
+#sorttype=bsort
+@source="data.rpn"
+sort statusln clear
+
+#sorttype=qsort
+@source="data.rpn"
+sort statusln clear
+
+#sorttype=msort
+@source="data.rpn"
+sort statusln clear
+
+#sorttype=rsort
+@source="data.rpn"
+sort statusln clear
