@@ -1,0 +1,15 @@
+#silent
+#autoclear=false
+
+"Geometrical sequence" rprintln
+"Enter a starting value: " rprint scannum
+"Enter a quotient: " rprint scannum
+
+"How many times do you want me to iterate?: " rprint 
+scannum times { 
+	*
+	2 keep
+}
+statusln
+clear
+

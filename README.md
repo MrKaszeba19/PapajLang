@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-April 17, 2018  
+April 18, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -163,6 +163,8 @@ rev | reverses the stack
 Operand  | Purpose
 -------- | -------
 scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
+scannum | Scan 1 numerical value from input
+scanstr | Scan 1 string value from input
 rand | Generate a random integer value within a range [0..N-1]
 print | Print a value being on the top of the stack
 println | Same as above and end the line.
@@ -179,6 +181,7 @@ X* | Do the next thing until the end of input (very risky and permitted only in 
 - `X2 scan +` equivalent of the expression above
 - `X* scan sum` read all values from an input and sums them
 - `scan 3 rand +` scans a value, generates a random number from a range [0..3] and adds the numbers
+- `"Hello world!" println` prints "Hello world!"
 
 *to be extended*
 
@@ -252,5 +255,5 @@ Version | Version Name | Date of Release | Improvements
 0.2.1 | Gimel | 12/10/2017 | Unary operands
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
-0.4.0 | Vav | soon | Core improvements for console app, more stack commands and other various abilities *and more*
+0.4.0 | Vav | soon | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

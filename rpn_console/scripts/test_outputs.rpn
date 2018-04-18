@@ -1,4 +1,5 @@
 #silent
+#autoclear=false
 1234567.890 // an example value
 #real println
 #milli println

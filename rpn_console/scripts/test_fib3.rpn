@@ -1,0 +1,9 @@
+#silent
+#autoclear=false 
+0 1
+statusln
+10 -- times {
+	+
+	2 keep
+	statusln
+}

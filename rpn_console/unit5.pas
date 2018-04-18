@@ -5,21 +5,49 @@ unit Unit5;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, Unit2;
 
 const
   is_gui = false;
 
-function scan_value() : Extended;
+function scan_value() : Entity;
+function scan_number() : Entity;
+function scan_string() : Entity;
 
 implementation
 
-function scan_value() : Extended;
+//Uses Unit2;
+
+function scan_value() : Entity;
 var
-   x : Extended;
+	x : String;
+	dummyNumber:Extended; 
+ 	posError:integer; 
 begin
-     read(x);
-     scan_value := x;
+    readln(x);
+ 	val(x, dummyNumber, posError); 
+ 	if (posError = 0) then begin
+ 		scan_value := buildNumber(dummyNumber);
+ 	end else begin
+ 		scan_value := buildString(x);
+ 	end;
 end;
+
+function scan_number() : Entity;
+var
+	x : Extended;
+begin
+    read(x);
+ 	scan_number := buildNumber(x);
+end;
+
+function scan_string() : Entity;
+var
+	x : String;
+begin
+    read(x);
+ 	scan_string := buildString(x);
+end;
+
 
 end.

@@ -12,9 +12,17 @@ const
         EU = 2.7182818284590452353602874713526;
         FI = 1.6180339887498948482045868343656;
 
+type Entity = record
+    EntityType : Integer;
+    Num        : Extended;
+    Str        : String;
+end;
+// 0 - number
+// 1 - string
+
 type PStos = ^TStos;
      TStos    = record
-     Val   : Extended;
+     Val   : Entity;
      Next  : PStos;
 end;
 
@@ -29,28 +37,33 @@ end;
 // 2 - mergesort
 // 3 - bogosort
 
-function pow(x,y:Extended):Extended;
-function pow2(x,y:Extended):Extended;
-function fact(x:Extended):Extended;
-function newton_int(n, k: Extended) : Extended;
-function newton_real(n, k: Extended) : Extended;
-function fib(n: Extended) : Extended;
+//function pow(x,y:Extended):Extended;
+//function pow2(x,y:Extended):Extended;
+//function fact(x:Extended):Extended;
+//function newton_int(n, k: Extended) : Extended;
+//function newton_real(n, k: Extended) : Extended;
+//function fib(n: Extended) : Extended;
 
-procedure qs_engine(var AI: array of Extended; ALo, AHi: Integer);
-procedure ms_merge(var a : array of Extended; l,r,x,y:Integer);
-procedure ms_engine(var a : array of Extended; l,r:Integer);
-function bs_isSorted(var data : array of Extended) : Boolean;
-procedure bs_shuffle(var data : array of Extended);
-procedure bubblesort(var tab : array of Extended);
-procedure quicksort(var tab : array of Extended);
-procedure mergesort(var tab : array of Extended);
-procedure bogosort(var tab : array of Extended);
+//procedure qs_engine(var AI: array of Extended; ALo, AHi: Integer);
+//procedure ms_merge(var a : array of Extended; l,r,x,y:Integer);
+//procedure ms_engine(var a : array of Extended; l,r:Integer);
+//function bs_isSorted(var data : array of Extended) : Boolean;
+//procedure bs_shuffle(var data : array of Extended);
+//procedure bubblesort(var tab : array of Extended);
+//procedure quicksort(var tab : array of Extended);
+//procedure mergesort(var tab : array of Extended);
+//procedure bogosort(var tab : array of Extended);
 
-procedure stack_add(var pocz:PStos; number:Extended);
+function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
+function buildNumber(val : Extended) : Entity;
+function buildString(val : String) : Entity;
+
+procedure stack_add(var pocz:PStos; node : Entity);
 function stack_clone(poc : PStos) : PStos;
 function stack_reverse(poc : PStos) : PStos;
 procedure stack_remove(var pocz:PStos);
 procedure stack_clear(var pocz:PStos);
+function stack_get(pocz:PStos) : Entity;
 function stack_size(poc : PStos) : Longint;
 function stack_show(poc : PStos; mask : String) : String;
 
@@ -287,14 +300,46 @@ begin
   while not (bs_isSorted(tab)) do bs_shuffle(tab);
 end;
 
+// ENTITY OPERATIONS
+
+function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
+var
+  pom : Entity;
+begin
+  pom.EntityType := 0;
+  pom.Num := val;
+  pom.Str := FormatFloat(sets.Mask, val);
+  buildNumberFormattted := pom;
+end;
+
+function buildNumber(val : Extended) : Entity;
+var
+  pom : Entity;
+begin
+  pom.EntityType := 0;
+  pom.Num := val;
+  pom.Str := '' + FormatFloat('0.###############' ,val);
+  buildNumber := pom;
+end;
+
+function buildString(val : String) : Entity;
+var
+  pom : Entity;
+begin
+  pom.EntityType := 1;
+  pom.Str := val;
+  pom.Num := Length(val);
+  buildString := pom;
+end;
+
 // STACK OPERATIONS
 
-procedure stack_add(var pocz:PStos; number:Extended);
+procedure stack_add(var pocz:PStos; node : Entity);
 var
     Nowy: PStos;
   begin
     New(Nowy);
-    Nowy^.Val := number;
+    Nowy^.Val := node;
     Nowy^.Next := Pocz;
     Pocz := Nowy;
   end;
@@ -311,6 +356,11 @@ end;
 procedure stack_clear(var pocz:PStos);
 begin
   while (pocz <> nil) do stack_remove(pocz);
+end;
+
+function stack_get(pocz:PStos) : Entity;
+begin
+        stack_get := pocz^.Val;
 end;
 
 function stack_clone(poc : PStos) : PStos;
@@ -336,7 +386,8 @@ var
 begin
     z := '';
     while (poc <> nil) do begin
-      z := FormatFloat(mask, poc^.Val) + ' ' + z;
+      if (poc^.Val.EntityType = 0) then z := FormatFloat(mask, poc^.Val.Num) + ' ' + z;
+      if (poc^.Val.EntityType = 1) then z := '"' + poc^.Val.Str + '" ' + z;
       poc := poc^.Next;
     end;
     stack_show := z;
@@ -376,11 +427,14 @@ var
     Code, index    : Longint;
     Size           : Longint;
     Sizer          : PStos;
-    HelpTable      : array of Extended;
+    HelpETable     : array of Entity;
+    HelpNTable     : array of Extended;
     StrEax, StrEbx : String;
+    EntEax, EntEbx : Entity;
 begin
     Steps := 1;
-    SetLength(HelpTable, 0);
+    SetLength(HelpETable, 0);
+    SetLength(HelpNTable, 0);
 
     Val (i,Im,Code);
     If Code<>0 then
@@ -388,57 +442,57 @@ begin
         case i of
           // binary
           '+' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               z := x+y;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '-' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               z := x-y;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '*' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               z := x*y;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '/' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               z := x/y;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '^' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               if (y = trunc(y)) then begin
                  z := pow(x,y);
@@ -446,15 +500,15 @@ begin
                   z := pow2(x,y);
               end;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'pow' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               if (y = trunc(y)) then begin
                  z := pow(x,y);
@@ -462,63 +516,63 @@ begin
                   z := pow2(x,y);
               end;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'log' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               z := ln(x)/ln(y);
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
               end;
-              stack_add(pocz, z);
+              stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'root' : begin
-                 y := pocz^.Val;
-                 stack_remove(pocz);
-                 x := pocz^.Val;
-                 stack_remove(pocz);
-                 z := pow2(x,1/y);
-                 if not (sets.Autoclear) then begin
-                     stack_add(pocz, x);
-                     stack_add(pocz, y);
-                 end;
-                 stack_add(pocz, z);
+                y := pocz^.Val.Num;
+                stack_remove(pocz);
+                x := pocz^.Val.Num;
+                stack_remove(pocz);
+                z := pow2(x,1/y);
+                if not (sets.Autoclear) then begin
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
+                end;
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'mod' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := trunc(x) mod trunc(y);
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'div' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := trunc(x) div trunc(y);
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'cdiv' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 if trunc(x/y) < 0 then begin
                    z := trunc(x/y)-1;
@@ -526,15 +580,15 @@ begin
                    z := trunc(x/y);
                 end;
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'cmod' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 if (x > 0) and (y < 0) then begin
                    z := ((trunc(x) mod trunc(y))+3)*(-1);
@@ -544,15 +598,15 @@ begin
                    z := trunc(x) mod trunc(y);
                 end;
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'choose' : begin
-              y := pocz^.Val;
+              y := pocz^.Val.Num;
               stack_remove(pocz);
-              x := pocz^.Val;
+              x := pocz^.Val.Num;
               stack_remove(pocz);
               if (x = trunc(x)) then begin
                   z := newton_int(x,y);
@@ -560,179 +614,179 @@ begin
                   z := newton_real(x,y);
               end;
               if not (sets.Autoclear) then begin
-                  stack_add(pocz, x);
-                  stack_add(pocz, y);
-              end;
-              stack_add(pocz, z);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
+                end;
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'gcd' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := gcd(x, y);
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'lcm' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
-                x := pocz^.Val;
+                x := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := lcm(x, y);
                 if not (sets.Autoclear) then begin
-                    stack_add(pocz, x);
-                    stack_add(pocz, y);
+                  stack_add(pocz, buildNumberFormattted(x, sets));
+                  stack_add(pocz, buildNumberFormattted(y, sets));
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
 
 
           // constants
           'PI' : begin
-            stack_add(pocz, PI);
+            stack_add(pocz, buildNumberFormattted(PI, sets));
           end;
           'EU' : begin
-            stack_add(pocz, EU);
+            stack_add(pocz, buildNumberFormattted(EU, sets));
           end;
           'FI' : begin
-            stack_add(pocz, FI);
+            stack_add(pocz, buildNumberFormattted(FI, sets));
           end;
 
           // unary
           'exp' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := exp(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'abs' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := abs(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'sqrt' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := sqrt(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'sin' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := sin(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'cos' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := cos(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'csc' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := 1/sin(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'sec' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := 1/cos(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'tan' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := sin(y)/cos(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'cot' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := cos(y)/sin(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '!' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := fact(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'fact' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := fact(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'ln' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := ln(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'trunc' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := trunc(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'round' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := round(y);
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'fib' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := fib(trunc(y));
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'inc' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := y + 1;
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'dec' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := y - 1;
-                if not (sets.Autoclear) then stack_add(pocz, y);
-                stack_add(pocz, z);
+                if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '++' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := y + 1;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           '--' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 z := y - 1;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
 
           // Directives
@@ -791,39 +845,53 @@ begin
 
           // single operands
           'scan' : begin
-                z := scan_value();
-                stack_add(pocz, z);
+            EntEax := scan_value();
+            stack_add(pocz, EntEax);
           end;
+          'scannum' : begin
+            EntEax := scan_number();
+            stack_add(pocz, EntEax);
+          end;
+          'scanstr' : begin
+            EntEax := scan_string();
+            stack_add(pocz, EntEax);
+          end;
+          //'scanln' : begin
+          //  EntEax := scanln_value();
+          //  stack_add(pocz, EntEax);
+          //end;
           'times' : begin
-                y := pocz^.Val;
+                y := pocz^.Val.Num;
                 stack_remove(pocz);
                 if (y >= 0) then Steps := trunc(y);
           end;
           'clone' : begin
-                y := pocz^.Val;
-                stack_add(pocz, y);
+                EntEax := pocz^.Val;
+                stack_add(pocz, EntEax);
           end;
           'print' : begin
-                y := pocz^.Val;
-                //write(y);
-                write(FormatFloat(sets.Mask, y));
+                EntEax := pocz^.Val;
+                if (sets.Autoclear) then stack_remove(pocz);
+                if (EntEax.EntityType = 0) then write(FormatFloat(sets.Mask, EntEax.Num))
+                else write(EntEax.Str);
           end;
           'println' : begin
-                y := pocz^.Val;
-                //writeln(y);
-                writeln(FormatFloat(sets.Mask, y));
+                EntEax := pocz^.Val;
+                if (sets.Autoclear) then stack_remove(pocz);
+                if (EntEax.EntityType = 0) then writeln(FormatFloat(sets.Mask, EntEax.Num))
+                else writeln(EntEax.Str);
           end;
           'rprint' : begin
-                y := pocz^.Val;
-                //write(y);
-                write(FormatFloat(sets.Mask, y));
+                EntEax := pocz^.Val;
                 stack_remove(pocz);
+                if (EntEax.EntityType = 0) then write(FormatFloat(sets.Mask, EntEax.Num))
+                else write(EntEax.Str);
           end;
           'rprintln' : begin
-                y := pocz^.Val;
-                //writeln(y);
-                writeln(FormatFloat(sets.Mask, y));
+                EntEax := pocz^.Val;
                 stack_remove(pocz);
+                if (EntEax.EntityType = 0) then writeln(FormatFloat(sets.Mask, EntEax.Num))
+                else writeln(EntEax.Str);
           end;
           'status' : begin
                 write(stack_show(pocz, sets.Mask));
@@ -839,73 +907,73 @@ begin
                 stack_clear(pocz);
           end;
           'keep' : begin
-               y := pocz^.Val;
+               y := pocz^.Val.Num;
                stack_remove(pocz);
                if (y >= 1) then begin
-                   SetLength(HelpTable, trunc(y));
+                   SetLength(HelpETable, trunc(y));
                    for index := 0 to trunc(y)-1 do begin
-                     HelpTable[index] := pocz^.Val;
+                     HelpETable[index] := pocz^.Val;
                      stack_remove(pocz);
                    end;
                    stack_clear(pocz);
-                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
-                   SetLength(HelpTable, 0);
+                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpETable[index]);
+                   SetLength(HelpETable, 0);
                end else if (y = 0) then begin
                    stack_clear(pocz);
                end;
           end;
           'copy' : begin
-               y := pocz^.Val;
+               y := pocz^.Val.Num;
                stack_remove(pocz);
                if (y >= 1) then begin
-                   SetLength(HelpTable, trunc(y));
+                   SetLength(HelpETable, trunc(y));
                    for index := 0 to trunc(y)-1 do begin
-                     HelpTable[index] := pocz^.Val;
+                     HelpETable[index] := pocz^.Val;
                      stack_remove(pocz);
                    end;
-                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
-                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
-                   SetLength(HelpTable, 0);
+                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpETable[index]);
+                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpETable[index]);
+                   SetLength(HelpETable, 0);
                end else if (y = 0) then begin
                    stack_clear(pocz);
                end;
           end;
           'mcopy' : begin
-               y := pocz^.Val;
+               y := pocz^.Val.Num;
                stack_remove(pocz);
                if (y >= 1) then begin
-                   SetLength(HelpTable, trunc(y));
+                   SetLength(HelpETable, trunc(y));
                    for index := 0 to trunc(y)-1 do begin
-                     HelpTable[index] := pocz^.Val;
+                     HelpETable[index] := pocz^.Val;
                      stack_remove(pocz);
                    end;
-                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpTable[index]);
-                   for index := 0 to trunc(y)-1 do stack_add(pocz, HelpTable[index]);
-                   SetLength(HelpTable, 0);
+                   for index := trunc(y)-1 downto 0 do stack_add(pocz, HelpETable[index]);
+                   for index := 0 to trunc(y)-1 do stack_add(pocz, HelpETable[index]);
+                   SetLength(HelpETable, 0);
                end else if (y = 0) then begin
                    stack_clear(pocz);
                end;
           end;
           'sort' : begin
              size := stack_size(pocz);
-             SetLength(HelpTable, size);
+             SetLength(HelpNTable, size);
              for index := 0 to size-1 do begin
-               HelpTable[index] := pocz^.Val;
+               HelpNTable[index] := pocz^.Val.Num;
                stack_remove(pocz);
              end;
-             if (sets.sorttype = 0) then bubblesort(HelpTable);
-             if (sets.sorttype = 1) then quicksort(HelpTable);
-             if (sets.sorttype = 2) then mergesort(HelpTable);
-             if (sets.sorttype = 3) then bogosort(HelpTable);
-             for index := 0 to size-1 do stack_add(pocz, HelpTable[index]);         
-             SetLength(HelpTable, 0);
+             if (sets.sorttype = 0) then bubblesort(HelpNTable);
+             if (sets.sorttype = 1) then quicksort(HelpNTable);
+             if (sets.sorttype = 2) then mergesort(HelpNTable);
+             if (sets.sorttype = 3) then bogosort(HelpNTable);
+             for index := 0 to size-1 do stack_add(pocz, buildNumberFormattted(HelpNTable[index], sets));         
+             SetLength(HelpNTable, 0);
           end;
           'rand' : begin
-            y := pocz^.Val;
+            y := pocz^.Val.Num;
             stack_remove(pocz);
             z := random(trunc(y));
-            if not (sets.Autoclear) then stack_add(pocz, y);
-            stack_add(pocz, z);
+            if not (sets.Autoclear) then stack_add(pocz, buildNumberFormattted(y, sets));
+            stack_add(pocz, buildNumberFormattted(z, sets));
           end;
              
 
@@ -915,21 +983,21 @@ begin
                 z := 0.0;
                 while (pocz <> nil) do
                 begin
-                     y := pocz^.Val;
+                     y := pocz^.Val.Num;
                      stack_remove(pocz);
                      z := z + y;
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'product' : begin
                 z := 1.0;
                 while (pocz <> nil) do
                 begin
-                     y := pocz^.Val;
+                     y := pocz^.Val.Num;
                      stack_remove(pocz);
                      z := z * y;
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'count' : begin
                 z := 0.0;
@@ -938,7 +1006,7 @@ begin
                     z := z + 1;
                     stack_remove(pocz);
                 end;
-                stack_add(pocz, z);
+                stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'size' : begin
                Sizer := stack_reverse(pocz);
@@ -948,37 +1016,37 @@ begin
                     z := z + 1;
                     stack_remove(Sizer);
                end;
-               stack_add(pocz, z);
+               stack_add(pocz, buildNumberFormattted(z, sets));
           end;
           'avg' : begin
                 z := 0.0;
                 a := 0.0;
                 while (pocz <> nil) do
                 begin
-                     y := pocz^.Val;
+                     y := pocz^.Val.Num;
                      stack_remove(pocz);
                      z := z + y;
                      a := a + 1.0;
                 end;
-                stack_add(pocz, z/a);
+                stack_add(pocz, buildNumberFormattted(z/a, sets));
           end;
           'min' : begin
-                a := pocz^.Val;
+                a := pocz^.Val.Num;
                 while (pocz <> nil) do
                 begin
-                		if a > pocz^.Val then a := pocz^.Val;
+                		if a > pocz^.Val.Num then a := pocz^.Val.Num;
                  	stack_remove(pocz);
                 end;
-                stack_add(pocz, a);
+                stack_add(pocz, buildNumberFormattted(a, sets));
           end;
           'max' : begin
-                a := pocz^.Val;
+                a := pocz^.Val.Num;
                 while (pocz <> nil) do
                 begin
-                		if a < pocz^.Val then a := pocz^.Val;
+                		if a < pocz^.Val.Num then a := pocz^.Val.Num;
                  	stack_remove(pocz);
                 end;
-                stack_add(pocz, a);
+                stack_add(pocz, buildNumberFormattted(a, sets));
           end;
           'rev' : begin
                 pocz := stack_reverse(pocz);
@@ -986,78 +1054,78 @@ begin
              
           // stack creators
           'seq' : begin
-          	z := pocz^.Val;
+          	z := pocz^.Val.Num;
              stack_remove(pocz);
-          	y := pocz^.Val;
+          	y := pocz^.Val.Num;
              stack_remove(pocz);
-             x := pocz^.Val;
+             x := pocz^.Val.Num;
              stack_remove(pocz);
              if (x <= z) then
              begin
              	while (x <= z) do 
              	begin
-             		stack_add(pocz, x);
+             		stack_add(pocz, buildNumberFormattted(x, sets));
              		x := x + y;
              	end;
              end else begin
              	while (x >= z) do 
              	begin
-             		stack_add(pocz, x);
+             		stack_add(pocz, buildNumberFormattted(x, sets));
              		x := x - y;
              	end;
              end;
           end;
 
           'seql' : begin
-            z := pocz^.Val;
-            if (sets.Autoclear) then stack_remove(pocz);
-            y := pocz^.Val;
-            if (sets.Autoclear) then stack_remove(pocz);
-            x := pocz^.Val;
-            if (sets.Autoclear) then stack_remove(pocz);
+            z := pocz^.Val.Num;
+            stack_remove(pocz);
+            y := pocz^.Val.Num;
+            stack_remove(pocz);
+            x := pocz^.Val.Num;
+            stack_remove(pocz);
             a := 1.0;
           	while (a <= z) do 
             begin
-                stack_add(pocz, x);
+                stack_add(pocz, buildNumberFormattted(x, sets));
                 x := x + y;
                 a := a + 1.0;
             end;
           end;
 
           'gseq' : begin
-            z := pocz^.Val;
+            z := pocz^.Val.Num;
             stack_remove(pocz);
-            y := pocz^.Val;
+            y := pocz^.Val.Num;
             stack_remove(pocz);
-            x := pocz^.Val;
+            x := pocz^.Val.Num;
             stack_remove(pocz);
             if (x <= z) then
             begin
               while (x <= z) do 
               begin
-                stack_add(pocz, x);
+                stack_add(pocz, buildNumber(x));
                 x := x * y;
               end;
             end else begin
               while (x >= z) do 
               begin
-                stack_add(pocz, x);
+                stack_add(pocz, buildNumber(x));
                 x := x / y;
               end;
             end;
           end;
 
           'gseql' : begin
-            z := pocz^.Val;
+            z := pocz^.Val.Num;
             stack_remove(pocz);
-            y := pocz^.Val;
+            y := pocz^.Val.Num;
             stack_remove(pocz);
-            x := pocz^.Val;
+            x := pocz^.Val.Num;
             stack_remove(pocz);
             a := 1.0;
           	while (a <= z) do 
             begin
-              stack_add(pocz, x);
+              stack_add(pocz, buildNumber(x));
               x := x * y;
               a := a + 1.0;
             end;
@@ -1077,7 +1145,11 @@ begin
                       StrEax := LeftStr(StrEax, Length(StrEax)-1);
                       StrEbx := read_sourcefile(StrEax, pocz, sets);
                     end else begin
+                      
                     end;
+                  end;
+                  else begin
+                    stack_add(pocz, buildString(i));
                   end;
                 end;
               end;
@@ -1085,7 +1157,7 @@ begin
           end;
         end;
       end else begin
-        stack_add(pocz, Im);
+        stack_add(pocz, buildNumber(Im));
       end;
 end;
 
@@ -1126,35 +1198,59 @@ end;
 
 function parseRPN(input : string; var pocz : PStos; var sets : TSettings) : String;
 var
-        L    : TStrings;
-        i    : String;
-        z    : String;
-        step : Integer;
+        L      : TStrings;
+        i      : String;
+        index  : LongInt;
+        z      : String;
+        step   : Integer;
+        cursor : LongInt;
+        nestlv : ShortInt;
+        nesttx : String;
 begin
-        // delimites string
-        //https://forum.lazarus.freepascal.org/index.php?topic=33644.0
-        L := TStringlist.Create;
-        L.Delimiter := ' ';
-        L.QuoteChar := '"';
-        L.StrictDelimiter := false;  // set this to false and the second 'test me' will be separate items! Try it.
-        L.DelimitedText := input;
+  L := TStringlist.Create;
+  L.Delimiter := ' ';
+  L.QuoteChar := '"';
+  L.StrictDelimiter := false;
+  L.DelimitedText := input;
 
-        Steps := 1;
-        for i in L do
-        begin
-             if Steps = -1 then
-             begin
-                repeat
-                  evaluate(i, pocz, Steps, sets);
-                until EOF;
-                stack_remove(pocz);
-             end
-             else for step := 1 to Steps do evaluate(i, pocz, Steps, sets);
-        end;
-        z := '';
-        L.Free;
+  Steps := 1;
 
-        parseRPN := z;
+  index := 0;
+  while index < L.Count do
+  begin
+    if L[index] = '{' then begin
+      nestlv := 1;
+      nesttx := '';
+      cursor := index + 1;
+      while (nestlv > 0) and (cursor < L.Count) do begin
+        if (L[cursor] = '{') then Inc(nestlv);
+        if (L[cursor] = '}') then Dec(nestlv);
+        if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+        Inc(cursor);
+      end;
+      if Steps = -1 then begin
+        repeat
+          parseRPN(nesttx, pocz, sets); 
+        until EOF;
+        stack_remove(pocz);
+      end else for step := 1 to Steps do parseRPN(nesttx, pocz, sets); 
+      index := cursor - 1;
+    end else begin
+      if Steps = -1 then begin
+        repeat
+          evaluate(L[index], pocz, Steps, sets);
+        until EOF;
+        stack_remove(pocz);
+      end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets); 
+    end;
+
+
+    Inc(index);
+  end;
+  z := '';
+  L.Free;
+
+  parseRPN := z;
 end;
 
 function calc_parseRPN(input : string; var sets : TSettings) : String;
@@ -1164,10 +1260,11 @@ var
 begin
   stack := nil;
   res := parseRPN(input, stack, sets);
-  while stack <> nil do begin
-    res := FormatFloat(sets.Mask, stack^.Val) + ' ' + res;
-    stack_remove(stack);
-  end;
+  //while stack <> nil do begin
+  //  res := FormatFloat(sets.Mask, stack^.Val.Num) + ' ' + res;
+  //  stack_remove(stack);
+  //end;
+  res := stack_show(stack, sets.Mask);
   calc_parseRPN := res;
 end;
 
