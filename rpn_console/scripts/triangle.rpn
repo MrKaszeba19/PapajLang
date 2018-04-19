@@ -1,3 +1,1 @@
-scan
-clone ++
-* 2 /
+scannum clone ++ * 2 /

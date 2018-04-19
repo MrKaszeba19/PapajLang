@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-April 18, 2018  
+April 19, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -42,7 +42,7 @@ Ordinary expression | RPN Expression
 
 ## Implemented operations:
 
-### Available constant values:
+### Available constant numerical values:
 - e.g. 2*π -> 2 PI *
 
 Name | Symbol | Approximated value | Programme Operand
@@ -51,10 +51,11 @@ Pi | π | 3.1415926535897 | PI
 Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
-### Binary operations
-- expr1 expr2 operand
 
-| Name    | Programme Operand       |
+### Operands for numeric expressions
+- <number1> <number2> <operand>
+
+| Name    | Purpose                 |
 |:-------:| ----------------------- |
 | +       | add                     |
 | -       | substract               |
@@ -72,11 +73,9 @@ Golden number | φ | 1.6180339887498 | FI
 | gcd     | Greatest Common Divisor                    |
 | lcm     | Least Common Multiplier                    |
 
-### Unary operations
-- expr0 operand
-
-Programme Operand | Name
------------------ | ----
+- <number1> <operand>
+Programme Operand | Purpose
+----------------- | -------
 ++ | increment
 inc | increment
 -- | decrement
@@ -96,41 +95,96 @@ ln | natural logarithm
 fib | Fibonacci number
 trunc | truncate
 round | round
-times | do the following operand/value N times (N is an integer value)
+times | do something N1 times
+tostring | convert to a string
+
+### Operands for string expressions
+
+- <string1> <string2> <operand>
+
+Programme Operand | Purpose
+----------------- | -------
+concat | Concatenates two strings
+splitby | Splits a string S1 according to a char of S2 (and a space char too)
+pos | Returns an index of the first occurence of a substring S2 in a string S1
+occur | Returns a count of occurences of a substring S2 in a string S1
+
+- <string1> <number1> <operand>
+
+Programme Operand | Purpose
+----------------- | -------
+crush | Splits a string S1 to the parts of the same length of N1 (except for the last part, if len(S1) is not divisible by N1)
+leftstr | Extracts a substring from a string S1 of the first N1 letters
+rightstr | Extracts a substring from a string S1 of the last N1 letters
+
+- <string1> <number1> <number2> <operand>
+
+Programme Operand | Purpose
+----------------- | -------
+substr | Extracts a substring from a string S1, starting in N1 and being N2 chars long
+
+- <string1> <string2> <number1> <operand>
+Programme Operand | Purpose
+----------------- | -------
+npos | Returns an index of the N1-th occurence of a substring S2 in a string S1
+
+- <string1> <operand>
+
+Programme Operand | Purpose
+----------------- | -------
+val | Converts to a number (if possible)
+len | Gets string length (does not remove the used string and is invulnerable to autoclear)
+length | Gets string length (vulnerable to autoclear, not recommended)
+ltrim | Eliminates whitespace on the left side
+rtrim | Eliminates whitespace on the right side
+trim | Eliminates whitespace on the both left and right sides
+despace | Eliminates space chars
+onespace | Eliminates combo space chars (e.g. "2   3" -> "2 3")
+split | Splits a string according to space chars
+
 
 **Examples:**
 - `5 times 2 sum` sums five 2's
-- `5 times scan sum` sums five numbers scanned by an input
+- `5 times scan all sum` sums five numbers scanned by an input
 
 ### Stack operations
 
 #### Stack aggregating functions
-- If you already own some values on the stack, e.g. after solving some minor expressions (`2 3 +  9 5 -` leaves 5 and 4 on the stack respectively), you may use stack operations on them by taking **ALL** its values.
-
-**Notes:**
-- Values themselves are put on the stack when solving the expression.
-- The stack operations clear entire stack after execution.
-- The stack aggregating functions will clear entire stack, even though autoclear is disabled.
+- <number of top elements> operand
 
 Programme Operand | Name
 ----------------- | ----
-sum | sum of all values
-product | product of all values
+sum | sum of values
+product | product of values
 count | amount of the values put on the stack (stack's size)
-avg | mean of the values put on the stack
-max | maximum value of the values put on the stack
-min | minimal value of the values put on the stack
+size | as above, but don't clear the stack
+all | as above
+avg | mean of the values
+max | maximum value of the values
+min | minimum value of the values
+median | median
+
+
+**Examples:**
+- `2 3 4 5 6 2 avg` brings a result of 5.5, as avg(5,6) = 5.5. The bottom values stay on the stack and now the stack looks like `2 3 4 5.5`.
+- `2 3 4 5 6 all avg` brings a result of 4, as avg(2,3,4,5,6) = 4.
+- `5 3 8 10 32.5 4 sin 2 2 + 5 10 all sum` sums all values previously put on the stack
+
+**Protips and notes:**
+- If you want to aggregate all stack, then just type as a number of top elements a value of `all` or `size`, e.g. `all sum` or `size stddev`.
+- All aggregating functions are vulnerable to autoclear, except for `count` (which always clears the stack) and `size`/`all` (which don't remove anything).
 
 #### Stack manipulators
 
 Programme Operand | Name
 ----------------- | ----
 size | Get the size of current stack without clearing that stack
+all | As above
 clone | Clone the value being on the top of the stack
-keep | keeps the top n values on the stack
-copy | copies the top n values on the stack and puts them on the stack
+keep | Keeps the top n values on the stack
+copy | Copies the top n values on the stack and puts them on the stack
 sort | Sorts a stack
-mcopy | copies the top n values on the stack and puts them on the stack in reversed order
+mcopy | Copies the top n values on the stack and puts them on the stack in reversed order
 rem | Remove a value from the top of the stack
 clear | Clear entire stack
 seq | generates an arithmetical sequence from A to B and puts it on the stack (syntax: `A STEP B seq`)
@@ -140,7 +194,6 @@ gseql | generates a geometrical sequence of N numbers and puts it on the stack (
 rev | reverses the stack
 
 **Examples:**
-- `5 3 8 10 32.5 4 sin 2 2 + 5 10 sum` sums all values previously put on the stack
 - `1 1 8 seq` generates "1 2 3 4 5 6 7 8"
 - `1 3 8 seql` generates "1 4 7 10 13 16 19 22"
 - `8 2 1 gseq` generates "8 4 2 1"
@@ -153,7 +206,7 @@ rev | reverses the stack
 - `5 4 3 2 1 2 sort` results in a stack of "1 2 2 3 4 5"
 
 **Protips:**
-- `size copy` replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `rev size 2 / keep rev` - assuming the sizes "old stack" and the "new stack" are the same.
+- `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `rev size 2 / keep rev` - assuming the sizes "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
 ### Other operands ans directives
@@ -162,6 +215,7 @@ rev | reverses the stack
 
 Operand  | Purpose
 -------- | -------
+type | Check the type of the value being on the top of the stack
 scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
 scannum | Scan 1 numerical value from input
 scanstr | Scan 1 string value from input
@@ -172,6 +226,7 @@ rprint | Print a value being on the top of the stack and remove it from this sta
 rprintln | Same as above and end the line.
 status | Print the stack.
 statusln | Same as above and end the line.
+newln | Start a new line
 Xn | Do the next thing n-times. ('n' is a constant integer value, n >= 1)
 X* | Do the next thing until the end of input (very risky and permitted only in console app)
 
@@ -179,8 +234,9 @@ X* | Do the next thing until the end of input (very risky and permitted only in 
 **Examples:**
 - `scan scan +` scans 2 values and adds them
 - `X2 scan +` equivalent of the expression above
-- `X* scan sum` read all values from an input and sums them
+- `X* scan all sum` read all values from an input and sums them
 - `scan 3 rand +` scans a value, generates a random number from a range [0..3] and adds the numbers
+- `"Hello world!" type` puts "string" on the top of the stack
 - `"Hello world!" println` prints "Hello world!"
 
 *to be extended*

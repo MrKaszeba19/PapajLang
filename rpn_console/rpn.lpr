@@ -4,7 +4,7 @@ uses Unit2, Unit5, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. April 18, 2018.');
+     writeln('Paul Lipkowski. April 19, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
@@ -127,15 +127,17 @@ begin
 	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
 	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
 	writeln('  #silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
-	writeln('  #sorttype=VAL    : Choose a sorting algorithm (VAL=[0..3], 1 is default)');
-	writeln('  #source="FNAME"  : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
+	writeln('  #sorttype=VAL    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
+	writeln('  @source="FNAME"  : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
 end;
 
 procedure show_operands6();
 begin
     writeln('Other operations: ');
     writeln('      rand : Get a random integer value from 0 to N-1 (execute "N rand")');
-    writeln('      scan : Scan a value from input');
+    writeln('      scan : Scan any value from input');
+    writeln('   scannum : Scan a number from input');
+    writeln('   scanstr : Scan a string from input');
     writeln('     print : Print a value being on the top of the stack');
     writeln('   println : Same as above and end the line.');
     writeln('    rprint : Print a value being on the top of the stack and remove it from this stack.');
@@ -220,7 +222,7 @@ begin
               		except
               			On E : Exception do
                  		begin
-                      		writeln(E.ToString);
+                      		writeln(StdErr, E.ToString);
                  		end;
               		end;
      			end;
@@ -255,7 +257,7 @@ begin
               		except
               			On E : Exception do
                  		begin
-                      		writeln(E.ToString);
+                      		writeln(StdErr, E.ToString);
                  		end;
               		end;
      			end;
@@ -269,7 +271,7 @@ begin
               		except
               			On E : Exception do
                  		begin
-                      		writeln(E.ToString);
+                      		writeln(StdErr, E.ToString);
                  		end;
               		end;
      			end;
@@ -287,7 +289,7 @@ begin
               		except
               			On E : Exception do
                  		begin
-                      		writeln(E.ToString);
+                      		writeln(StdErr, E.ToString);
                  		end;
               		end;
      			end;
