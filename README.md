@@ -125,6 +125,7 @@ Programme Operand | Purpose
 substr | Extracts a substring from a string S1, starting in N1 and being N2 chars long
 
 - string1 string2 number1 operand
+
 Programme Operand | Purpose
 ----------------- | -------
 npos | Returns an index of the N1-th occurence of a substring S2 in a string S1
