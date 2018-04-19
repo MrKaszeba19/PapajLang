@@ -53,7 +53,7 @@ Golden number | φ | 1.6180339887498 | FI
 
 
 ### Operands for numeric expressions
-- <number1> <number2> <operand>
+- number1 number2 operand
 
 | Name    | Purpose                 |
 |:-------:| ----------------------- |
@@ -73,7 +73,8 @@ Golden number | φ | 1.6180339887498 | FI
 | gcd     | Greatest Common Divisor                    |
 | lcm     | Least Common Multiplier                    |
 
-- <number1> <operand>
+- number1 operand
+
 Programme Operand | Purpose
 ----------------- | -------
 ++ | increment
@@ -100,7 +101,7 @@ tostring | convert to a string
 
 ### Operands for string expressions
 
-- <string1> <string2> <operand>
+- string1 string2 operand
 
 Programme Operand | Purpose
 ----------------- | -------
@@ -109,7 +110,7 @@ splitby | Splits a string S1 according to a char of S2 (and a space char too)
 pos | Returns an index of the first occurence of a substring S2 in a string S1
 occur | Returns a count of occurences of a substring S2 in a string S1
 
-- <string1> <number1> <operand>
+- string1 number1 operand
 
 Programme Operand | Purpose
 ----------------- | -------
@@ -117,18 +118,18 @@ crush | Splits a string S1 to the parts of the same length of N1 (except for the
 leftstr | Extracts a substring from a string S1 of the first N1 letters
 rightstr | Extracts a substring from a string S1 of the last N1 letters
 
-- <string1> <number1> <number2> <operand>
+- string1 number1 number2 operand
 
 Programme Operand | Purpose
 ----------------- | -------
 substr | Extracts a substring from a string S1, starting in N1 and being N2 chars long
 
-- <string1> <string2> <number1> <operand>
+- string1 string2 number1 operand
 Programme Operand | Purpose
 ----------------- | -------
 npos | Returns an index of the N1-th occurence of a substring S2 in a string S1
 
-- <string1> <operand>
+- string1 operand
 
 Programme Operand | Purpose
 ----------------- | -------
