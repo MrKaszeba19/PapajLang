@@ -8,20 +8,20 @@ uses
   Classes, SysUtils, StrUtils;
 
 const
-        PI = 3.1415926535897932384626433832795;
-        EU = 2.7182818284590452353602874713526;
-        FI = 1.6180339887498948482045868343656;
-        TNIL = 0;
-        TNUM = 1;
-        TSTR = 2;
-        TVEN = 3;
-        TVES = 4;
-        TVEC = 5;
+	PI = 3.1415926535897932384626433832795;
+	EU = 2.7182818284590452353602874713526;
+	FI = 1.6180339887498948482045868343656;
+	TNIL = 0;
+	TNUM = 1;
+	TSTR = 2;
+	TVEN = 3;
+	TVES = 4;
+	TVEC = 5;
 
 type Entity = record
 	EntityType : Integer;
-  Num        : Extended;	// plans to make them arrays
-  Str        : String;
+	Num        : Extended;	// plans to make them arrays
+	Str        : String;
 end;
 // 0 - unknown/null
 // 1 - number
@@ -32,17 +32,18 @@ end;
 
 
 type PStos = ^TStos;
-     TStos    = record
-     Val   : Entity;
-     Next  : PStos;
+	TStos = record
+	Val   : Entity;
+	Next  : PStos;
 end;
 
 type TSettings = record
-    Prevent    : Boolean;
-    Autoclear  : Boolean;
-    Mask       : String;
-    SortType   : ShortInt;
-    StrictType : Boolean;
+    Prevent       : Boolean;
+    Autoclear     : Boolean;
+    Mask          : String;
+    SortType      : ShortInt;
+    StrictType    : Boolean;
+    CaseSensitive : Boolean;
 end;
 // sorts
 // 0 - bubblesort
@@ -244,7 +245,7 @@ var
 begin
 	s := tab[0];
   for i := 1 to Length(tab)-1 do
-  	if (tab[i] < tab[i-1]) then s := tab[i];
+  	if (tab[i] < s) then s := tab[i];
   table_min := s;
 end;
 
@@ -255,7 +256,7 @@ var
 begin
 	s := tab[0];
   for i := 1 to Length(tab)-1 do
-  	if (tab[i] > tab[i-1]) then begin
+  	if (tab[i] > s) then begin
   		s := tab[i];
   		//writeln(s);
   	end; 
@@ -597,6 +598,7 @@ begin
   pom.Mask := '0.################';
   pom.SortType := 1;
   pom.StrictType := true;
+  pom.CaseSensitive := true;
   default_settings := pom;
 end;
 
@@ -617,13 +619,15 @@ var
     StrEax, StrEbx, StrEcx : String;
     EntEax, EntEbx         : Entity;
     ExtEax, ExtEbx         : Extended; 
- 		IntEax, IntEbx         : integer; 
+    IntEax, IntEbx         : integer; 
 begin
     Steps := 1;
     SetLength(HelpETable, 0);
     SetLength(HelpNTable, 0);
     SetLength(HelpSTable, 0);
 
+    StrEcx := i;
+    if not (sets.CaseSensitive) then i := LowerCase(i);
     Val (i,Im,Code);
     If Code<>0 then
       begin
@@ -1043,17 +1047,35 @@ begin
           end;
           'crush' : begin
           	SetLength(HelpSTable, 0);
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz); 
+            IntEbx := 1;
+            while (IntEbx <= Length(StrEbx)) do begin
+            	SetLength(HelpSTable, IntEbx+1);
+            	HelpSTable[IntEbx] := Copy(StrEbx, IntEbx, 1);
+            	IntEbx := IntEbx + 1; 
+            end;
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildNumber(y));
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            for index := 1 to Length(HelpSTable)-1 do stack_add(pocz, buildString(HelpSTable[index])); 
+            SetLength(HelpSTable, 0);
+          end;
+          'crushby' : begin
+          	SetLength(HelpSTable, 0);
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
             StrEbx := pocz^.Val.Str;
             stack_remove(pocz); 
-            IntEax := 0;
+            IntEax := 1;
             IntEbx := 1;
-            while (IntEax < Length(StrEbx)) do begin
-            	SetLength(HelpSTable, IntEbx);
-            	HelpSTable[IntEbx-1] := Copy(StrEbx, IntEax, trunc(y));
+            while (IntEax <= Length(StrEbx)) do begin
+            	SetLength(HelpSTable, IntEbx+1);
+            	HelpSTable[IntEbx] := Copy(StrEbx, IntEax, trunc(y));
             	IntEax := IntEax + trunc(y);
             	IntEbx := IntEbx + 1; 
             end;
@@ -1061,7 +1083,7 @@ begin
               stack_add(pocz, buildNumber(y));
               stack_add(pocz, buildString(StrEbx));
             end;
-            for index := 0 to Length(HelpSTable)-1 do stack_add(pocz, buildString(HelpSTable[index])); 
+            for index := 1 to Length(HelpSTable)-1 do stack_add(pocz, buildString(HelpSTable[index])); 
             SetLength(HelpSTable, 0);
           end;
           'leftstr' : begin
@@ -1142,16 +1164,45 @@ begin
             end;
             stack_add(pocz, buildString(StrEcx));
           end;
+          'dechar' : begin
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEcx := pocz^.Val.Str;
+            stack_remove(pocz); 
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz);
+            StrEcx := DelChars(StrEbx, StrEcx[1]);
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEcx));
+          end;
+          'bind' : begin
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz);
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEax := pocz^.Val.Str;
+            stack_remove(pocz);
+            
+            StrEcx := StrEax + ' ' + StrEbx;
+
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEax));
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEcx));
+          end;
           'split' : begin
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
             StrEbx := pocz^.Val.Str;
             if (sets.Autoclear) then stack_remove(pocz); 
             
             HelpTStrings := TStringlist.Create;
-  					HelpTStrings.Delimiter := ' ';
-  					HelpTStrings.QuoteChar := '"';
-  					HelpTStrings.StrictDelimiter := false;
-  					HelpTStrings.DelimitedText := StrEbx;
+            HelpTStrings.Delimiter := ' ';
+            HelpTStrings.QuoteChar := '"';
+            HelpTStrings.StrictDelimiter := false;
+            HelpTStrings.DelimitedText := StrEbx;
 
             for StrEax in HelpTStrings do stack_add(pocz, buildString(StrEax)); 
             HelpTStrings.Free;
@@ -1165,10 +1216,10 @@ begin
             if (sets.Autoclear) then stack_remove(pocz); 
             
             HelpTStrings := TStringlist.Create;
-  					HelpTStrings.Delimiter := StrEcx[1];
-  					HelpTStrings.QuoteChar := '"';
-  					HelpTStrings.StrictDelimiter := false;
-  					HelpTStrings.DelimitedText := StrEbx;
+            HelpTStrings.Delimiter := StrEcx[1];
+            HelpTStrings.QuoteChar := '"';
+            HelpTStrings.StrictDelimiter := false;
+            HelpTStrings.DelimitedText := StrEbx;
 
             for StrEax in HelpTStrings do stack_add(pocz, buildString(StrEax)); 
             HelpTStrings.Free;
@@ -1189,7 +1240,25 @@ begin
               stack_add(pocz, buildNumber(y));
               stack_add(pocz, buildString(StrEbx));
             end;
-						stack_add(pocz, buildString(StrEax)); 
+            stack_add(pocz, buildString(StrEax)); 
+          end;
+          'strbetween' : begin
+          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+            y := pocz^.Val.Num;
+            stack_remove(pocz);
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+            x := pocz^.Val.Num;
+            stack_remove(pocz);
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz); 
+            StrEax := Copy(StrEbx, trunc(x), trunc(y)-trunc(x)+1);
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildNumber(x));
+              stack_add(pocz, buildNumber(y));
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEax)); 
           end;
           'pos' : begin
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1203,7 +1272,7 @@ begin
               stack_add(pocz, buildString(StrEax));
               stack_add(pocz, buildString(StrEbx));
             end;
-						stack_add(pocz, buildNumber(ExtEax)); 
+            stack_add(pocz, buildNumber(ExtEax)); 
           end;
           'npos' : begin
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
@@ -1220,7 +1289,7 @@ begin
               stack_add(pocz, buildString(StrEax));
               stack_add(pocz, buildString(StrEbx));
             end;
-						stack_add(pocz, buildNumber(ExtEax)); 
+            stack_add(pocz, buildNumber(ExtEax)); 
           end;
           'occur' : begin
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1231,14 +1300,24 @@ begin
             stack_remove(pocz);
             IntEax := 0;
             repeat
-            	IntEbx := NPos(StrEbx, StrEax, IntEax+1);
-            	if (IntEbx <> 0) then Inc(IntEax);
+              IntEbx := NPos(StrEbx, StrEax, IntEax+1);
+              if (IntEbx <> 0) then Inc(IntEax);
             until (IntEbx = 0);
             if not (sets.Autoclear) then begin
               stack_add(pocz, buildString(StrEax));
               stack_add(pocz, buildString(StrEbx));
             end;
-						stack_add(pocz, buildNumber(IntEax)); 
+            stack_add(pocz, buildNumber(IntEax)); 
+          end;
+          'strparse' : begin
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz);
+            StrEcx := parseRPN(StrEbx, pocz, sets);
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            //stack_add(pocz, buildString(StrEcx));
           end;
 
           // Directives
@@ -1256,6 +1335,12 @@ begin
           end;
           '#stricttype=false' : begin
              sets.StrictType := false;
+          end;
+          '#casesensitive=true' : begin
+             sets.CaseSensitive := true;
+          end;
+          '#casesensitive=false' : begin
+             sets.CaseSensitive := false;
           end;
           '#real' : begin
              sets.Mask := '0.################';
@@ -1354,50 +1439,50 @@ begin
             if (sets.Autoclear) then stack_remove(pocz);
             val(StrEax, ExtEax, IntEax); 
             if (IntEax = 0) then begin
- 							stack_add(pocz, buildNumber(ExtEax));
- 						end else begin
- 							stack_add(pocz, buildString(StrEax));
- 						end;
+              stack_add(pocz, buildNumber(ExtEax));
+            end else begin
+              stack_add(pocz, buildString(StrEax));
+            end;
           end;
           'print' : begin
-                EntEax := pocz^.Val;
-                if (sets.Autoclear) then stack_remove(pocz);
-                if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
-                if (EntEax.EntityType = TSTR) then write(EntEax.Str);
+            EntEax := pocz^.Val;
+            if (sets.Autoclear) then stack_remove(pocz);
+            if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
+            if (EntEax.EntityType = TSTR) then write(EntEax.Str);
           end;
           'println' : begin
-                EntEax := pocz^.Val;
-                if (sets.Autoclear) then stack_remove(pocz);
-                if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
-                if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
+            EntEax := pocz^.Val;
+            if (sets.Autoclear) then stack_remove(pocz);
+            if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
+            if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
           end;
           'rprint' : begin
-                EntEax := pocz^.Val;
-                stack_remove(pocz);
-                if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
-                if (EntEax.EntityType = TSTR) then write(EntEax.Str);
+            EntEax := pocz^.Val;
+            stack_remove(pocz);
+            if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
+            if (EntEax.EntityType = TSTR) then write(EntEax.Str);
           end;
           'rprintln' : begin
-                EntEax := pocz^.Val;
-                stack_remove(pocz);
-                if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
-                if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
+            EntEax := pocz^.Val;
+            stack_remove(pocz);
+            if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
+            if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
           end;
           'newln' : begin
-                writeln();
+            writeln();
           end;
           'status' : begin
-                write(stack_show(pocz, sets.Mask));
+            write(stack_show(pocz, sets.Mask));
           end;
           'statusln' : begin
-                writeln(stack_show(pocz, sets.Mask));
+            writeln(stack_show(pocz, sets.Mask));
           end;
 
           'rem' : begin
-                stack_remove(pocz);
+            stack_remove(pocz);
           end;
           'clear' : begin
-                stack_clear(pocz);
+            stack_clear(pocz);
           end;
           'keep' : begin
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
@@ -1814,7 +1899,7 @@ begin
                     end;
                   end;
                   else begin
-                    stack_add(pocz, buildString(i));
+                    stack_add(pocz, buildString(StrEcx));
                   end;
                 end;
               end;

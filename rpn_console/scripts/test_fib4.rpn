@@ -1,10 +1,10 @@
 #silent
 #autoclear=false 
 0 1
-scan -- times {
+"Podaj liczbe: " rprint scannum -- times {
 	+
-	2 keep
+	//2 keep
+	statusln
 }
 #autoclear=true
-println
 clear
