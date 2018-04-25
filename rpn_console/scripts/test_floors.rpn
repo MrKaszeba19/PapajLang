@@ -1,0 +1,65 @@
+#silent
+#autoclear=false
+
+5.5 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+-5.5 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+5.25 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+-5.25 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+5.75 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+-5.75 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+5 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+-5 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear newln
+
+0 println
+"Round:   " rprint round rprintln
+"Trunc:   " rprint trunc rprintln
+"Floor:   " rprint floor rprintln
+"Ceiling: " rprint ceiling rprintln
+clear

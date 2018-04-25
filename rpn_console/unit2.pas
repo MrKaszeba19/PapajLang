@@ -38,12 +38,13 @@ type PStos = ^TStos;
 end;
 
 type TSettings = record
-    Prevent       : Boolean;
-    Autoclear     : Boolean;
-    Mask          : String;
-    SortType      : ShortInt;
-    StrictType    : Boolean;
-    CaseSensitive : Boolean;
+    Prevent            : Boolean;
+    Autoclear          : Boolean;
+    Mask               : String;
+    SortType           : ShortInt;
+    StrictType         : Boolean;
+    CaseSensitive      : Boolean;
+    OptimizeWhitespace : Boolean;
 end;
 // sorts
 // 0 - bubblesort
@@ -599,6 +600,7 @@ begin
   pom.SortType := 1;
   pom.StrictType := true;
   pom.CaseSensitive := true;
+  pom.OptimizeWhitespace := true;
   default_settings := pom;
 end;
 
@@ -983,6 +985,24 @@ begin
             if not (sets.Autoclear) then stack_add(pocz, buildNumber(y));
             stack_add(pocz, buildNumber(z));
           end;
+          'floor' : begin
+          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            y := pocz^.Val.Num;
+            stack_remove(pocz);
+			if (y = trunc(y)) then z := trunc(y)
+			else if (y < 0) then z := trunc(y)-1 else z := trunc(y);
+            if not (sets.Autoclear) then stack_add(pocz, buildNumber(y));
+            stack_add(pocz, buildNumber(z));
+          end;
+          'ceiling' : begin
+          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            y := pocz^.Val.Num;
+            stack_remove(pocz);
+            if (y = trunc(y)) then z := trunc(y)
+			else if (y < 0) then z := trunc(y) else z := trunc(y)+1;
+            if not (sets.Autoclear) then stack_add(pocz, buildNumber(y));
+            stack_add(pocz, buildNumber(z));
+          end;
           'round' : begin
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
             y := pocz^.Val.Num;
@@ -1341,6 +1361,12 @@ begin
           end;
           '#casesensitive=false' : begin
              sets.CaseSensitive := false;
+          end;
+          '#parseclear=true' : begin
+             sets.OptimizeWhitespace := true;
+          end;
+          '#parseclear=false' : begin
+             sets.OptimizeWhitespace := false;
           end;
           '#real' : begin
              sets.Mask := '0.################';
@@ -1934,15 +1960,15 @@ var
 begin
   fun := '';
   assignfile(fp, filename);
-    reset(fp);
-    while not eof(fp) do
-    begin
-      readln(fp, S);
-      if (S <> '') then S := commentcut(S);
-      fun := fun + ' ' + S;
-    end;
-    closefile(fp);
-    S := parseRPN(fun, pocz, sets);
+  reset(fp);
+  while not eof(fp) do
+  begin
+    readln(fp, S);
+    if (S <> '') then S := commentcut(S);
+    fun := fun + ' ' + S;
+  end;
+  closefile(fp);
+  S := parseRPN(fun, pocz, sets);
   read_sourcefile := S;
 end;
 

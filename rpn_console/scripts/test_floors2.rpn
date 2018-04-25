@@ -1,0 +1,14 @@
+#silent
+#autoclear=false
+
+5.5 -5.5 5.25 -5.25 5.75 -5.75 5 -5 0 rev
+
+all times {
+	println
+	"Round:   " rprint round rprintln
+	"Trunc:   " rprint trunc rprintln
+	"Floor:   " rprint floor rprintln
+	"Ceiling: " rprint ceiling rprintln
+	rem newln
+}
+clear
