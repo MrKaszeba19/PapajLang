@@ -3,7 +3,7 @@ uses Unit2, Unit5, Sysutils;
 
 procedure show_version();
 begin
-     writeln('RPN Calculator. Version X.X.X (Leviathan)');
+     writeln('RPN Calculator. Version 0.4.0 (Vav)');
      writeln('Paul Lipkowski. April 26, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
@@ -18,6 +18,8 @@ begin
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
      writeln('Run ''rpn flags'' to obtain info about flags.');
      writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
+     writeln();
+     writeln('More help at github.com/RooiGevaar19/RPNCalculator');
 end;
 
 procedure show_flags();
@@ -118,17 +120,17 @@ end;
 procedure show_operands5();
 begin
 	writeln('Data directives: ');
-	writeln('#real        #milli       #float');
-	writeln('#double      #int         #decimal');
-	writeln('#scientific  #scientific1 #money');
-	writeln('#amoney');
+	writeln('@real        @milli       @float');
+	writeln('@double      @int         @decimal');
+	writeln('@scientific  @scientific1 @money');
+	writeln('@amoney');
 	writeln('Parsing directives:');
-	writeln('  #autoclear=BOOL  : Stack is wisely cleared after every operation (BOOL=true by default)');
+	writeln('  @autoclear(BOOL) : Stack is wisely cleared after every operation (BOOL=true by default)');
 	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
 	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
-	writeln('  #silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
-	writeln('  #sorttype=VAL    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
-	writeln('  @source="FNAME"  : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
+	writeln('  @silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+	writeln('  @sorttype(VAL)   : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
+	writeln('  @source("FNAME") : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
 end;
 
 procedure show_operands6();
