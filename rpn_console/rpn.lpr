@@ -13,11 +13,13 @@ procedure show_help();
 begin
      writeln('SYNTAX: rpn "quoted_rpn_expression" [flags]');
      writeln('');
-     writeln('Run ''rpn help'' to display this again.');
+     writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
      writeln('Run ''rpn flags'' to obtain info about flags.');
      writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
+     writeln('');
+     writeln('More help at github.com/RooiGevaar19/RPNCalculator');
 end;
 
 procedure show_flags();
