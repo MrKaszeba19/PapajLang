@@ -1,5 +1,5 @@
-#money
-#autoclear=false 
+@money
+@autoclear(false) 
 1 1.5
-scan -- 
+scannum -- 
 times *

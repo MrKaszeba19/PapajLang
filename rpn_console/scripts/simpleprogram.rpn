@@ -1,5 +1,5 @@
-#silent
-#autoclear=false
+@silent
+@autoclear(false)
 
 "Geometrical sequence" rprintln
 "Enter a starting value: " rprint scannum

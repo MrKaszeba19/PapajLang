@@ -1,20 +1,20 @@
-#silent
+@silent
 
-@source="data.rpn"
+@source("data.rpn")
 statusln clear
 
-#sorttype=bsort
-@source="data.rpn"
+@sorttype(BSORT)
+@source("data.rpn")
 sort statusln clear
 
-#sorttype=qsort
-@source="data.rpn"
+@sorttype(QSORT)
+@source("data.rpn")
 sort statusln clear
 
-#sorttype=msort
-@source="data.rpn"
+@sorttype(MSORT)
+@source("data.rpn")
 sort statusln clear
 
-#sorttype=rsort
-@source="data.rpn"
+@sorttype(RSORT)
+@source("data.rpn")
 sort statusln clear

@@ -1,5 +1,5 @@
-#silent
-#autoclear=false
+@silent
+@autoclear(false)
 
 5.5 -5.5 5.25 -5.25 5.75 -5.75 5 -5 0 rev
 

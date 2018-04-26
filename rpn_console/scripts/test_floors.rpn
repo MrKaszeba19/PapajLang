@@ -1,5 +1,5 @@
-#silent
-#autoclear=false
+@silent
+@autoclear(false)
 
 5.5 println
 "Round:   " rprint round rprintln

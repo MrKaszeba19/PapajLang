@@ -1,2 +1,2 @@
-#silent
+@silent
 "Hello world!" println

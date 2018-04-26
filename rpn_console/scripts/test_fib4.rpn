@@ -1,10 +1,10 @@
-#silent
-#autoclear=false 
+@silent
+@autoclear(false) 
 0 1
 "Podaj liczbe: " rprint scannum -- times {
 	+
 	//2 keep
 	statusln
 }
-#autoclear=true
+@autoclear(true)
 clear

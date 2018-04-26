@@ -1,21 +1,21 @@
-#silent
+@silent
 
-#sorttype=bsort
+@sorttype(0)
 "Bubblesort:" println
 10 times { 100 rand } statusln
 sort statusln clear statusln
 
-#sorttype=qsort
+@sorttype(1)
 "Quicksort:" println
 10 times { 100 rand } statusln
 sort statusln clear statusln
 
-#sorttype=msort
+@sorttype(2)
 "Mergesort:" println
 10 times { 100 rand } statusln
 sort statusln clear statusln
 
-#sorttype=rsort
+@sorttype(3)
 "Bogosort:" println
 10 times { 100 rand } statusln
 sort statusln clear

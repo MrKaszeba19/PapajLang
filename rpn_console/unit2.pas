@@ -44,7 +44,6 @@ type TSettings = record
     SortType           : ShortInt;
     StrictType         : Boolean;
     CaseSensitive      : Boolean;
-    OptimizeWhitespace : Boolean;
 end;
 // sorts
 // 0 - bubblesort
@@ -288,11 +287,11 @@ var
 	s    : Extended;
 	mean : Extended;
 begin
-	mean := table_avg(tab);
-	s := 0.0;
+  mean := table_avg(tab);
+  s := 0.0;
   for i := 0 to Length(tab)-1 do
-  	s := s + sqr(tab[i]-mean);
-	table_variance := s/Length(tab);
+    s := s + sqr(tab[i]-mean);
+  table_variance := s/Length(tab);
 end;
 
 function table_stddev(tab : array of Extended) : Extended;
@@ -487,6 +486,30 @@ begin
     raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(wtype)+'> expected, got ['+getEntitySpec(val)+']');
 end;
 
+procedure assertNotNegativeLocated(val : Entity; operand : String);
+begin
+  if (val.EntityType <> TNUM) then 
+    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got ['+getEntitySpec(val)+']');
+  if (val.Num < 0) then 
+    raiserror('Exception when taking a numeric value at "'+operand+'": an positive real number or zero expected');
+end;
+
+procedure assertIntegerLocated(val : Entity; operand : String);
+begin
+  if (val.EntityType <> TNUM) then 
+    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got ['+getEntitySpec(val)+']');
+  if (val.Num <> trunc(val.Num)) then 
+    raiserror('Exception when taking a numeric value at "'+operand+'": integer expected, got a real number');
+end;
+
+procedure assertNaturalLocated(val : Entity; operand : String);
+begin
+  if (val.EntityType <> TNUM) then 
+    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got ['+getEntitySpec(val)+']');
+  if (val.Num < 0) or (val.Num <> trunc(val.Num)) then 
+    raiserror('Exception when taking a numeric value at "'+operand+'": an positive integer or zero expected');
+end;
+
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 var
   pom : Entity;
@@ -600,7 +623,6 @@ begin
   pom.SortType := 1;
   pom.StrictType := true;
   pom.CaseSensitive := true;
-  pom.OptimizeWhitespace := true;
   default_settings := pom;
 end;
 
@@ -610,18 +632,19 @@ end;
 
 procedure evaluate(i : String; var pocz : PStos; var Steps : Integer; var sets : TSettings);
 var
-    x, y, z, a, Im         : Extended;
-    Code, index    	       : Longint;
-    Size           	       : Longint;
-    Sizer          	       : PStos;
-    HelpETable     	       : array of Entity;
-    HelpNTable     	       : array of Extended;
-    HelpSTable     	       : array of String;
-    HelpTStrings           : TStrings;
-    StrEax, StrEbx, StrEcx : String;
-    EntEax, EntEbx         : Entity;
-    ExtEax, ExtEbx         : Extended; 
-    IntEax, IntEbx         : integer; 
+    x, y, z, a, Im : Extended;
+    Code, index    : Longint;
+    Size           : Longint;
+    Sizer          : PStos;
+    HelpETable     : array of Entity;
+    HelpNTable     : array of Extended;
+    HelpSTable     : array of String;
+    HelpTStrings   : TStrings;
+    StrEax, StrEbx : String;
+    StrEcx, StrEdx : String;
+    EntEax, EntEbx : Entity;
+    ExtEax, ExtEbx : Extended; 
+    IntEax, IntEbx : integer; 
 begin
     Steps := 1;
     SetLength(HelpETable, 0);
@@ -756,10 +779,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'mod' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             z := trunc(x) mod trunc(y);
@@ -770,10 +793,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'div' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             z := trunc(x) div trunc(y);
@@ -784,10 +807,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'cdiv' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             if trunc(x/y) < 0 then begin
@@ -802,10 +825,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'cmod' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             if (x > 0) and (y < 0) then begin
@@ -822,7 +845,7 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'choose' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
@@ -840,10 +863,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'gcd' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             z := gcd(x, y);
@@ -854,10 +877,10 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'lcm' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertIntegerLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             z := lcm(x, y);
@@ -954,7 +977,7 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           '!' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             z := fact(y);
@@ -962,7 +985,7 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'fact' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             z := fact(y);
@@ -970,7 +993,7 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'ln' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNotNegativeLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             z := ln(y);
@@ -1012,7 +1035,7 @@ begin
             stack_add(pocz, buildNumber(z));
           end;
           'fib' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             z := fib(trunc(y));
@@ -1107,7 +1130,7 @@ begin
             SetLength(HelpSTable, 0);
           end;
           'leftstr' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1121,7 +1144,7 @@ begin
             stack_add(pocz, buildString(StrEax));
           end;
           'rightstr' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1213,6 +1236,25 @@ begin
             end;
             stack_add(pocz, buildString(StrEcx));
           end;
+          'bindby' : begin
+          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEcx := pocz^.Val.Str;
+            stack_remove(pocz); 
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz);
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEax := pocz^.Val.Str;
+            stack_remove(pocz);
+            
+            StrEdx := StrEax + StrEcx + StrEbx;
+
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEax));
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEdx));
+          end;
           'split' : begin
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
             StrEbx := pocz^.Val.Str;
@@ -1245,10 +1287,10 @@ begin
             HelpTStrings.Free;
           end;
           'substr' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+            if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             x := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1263,10 +1305,10 @@ begin
             stack_add(pocz, buildString(StrEax)); 
           end;
           'strbetween' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+            if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
             x := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1294,8 +1336,59 @@ begin
             end;
             stack_add(pocz, buildNumber(ExtEax)); 
           end;
+          'strremove' : begin 
+          	if (pocz^.Val.EntityType = TSTR) then
+          	begin
+          	  if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+              StrEbx := pocz^.Val.Str;
+              stack_remove(pocz); 
+              if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+              StrEax := pocz^.Val.Str;
+              stack_remove(pocz); 
+              Delete(StrEax, Pos(StrEbx, StrEax), Length(StrEbx));
+              if not (sets.Autoclear) then begin
+                stack_add(pocz, buildString(StrEax));
+                stack_add(pocz, buildString(StrEbx));
+              end;
+              stack_add(pocz, buildString(StrEax)); 
+          	end else begin
+          	  if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
+              y := pocz^.Val.Num;
+              stack_remove(pocz);
+          	  if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
+              x := pocz^.Val.Num;
+              stack_remove(pocz); 
+              if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+              StrEax := pocz^.Val.Str;
+              stack_remove(pocz);
+              Delete(StrEax, trunc(x), trunc(y)); 
+              if not (sets.Autoclear) then begin
+                stack_add(pocz, buildString(StrEax));
+                stack_add(pocz, buildNumber(x));
+                stack_add(pocz, buildNumber(y));
+              end;
+              stack_add(pocz, buildString(StrEax));
+          	end;
+          end;
+          'strinsert' : begin
+            if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
+            y := pocz^.Val.Num;
+            stack_remove(pocz); 
+          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz); 
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEax := pocz^.Val.Str;
+            stack_remove(pocz); 
+            Insert(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEax));
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEax)); 
+          end;
           'npos' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i); 
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i); 
             y := pocz^.Val.Num;
             stack_remove(pocz); 
           	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
@@ -1341,73 +1434,94 @@ begin
           end;
 
           // Directives
-          '#silent' : begin
+          '@silent' : begin
              sets.Prevent := true;
           end;
-          '#autoclear=true' : begin
+          '@autoclear(true)' : begin
              sets.Autoclear := true;
           end;
-          '#autoclear=false' : begin
+          '@autoclear(false)' : begin
              sets.Autoclear := false;
           end;
-          '#stricttype=true' : begin
+          '@stricttype(true)' : begin
              sets.StrictType := true;
           end;
-          '#stricttype=false' : begin
+          '@stricttype(false)' : begin
              sets.StrictType := false;
           end;
-          '#casesensitive=true' : begin
+          '@casesensitive(true)' : begin
              sets.CaseSensitive := true;
           end;
-          '#casesensitive=false' : begin
+          '@casesensitive(false)' : begin
              sets.CaseSensitive := false;
           end;
-          '#parseclear=true' : begin
-             sets.OptimizeWhitespace := true;
-          end;
-          '#parseclear=false' : begin
-             sets.OptimizeWhitespace := false;
-          end;
-          '#real' : begin
+          '@real' : begin
              sets.Mask := '0.################';
           end;
-          '#decimal' : begin
+          '@decimal' : begin
              sets.Mask := '#,###.################';
           end;
-          '#milli' : begin
+          '@milli' : begin
              sets.Mask := '0.000';
           end;
-          '#float' : begin
+          '@float' : begin
              sets.Mask := '0.000000';
           end;
-          '#double' : begin
+          '@double' : begin
              sets.Mask := '0.000000000000000';
           end;
-          '#money' : begin
+          '@money' : begin
              sets.Mask := '0.00';
           end;
-          '#amoney' : begin
+          '@amoney' : begin
              sets.Mask := '#,###.00';
           end;
-          '#int' : begin
+          '@int' : begin
              sets.Mask := '0';
           end;
-          '#scientific' : begin
+          '@scientific' : begin
              sets.Mask := '0.################E+00';
           end;
-          '#scientific1' : begin
+          '@scientific1' : begin
              sets.Mask := '0.000000000000000E+0000';
           end;
-          '#sorttype=bsort' : begin
+          '@sorttype(BUBBLESORT)' : begin
              sets.sorttype := 0;
           end;
-          '#sorttype=qsort' : begin
+          '@sorttype(QUICKSORT)' : begin
              sets.sorttype := 1;
           end;
-          '#sorttype=msort' : begin
+          '@sorttype(MERGESORT)' : begin
              sets.sorttype := 2;
           end;
-          '#sorttype=rsort' : begin
+          '@sorttype(BOGOSORT)' : begin
+             sets.sorttype := 3;
+          end;
+          '@sorttype(RANDOMSORT)' : begin
+             sets.sorttype := 3;
+          end;
+          '@sorttype(BSORT)' : begin
+             sets.sorttype := 0;
+          end;
+          '@sorttype(QSORT)' : begin
+             sets.sorttype := 1;
+          end;
+          '@sorttype(MSORT)' : begin
+             sets.sorttype := 2;
+          end;
+          '@sorttype(RSORT)' : begin
+             sets.sorttype := 3;
+          end;
+          '@sorttype(0)' : begin
+             sets.sorttype := 0;
+          end;
+          '@sorttype(1)' : begin
+             sets.sorttype := 1;
+          end;
+          '@sorttype(2)' : begin
+             sets.sorttype := 2;
+          end;
+          '@sorttype(3)' : begin
              sets.sorttype := 3;
           end;
 
@@ -1428,10 +1542,13 @@ begin
             stack_add(pocz, EntEax);
           end;
           'times' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (y >= 0) then Steps := trunc(y);
+          end;
+          'tilleof' : begin
+          	Steps := -1;
           end;
           'clone' : begin
                 EntEax := pocz^.Val;
@@ -1511,7 +1628,7 @@ begin
             stack_clear(pocz);
           end;
           'keep' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1528,7 +1645,7 @@ begin
           	end;
           end;
           'copy' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             if (y >= 1) then begin
@@ -1545,7 +1662,7 @@ begin
             end;
           end;
           'mcopy' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1577,7 +1694,7 @@ begin
             SetLength(HelpNTable, 0);
           end;
           'rand' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             y := pocz^.Val.Num;
             stack_remove(pocz);
             z := random(trunc(y));
@@ -1589,7 +1706,7 @@ begin
 
           // stack operands
           'sum' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1614,7 +1731,7 @@ begin
           	end;
           end;
           'product' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1657,7 +1774,7 @@ begin
           	stack_add(pocz, buildNumber(z));
           end;
           'avg' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1683,7 +1800,7 @@ begin
           	end;
           end;
           'min' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1709,7 +1826,7 @@ begin
           	end;
           end;
           'max' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1735,7 +1852,7 @@ begin
           	end;
           end;
           'median' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1761,7 +1878,7 @@ begin
           	end;
           end;
           'variance' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1787,7 +1904,7 @@ begin
           	end;
           end;
           'stddev' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
           	y := pocz^.Val.Num;
           	stack_remove(pocz);
           	if (y >= 1) then begin
@@ -1844,7 +1961,7 @@ begin
           end;
 
           'seql' : begin
-            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+            if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             z := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
@@ -1889,7 +2006,7 @@ begin
           end;
 
           'gseql' : begin
-          	if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
+          	if (sets.StrictType) then assertNaturalLocated(pocz^.Val, i);
             z := pocz^.Val.Num;
             stack_remove(pocz);
             if (sets.StrictType) then assertEntityLocated(pocz^.Val, TNUM, i);
@@ -1915,10 +2032,10 @@ begin
               end;
               else begin
                 case LeftStr(i, 9) of
-                  '@source="' : begin
-                    if (RightStr(i, 1) = '"') then begin
+                  '@source("' : begin
+                    if (RightStr(i, 2) = '")') then begin
                       StrEax := RightStr(i, Length(i)-9);
-                      StrEax := LeftStr(StrEax, Length(StrEax)-1);
+                      StrEax := LeftStr(StrEax, Length(StrEax)-2);
                       StrEbx := read_sourcefile(StrEax, pocz, sets);
                     end else begin
                       
@@ -1939,15 +2056,18 @@ end;
 
 function commentcut(input : String) : String;
 var 
-  pom : String;
-  i   : Integer;
+  pom         : String;
+  togglequote : Boolean;
+  i           : Integer;
 begin
   pom := '';
+  togglequote := false;
   for i := 0 to Length(input) do begin
-    if not ((input[i] = '/') and (input[i+1] = '/')) then begin
+  	if (input[i] = '"') then togglequote := not (togglequote);
+    if (not ((input[i] = '/') and (input[i+1] = '/'))) or (togglequote) then begin
       pom := concat(pom, input[i]);
     end else begin
-      break;
+      if not (togglequote) then break;
     end;
   end;
   commentcut := pom;
@@ -1989,6 +2109,8 @@ begin
   L.StrictDelimiter := false;
   L.DelimitedText := input;
 
+  //writeln(input);
+
   Steps := 1;
 
   index := 0;
@@ -2001,7 +2123,8 @@ begin
       while (nestlv > 0) and (cursor < L.Count) do begin
         if (L[cursor] = '{') then Inc(nestlv);
         if (L[cursor] = '}') then Dec(nestlv);
-        if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+        if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+        else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
         Inc(cursor);
       end;
       if Steps = -1 then begin
