@@ -2,6 +2,7 @@
 */lib
 *.o
 *.ppu
+*.exe
 plans.md
 trash/
 rpn_console/rpn

@@ -4,7 +4,7 @@ uses Unit2, Unit5, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. April 26, 2018.');
+     writeln('Paul Lipkowski. May 3, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
@@ -191,6 +191,9 @@ end;
 var
    x, maska : String;
    sets     : TSettings;
+
+{$R *.res}
+
 begin
 	randomize();
 	case ParamCount of

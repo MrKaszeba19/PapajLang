@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-April 26, 2018  
+May 3, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -157,11 +157,13 @@ despace | Eliminates space chars
 onespace | Eliminates combo space chars (e.g. "2   3" -> "2 3")
 split | Splits a string according to space chars
 strparse | Parses a string like it was a set of RPN commands
+shell | Execute a command being included in S1
 
 
 **Examples:**
 - `5 times 2 sum` sums five 2's
 - `5 times scan all sum` sums five numbers scanned by an input
+- `"ls" shell` executes `ls` (assuming RPN uses `bash`)
 
 ### Stack operations
 
@@ -290,15 +292,23 @@ Operand | Purpose
 | @autoclear(BOOL)     | Stack is wisely cleared after every operation (BOOL=true by default)                                    |
 | @sorttype(STYPE)     | Set a type of sorting a stack                                                                           |
 | @casesensitive(BOOL) | Whether it does matter if you type a command like THIS, or this, or tHiS                                |
+| @useshell(SHELL)     | Specify what shell do you want to use                                                                   |
 | //                   | One-line comment (only parsing text files)                                                              |
 
 *BOOL* available values are `true` or `false`
+
 *STYPE* available values are
 - `BUBBLESORT` or `BSORT` or `0` - bubblesort
 - `QUICKSORT` or `QSORT` or `1` - quicksort (*set by default*)
 - `MERGESORT` or `MSORT` or `2` - mergesort
 - `RANDOMSORT` or `RSORT` or `3` or `BOGOSORT` - random sort/bogosort (_for devils and masochists only, use at **your own** risk_)
 
+*SHELL* available values are
+- `BASH` - use /bin/bash shell (*set by default on UNIX systems*)
+- `CMD` - use cmd.exe shell (*set by default on Windows systems*)
+- `PWSH` or `POWERSHELL` - use PowerShell
+- `SH` - use /bin/sh shell
+- `ZSH` - use /bin/zsh shell
 
 **Examples:**
 - `#int 14.89` prints a stack with "15"
@@ -330,5 +340,5 @@ Version | Version Name | Date of Release | Improvements
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
-0.4.1 | Zain | soon | Introducing a vector type, REPL, variables, more string functions
+0.4.1 | Zain | soon | RPN logo, shell usage, introducing a vector type, REPL, variables, more string functions
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

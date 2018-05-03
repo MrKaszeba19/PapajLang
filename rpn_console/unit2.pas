@@ -5,7 +5,7 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, StrUtils;
+  Classes, SysUtils, StrUtils, Process;
 
 const
 	PI = 3.1415926535897932384626433832795;
@@ -17,6 +17,11 @@ const
 	TVEN = 3;
 	TVES = 4;
 	TVEC = 5;
+	SHELL_BASH = '/bin/bash';
+	SHELL_ZSH  = '/bin/zsh';
+	SHELL_SH   = '/bin/sh';
+	SHELL_CMD  = 'C:\Windows\System32\cmd.exe';
+	SHELL_PWSH = 'C:\Windows\System32\WindowsPowershell\v1.0\powershell.exe';
 
 type Entity = record
 	EntityType : Integer;
@@ -44,6 +49,7 @@ type TSettings = record
     SortType           : ShortInt;
     StrictType         : Boolean;
     CaseSensitive      : Boolean;
+    Shell              : String;
 end;
 // sorts
 // 0 - bubblesort
@@ -623,9 +629,28 @@ begin
   pom.SortType := 1;
   pom.StrictType := true;
   pom.CaseSensitive := true;
+  {$IFDEF MSWINDOWS}
+  pom.Shell := SHELL_CMD;
+  {$ELSE}
+  pom.Shell := SHELL_BASH;
+  {$ENDIF}
   default_settings := pom;
 end;
 
+// COMMANDS' EXECUTION
+
+function executeCommand(input, Shell : String) : String;
+var
+	s : String;
+begin
+	s := '';
+	{$IFDEF MSWINDOWS}
+	RunCommand(Shell,['/c', input],s);
+ 	{$ELSE}
+  	RunCommand(Shell,['-c', input],s);
+ 	{$ENDIF}
+ 	executeCommand := s;
+end;
 
 
 // EVALUATION
@@ -1433,6 +1458,18 @@ begin
             //stack_add(pocz, buildString(StrEcx));
           end;
 
+          'shell' : begin
+            if (sets.StrictType) then assertEntityLocated(pocz^.Val, TSTR, i); 
+            StrEbx := pocz^.Val.Str;
+            stack_remove(pocz);
+            StrEcx := executeCommand(StrEbx, sets.Shell);
+            if not (sets.Autoclear) then begin
+              stack_add(pocz, buildString(StrEbx));
+            end;
+            stack_add(pocz, buildString(StrEcx));
+          end;
+
+
           // Directives
           '@silent' : begin
              sets.Prevent := true;
@@ -1524,6 +1561,25 @@ begin
           '@sorttype(3)' : begin
              sets.sorttype := 3;
           end;
+          '@useshell(BASH)' : begin
+             sets.Shell := SHELL_BASH;
+          end;
+          '@useshell(ZSH)' : begin
+             sets.Shell := SHELL_ZSH;
+          end;
+          '@useshell(SH)' : begin
+             sets.Shell := SHELL_SH;
+          end;
+          '@useshell(CMD)' : begin
+             sets.Shell := SHELL_CMD;
+          end;
+          '@useshell(POWERSHELL)' : begin
+             sets.Shell := SHELL_PWSH;
+          end;
+          '@useshell(PWSH)' : begin
+             sets.Shell := SHELL_PWSH;
+          end;
+          
 
 
           // single operands
