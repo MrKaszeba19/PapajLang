@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-May 3, 2018  
+June 8, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -27,11 +27,10 @@ Ordinary expression | RPN Expression
 ### Console application
 - Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- In order to specify your output, you can execute rpn with a flag (e.g. `rpn "2 3.4 + 4.5 *" -i` provides an output of rounded integer). Type a command `rpn flags` to check out the available flags in this program.
 - If you need help, you can type `rpn help`.
 - If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
 
-**Flags are working now, but due to existence of the directives, they are supposed to be removed**
+**Flags are actually removed and won't be available in the next releases, from 0.4.1 onwards**
 
 ### GUI Application
 - Open an app executable.
@@ -311,9 +310,9 @@ Operand | Purpose
 - `ZSH` - use /bin/zsh shell
 
 **Examples:**
-- `#int 14.89` prints a stack with "15"
-- `#int trunc 14.89` prints stack with "14"
-- `#silent #int trunc 14.89` doesn't print the stack
+- `@int 14.89` prints a stack with "15"
+- `@int trunc 14.89` prints stack with "14"
+- `@silent @int trunc 14.89` doesn't print the stack
 - `2 3 +` prints a stack with "5"
 - `@autoclear(true) 2 3 +` prints a stack with "5" - as 2 and 3 were removed automatically after usage
 - `@autoclear(false) 2 3 +` prints a stack with "2 3 5"
@@ -340,5 +339,5 @@ Version | Version Name | Date of Release | Improvements
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
-0.4.1 | Zain | soon | RPN logo, shell usage, introducing a vector type, REPL, variables, more string functions
+0.4.1 | Zain | soon | reconstruction and optimization, RPN logo, shell usage, introducing a vector type, REPL, variables, more string functions
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

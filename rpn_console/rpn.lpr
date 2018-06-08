@@ -1,10 +1,10 @@
 program rpn;
-uses Unit2, Unit5, Sysutils;
+uses Unit2, Unit5, Unit7, Sysutils;
 
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. May 3, 2018.');
+     writeln('Paul Lipkowski. June 8, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
@@ -16,25 +16,9 @@ begin
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
-     writeln('Run ''rpn flags'' to obtain info about flags.');
      writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
      writeln('');
      writeln('More help at github.com/RooiGevaar19/RPNCalculator');
-end;
-
-procedure show_flags();
-begin
- 	writeln('Flags: ');
- 	writeln('    -e        Provides an output in scientific notation');
- 	writeln('    -i        Provides an integer output (truncated)');
- 	writeln('    -f        DEFAULT - Provides a decimal output');
- 	writeln('              except for large numbers (more than 2E+49)');
- 	writeln('    -f2       Provides a decimal output truncated to 2 digits');
- 	writeln('    -f15      Provides a decimal output for all numbers');
- 	writeln('              (with a constant precision of 15 digits)');
- 	writeln('    -d        Provides a decimal output with thousands separators');
- 	writeln('    -m        Provides a decimal 2-digit-precise output with thousands separators (money output)');
- 	writeln('No flag provided - works on the ''-f'' flag by default.')
 end;
 
 procedure show_expressions;
@@ -98,7 +82,7 @@ end;
 procedure show_operands3();
 begin
 	writeln('Stack operations model (set of expressions put on the stack) (operand),'); 
-	writeln('e.g. 5 2 3 + 7 sum => 5 5 7 sum');
+	writeln('e.g. 5 2 3 + 7 sum => 5 5 7 sum => 17');
 	writeln('Available stack operations:');
 	writeln('       sum   product     count       avg');
 	writeln('       min       max');
@@ -153,21 +137,6 @@ begin
 end;
 
 
-//work in progress
-
-function check_flags(input : String) : String;
-begin
-	case input of
-		'-f' : check_flags := '0.################';
-		'-f2' : check_flags := '0.00';
-		'-f15' : check_flags := '0.000000000000000';
-		'-d' : check_flags := '#,###.################';
-		'-m' : check_flags := '#,###.00';
-		'-i' : check_flags := '0';
-		'-e' : check_flags := '0.000E+00';
-	end;
-end;
-
 function read_file(filename : String; var sets : TSettings) : String;
 var
   fun, S : String;
@@ -214,11 +183,7 @@ begin
      			'operands' : begin
      				show_version();
      				show_operands();
-     			end;
-     			'flags' : begin
-     				show_version();
-     				show_flags();
-     			end;
+     			end
      			else begin
      				try
      					sets := default_settings();
@@ -233,7 +198,7 @@ begin
      			end;
      		end;
 		end;
-		2 : begin
+		else begin
 			case ParamStr(1) of
 				'operands' : begin
      				show_version();
@@ -257,38 +222,6 @@ begin
      			'parse' : begin
      				try
      					sets := default_settings();
-     					x := read_file(ParamStr(2), sets);
-        				if (sets.Prevent = false) then writeln(x);
-              		except
-              			On E : Exception do
-                 		begin
-                      		writeln(StdErr, E.ToString);
-                 		end;
-              		end;
-     			end;
-     			else begin
-     				maska := check_flags(ParamStr(2));
-     				sets := default_settings();
-     				sets.mask := maska;
-     				try
-     					x := calc_parseRPN(ParamStr(1), sets);
-        				if (sets.Prevent = false) then writeln(x);
-              		except
-              			On E : Exception do
-                 		begin
-                      		writeln(StdErr, E.ToString);
-                 		end;
-              		end;
-     			end;
-			end;
-		end;
-		3 : begin
-			case ParamStr(1) of
-				'parse' : begin
-     				maska := check_flags(ParamStr(3));
-     				sets := default_settings();
-     				sets.mask := maska;
-     				try
      					x := read_file(ParamStr(2), sets);
         				if (sets.Prevent = false) then writeln(x);
               		except

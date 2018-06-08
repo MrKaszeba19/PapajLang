@@ -3,32 +3,48 @@
   <ProjectSession>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="3">
+    <Units Count="5">
       <Unit0>
         <Filename Value="rpn.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="140"/>
-        <CursorPos X="61" Y="86"/>
+        <CursorPos X="60" Y="2"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="unit2.pas"/>
-        <UnitName Value="Unit2"/>
+        <Filename Value="unit6.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit6"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="514"/>
-        <CursorPos X="27" Y="549"/>
-        <UsageCount Value="10"/>
+        <CursorPos X="11"/>
+        <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="unit5.pas"/>
-        <UnitName Value="Unit5"/>
-        <EditorIndex Value="2"/>
+        <Filename Value="unit2.pas"/>
+        <UnitName Value="Unit2"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="26"/>
+        <CursorPos Y="56"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit2>
+      <Unit3>
+        <Filename Value="unit5.pas"/>
+        <UnitName Value="Unit5"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="unit7.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit7"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="11"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit4>
     </Units>
     <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
