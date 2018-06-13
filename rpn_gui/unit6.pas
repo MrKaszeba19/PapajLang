@@ -8,7 +8,7 @@ interface
 uses Unit7, Classes, SysUtils;
 
 type StackDB = record
-  Values : array of Entity;
+  Values : TEntities;
 end;
 
 function stack_null() : StackDB;
@@ -21,6 +21,13 @@ function stack_getback(pocz : StackDB; index : LongInt) : Entity;
 function stack_size(poc : StackDB) : Longint;
 function stack_show(poc : StackDB; mask : String) : String;
 function stack_reverse(poc : StackDB) : StackDB;
+
+function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
+function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
+function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
+procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
+procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
+procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
 
 implementation
 
@@ -112,6 +119,58 @@ begin
     stack_reverse := pom;   
 end;
 
+function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
+var
+	pom : Entity;
+	i   : LongInt;
+begin
+	pom := poc.Values[Length(poc.Values)-index];
+	for i := Length(poc.Values)-index to Length(poc.Values)-2 do poc.Values[i] := poc.Values[i+1];
+	SetLength(poc.Values, Length(poc.Values)-1);
+	stack_popback := pom;
+end;
+
+function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
+var
+	pom : TEntities;
+	i   : LongInt;
+begin
+	SetLength(pom, index);
+	for i := 0 to index-1 do pom[i] := poc.Values[Length(poc.Values)-index+i];
+	stack_getCollection := pom;
+end;
+
+function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
+var
+	pom : TEntities;
+	i   : LongInt;
+begin
+	SetLength(pom, index);
+	for i := 0 to index-1 do pom[i] := poc.Values[Length(poc.Values)-index+i];
+	SetLength(poc.Values, Length(poc.Values)-index);
+	stack_popCollection := pom;
+end;
+
+procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
+begin
+	SetLength(poc.Values, Length(poc.Values)-index);
+end;
+
+procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
+var
+    len : LongInt;
+    i   : LongInt;
+begin
+	len := Length(poc.Values);
+    SetLength(poc.Values, len+Length(nodes));
+    for i := 0 to Length(nodes)-1 do poc.Values[len+i] := nodes[i];
+end;
+
+procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
+var
+	i : LongInt;
+begin
+	for i := 0 to (index div 2)-1 do swapEntities(poc.Values[Length(poc.Values)-index+i], poc.Values[Length(poc.Values)-i-1]);
+end;
 
 end.
-

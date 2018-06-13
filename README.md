@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-June 8, 2018  
+June 13, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -180,6 +180,7 @@ avg | mean of the values
 max | maximum value of the values
 min | minimum value of the values
 median | median
+rev | reverse the top N elements of the stack
 
 
 **Examples:**
@@ -208,22 +209,24 @@ seq | generates an arithmetical sequence from A to B and puts it on the stack (s
 gseq | generates a geometical sequence from A to B and puts it on the stack (syntax: `A STEP B gseq`)
 seql | generates an arithmetical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N seq`)
 gseql | generates a geometrical sequence of N numbers and puts it on the stack (syntax: `BEGIN STEP N gseq`)
-rev | reverses the stack
+rev | reverses the top N elements of the stack
+reverse | reverses the entire stack
 
 **Examples:**
 - `1 1 8 seq` generates "1 2 3 4 5 6 7 8"
 - `1 3 8 seql` generates "1 4 7 10 13 16 19 22"
 - `8 2 1 gseq` generates "8 4 2 1"
 - `8 -1 10 gseql` generates "8 -8 8 -8 8 -8 8 -8 8 -8"
-- `1 2 3 4 rev` transforms into "4 3 2 1"
+- `1 2 3 4 reverse` transforms into "4 3 2 1"
 - `5 10 times clone` generates "5 5 5 5 5 5 5 5 5 5 5"
 - `5 4 3 2 1 2 keep` results in a stack of "2 1"
 - `5 4 3 2 1 2 copy` results in a stack of "5 4 3 2 1 2 1"
 - `5 4 3 2 1 2 mcopy` results in a stack of "5 4 3 2 1 1 2"
-- `5 4 3 2 1 2 sort` results in a stack of "1 2 2 3 4 5"
+- `5 4 3 2 1 2 all sort` results in a stack of "1 2 2 3 4 5"
+- `5 4 3 1 7 2  3 rev` results in a stack of "5 4 3 2 7 1"
 
 **Protips:**
-- `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `rev size 2 / keep rev` - assuming the sizes "old stack" and the "new stack" are the same.
+- `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `reverse size 2 / keep reverse` - assuming the sizes of "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
 ### Other operands ans directives

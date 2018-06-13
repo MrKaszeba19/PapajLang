@@ -71,6 +71,8 @@ procedure assertNotNegativeLocated(val : Entity; operand : String);
 procedure assertIntegerLocated(val : Entity; operand : String);
 procedure assertNaturalLocated(val : Entity; operand : String);
 
+procedure swapEntities(var e1 : Entity; var e2 : Entity);
+
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
@@ -172,6 +174,16 @@ begin
   if (val.Num < 0) or (val.Num <> trunc(val.Num)) then 
     raiserror('Exception when taking a numeric value at "'+operand+'": an positive integer or zero expected');
 end;
+
+procedure swapEntities(var e1 : Entity; var e2 : Entity);
+var
+	pom : Entity;
+begin
+	pom := e1;
+	e1 := e2;
+	e2 := pom;
+end;
+
 
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 var

@@ -25,9 +25,9 @@ const
 //function bs_isSorted(var data : array of Extended) : Boolean;
 //procedure bs_shuffle(var data : array of Extended);
 //procedure bubblesort(var tab : array of Extended);
-procedure quicksort(var tab : array of Extended);
-procedure mergesort(var tab : array of Extended);
-procedure bogosort(var tab : array of Extended);
+procedure quicksort(var tab : TEntities);
+procedure mergesort(var tab : TEntities);
+procedure bogosort(var tab : TEntities);
 
 function commentcut(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
@@ -122,9 +122,9 @@ end;
 
 // TABLES AGGREGATE
 
-procedure table_reverse(var tab : array of Extended);
+procedure table_reverse(var tab : TEntities);
 var 
-	pom : array of Extended;
+	pom : TEntities;
 	i   : Integer;
 begin
 	SetLength(pom, Length(tab));
@@ -133,83 +133,82 @@ begin
 	SetLength(pom, 0);
 end;
 
-function table_sum(tab : array of Extended) : Extended;
+function table_sum(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
 	s := 0.0;
   for i := 0 to Length(tab)-1 do
-  	s := s + tab[i];
+  	s := s + tab[i].Num;
   table_sum := s;
 end;
 
-function table_product(tab : array of Extended) : Extended;
+function table_product(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
 	s := 1.0;
   for i := 0 to Length(tab)-1 do
-  	s := s * tab[i];
+  	s := s * tab[i].Num;
   table_product := s;
 end;
 
-function table_avg(tab : array of Extended) : Extended;
+function table_avg(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
 	s := 0.0;
   for i := 0 to Length(tab)-1 do
-  	s := s + tab[i];
+  	s := s + tab[i].Num;
   table_avg := s/Length(tab);
 end;
 
-function table_min(tab : array of Extended) : Extended;
+function table_min(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
-	s := tab[0];
+	s := tab[0].Num;
   for i := 1 to Length(tab)-1 do
-  	if (tab[i] < s) then s := tab[i];
+  	if (tab[i].Num < s) then s := tab[i].Num;
   table_min := s;
 end;
 
-function table_max(tab : array of Extended) : Extended;
+function table_max(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
-	s := tab[0];
+	s := tab[0].Num;
   for i := 1 to Length(tab)-1 do
-  	if (tab[i] > s) then begin
-  		s := tab[i];
-  		//writeln(s);
+  	if (tab[i].Num > s) then begin
+  		s := tab[i].Num;
   	end; 
   table_max := s;
 end;
 
-function table_median(tab : array of Extended) : Extended;
+function table_median(tab : TEntities) : Extended;
 begin
 	quicksort(tab);
-	if (Length(tab) mod 2 = 0) then table_median := 0.5*(tab[Length(tab) div 2 - 1] + tab[Length(tab) div 2])
-	else table_median := tab[Length(tab) div 2];
+	if (Length(tab) mod 2 = 0) then table_median := 0.5*(tab[Length(tab) div 2 - 1].Num + tab[Length(tab) div 2].Num)
+	else table_median := tab[Length(tab) div 2].Num;
 end;
 
-function table_abs(tab : array of Extended) : Extended;
+function table_abs(tab : TEntities) : Extended;
 var
 	i : Integer;
 	s : Extended;
 begin
 	s := 0.0;
   for i := 0 to Length(tab)-1 do
-  	s := s + tab[i]*tab[i];
+  	s := s + tab[i].Num * tab[i].Num;
   table_abs := sqrt(s);
 end;
 
-function table_variance(tab : array of Extended) : Extended;
+function table_variance(tab : TEntities) : Extended;
 var
 	i    : Integer;
 	s    : Extended;
@@ -218,43 +217,43 @@ begin
   mean := table_avg(tab);
   s := 0.0;
   for i := 0 to Length(tab)-1 do
-    s := s + sqr(tab[i]-mean);
+    s := s + sqr(tab[i].Num - mean);
   table_variance := s/Length(tab);
 end;
 
-function table_stddev(tab : array of Extended) : Extended;
+function table_stddev(tab : TEntities) : Extended;
 begin
 	table_stddev := sqrt(table_variance(tab));
 end;
 
 // SORTS
 
-procedure bubblesort(var tab : array of Extended);
+procedure bubblesort(var tab : TEntities);
 var
   i, j : Longint;
-  pom  : Extended;
+  pom  : Entity;
 begin
   for j := Length(tab)-1 downto 1 do
     for i := 0 to j-1 do 
-      if (tab[i] > tab[i+1]) then begin
+      if (tab[i].Num > tab[i+1].Num) then begin
         pom := tab[i];
         tab[i] := tab[i+1];
         tab[i+1] := pom;
       end;
 end;
 
-procedure qs_engine(var AI: array of Extended; ALo, AHi: Integer);
+procedure qs_engine(var AI: TEntities; ALo, AHi: Integer);
 var
   Lo, Hi   : Integer;
-  Pivot, T : Extended;
+  Pivot, T : Entity;
 begin
   Lo := ALo;
   Hi := AHi;
   Pivot := AI[(Lo + Hi) div 2];
   repeat
-    while AI[Lo] < Pivot do
+    while AI[Lo].Num < Pivot.Num do
       Inc(Lo) ;
-    while AI[Hi] > Pivot do
+    while AI[Hi].Num > Pivot.Num do
       Dec(Hi) ;
     if Lo <= Hi then
     begin
@@ -271,28 +270,28 @@ begin
     qs_engine(AI, Lo, AHi);
 end;
 
-procedure quicksort(var tab : array of Extended);
+procedure quicksort(var tab : TEntities);
 begin
   qs_engine(tab, 0, Length(tab)-1);
 end;
 
-procedure ms_merge(var a : array of Extended; l,r,x,y:Integer);
+procedure ms_merge(var a : TEntities; l,r,x,y:Integer);
 var 
   i,j,k,s : Integer;
-  c       : array of Extended;
+  c       : TEntities;
 begin
-  i:=l;
-  j:=y;
-  k:=0;
+  i := l;
+  j := y;
+  k := 0;
   SetLength(c,r-l+1+y-x+1);
   while (l<=r) and (x<=y) do
   begin
-    if a[l]<a[x] then
+    if a[l].Num < a[x].Num then
     begin
-      c[k]:=a[l];
+      c[k] := a[l];
       inc(l);
     end else begin
-      c[k]:=a[x];
+      c[k] := a[x];
       inc(x);
     end;
     inc(k);
@@ -319,7 +318,7 @@ begin
   end;
 end;
 
-procedure ms_engine(var a : array of Extended; l,r:Integer);
+procedure ms_engine(var a : TEntities; l,r:Integer);
 var 
   m : Integer;
 begin
@@ -330,26 +329,26 @@ begin
   ms_merge(a, l, m, m+1, r);
 end;
 
-procedure mergesort(var tab : array of Extended);
+procedure mergesort(var tab : TEntities);
 begin
   ms_engine(tab, 0, Length(tab)-1);
 end;
 
-function bs_isSorted(var data : array of Extended) : Boolean;
+function bs_isSorted(var data : TEntities) : Boolean;
 var
   Count : Longint;
   res   : Boolean;
 begin
   res := true;
   for count := Length(data)-1 downto 1 do
-    if (data[count] < data[count - 1]) then res := false;
+    if (data[count].Num < data[count - 1].Num) then res := false;
   bs_isSorted := res;
 end;
 
-procedure bs_shuffle(var data : array of Extended);
+procedure bs_shuffle(var data : TEntities);
 var
   Count, rnd, i : Longint;
-  pom           : Extended;
+  pom           : Entity;
 begin
   Count := Length(data);
   for i := 0 to Count-1 do
@@ -361,7 +360,7 @@ begin
   end;
 end;
 
-procedure bogosort(var tab : array of Extended);
+procedure bogosort(var tab : TEntities);
 begin
   randomize();
   while not (bs_isSorted(tab)) do bs_shuffle(tab);
@@ -1397,18 +1396,20 @@ begin
           'sort' : begin
             if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i);
             size := trunc(stack_pop(pocz).Num);
-          	//size := stack_size(pocz);
-            SetLength(HelpNTable, size);
-            for index := 0 to size-1 do begin
-              if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-              HelpNTable[index] := stack_pop(pocz).Num;
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                if (sets.sorttype = 0) then bubblesort(HelpETable);
+                if (sets.sorttype = 1) then quicksort(HelpETable);
+                if (sets.sorttype = 2) then mergesort(HelpETable);
+                if (sets.sorttype = 3) then bogosort(HelpETable);
+                stack_pushCollection(pocz, HelpETable);
+                SetLength(HelpETable, 0);
             end;
-            if (sets.sorttype = 0) then bubblesort(HelpNTable);
-            if (sets.sorttype = 1) then quicksort(HelpNTable);
-            if (sets.sorttype = 2) then mergesort(HelpNTable);
-            if (sets.sorttype = 3) then bogosort(HelpNTable);
-            for index := 0 to size-1 do stack_push(pocz, buildNumber(HelpNTable[index]));         
-            SetLength(HelpNTable, 0);
           end;
           'rand' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
@@ -1418,58 +1419,51 @@ begin
             if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
             stack_push(pocz, buildNumber(z));
           end;
+          'reverse' : begin
+            pocz := stack_reverse(pocz);
+          end;
+          'rev' : begin
+            if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then stack_reverseCollection(pocz, size);
+          end;
              
 
 
           // stack operands
           'sum' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          		    if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		    HelpNTable[index] := stack_pop(pocz).Num;
-          		end;
-          		z := table_sum(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+          	size := trunc(stack_pop(pocz).Num);
+          	if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_sum(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNumber(0.0));
+            end;
           end;
           'product' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-                    HelpNTable[index] := stack_pop(pocz).Num;
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_product(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(1.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_product(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNumber(1.0));
+            end;
           end;
           'count' : begin
           	z := 0.0;
@@ -1490,162 +1484,105 @@ begin
           end;
           'avg' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		//table_reverse(HelpNTable);
-          		z := table_avg(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_avg(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNumber(0.0));
+            end;
           end;
           'min' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_min(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_min(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNull());
+            end;
           end;
           'max' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_max(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_max(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNull());
+            end;
           end;
           'median' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_median(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_median(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNull());
+            end;
           end;
           'variance' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_variance(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_variance(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNull());
+            end;
           end;
           'stddev' : begin
           	if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i); 
-          	y := stack_get(pocz).Num;
-          	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpNTable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TNUM, i);
-          		  HelpNTable[index] := stack_get(pocz).Num;
-          		  stack_pop(pocz);
-          		end;
-          		table_reverse(HelpNTable);
-          		z := table_stddev(HelpNTable);
-          		if not (sets.Autoclear) then begin 
-          			IntEax := trunc(y)-1;
-          			repeat
-          				stack_push(pocz, buildNumber(HelpNTable[IntEax]));
-          				Dec(IntEax);
-          			until IntEax = 0;
-          		end;
-          		SetLength(HelpNTable, 0);
-          		stack_push(pocz, buildNumber(z));
-          	end else if (y = 0) then begin
-          	  stack_push(pocz, buildNumber(0.0));
-          	end;
-          end;
-          'rev' : begin
-          	pocz := stack_reverse(pocz);
+            size := trunc(stack_pop(pocz).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz, size)
+                else 
+                    HelpETable := stack_getCollection(pocz, size);
+                ExtEax := table_variance(HelpETable);
+                stack_push(pocz, buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz, buildNull());
+            end;
           end;
              
           // stack creators

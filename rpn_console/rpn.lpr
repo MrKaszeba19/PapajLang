@@ -4,7 +4,7 @@ uses Unit2, Unit5, Unit7, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. June 8, 2018.');
+     writeln('Paul Lipkowski. June 13, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
