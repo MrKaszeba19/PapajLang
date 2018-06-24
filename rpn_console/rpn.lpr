@@ -1,5 +1,5 @@
 program rpn;
-uses Unit2, Unit5, Unit7, Sysutils;
+uses Unit2, Unit5, UnitEntity, Sysutils;
 
 procedure show_version();
 begin

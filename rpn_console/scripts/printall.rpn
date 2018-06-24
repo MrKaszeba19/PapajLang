@@ -1,3 +1,4 @@
 @silent
-tilleof scannum rev
+tilleof scannum 
+reverse
 size times rprintln

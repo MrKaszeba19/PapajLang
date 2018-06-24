@@ -1,4 +1,4 @@
-unit Unit7;
+unit UnitEntity;
 // Unit with Settings, Entities and Variables
 
 {$mode objfpc}{$H+}
@@ -62,6 +62,7 @@ type VariableDB = record
 end;
 
 function default_settings() : TSettings;
+procedure raiserror(Const msg : string);  
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
@@ -236,7 +237,7 @@ var
   pom : Entity;
 begin
   pom.EntityType := TNIL;
-  pom.Str := 'null';
+  pom.Str := 'NULL';
   pom.Num := 0;
   buildNull := pom;
 end;

@@ -5,16 +5,16 @@ statusln clear
 
 @sorttype(BSORT)
 @source("data.rpn")
-sort statusln clear
+all sort statusln clear
 
 @sorttype(QSORT)
 @source("data.rpn")
-sort statusln clear
+all sort statusln clear
 
 @sorttype(MSORT)
 @source("data.rpn")
-sort statusln clear
+all sort statusln clear
 
 @sorttype(RSORT)
 @source("data.rpn")
-sort statusln clear
+all sort statusln clear
