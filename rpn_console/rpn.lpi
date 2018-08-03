@@ -31,21 +31,26 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="3">
+    <Units Count="4">
       <Unit0>
         <Filename Value="rpn.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="unit6.pas"/>
+        <Filename Value="UnitStack.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit6"/>
+        <UnitName Value="UnitStack"/>
       </Unit1>
       <Unit2>
-        <Filename Value="unit7.pas"/>
+        <Filename Value="UnitEntity.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit7"/>
+        <UnitName Value="UnitEntity"/>
       </Unit2>
+      <Unit3>
+        <Filename Value="UnitFunctions.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UnitFunctions"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

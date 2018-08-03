@@ -1,0 +1,18 @@
+@silent
+
+scan tonumber 
+clone 0 >= ?
+if {
+	"You entered a natural number." println
+} else {
+	"You didn't enter a natural number." println
+}
+
+5 != ?
+else {
+	5 times {
+		"And this number is 5." println
+	}
+}
+
+"And that's it" println

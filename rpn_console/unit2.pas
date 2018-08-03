@@ -42,8 +42,11 @@ begin
     Val (i,Im,Code);
     If Code<>0 then
     begin
-        if not lib_vanilla(i, pocz, Steps, sets, vardb) then
         if not lib_directives(i, pocz, Steps, sets, vardb) then
+        if not lib_constants(i, pocz, Steps, sets, vardb) then
+        if not lib_logics(i, pocz, Steps, sets, vardb) then
+        if not lib_variables(i, pocz, Steps, sets, vardb) then
+        if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
         stack_push(pocz, buildString(StrEcx));
     end else begin
         stack_push(pocz, buildNumber(Im));
@@ -98,50 +101,63 @@ var
         cursor : LongInt;
         nestlv : ShortInt;
         nesttx : String;
+        cond   : ShortInt;
+        permit : Boolean;
 begin
-  L := TStringlist.Create;
-  L.Delimiter := ' ';
-  L.QuoteChar := '"';
-  L.StrictDelimiter := false;
-  L.DelimitedText := input;
+	L := TStringlist.Create;
+	L.Delimiter := ' ';
+	L.QuoteChar := '"';
+	L.StrictDelimiter := false;
+	L.DelimitedText := input;
 
-  //writeln(input);
-
-  Steps := 1;
-
-  index := 0;
-  while index < L.Count do
-  begin
-    if L[index] = '{' then begin
-      nestlv := 1;
-      nesttx := '';
-      cursor := index + 1;
-      while (nestlv > 0) and (cursor < L.Count) do begin
-        if (L[cursor] = '{') then Inc(nestlv);
-        if (L[cursor] = '}') then Dec(nestlv);
-        if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-        else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-        Inc(cursor);
-      end;
-      if Steps = -1 then begin
-        repeat
-          parseRPN(nesttx, pocz, sets, vardb); 
-        until EOF;
-        stack_pop(pocz);
-      end else for step := 1 to Steps do parseRPN(nesttx, pocz, sets, vardb); 
-      index := cursor - 1;
-    end else begin
-      if Steps = -1 then begin
-        repeat
-          evaluate(L[index], pocz, Steps, sets, vardb);
-        until EOF;
-        stack_pop(pocz);
-      end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb); 
-    end;
-
-
-    Inc(index);
-  end;
+  	Steps := 1;
+  	cond := -1;
+  	permit := True;
+  	index := 0;
+  	while index < L.Count do
+	begin
+		if L[index] = '?' then begin
+			cond := trunc(stack_pop(pocz).Num);
+		end else if (L[index] = 'if') then begin
+			if cond = 0 then permit := True
+			else permit := False;
+		end else if L[index] = 'else' then begin
+			if cond = 0 then permit := False
+			else permit := True;
+		end else begin
+			if L[index] = '{' then begin
+	    		nestlv := 1;
+	    		nesttx := '';
+	    		cursor := index + 1;
+	    		while (nestlv > 0) and (cursor < L.Count) do begin
+	    			if (L[cursor] = '{') then Inc(nestlv);
+	    			if (L[cursor] = '}') then Dec(nestlv);
+	    			if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+	    			else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    			Inc(cursor);
+	    		end;
+	    		if (permit) then
+	    			if Steps = -1 then begin
+	    				repeat
+	    				  parseRPN(nesttx, pocz, sets, vardb); 
+	    				until EOF;
+	    				stack_pop(pocz);
+	    			end else for step := 1 to Steps do parseRPN(nesttx, pocz, sets, vardb);
+	    		permit := True;
+	    		index := cursor - 1;
+	    	end else begin
+	    		if (permit) then
+	    			if Steps = -1 then begin
+	    				repeat
+	    					evaluate(L[index], pocz, Steps, sets, vardb);
+	    				until EOF;
+	    				stack_pop(pocz);
+	    			end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
+	    		permit := True; 
+	    	end;
+	    end;
+    	Inc(index);
+  	end;
   z := '';
   L.Free;
 

@@ -5,7 +5,7 @@ unit Unit5;
 interface
 
 uses
-  Classes, SysUtils, Unit2, Unit7;
+  Classes, SysUtils, Unit2, UnitEntity;
 
 const
     is_gui = true;

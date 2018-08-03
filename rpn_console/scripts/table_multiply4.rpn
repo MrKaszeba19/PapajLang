@@ -1,0 +1,16 @@
+@silent
+
+scan tonumber clone >n
+2 ^ tostring length ++ >len
+
+0 >i
+$n ++ times {
+	clear
+	0 1 $n seq
+	size times {
+		qshift $i *
+		$len colprint
+	}
+	newln
+	$i ++ >i
+}

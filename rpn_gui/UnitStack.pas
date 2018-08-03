@@ -1,11 +1,11 @@
-unit Unit6;
+unit UnitStack;
 // Unit with Stacks
 
 {$mode objfpc}{$H+}
 
 interface
 
-uses Unit7, Classes, SysUtils;
+uses UnitEntity, Classes, SysUtils;
 
 type StackDB = record
   Values : TEntities;
@@ -14,12 +14,14 @@ end;
 function stack_null() : StackDB;
 procedure stack_push(var pocz:StackDB; node : Entity);
 function stack_pop(var pocz:StackDB) : Entity;
+function stack_firstpop(var poc : StackDB) : Entity;
 procedure stack_justpop(var pocz:StackDB);
 procedure stack_clear(var pocz:StackDB);
 function stack_get(pocz : StackDB) : Entity;
 function stack_getback(pocz : StackDB; index : LongInt) : Entity;
 function stack_size(poc : StackDB) : Longint;
 function stack_show(poc : StackDB; mask : String) : String;
+function stack_showBeautiful(poc : StackDB; mask : String) : String;
 function stack_reverse(poc : StackDB) : StackDB;
 
 function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
@@ -30,6 +32,23 @@ procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
 procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
 
 implementation
+
+uses StrUtils;
+
+// helpful ones
+
+function find_maxStrlen(tab : TEntities) : LongInt;
+var
+    i : Integer;
+    s : LongInt;
+begin
+    s := 0;
+    for i := 0 to Length(tab)-1 do
+    if (Length(tab[i].Str) > s) then begin
+        s := Length(tab[i].Str);
+    end; 
+    find_maxStrlen := s;
+end;
 
 // STACK OPERATIONS
 
@@ -100,11 +119,31 @@ begin
     begin
         if (i.EntityType = TNUM) then z := z + FormatFloat(mask, i.Num) + ' ';
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
+        if (i.EntityType = TNIL) then z := z + i.Str + ' ';
+        if (i.EntityType = TBOO) then z := z + i.Str + ' ';
     end;
     z := LeftStr(z, Length(z)-1);
     stack_show := z;
 end;
 
+function stack_showBeautiful(poc : StackDB; mask : String) : String;
+var
+  z   : String;
+  i   : Entity;
+  col : LongInt;
+begin
+    z := '';
+    col := find_maxStrlen(poc.Values)+1;
+    for i in poc.Values do
+    begin
+        if (i.EntityType = TNUM) then z := z + PadLeft(FormatFloat(mask, i.Num), col) + ' ';
+        if (i.EntityType = TSTR) then z := z + '"' + PadLeft(i.Str, col) + '" ';
+        if (i.EntityType = TNIL) then z := z + PadLeft(i.Str, col) + ' ';
+        if (i.EntityType = TBOO) then z := z + PadLeft(i.Str, col) + ' ';
+    end;
+    z := LeftStr(z, Length(z)-1);
+    stack_showBeautiful := z;
+end;
 
 function stack_reverse(poc : StackDB) : StackDB;
 var
@@ -171,6 +210,17 @@ var
 	i : LongInt;
 begin
 	for i := 0 to (index div 2)-1 do swapEntities(poc.Values[Length(poc.Values)-index+i], poc.Values[Length(poc.Values)-i-1]);
+end;
+
+function stack_firstpop(var poc:StackDB) : Entity;
+var
+    pom : Entity;
+    i   : LongInt;
+begin
+    pom := poc.Values[0];
+    for i := 0 to Length(poc.Values)-2 do poc.Values[i] := poc.Values[i+1];
+    SetLength(poc.Values, Length(poc.Values)-1);
+    stack_firstpop := pom;
 end;
 
 end.

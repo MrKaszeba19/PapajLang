@@ -120,6 +120,7 @@ begin
         if (i.EntityType = TNUM) then z := z + FormatFloat(mask, i.Num) + ' ';
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TNIL) then z := z + i.Str + ' ';
+        if (i.EntityType = TBOO) then z := z + i.Str + ' ';
     end;
     z := LeftStr(z, Length(z)-1);
     stack_show := z;
@@ -138,6 +139,7 @@ begin
         if (i.EntityType = TNUM) then z := z + PadLeft(FormatFloat(mask, i.Num), col) + ' ';
         if (i.EntityType = TSTR) then z := z + '"' + PadLeft(i.Str, col) + '" ';
         if (i.EntityType = TNIL) then z := z + PadLeft(i.Str, col) + ' ';
+        if (i.EntityType = TBOO) then z := z + PadLeft(i.Str, col) + ' ';
     end;
     z := LeftStr(z, Length(z)-1);
     stack_showBeautiful := z;

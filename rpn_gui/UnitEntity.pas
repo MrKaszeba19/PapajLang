@@ -1,4 +1,4 @@
-unit Unit7;
+unit UnitEntity;
 // Unit with Settings, Entities and Variables
 
 {$mode objfpc}{$H+}
@@ -16,6 +16,8 @@ const
 	TVES = 4;
 	TVEC = 5;
 	TBOO = 6;
+  TOBJ = 7;
+  TFUN = 8;
 	SHELL_BASH = '/bin/bash';
 	SHELL_ZSH  = '/bin/zsh';
 	SHELL_SH   = '/bin/sh';
@@ -62,6 +64,7 @@ type VariableDB = record
 end;
 
 function default_settings() : TSettings;
+procedure raiserror(Const msg : string);  
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
@@ -84,6 +87,7 @@ function createVariables() : VariableDB;
 function isVarAssigned(db : VariableDB; guess : String) : Boolean;
 function getVariable(db : VariableDB; guess : String) : Entity;
 procedure setVariable(var db : VariableDB; newname : String; newvalue : Entity);
+procedure destroyVariable(var db : VariableDB; guess : String);
 
 implementation
 
@@ -121,6 +125,8 @@ begin
     TVES : getEntityTypeName := 'vector<string>';
     TVEC : getEntityTypeName := 'vector<any>';
     TBOO : getEntityTypeName := 'boolean';
+    TOBJ : getEntityTypeName := 'object';
+    TFUN : getEntityTypeName := 'function';
     else getEntityTypeName := 'unknown';
   end;
 end;
@@ -222,10 +228,10 @@ begin
   pom.EntityType := TBOO;
   if (val) then
   begin
-    pom.Str := 'true';
+    pom.Str := 'TRUE';
     pom.Num := 0;
   end else begin
-    pom.Str := 'false';
+    pom.Str := 'FALSE';
     pom.Num := 1;
   end;
   buildBoolean := pom;
@@ -236,7 +242,7 @@ var
   pom : Entity;
 begin
   pom.EntityType := TNIL;
-  pom.Str := 'null';
+  pom.Str := 'NULL';
   pom.Num := 0;
   buildNull := pom;
 end;
@@ -294,7 +300,7 @@ end;
 
 procedure setVariable(var db : VariableDB; newname : String; newvalue : Entity);
 var
-	i      : Integer;
+	i      : LongInt;
 	is_set : Boolean;
 begin
 	is_set := false;
@@ -314,6 +320,30 @@ begin
 		db.Content[i].VarName := newname;
 		db.Content[i].StoredVar := newvalue;
 	end;
+end;
+
+procedure destroyVariable(var db : VariableDB; guess : String);
+var
+    i      : LongInt;
+    addr   : LongInt;
+    is_set : Boolean;
+begin
+    is_set := False;
+    for i := 0 to Length(db.Content)-1 do  
+    begin
+        if (guess = db.Content[i].VarName) then
+        begin
+            addr := i;
+            is_set := true;
+            break;
+        end;
+    end;
+    if (is_set) then 
+    begin
+        for i := addr to Length(db.Content)-2 do
+            db.Content[i] := db.Content[i+1];
+        SetLength(db.Content, Length(db.Content)-1);
+    end;
 end;
 
 
