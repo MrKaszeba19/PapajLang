@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**  
 Version X.X.X (Leviathan)  
-June 13, 2018  
+August 3, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -228,6 +228,20 @@ reverse | reverses the entire stack
 **Protips:**
 - `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `reverse size 2 / keep reverse` - assuming the sizes of "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
+
+### Language extensions
+
+#### Condtitional instructions (if-else)
+**Syntax:** `B1 ? if I1 else I2`
+The question mark checks if an expression B1 is true or its numerical value is equal to 0.
+The `if` launches the next instruction only when the recent ?-check was successful.
+The `else` launches the next instruction only when the recent ?-check was unsuccesful.
+
+**Examples**
+- `scan tonumber 2 mod ? if { "This number is even." println } else { "This number is odd." println }`
+- `scan tonumber 5 > ? if { "This number is greater than 5" println }`
+- `scan tonumber 5 <= ? else { "This number is greater than 5" println }`
+- `scan tonumber 10 mod ? if 1 else 0`
 
 ### Other operands ans directives
 
