@@ -121,6 +121,8 @@ begin
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TNIL) then z := z + i.Str + ' ';
         if (i.EntityType = TBOO) then z := z + i.Str + ' ';
+        if (i.EntityType = TOBJ) then z := z + '<object> ';
+        if (i.EntityType = TFUN) then z := z + '<function> '; 
     end;
     z := LeftStr(z, Length(z)-1);
     stack_show := z;

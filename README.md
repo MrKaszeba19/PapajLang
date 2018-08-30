@@ -229,7 +229,7 @@ reverse | reverses the entire stack
 - `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `reverse size 2 / keep reverse` - assuming the sizes of "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
-### Language extensions
+### Language features
 
 #### Condtitional instructions (if-else)
 **Syntax:** `B1 ? if I1 else I2`
@@ -243,7 +243,33 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 - `scan tonumber 5 <= ? else { "This number is greater than 5" println }`
 - `scan tonumber 10 mod ? if 1 else 0`
 
-### Other operands ans directives
+#### Data types
+**Current data types:**
+- `number`, e.g. `5, 2, -10, 20.5`
+- `string`, e.g. `"Hello world!", "Shalom!", "h"`
+- `boolean`, e.g. `true, false`
+- `null`
+- `function`, e.g. `fun{ -1 * }`
+
+#### Variables
+
+- `abc xyz vset` or `abc >xyz` – Move an "abc" to a var "xyz". If the variable does not exist, then create it with this value.
+- `xyz vget` or `$xyz` – Put either the var "xyz" or NULL on the stack, depending if the variable exists or not.
+- `xyz vexists` or `?xyz` – Return true or false, depending if var "xyz" exists.
+- `xyz vdestroy` or `~xyz` – Destroy a variable "xyz" if exists.
+- `xyz vcall` or `@@xyz` – If the var is a function, then call it directly.
+
+#### Functions
+
+Syntax: `fun{ <set_of_instructions> }`
+
+**Notes**
+- The functions use the main stack, they may get the parameters from there and they manipulate it.
+- The `fun{` is a monolithic opening parenthesis of the function and must not be separated.
+- To call a function being on the stack, use an operand `call`.
+- If a function is a variable, then you may call it directly either via `vcall` or via `@@vname` (where vname is a name of the function).
+
+### Other operands and directives
 
 #### Input-output operands
 
@@ -253,6 +279,8 @@ type | Check the type of the value being on the top of the stack
 scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
 scannum | Scan 1 numerical value from input
 scanstr | Scan 1 string value from input
+tostring | Convert anything to string
+tonumber | Convert anything to number
 rand | Generate a random integer value within a range [0..N-1]
 print | Print a value being on the top of the stack
 println | Same as above and end the line.

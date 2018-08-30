@@ -1,0 +1,77 @@
+@silent
+
+"█" >fill
+clrscr
+
+// ==================== Draw flag and logo
+
+0 textbackground
+15 textbackground
+1 textcolor
+"                          " println
+"==========================" println    
+"            ^             " println
+"       ____/_\____        " println
+"       \  /   \  /        " println
+"        \/     \/         " println
+"        /\     /\         " println
+"       /__\___/__\        " println
+"           \ /            " println
+"            -             " println
+"==========================" println 
+"                          " println
+0 textbackground
+7 textcolor
+
+// ==================== Draw upper Israel 
+1 textbackground newln // sea color
+2 textcolor            // grass color
+12 times { " " print } 10 times { $fill print } newln
+4 times {
+	6 times { " " print } 
+	16 times { $fill print } newln
+}
+2 times {
+	4 times { " " print } 
+	18 times { $fill print } newln
+}
+4 times { " " print } 16 times { $fill print } newln
+8 times {
+	4 times { " " print } 
+	14 times { $fill print } newln
+}
+2 times {
+	3 times { " " print } 
+	15 times { $fill print } newln
+}
+2 times { " " print } 16 times { $fill print } newln
+
+// ==================== Draw Negev Desert
+0 textbackground
+14 textcolor // sand color
+1 1 14 seq all copy size 2 / times {
+	qshift 2 + times { " " print } times { $fill print } newln
+}
+
+// Cities
+12 textbackground
+15 textcolor
+13 18 gotoxy "*Natzrat" print
+5 19 gotoxy "*Haifa" print
+5 22 gotoxy "*Netanya" print
+5 25 gotoxy "*Tel Aviv" print
+14 27 gotoxy "*Jerusalem" print
+9 30 gotoxy "*Beersheva" print
+17 46 gotoxy "*Eilat" print
+
+// Reset
+0 textbackground
+7 textcolor
+newln
+"  _                    _  " println
+" (_)                  | | " println
+"  _ ___ _ __ __ _  ___| | " println
+" | / __| '__/ _` |/ _ \ | " println
+" | \__ \ | | (_| |  __/ | " println
+" |_|___/_|  \__,_|\___|_| " println
+getchar clrscr

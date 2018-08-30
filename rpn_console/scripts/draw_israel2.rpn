@@ -1,0 +1,57 @@
+@silent
+
+"█" >fill
+1 textbackground newln
+clrscr
+
+// ==================== Draw upper Israel 
+2 textcolor
+2 times newln
+12 times { " " print } 
+10 times { $fill print } newln
+4 times {
+	6 times { " " print } 
+	16 times { $fill print } newln
+}
+2 times {
+	4 times { " " print } 
+	18 times { $fill print } newln
+}
+4 times { " " print } 
+16 times { $fill print } newln
+8 times {
+	4 times { " " print } 
+	14 times { $fill print } newln
+}
+2 times {
+	3 times { " " print } 
+	15 times { $fill print } newln
+}
+2 times { " " print } 
+16 times { $fill print } newln
+
+// ==================== Draw Negev Desert
+14 textcolor // sand color
+1 1 14 seq size copy size 2 / times {
+	qshift 2 + times { " " print } times { $fill print } newln
+}
+
+// Cities
+12 textbackground
+15 textcolor
+
+13 7 gotoxy "*Natzrat" print
+5 8 gotoxy "*Haifa" print
+5 11 gotoxy "*Netanya" print
+5 14 gotoxy "*Tel Aviv" print
+14 16 gotoxy "*Jerusalem" print
+9 19 gotoxy "*Beersheva" print
+17 35 gotoxy "*Eilat" print
+
+
+// Reset
+0 textbackground
+7 textcolor
+newln
+newln
+1 40 gotoxy getchar clrscr

@@ -1,0 +1,32 @@
+@silent
+10 times { " " print } 
+6 times { "|" print } newln
+
+4 times {
+	4 times { " " print } 
+	12 times { "|" print } newln
+}
+
+2 times {
+	2 times { " " print } 
+	14 times { "|" print } newln
+}
+
+2 times { " " print } 
+12 times { "|" print } newln
+
+8 times {
+	2 times { " " print } 
+	10 times { "|" print } newln
+}
+
+2 times {
+	1 times { " " print } 
+	11 times { "|" print } newln
+}
+
+12 times { "|" print } newln
+
+1 1 12 seq size times {
+	 clone >x times "|" $x -- times concat 12 colprintln
+}

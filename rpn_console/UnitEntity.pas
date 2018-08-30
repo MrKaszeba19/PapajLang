@@ -16,8 +16,8 @@ const
 	TVES = 4;
 	TVEC = 5;
 	TBOO = 6;
-  TOBJ = 7;
-  TFUN = 8;
+	TOBJ = 7;
+	TFUN = 8;
 	SHELL_BASH = '/bin/bash';
 	SHELL_ZSH  = '/bin/zsh';
 	SHELL_SH   = '/bin/sh';
@@ -80,6 +80,7 @@ function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
+function buildFunction(val : String) : Entity;
 function buildNull() : Entity;
 
 function buildVariable(namevar : String; contentvar : Entity) : Variable;
@@ -141,6 +142,8 @@ begin
     TVES : getEntitySpec := '<vector<string>>';
     TVEC : getEntitySpec := '<vector<any>>';
     TBOO : getEntitySpec := x.Str + ' : <boolean>';
+    TOBJ : getEntitySpec := '<object>';
+    TFUN : getEntitySpec := '<function>';
     else getEntitySpec := '<unknown>';
   end;
 end;
@@ -235,6 +238,16 @@ begin
     pom.Num := 1;
   end;
   buildBoolean := pom;
+end;
+
+function buildFunction(val : String) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TFUN;
+	pom.Str := val;
+	pom.Num := Length(val);
+	buildFunction := pom;
 end;
 
 function buildNull() : Entity;

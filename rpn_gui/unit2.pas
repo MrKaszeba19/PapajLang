@@ -47,6 +47,7 @@ begin
         if not lib_logics(i, pocz, Steps, sets, vardb) then
         if not lib_variables(i, pocz, Steps, sets, vardb) then
         if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
+        if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
         stack_push(pocz, buildString(StrEcx));
     end else begin
         stack_push(pocz, buildNumber(Im));
@@ -131,6 +132,7 @@ begin
 	    		cursor := index + 1;
 	    		while (nestlv > 0) and (cursor < L.Count) do begin
 	    			if (L[cursor] = '{') then Inc(nestlv);
+                    if (L[cursor] = 'fun{') then Inc(nestlv);
 	    			if (L[cursor] = '}') then Dec(nestlv);
 	    			if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
 	    			else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
@@ -145,7 +147,28 @@ begin
 	    			end else for step := 1 to Steps do parseRPN(nesttx, pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
-	    	end else begin
+            end else if L[index] = 'fun{' then begin
+                nestlv := 1;
+                nesttx := '';
+                cursor := index + 1;
+                while (nestlv > 0) and (cursor < L.Count) do begin
+                    if (L[cursor] = '{') then Inc(nestlv);
+                    if (L[cursor] = 'fun{') then Inc(nestlv);
+                    if (L[cursor] = '}') then Dec(nestlv);
+                    if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+                    else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+                    Inc(cursor);
+                end;
+                if (permit) then
+                    if Steps = -1 then begin
+                        repeat
+                            stack_push(pocz, buildFunction(nesttx)); 
+                        until EOF;
+                        stack_pop(pocz);
+                    end else for step := 1 to Steps do stack_push(pocz, buildFunction(nesttx));
+                permit := True;
+                index := cursor - 1;
+            end else begin
 	    		if (permit) then
 	    			if Steps = -1 then begin
 	    				repeat

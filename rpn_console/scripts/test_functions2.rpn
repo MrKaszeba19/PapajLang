@@ -1,0 +1,2 @@
+@silent
+fun{ times concat } >superbind

@@ -5,7 +5,7 @@ unit UnitFunctions;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Process, UnitStack, UnitEntity;
+  Classes, SysUtils, StrUtils, Crt, Process, UnitStack, UnitEntity;
 
 const
 	PI = 3.1415926535897932384626433832795;
@@ -17,6 +17,7 @@ function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var
 function lib_constants(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 
 implementation
 
@@ -1108,6 +1109,14 @@ begin
             	stack_push(pocz, buildString(StrEbx));
             end;
             stack_push(pocz, buildString(StrEcx));
+        end;
+        'call' : begin
+            if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TFUN, i);  
+            StrEbx := stack_pop(pocz).Str;
+            StrEcx := parseRPN(StrEbx, pocz, sets, vardb);
+            if not (sets.Autoclear) then begin
+              stack_push(pocz, buildString(StrEbx));
+            end;
         end;          
 
 
@@ -1248,6 +1257,9 @@ begin
         end;
         'autocolstatusln' : begin
             writeln(stack_showBeautiful(pocz, sets.Mask));
+        end;
+        'getchar' : begin
+            readln();
         end;
         'rem' : begin
         	stack_justpop(pocz);
@@ -1577,7 +1589,8 @@ begin
             case LeftStr(i, 1) of
             	'X' : begin
               		if (RightStr(i, Length(i)-1) = '*') and (not (Unit5.is_gui)) then Steps := -1
-              		else Steps := StrToInt(RightStr(i, Length(i)-1));
+              		else if (RightStr(i, Length(i)-1) <> '') then Steps := StrToInt(RightStr(i, Length(i)-1))
+                    else stack_push(pocz, buildString('X'));
               	end;
               	else begin
                 	Found := false;
@@ -1771,6 +1784,9 @@ begin
         '\@' : begin
           stack_push(pocz, buildString('@'));
         end;
+        '\@@' : begin
+          stack_push(pocz, buildString('@@'));
+        end;
         '\+' : begin
           stack_push(pocz, buildString('+'));
         end;
@@ -1821,7 +1837,7 @@ end;
 function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
 	Found  : Boolean;
-	StrEax : String;
+	StrEax, StrEbx : String;
 	EntEax : Entity;
 	LogEax : Boolean;
 	IntEax : LongInt;
@@ -1864,6 +1880,17 @@ begin
             	stack_push(pocz, buildString(StrEax));
             end;
         end;
+        'vcall' : begin
+            if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TSTR, i); 
+            StrEax := stack_pop(pocz).Str;
+            EntEax := getVariable(vardb, StrEax);
+            if (sets.StrictType) then assertEntityLocated(EntEax, TFUN, i);   
+            StrEbx := EntEax.Str;
+            StrEbx := parseRPN(StrEbx, pocz, sets, vardb);
+            if not (sets.Autoclear) then begin
+                stack_push(pocz, buildString(StrEax));
+            end;
+        end;
         else begin
         	case LeftStr(i, 1) of
             	'$' : begin
@@ -1903,7 +1930,22 @@ begin
               		end;
              	end;
              	else begin
-              		Found := false;
+                    case LeftStr(i, 2) of
+                        '@@' : begin 
+                            if (RightStr(i, Length(i)-2) <> '') then begin
+                                StrEax := RightStr(i, Length(i)-2);
+                                EntEax := getVariable(vardb, StrEax);
+                                if (sets.StrictType) then assertEntityLocated(EntEax, TFUN, i);   
+                                StrEbx := EntEax.Str;
+                                StrEbx := parseRPN(StrEbx, pocz, sets, vardb);
+                            end else begin
+                                raiserror('Exception when executing function: You cannot execute an unnamed function by this method.');
+                            end;
+                        end;
+                        else begin
+                            Found := false;
+                        end;
+                    end;
              	end;
         	end;
         end;
@@ -2030,6 +2072,44 @@ begin
        	end;
     end;
     lib_logics := Found;
-end;	
+end;
+
+function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+    Found : Boolean;
+    x, y  : ShortInt;
+begin
+    Found := true;
+    case i of
+        'textcolor' : begin
+            if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i);
+            y := trunc(stack_pop(pocz).Num);
+            TextColor(y);
+            if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
+        end;
+        'textbackground' : begin
+            if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i);
+            y := trunc(stack_pop(pocz).Num);
+            TextBackground(y);
+            if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
+        end;
+        'gotoxy' : begin
+            if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i);
+            y := trunc(stack_pop(pocz).Num);
+            if (sets.StrictType) then assertNaturalLocated(stack_get(pocz), i);
+            x := trunc(stack_pop(pocz).Num);
+            GotoXY(x,y);
+            if not (sets.Autoclear) then stack_push(pocz, buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
+        end;
+        'clrscr' : begin
+            clrscr();
+        end;
+        else begin
+            Found := false;
+        end;
+    end;
+    lib_consolemanipulators := Found;
+end;
 
 end.

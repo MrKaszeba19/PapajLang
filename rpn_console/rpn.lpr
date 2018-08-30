@@ -4,14 +4,14 @@ uses Unit2, Unit5, UnitEntity, UnitFunctions, Sysutils;
 procedure show_version();
 begin
      writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. August 3, 2018.');
+     writeln('Paul Lipkowski. August 30, 2018.');
      writeln('Since 11/24/2017. Proudly written in FPC. :)');
      writeln('');
 end;
 
 procedure show_help();
 begin
-     writeln('SYNTAX: rpn "quoted_rpn_expression" [flags]');
+     writeln('SYNTAX: rpn "quoted_rpn_expression"');
      writeln('');
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
@@ -47,7 +47,9 @@ begin
 	writeln('Page 3: Stack operations');
 	writeln('Page 4: Constants');
 	writeln('Page 5: Parsing directives');
-	writeln('Page 6: Other');
+    writeln('Page 6: Variables and data types');
+    writeln('Page 7: Conditionals and functions');
+	writeln('Page 8: Other');
 	writeln;
 	writeln('Type ''rpn operands [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
 	writeln('Type ''rpn operands all'' to print all pages at once.');
@@ -104,35 +106,57 @@ end;
 procedure show_operands5();
 begin
 	writeln('Data directives: ');
-	writeln('#real        #milli       #float');
-	writeln('#double      #int         #decimal');
-	writeln('#scientific  #scientific1 #money');
-	writeln('#amoney');
+	writeln('@real        @milli       @float');
+	writeln('@double      @int         @decimal');
+	writeln('@scientific  @scientific1 @money');
+	writeln('@amoney');
 	writeln('Parsing directives:');
-	writeln('  #autoclear=BOOL  : Stack is wisely cleared after every operation (BOOL=true by default)');
-	writeln('            =true  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
-	writeln('            =false : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
-	writeln('  #silent          : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
-	writeln('  #sorttype=VAL    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
-	writeln('  @source="FNAME"  : Use an another RPN script and execute its code directly on the main stack (FNAME is a quoted path to a filename)');
+	writeln('  @autoclear(BOOL)  : Stack is wisely cleared after every operation (BOOL=true by default)');
+	writeln('            (true)  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
+	writeln('            (false) : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
+	writeln('  @silent           : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+	writeln('  @sorttype(VAL)    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
+	writeln('  @source("FNAME")  : Use an another RPN script and execute its code directly on the main stack ("FNAME" is a quoted path to a filename)');
 end;
 
 procedure show_operands6();
 begin
+    writeln('Variables: ');
+    writeln('    LONG FORM :  SHORT F : EXPLANATION ');
+    writeln(' abc xyz vset : abc >xyz : Move an "abc" to a var "xyz".');
+    writeln('     xyz vget :     $xyz : Put either the var "xyz" or NULL on the stack.');
+    writeln('  xyz vexists :     ?xyz : Return true or false, depending if var "xyz" exists.');
+    writeln(' xyz vdestroy :     ~xyz : Destroy a variable "xyz".');
+    writeln('    xyz vcall :    @@xyz : If the var is a function, then call it directly.');
+    writeln();
+    writeln('Data types: ');
+    writeln('number   string   boolean  null');
+    writeln('function ');
+end;
+
+procedure show_operands7();
+begin
+    writeln('Conditionals: ');
+    writeln(' <expression> ?           : Check if an expression if true or equal to zero.');
+    writeln(' if { set_of_commands }   : If the last check returned true, then execute the set_of_commands');
+    writeln(' else { set_of_commands } : If the last check returned false, then execute the set_of_commands');
+    writeln();
+    writeln('Functions'' syntax: fun{ set_of_commands }');
+    writeln('Execute the functions via "call" command or via "vcall" or @@var (var - var name).');
+end;
+
+procedure show_operands8();
+begin
     writeln('Other operations: ');
     writeln('      rand : Get a random integer value from 0 to N-1 (execute "N rand")');
     writeln('      scan : Scan any value from input');
-    writeln('   scannum : Scan a number from input');
-    writeln('   scanstr : Scan a string from input');
+    writeln('  tonumber : Convert anything to number if possible');
+    writeln('  tostring : Convert anything to string');
     writeln('     print : Print a value being on the top of the stack');
     writeln('   println : Same as above and end the line.');
-    writeln('    rprint : Print a value being on the top of the stack and remove it from this stack.');
-    writeln('  rprintln : Same as above and end the line.');
     writeln('     clone : Clone the value being on the top of the stack');
     writeln('       rem : Remove a value from the top of the stack');
     writeln('      keep : Keep the top n values on the stack (e.g. "2 3 1 4 5  3 keep" results in a stack of "1 4 5")');
-    writeln('        Xn : Do the next thing n times');
-    writeln('        X* : Scan all the values from input (pre-made input usage recommended)');
     writeln('        // : One-line comment (when parsing files)');
 end;
 
@@ -209,13 +233,17 @@ begin
      					'4'	: show_operands4();
      					'5'	: show_operands5();
      					'6' : show_operands6();
+                        '7' : show_operands7();
+                        '8' : show_operands8();
      					'all': begin 
      						show_operands1(); writeln();
      						show_operands2(); writeln();
      						show_operands3(); writeln();
      						show_operands4(); writeln();
      						show_operands5(); writeln();
-     						show_operands6();
+     						show_operands6(); writeln();
+                            show_operands7(); writeln();
+                            show_operands8();
      					end;
      				end;
      			end;
