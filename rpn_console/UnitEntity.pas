@@ -89,6 +89,7 @@ function isVarAssigned(db : VariableDB; guess : String) : Boolean;
 function getVariable(db : VariableDB; guess : String) : Entity;
 procedure setVariable(var db : VariableDB; newname : String; newvalue : Entity);
 procedure destroyVariable(var db : VariableDB; guess : String);
+procedure destroyVariables(var db : VariableDB);
 
 implementation
 
@@ -357,6 +358,11 @@ begin
             db.Content[i] := db.Content[i+1];
         SetLength(db.Content, Length(db.Content)-1);
     end;
+end;
+
+procedure destroyVariables(var db : VariableDB);
+begin
+    SetLength(db.Content, 0);
 end;
 
 

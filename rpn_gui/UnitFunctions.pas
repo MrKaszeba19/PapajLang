@@ -1348,6 +1348,9 @@ begin
             size := trunc(stack_pop(pocz).Num);
             if (size >= 0) then stack_reverseCollection(pocz, size);
         end;
+        'swap' : begin
+            stack_reverseCollection(pocz, 2);
+        end;
              
 
 
@@ -1879,6 +1882,9 @@ begin
             if not (sets.Autoclear) then begin
             	stack_push(pocz, buildString(StrEax));
             end;
+        end;
+        'vclear' : begin
+            destroyVariables(vardb);
         end;
         'vcall' : begin
             if (sets.StrictType) then assertEntityLocated(stack_get(pocz), TSTR, i); 

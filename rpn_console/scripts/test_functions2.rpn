@@ -1,2 +1,13 @@
 @silent
-fun{ times concat } >superbind
+
+fun{ -1 * } >invert
+fun{
+	0 = ?
+	if TRUE
+	else FALSE
+} >toboolean
+
+scan tonumber 
+clone 
+@@invert println
+@@toboolean println

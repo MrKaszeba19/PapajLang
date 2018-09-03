@@ -3,10 +3,11 @@ uses Unit2, Unit5, UnitEntity, UnitFunctions, Sysutils;
 
 procedure show_version();
 begin
-     writeln('RPN Calculator. Version X.X.X (Leviathan)');
-     writeln('Paul Lipkowski. August 30, 2018.');
-     writeln('Since 11/24/2017. Proudly written in FPC. :)');
-     writeln('');
+    writeln('RPN CALCULATOR with PapajScript.'); 
+    writeln('Version X.X.X (Leviathan)');
+    writeln('Paul Lipkowski. September 3, 2018.');
+    writeln('Since 11/24/2017. Proudly written in FPC. :)');
+    writeln('');
 end;
 
 procedure show_help();

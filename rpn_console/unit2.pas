@@ -16,7 +16,7 @@ const
 function commentcut(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
-function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
 function calc_parseRPN(input : string; var sets : TSettings) : String;
 
 implementation
@@ -92,7 +92,7 @@ begin
   read_sourcefile := S;
 end;
 
-function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
 var
         L      : TStrings;
         i      : String;

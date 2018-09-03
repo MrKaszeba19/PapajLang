@@ -1,7 +1,7 @@
-//@silent
+@silent
 2 3 4 6 8 9
 fun{ 
 	size -- times + 
 } >xd
 @@xd println
-//$xd type println
+$xd type println

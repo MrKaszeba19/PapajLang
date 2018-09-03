@@ -1,0 +1,21 @@
+@silent
+
+" " >empty
+//"█" >fill
+\* >fill
+
+// (from, to)
+fun{
+	2 copy < ?
+	if {	
+		swap
+		2 copy -
+		swap
+		times { $empty print }
+		times { $fill print }
+		newln
+	}
+} >draw_asterisks
+
+clrscr
+50 80 @@draw_asterisks

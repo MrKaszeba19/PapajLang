@@ -1,5 +1,6 @@
 # RPN Calculator
-**Reversed Polish Notation Calculator**  
+**Reversed Polish Notation Calculator**
+and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
 August 30, 2018  
 by Paul Lipkowski (RooiGevaar19)  
@@ -37,7 +38,13 @@ Ordinary expression | RPN Expression
 - In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
-## Implemented operations:
+## PapajScript and its features:
+
+### About the language
+**PapajScript** is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
+Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
+Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions or functions.  
+The future enhancements of the language include an introduction of objects, better file management and vector entities.
 
 ### Available constant numerical values:
 - e.g. 2*π -> 2 PI *
@@ -49,7 +56,7 @@ Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
 
 
-### Operands for numeric expressions
+### Commands for numeric expressions
 - number1 number2 operand
 
 | Name    | Purpose                 |
@@ -98,7 +105,7 @@ tostring | convert to a string
 floor | floor
 ceiling | ceiling
 
-### Operands for string expressions
+### Commands for string expressions
 
 - string1 string2 operand
 
@@ -219,17 +226,17 @@ reverse | reverses the entire stack
 - `8 -1 10 gseql` generates "8 -8 8 -8 8 -8 8 -8 8 -8"
 - `1 2 3 4 reverse` transforms into "4 3 2 1"
 - `5 10 times clone` generates "5 5 5 5 5 5 5 5 5 5 5"
-- `5 4 3 2 1 2 keep` results in a stack of "2 1"
-- `5 4 3 2 1 2 copy` results in a stack of "5 4 3 2 1 2 1"
-- `5 4 3 2 1 2 mcopy` results in a stack of "5 4 3 2 1 1 2"
-- `5 4 3 2 1 2 all sort` results in a stack of "1 2 2 3 4 5"
+- `5 4 3 2 1  2 keep` results in a stack of "2 1"
+- `5 4 3 2 1  2 copy` results in a stack of "5 4 3 2 1 2 1"
+- `5 4 3 2 1  2 mcopy` results in a stack of "5 4 3 2 1 1 2"
+- `5 4 3 2 1  2 all sort` results in a stack of "1 2 2 3 4 5"
 - `5 4 3 1 7 2  3 rev` results in a stack of "5 4 3 2 7 1"
 
 **Protips:**
 - `size copy` (or `all copy`) replicates the stack (e.g. `1 2 3 4 size copy` results in "1 2 3 4 1 2 3 4"), and `size 2 / keep` halves the stack and lets the new one stay, e.g. after you don't need a replication anymore. If you want to keep the "old stack", just use `reverse size 2 / keep reverse` - assuming the sizes of "old stack" and the "new stack" are the same.
 - `size mcopy` creates a mirrored stack (e.g. `1 2 3 4 size mcopy` results in "1 2 3 4 4 3 2 1")
 
-### Language features
+### Language syntax features
 
 #### Condtitional instructions (if-else)
 **Syntax:** `B1 ? if I1 else I2`
@@ -302,7 +309,6 @@ tilleof | As above
 - `"Hello world!" type` puts "string" on the top of the stack
 - `"Hello world!" println` prints "Hello world!"
 
-*to be extended*
 
 #### Files management directives
 
@@ -316,6 +322,8 @@ Operand | Purpose
 
 **Protips:**
 - `@source` is recommended when you use a file that consists only of values and you want to put them on the stack.
+
+*to be extended and rebuilt completely*
 
 
 #### Parsing directives
@@ -384,5 +392,5 @@ Version | Version Name | Date of Release | Improvements
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
-0.4.1 | Zain | soon | reconstruction and optimization, RPN logo, shell usage, introducing a vector type, REPL, variables, more string functions
+0.4.1 | Zain | soon | reconstruction and optimization, RPN logo, introducing a vector type, creating own functions, REPL, variables, more string functions
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
