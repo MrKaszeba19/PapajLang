@@ -22,6 +22,7 @@ function stack_getback(pocz : StackDB; index : LongInt) : Entity;
 function stack_size(poc : StackDB) : Longint;
 function stack_show(poc : StackDB; mask : String) : String;
 function stack_showBeautiful(poc : StackDB; mask : String) : String;
+function stack_showFull(poc : StackDB) : String;
 function stack_reverse(poc : StackDB) : StackDB;
 
 function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
@@ -145,6 +146,31 @@ begin
     end;
     z := LeftStr(z, Length(z)-1);
     stack_showBeautiful := z;
+end;
+
+function identTabs(x : Integer) : String;
+var
+    i : Integer;
+    s : String;
+begin
+    s := '';
+    for i := 1 to x do s := s + #9; 
+    identTabs := s;
+end;
+
+function stack_showFull(poc : StackDB) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := 'stack{ ' + #13#10;
+    for i := 0 to Length(poc.Values)-2 do
+    begin
+        z := z + identTabs(1) + getEntitySpec(poc.Values[i]) + ', ' + #13#10;
+    end;
+    z := z + identTabs(1) + getEntitySpec(poc.Values[Length(poc.Values)-1]) + #13#10 + '} ';
+    z := LeftStr(z, Length(z)-1);
+    stack_showFull := z;
 end;
 
 function stack_reverse(poc : StackDB) : StackDB;

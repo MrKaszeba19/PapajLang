@@ -68,6 +68,7 @@ procedure raiserror(Const msg : string);
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
+
 procedure assertEntity(val : Entity; const wtype : Integer);
 procedure assertEntityLocated(val : Entity; const wtype : Integer; operand : String);
 procedure assertNotNegativeLocated(val : Entity; operand : String);
@@ -125,7 +126,7 @@ begin
     TSTR : getEntityTypeName := 'string';
     TVEN : getEntityTypeName := 'vector<number>';
     TVES : getEntityTypeName := 'vector<string>';
-    TVEC : getEntityTypeName := 'vector<any>';
+    TVEC : getEntityTypeName := 'vector';
     TBOO : getEntityTypeName := 'boolean';
     TOBJ : getEntityTypeName := 'object';
     TFUN : getEntityTypeName := 'function';
@@ -141,7 +142,7 @@ begin
     TSTR : getEntitySpec := '"' + x.Str + '" : <string>';
     TVEN : getEntitySpec := '<vector<number>>';
     TVES : getEntitySpec := '<vector<string>>';
-    TVEC : getEntitySpec := '<vector<any>>';
+    TVEC : getEntitySpec := '<vector>';
     TBOO : getEntitySpec := x.Str + ' : <boolean>';
     TOBJ : getEntitySpec := '<object>';
     TFUN : getEntitySpec := '<function>';

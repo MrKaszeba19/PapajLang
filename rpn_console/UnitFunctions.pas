@@ -1258,6 +1258,9 @@ begin
         'autocolstatusln' : begin
             writeln(stack_showBeautiful(pocz, sets.Mask));
         end;
+        'statusfull' : begin
+            writeln(stack_showFull(pocz));
+        end;
         'getchar' : begin
             readln();
         end;
