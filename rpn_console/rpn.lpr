@@ -3,9 +3,9 @@ uses Unit2, Unit5, UnitEntity, UnitFunctions, Sysutils;
 
 procedure show_version();
 begin
-    writeln('RPN CALCULATOR with PapajScript.'); 
+    writeln('RPN CALCULATOR and PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. September 3, 2018.');
+    writeln('Paul Lipkowski. November 5, 2018.');
     writeln('Since 11/24/2017. Proudly written in FPC. :)');
     writeln('');
 end;
@@ -18,6 +18,7 @@ begin
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
      writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
+     writeln('Run ''rpn repl'' to run a REPL for PapajScript');
      writeln('');
      writeln('More help at github.com/RooiGevaar19/RPNCalculator');
 end;
@@ -113,9 +114,10 @@ begin
 	writeln('@amoney');
 	writeln('Parsing directives:');
 	writeln('  @autoclear(BOOL)  : Stack is wisely cleared after every operation (BOOL=true by default)');
-	writeln('            (true)  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
-	writeln('            (false) : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
-	writeln('  @silent           : Don''t print the final stack output (it does not affect the outputs invoked by script before)');
+	writeln('            (TRUE)  : After "2 3 +" the stack is "5", as 2 and 3 were removed after usage. ');
+	writeln('            (FALSE) : After "2 3 +" the stack is "2 3 5", as 2 and 3 stay on the stack.');
+    writeln('  @silent(BOOL)     : Print final stack output or not, depending if BOOL is TRUE or FALSE (false by default.)');
+    writeln('  @silent           : Work the same way as @silent(TRUE)');
 	writeln('  @sorttype(VAL)    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
 	writeln('  @source("FNAME")  : Use an another RPN script and execute its code directly on the main stack ("FNAME" is a quoted path to a filename)');
 end;
@@ -201,6 +203,18 @@ begin
      				show_version();
      				show_help();
      			end;
+                'repl' : begin
+                    try
+                        sets := default_settings();
+                        show_version();
+                        calc_runREPL(sets);
+                    except
+                        On E : Exception do
+                        begin
+                            writeln(StdErr, E.ToString);
+                        end;
+                    end;
+                end;
      			'expression' : begin
      				show_version();
      				show_expressions();

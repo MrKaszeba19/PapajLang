@@ -18,6 +18,7 @@ procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
 function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
 function calc_parseRPN(input : string; var sets : TSettings) : String;
+procedure calc_runREPL(var sets : TSettings);
 
 implementation
 uses Unit5;
@@ -200,5 +201,58 @@ begin
   calc_parseRPN := res;
 end;
 
+// ========= REPL
+
+procedure repl_showhelp();
+begin
+    writeln('REPL (Read-Eval-Print Loop) for PapajScript');
+    writeln();
+    //writeln('End each line with \ to make multiline commands.');
+    writeln('Type \reset to reset the REPL.');
+    writeln('Type \help to display this help again.');
+    writeln('Type \q or \quit to exit the REPL.');
+    writeln();
+end;
+
+procedure calc_runREPL(var sets : TSettings);
+var
+  stack   : StackDB;
+  command : String;
+  input   : String;
+  res     : String;
+  vardb   : VariableDB;
+begin
+    stack := stack_null();
+    vardb := createVariables();
+    repl_showhelp();
+    repeat
+        input := '';
+        write('> ');
+        readln(input);
+        case input of 
+            '\q' : begin
+                writeln('Bye.');
+            end;
+            '\quit' : begin
+                writeln('Goodbye. :)');
+            end;
+            '\reset' : begin
+                stack := stack_null();
+                vardb := createVariables();
+                sets := default_settings();
+                writeln('All settings and data have been reset.');
+                writeln();
+            end;
+            '\help' : begin
+                repl_showhelp();
+            end
+            else begin
+                res := parseRPN(input, stack, sets, vardb);
+                res := stack_show(stack, sets.Mask);
+                if not (sets.Prevent) then writeln(res);
+            end;
+        end;
+    until not ((input <> '\q') and (input <> '\quit'));
+end;
 
 end.

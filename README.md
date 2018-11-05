@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-August 30, 2018  
+November 5, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -30,6 +30,7 @@ Ordinary expression | RPN Expression
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
 - If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
+- If you want to run a REPL of PapajScript, then execute `rpn repl`.
 
 **Flags are actually removed and won't be available in the next releases, from 0.4.1 onwards**
 
@@ -41,7 +42,7 @@ Ordinary expression | RPN Expression
 ## PapajScript and its features:
 
 ### About the language
-**PapajScript** is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
+**PapajScript** (PS) is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
 Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
 Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions or functions.  
 The future enhancements of the language include an introduction of objects, better file management and vector entities.
@@ -254,7 +255,7 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 **Current data types:**
 - `number`, e.g. `5, 2, -10, 20.5`
 - `string`, e.g. `"Hello world!", "Shalom!", "h"`
-- `boolean`, e.g. `true, false`
+- `boolean`, e.g. `TRUE, FALSE`
 - `null`
 - `function`, e.g. `fun{ -1 * }`
 
@@ -295,6 +296,7 @@ rprint | Print a value being on the top of the stack and remove it from this sta
 rprintln | Same as above and end the line.
 status | Print the stack.
 statusln | Same as above and end the line.
+statusfull | Print the stack in a more "beautiful" and detailed way.
 newln | Start a new line
 Xn | Do the next thing n-times. ('n' is a constant integer value, n >= 1)
 X* | Do the next thing until the end of input (very risky and permitted only in console app)
@@ -330,7 +332,8 @@ Operand | Purpose
 
 | Operand              | Purpose                                                                                                 |
 |:-------------------- | ------------------------------------------------------------------------------------------------------- |
-| @silent              | Don't print the final stack output (it does not affect the outputs invoked by script before)            |
+| @silent(BOOL)        | Don't print the final stack output (when BOOL=TRUE). BOOL=false by default.                             |
+| @silent              | The same as @silent(TRUE)                                                                               |
 | @real                | Output is a decimal (set by default)                                                                    |
 | @milli               | Output is a decimal with fixed precision of 3 digits                                                    |
 | @float               | Output is a decimal with fixed precision of 6 digits                                                    |
@@ -347,7 +350,7 @@ Operand | Purpose
 | @useshell(SHELL)     | Specify what shell do you want to use                                                                   |
 | //                   | One-line comment (only parsing text files)                                                              |
 
-*BOOL* available values are `true` or `false`
+*BOOL* available values are `TRUE` or `FALSE` (or also `true`/`false`, for compatibility with older scripts)
 
 *STYPE* available values are
 - `BUBBLESORT` or `BSORT` or `0` - bubblesort
@@ -372,7 +375,7 @@ Operand | Purpose
 
 **Notes**
 - Disabling autoclear does not apply to instructions of `times`, `rprint`, `rprintln`, `++`, `--`, stack manipulators and stack aggregating functions
-- `inc`, `dec` do the same thing as `++`, `--` mentioned above and are vulnerable to @autoclear(false) (*protip*)
+- `inc`, `dec` do the same thing as `++`, `--` mentioned above and are vulnerable to @autoclear(FALSE) (*protip*)
 
 ## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*

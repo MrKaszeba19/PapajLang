@@ -1617,10 +1617,28 @@ begin
         '@silent' : begin
            sets.Prevent := true;
         end;
+        '@silent(true)' : begin
+           sets.Prevent := true;
+        end;
+        '@silent(false)' : begin
+           sets.Prevent := false;
+        end;
+        '@silent(TRUE)' : begin
+           sets.Prevent := true;
+        end;
+        '@silent(FALSE)' : begin
+           sets.Prevent := false;
+        end;
         '@autoclear(true)' : begin
            sets.Autoclear := true;
         end;
         '@autoclear(false)' : begin
+           sets.Autoclear := false;
+        end;
+        '@autoclear(TRUE)' : begin
+           sets.Autoclear := true;
+        end;
+        '@autoclear(FALSE)' : begin
            sets.Autoclear := false;
         end;
         '@stricttype(true)' : begin
@@ -1629,10 +1647,22 @@ begin
         '@stricttype(false)' : begin
            sets.StrictType := false;
         end;
+        '@stricttype(TRUE)' : begin
+           sets.StrictType := true;
+        end;
+        '@stricttype(FALSE)' : begin
+           sets.StrictType := false;
+        end;
         '@casesensitive(true)' : begin
            sets.CaseSensitive := true;
         end;
         '@casesensitive(false)' : begin
+           sets.CaseSensitive := false;
+        end;
+        '@casesensitive(TRUE)' : begin
+           sets.CaseSensitive := true;
+        end;
+        '@casesensitive(FALSE)' : begin
            sets.CaseSensitive := false;
         end;
         '@real' : begin
