@@ -378,6 +378,7 @@ Operand | Purpose
 - `inc`, `dec` do the same thing as `++`, `--` mentioned above and are vulnerable to @autoclear(FALSE) (*protip*)
 
 ## REPL Commands
+- `\` at the very end of the input line allows for multi-line commands 
 - `\reset` - reset the REPL.
 - `\help` - display the help.
 - `\q` or `\quit` - exit the REPL.

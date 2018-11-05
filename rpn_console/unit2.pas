@@ -21,7 +21,7 @@ function calc_parseRPN(input : string; var sets : TSettings) : String;
 procedure calc_runREPL(var sets : TSettings);
 
 implementation
-uses Unit5;
+uses Unit5, crt;
 
 var
         Steps : Integer;
@@ -207,7 +207,7 @@ procedure repl_showhelp();
 begin
     writeln('REPL (Read-Eval-Print Loop) for PapajScript');
     writeln();
-    //writeln('End each line with \ to make multiline commands.');
+    writeln('End each line with \ to make multiline commands.');
     writeln('Type \reset to reset the REPL.');
     writeln('Type \help to display this help again.');
     writeln('Type \q or \quit to exit the REPL.');
@@ -220,6 +220,7 @@ var
   command : String;
   input   : String;
   res     : String;
+  fun     : LongInt;
   vardb   : VariableDB;
 begin
     stack := stack_null();
@@ -227,14 +228,67 @@ begin
     repl_showhelp();
     repeat
         input := '';
-        write('> ');
-        readln(input);
+        TextColor(14);
+        write('=> ');
+        TextColor(7);
+        readln(command);
+        if (RightStr(command, 1) = '\') then 
+        begin
+            input := LeftStr(command, Length(command)-1) + ' ';
+            repeat
+                TextColor(6);
+                write('-> ');
+                TextColor(7);
+                readln(command);
+                if (RightStr(command, 1) = '\') then
+                begin
+                    input := input + LeftStr(command, Length(command)-1) + ' ';
+                end else begin
+                    input := input + command;
+                end;
+            until (RightStr(command, 1) <> '\');
+        end else begin
+            input := command;
+        end;
         case input of 
             '\q' : begin
                 writeln('Bye.');
             end;
             '\quit' : begin
                 writeln('Goodbye. :)');
+            end;
+            '\comamrobic' : begin
+                randomize;
+                fun := Random(10);
+                TextColor(14);
+                case fun of
+                    0 : writeln('Tak jak pan Jezus powiedzial.');
+                    1 : writeln('Badzmy lagodni.'); 
+                    2 : writeln('Nie lekajcie sie.'); 
+                    3 : writeln('Podazajcie z entuzjazmem.');
+                    4 : writeln('Tolerancja jest mozliwa.');
+                    5 : writeln('Nie wiem.'); 
+                    6 : writeln('Trwajcie mocno w Chrystusie.');
+                    7 : writeln('Niech zstapi Duch Twoj.'); 
+                    8 : writeln('Jestem z Wami');
+                    9 : writeln('Wyplywajcie na glebie.');
+                end;
+                TextColor(7);
+            end;
+            '\rzulta' : begin
+                TextColor(14);
+                writeln('  .----\----.  ');
+                writeln(' ------------- ');
+                writeln(' (  .-.  ___  )');
+                writeln('((  (o)  (o)  |');
+                writeln('`|     _\,    |');
+                writeln('  \     _.   / ');
+                writeln('   ---_____-   ');
+                writeln();
+                TextColor(15);
+                writeln('Jan Papaj 2 interpretowal male skrypty. xD');
+                writeln();
+                TextColor(7);
             end;
             '\reset' : begin
                 stack := stack_null();
@@ -249,7 +303,12 @@ begin
             else begin
                 res := parseRPN(input, stack, sets, vardb);
                 res := stack_show(stack, sets.Mask);
-                if not (sets.Prevent) then writeln(res);
+                if not (sets.Prevent) then 
+                begin
+                    TextColor(3);
+                    writeln(res);
+                    TextColor(7);
+                end;
             end;
         end;
     until not ((input <> '\q') and (input <> '\quit'));
