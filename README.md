@@ -377,6 +377,11 @@ Operand | Purpose
 - Disabling autoclear does not apply to instructions of `times`, `rprint`, `rprintln`, `++`, `--`, stack manipulators and stack aggregating functions
 - `inc`, `dec` do the same thing as `++`, `--` mentioned above and are vulnerable to @autoclear(FALSE) (*protip*)
 
+## REPL Commands
+- `\reset` - reset the REPL.
+- `\help` - display the help.
+- `\q` or `\quit` - exit the REPL.
+
 ## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*
 - :denmark: **Danish** (Dansk)
