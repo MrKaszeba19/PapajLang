@@ -205,10 +205,14 @@ end;
 
 procedure repl_showhelp();
 begin
-    writeln('REPL (Read-Eval-Print Loop) for PapajScript');
+    writeln('REPL for PapajScript');
     writeln();
     writeln('End each line with \ to make multiline commands.');
     writeln('Type \reset to reset the REPL.');
+    writeln('Type \export:FILE to export your history to a file (relative or absolute path)');
+    writeln('Type \history to display what you did.');
+    writeln('Type \!! to repeat last command');
+    writeln('Type \!N to execute an N-th command of history (N >= 1)');
     writeln('Type \help to display this help again.');
     writeln('Type \q or \quit to exit the REPL.');
     writeln();
@@ -216,17 +220,26 @@ end;
 
 procedure calc_runREPL(var sets : TSettings);
 var
-  stack   : StackDB;
-  command : String;
-  input   : String;
-  res     : String;
-  fun     : LongInt;
-  vardb   : VariableDB;
+    stack   : StackDB;
+    vardb   : VariableDB;
+    command : String;
+    input   : String;
+    res     : String;
+    fun     : LongInt;
+    history : array of String;
+    i       : Integer;
+    Im      : Extended;
+    Code    : Longint;
+    alright : Boolean;
+    fp      : Text;
+    fname   : String;
 begin
     stack := stack_null();
     vardb := createVariables();
+    SetLength(history, 0);
     repl_showhelp();
     repeat
+        alright := true;
         input := '';
         TextColor(14);
         write('=> ');
@@ -250,6 +263,53 @@ begin
         end else begin
             input := command;
         end;
+
+        if input = '\!!' then 
+        begin
+            if Length(history) = 0 then
+            begin
+                input := '';
+            end else begin
+                input := history[Length(history)-1];
+            end;
+        end else if LeftStr(input, 2) = '\!' then
+        begin
+            Val(RightStr(input, Length(input)-2), Im, Code);
+            input := '';
+            if Code = 0 then
+                if (Trunc(Im) >= 1) and (Trunc(Im) <= Length(history)) then
+                    input := history[Trunc(Im)-1]; 
+        end else if (LeftStr(input, 8) = '\export:') or (input = '\export') then
+        begin
+            if (input <> '\export') then fname := RightStr(input, Length(input)-8)
+            else fname := '';
+            input := '';
+            if (fname = '') then begin
+                TextColor(15);
+                writeln('REPL Warning: No valid filepath specified - exporting to a "export.rpn" file.');
+                TextColor(7);
+                fname := 'export.rpn';
+            end;
+            try
+                assignfile(fp, fname);
+                rewrite(fp);
+                for res in history do writeln(fp, res);
+                closefile(fp);
+                TextColor(10);
+                writeln('Exported to "', fname,'" successfully.');
+                TextColor(7);
+            except
+                On E : Exception do
+                begin
+                    TextColor(12);
+                    writeln(StdErr, 'REPL Error: A problem occured when exporting to a file.');
+                    TextColor(7);
+                    writeln();
+                end;
+            end;
+
+        end;
+
         case input of 
             '\q' : begin
                 writeln('Bye.');
@@ -294,20 +354,45 @@ begin
                 stack := stack_null();
                 vardb := createVariables();
                 sets := default_settings();
-                writeln('All settings and data have been reset.');
+                SetLength(history, 0);
+                TextColor(10);
+                writeln('All settings, history and data have been reset.');
+                TextColor(7);
+                writeln();
+            end;
+            '\history' : begin
+                for i := 0 to Length(history)-1 do
+                begin
+                    writeln(PadLeft(IntToStr(i+1), 4) + ' : ' + history[i]);
+                end;
                 writeln();
             end;
             '\help' : begin
                 repl_showhelp();
             end
             else begin
-                res := parseRPN(input, stack, sets, vardb);
-                res := stack_show(stack, sets.Mask);
-                if not (sets.Prevent) then 
+                if (input <> '') then
                 begin
-                    TextColor(3);
-                    writeln(res);
-                    TextColor(7);
+                    SetLength(history, Length(history)+1);
+                    history[Length(history)-1] := input;
+                end;
+                try
+                    res := parseRPN(input, stack, sets, vardb);
+                    res := stack_show(stack, sets.Mask);
+                    if not (sets.Prevent) then 
+                    begin
+                        TextColor(3);
+                        writeln(res);
+                        TextColor(7);
+                    end;
+                except
+                    On E : Exception do
+                    begin
+                        TextColor(12);
+                        writeln(StdErr, E.ToString);
+                        TextColor(7);
+                        writeln();
+                    end;
                 end;
             end;
         end;

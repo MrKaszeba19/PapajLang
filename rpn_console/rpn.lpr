@@ -204,16 +204,9 @@ begin
      				show_help();
      			end;
                 'repl' : begin
-                    try
-                        sets := default_settings();
-                        show_version();
-                        calc_runREPL(sets);
-                    except
-                        On E : Exception do
-                        begin
-                            writeln(StdErr, E.ToString);
-                        end;
-                    end;
+                    sets := default_settings();
+                    show_version();
+                    calc_runREPL(sets);
                 end;
      			'expression' : begin
      				show_version();
