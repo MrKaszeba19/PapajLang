@@ -380,6 +380,10 @@ Operand | Purpose
 ## REPL Commands
 - `\` at the very end of the input line allows for multi-line commands 
 - `\reset` - reset the REPL.
+- `\export:FILE` - export your history to a file (FILE is a relative or absolute path)
+- `\history` - display the previously typed commands
+- `\!!` - repeat last command
+- `\!N` - execute an N-th command of `\history` (N >= 1)
 - `\help` - display the help.
 - `\q` or `\quit` - exit the REPL.
 
@@ -401,5 +405,6 @@ Version | Version Name | Date of Release | Improvements
 0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
-0.4.1 | Zain | soon | reconstruction and optimization, RPN logo, introducing a vector type, creating own functions, REPL, variables, more string functions
+0.4.1 | Zain | very soon | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
+0.4.2 | Chet | soon | Arrays and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
