@@ -34,7 +34,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="9">
+    <Units Count="10">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -73,18 +73,19 @@
       <Unit6>
         <Filename Value="UnitStack.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UnitStack"/>
       </Unit6>
       <Unit7>
         <Filename Value="UnitEntity.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UnitEntity"/>
       </Unit7>
       <Unit8>
         <Filename Value="UnitFunctions.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UnitFunctions"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="UnitEnvironment.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

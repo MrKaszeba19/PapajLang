@@ -23,6 +23,9 @@ const
 	SHELL_SH   = '/bin/sh';
 	SHELL_CMD  = 'C:\Windows\System32\cmd.exe';
 	SHELL_PWSH = 'C:\Windows\System32\WindowsPowershell\v1.0\powershell.exe';
+	PI = 3.1415926535897932384626433832795;
+	EU = 2.7182818284590452353602874713526;
+	FI = 1.6180339887498948482045868343656;
 
 type TSettings = record
     Prevent            : Boolean;
@@ -44,13 +47,6 @@ type Entity = record
 	Num        : Extended;	// plans to make them arrays
 	Str        : String;
 end;
-// 0 - unknown/null
-// 1 - number
-// 2 - string
-// 3 - vector<number>
-// 4 - vector<string>
-// 5 - vector<any>
-// 6 - boolean
 
 type TEntities = array of Entity;
 

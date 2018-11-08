@@ -5,20 +5,14 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Process, UnitStack, UnitEntity, UnitFunctions;
-
-const
-	PI = 3.1415926535897932384626433832795;
-	EU = 2.7182818284590452353602874713526;
-	FI = 1.6180339887498948482045868343656;
-
+  Classes, SysUtils, StrUtils, Process, UnitStack, UnitEntity, UnitFunctions, UnitEnvironment;
 
 function commentcut(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
 function parseRPN(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
-function calc_parseRPN(input : string; var sets : TSettings) : String;
-procedure calc_runREPL(var sets : TSettings);
+function PS_parseString(input : string) : String;
+procedure PS_runREPL();
 
 implementation
 uses Unit5, crt;
@@ -188,17 +182,16 @@ begin
   parseRPN := z;
 end;
 
-function calc_parseRPN(input : string; var sets : TSettings) : String;
+function PS_parseString(input : string) : String;
 var
-  stack  : StackDB;
-  res    : String;
-  vardb  : VariableDB;
+    res : String;
+    env : PSEnvironment;
 begin
-  stack := stack_null();
-  vardb := createVariables();
-  res := parseRPN(input, stack, sets, vardb);
-  res := stack_show(stack, sets.Mask);
-  calc_parseRPN := res;
+    env := buildNewEnvironment();
+    res := parseRPN(input, env.Stack, env.Settings, env.Variables);
+    res := stack_show(env.Stack, env.Settings.Mask);
+    if (env.Settings.Prevent) then res := '';
+    PS_parseString := res;
 end;
 
 // ========= REPL
@@ -220,10 +213,9 @@ begin
     writeln();
 end;
 
-procedure calc_runREPL(var sets : TSettings);
+procedure PS_runREPL();
 var
-    stack   : StackDB;
-    vardb   : VariableDB;
+    env     : PSEnvironment;
     command : String;
     input   : String;
     res     : String;
@@ -236,8 +228,7 @@ var
     fp      : Text;
     fname   : String;
 begin
-    stack := stack_null();
-    vardb := createVariables();
+    env := buildNewEnvironment();
     SetLength(history, 0);
     repl_showhelp();
     repeat
@@ -375,9 +366,7 @@ begin
                 TextColor(7);
             end;
             '\reset' : begin
-                stack := stack_null();
-                vardb := createVariables();
-                sets := default_settings();
+                env := buildNewEnvironment();
                 SetLength(history, 0);
                 TextColor(10);
                 writeln('All settings, history and data have been reset.');
@@ -401,9 +390,9 @@ begin
                     history[Length(history)-1] := input;
                 end;
                 try
-                    res := parseRPN(input, stack, sets, vardb);
-                    res := stack_show(stack, sets.Mask);
-                    if not (sets.Prevent) then 
+                    res := parseRPN(input, env.Stack, env.Settings, env.Variables);
+                    res := stack_show(env.Stack, env.Settings.Mask);
+                    if not (env.Settings.Prevent) then 
                     begin
                         TextColor(3);
                         writeln(res);

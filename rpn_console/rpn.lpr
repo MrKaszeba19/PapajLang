@@ -1,12 +1,12 @@
 program rpn;
-uses Unit2, Unit5, UnitEntity, UnitFunctions, Sysutils;
+uses Unit2, UnitEnvironment, Sysutils;
 
 procedure show_version();
 begin
-    writeln('RPN CALCULATOR and PapajScript Interpreter.'); 
+    writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
     writeln('Paul Lipkowski. November 8, 2018.');
-    writeln('Since 11/24/2017. Proudly written in FPC. :)');
+    writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
 
@@ -164,29 +164,28 @@ begin
 end;
 
 
-function read_file(filename : String; var sets : TSettings) : String;
+function read_file(filename : String) : String;
 var
-  fun, S : String;
-  fp     : Text;
+    fun, S : String;
+    fp     : Text;
 begin
-  fun := '';
-  assignfile(fp, filename);
-    reset(fp);
-    while not eof(fp) do
-    begin
-      readln(fp, S);
-      if (S <> '') then S := commentcut(S);
-      fun := fun + ' ' + S;
-    end;
-    closefile(fp);
-  read_file := calc_parseRPN(fun, sets);
+    fun := '';
+    assignfile(fp, filename);
+        reset(fp);
+        while not eof(fp) do
+        begin
+            readln(fp, S);
+            if (S <> '') then S := commentcut(S);
+            fun := fun + ' ' + S;
+        end;
+        closefile(fp);
+    read_file := PS_parseString(fun);
 end;
 
 // main
 
 var
-   x, maska : String;
-   sets     : TSettings;
+   x : String;
 
 {$R *.res}
 
@@ -204,9 +203,8 @@ begin
      				show_help();
      			end;
                 'repl' : begin
-                    sets := default_settings();
                     show_version();
-                    calc_runREPL(sets);
+                    PS_runREPL();
                 end;
      			'expression' : begin
      				show_version();
@@ -218,9 +216,8 @@ begin
      			end
      			else begin
      				try
-     					sets := default_settings();
-     					x := calc_parseRPN(ParamStr(1), sets);
-        				if (sets.Prevent = false) then writeln(x);
+     					x := PS_parseString(ParamStr(1));
+        				if (x <> '') then writeln(x);
               		except
               			On E : Exception do
                  		begin
@@ -257,9 +254,8 @@ begin
      			end;
      			'parse' : begin
      				try
-     					sets := default_settings();
-     					x := read_file(ParamStr(2), sets);
-        				if (sets.Prevent = false) then writeln(x);
+     					x := read_file(ParamStr(2));
+        				if (x <> '') then writeln(x);
               		except
               			On E : Exception do
                  		begin

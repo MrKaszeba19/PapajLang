@@ -81,11 +81,9 @@ procedure TForm1.Button1Click(Sender: TObject);
 var
   prevent : Integer;
   mask    : String;
-  sets    : TSettings;
 begin
      try
-        sets := default_settings();
-        Edit2.Text := calc_parseRPN(Edit1.Text, sets);
+        Edit2.Text := PS_parseString(Edit1.Text);
      except
      on E : EAccessViolation do begin
        Edit1.Text := '';

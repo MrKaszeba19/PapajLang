@@ -3,7 +3,7 @@
   <ProjectSession>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="7">
+    <Units Count="11">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -20,7 +20,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="29"/>
         <CursorPos X="3" Y="44"/>
         <UsageCount Value="28"/>
@@ -31,7 +30,7 @@
         <Filename Value="unit2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="296"/>
         <CursorPos X="65" Y="321"/>
         <UsageCount Value="28"/>
@@ -41,7 +40,7 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="21"/>
         <CursorPos X="42" Y="24"/>
         <UsageCount Value="27"/>
@@ -54,7 +53,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit4"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="20"/>
         <CursorPos X="32" Y="52"/>
         <UsageCount Value="25"/>
@@ -65,18 +64,41 @@
         <Filename Value="unit5.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit5"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="22" Y="10"/>
         <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
+        <Filename Value="UnitStack.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="UnitEntity.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="UnitFunctions.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="20"/>
+      </Unit8>
+      <Unit9>
         <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3254"/>
         <CursorPos Y="3271"/>
         <UsageCount Value="10"/>
-      </Unit6>
+      </Unit9>
+      <Unit10>
+        <Filename Value="UnitEnvironment.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos Y="32"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit10>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
