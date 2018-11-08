@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
-Version X.X.X (Leviathan)  
+Version 0.4.1 (Zain)  
 November 8, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
@@ -408,5 +408,5 @@ Version | Version Name | Date of Release | Improvements
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | very soon | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
-0.4.2 | Chet | soon | Arrays and more
+0.4.2 | Chet | soon | Improvements of code, Arrays, more built-in functions etc.
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

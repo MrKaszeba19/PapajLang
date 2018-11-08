@@ -4,7 +4,7 @@ uses Unit2, Unit5, UnitEntity, UnitFunctions, Sysutils;
 procedure show_version();
 begin
     writeln('RPN CALCULATOR and PapajScript Interpreter.'); 
-    writeln('Version X.X.X (Leviathan)');
+    writeln('Version 0.4.1 (Zain)');
     writeln('Paul Lipkowski. November 8, 2018.');
     writeln('Since 11/24/2017. Proudly written in FPC. :)');
     writeln('');
