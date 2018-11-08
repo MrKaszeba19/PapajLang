@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-November 5, 2018  
+November 8, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -382,6 +382,8 @@ Operand | Purpose
 - `\reset` - reset the REPL.
 - `\export:FILE` - export your history to a file (FILE is a relative or absolute path)
 - `\history` - display the previously typed commands
+- `\hclear` - clear all history
+- `\hclear:N` - repeat the N-th command of history (N >= 1)
 - `\!!` - repeat last command
 - `\!N` - execute an N-th command of `\history` (N >= 1)
 - `\help` - display the help.

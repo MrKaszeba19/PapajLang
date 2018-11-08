@@ -212,7 +212,7 @@ begin
     writeln('Type \export:FILE to export your history to a file (relative or absolute path)');
     writeln('Type \history to display what you did.');
     writeln('Type \hclear to clear all history');
-    writeln('Type \hclear:N to the N-th command of history (N >= 1)');
+    writeln('Type \hclear:N to clear the N-th command of history (N >= 1)');
     writeln('Type \!! to repeat last command');
     writeln('Type \!N to execute the N-th command of history (N >= 1)');
     writeln('Type \help to display this help again.');
