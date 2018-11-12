@@ -64,7 +64,7 @@ begin
     writeln('Available binary operands:');
     writeln('       +       -       *       /     div');
     writeln('       ^     pow    root     log     mod');
-    writeln('    cdiv    cmod  choose     gcd     lcm');
+    writeln('  choose     gcd     lcm');
 end;
 
 // unary
@@ -133,8 +133,8 @@ begin
     writeln('    xyz vcall :    @@xyz : If the var is a function, then call it directly.');
     writeln();
     writeln('Data types: ');
-    writeln('number   string   boolean  null');
-    writeln('function ');
+    writeln('number    string    boolean   null');
+    writeln('function  exception ');
 end;
 
 procedure show_operands7();
@@ -182,10 +182,29 @@ begin
     read_file := PS_parseString(fun);
 end;
 
+function read_file_params(filename, params : String) : String;
+var
+    fun, S : String;
+    fp     : Text;
+begin
+    fun := '';
+    assignfile(fp, filename);
+        reset(fp);
+        while not eof(fp) do
+        begin
+            readln(fp, S);
+            if (S <> '') then S := commentcut(S);
+            fun := fun + ' ' + S;
+        end;
+        closefile(fp);
+    read_file_params := PS_parseString(params+fun);
+end;
+
 // main
 
 var
-   x : String;
+   x, y : String;
+   i    : Integer;
 
 {$R *.res}
 
@@ -227,43 +246,83 @@ begin
      			end;
      		end;
 		end;
-		else begin
-			case ParamStr(1) of
-				'operands' : begin
-     				show_version();
-     				case ParamStr(2) of
-     					'1'	: show_operands1();
-     					'2'	: show_operands2();
-     					'3'	: show_operands3();
-     					'4'	: show_operands4();
-     					'5'	: show_operands5();
-     					'6' : show_operands6();
+        2 : begin
+            case ParamStr(1) of
+                'operands' : begin
+                    show_version();
+                    case ParamStr(2) of
+                        '1' : show_operands1();
+                        '2' : show_operands2();
+                        '3' : show_operands3();
+                        '4' : show_operands4();
+                        '5' : show_operands5();
+                        '6' : show_operands6();
                         '7' : show_operands7();
                         '8' : show_operands8();
-     					'all': begin 
-     						show_operands1(); writeln();
-     						show_operands2(); writeln();
-     						show_operands3(); writeln();
-     						show_operands4(); writeln();
-     						show_operands5(); writeln();
-     						show_operands6(); writeln();
+                        'all': begin 
+                            show_operands1(); writeln();
+                            show_operands2(); writeln();
+                            show_operands3(); writeln();
+                            show_operands4(); writeln();
+                            show_operands5(); writeln();
+                            show_operands6(); writeln();
                             show_operands7(); writeln();
                             show_operands8();
-     					end;
-     				end;
-     			end;
-     			'parse' : begin
-     				try
-     					x := read_file(ParamStr(2));
-        				if (x <> '') then writeln(x);
-              		except
-              			On E : Exception do
-                 		begin
-                      		writeln(StdErr, E.ToString);
-                 		end;
-              		end;
-     			end;
-			end;
+                        end;
+                    end;
+                end;
+                'parse' : begin
+                    try
+                        x := read_file(ParamStr(2));
+                        if (x <> '') then writeln(x);
+                    except
+                        On E : Exception do
+                        begin
+                            writeln(StdErr, E.ToString);
+                        end;
+                    end;
+                end;
+            end;
+        end
+		else begin
+			case ParamStr(1) of
+                'operands' : begin
+                    show_version();
+                    case ParamStr(2) of
+                        '1' : show_operands1();
+                        '2' : show_operands2();
+                        '3' : show_operands3();
+                        '4' : show_operands4();
+                        '5' : show_operands5();
+                        '6' : show_operands6();
+                        '7' : show_operands7();
+                        '8' : show_operands8();
+                        'all': begin 
+                            show_operands1(); writeln();
+                            show_operands2(); writeln();
+                            show_operands3(); writeln();
+                            show_operands4(); writeln();
+                            show_operands5(); writeln();
+                            show_operands6(); writeln();
+                            show_operands7(); writeln();
+                            show_operands8();
+                        end;
+                    end;
+                end;
+                'parse' : begin
+                    try
+                        y := '';
+                        for i := 3 to ParamCount do y := y + ParamStr(i) + ' ';
+                        x := read_file_params(ParamStr(2), y);
+                        if (x <> '') then writeln(x);
+                    except
+                        On E : Exception do
+                        begin
+                            writeln(StdErr, E.ToString);
+                        end;
+                    end;
+                end;
+            end;
 		end;
 	end;
 	

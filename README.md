@@ -26,26 +26,28 @@ Ordinary expression | RPN Expression
 ## How to use it
 
 ### Console application
-- Execute a command **rpn** with a quoted RPN expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
+- Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
-- If you want to parse an RPN script file, then execute `rpn parse FILENAME`.
+- If you want to parse an PS script file, then execute `rpn parse FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
+then provide them after the FILENAME delimited by space, e.g. `rpn parse FILENAME param1 param2 param3`. 
+All these params are treated as PS expressions. For example `rpn parse script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 
 **Flags are actually removed and won't be available in the next releases, from 0.4.1 onwards**
 
 ### GUI Application
 - Open an app executable.
-- In order to compute an RPN expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
+- In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
 ## PapajScript and its features:
 
 ### About the language
 **PapajScript** (PS) is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
-Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
-Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions or functions.  
-The future enhancements of the language include an introduction of objects, better file management and vector entities.
+Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
+Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions, functions or exceptions.  
+The future enhancements of the language include an introduction of objects, better file management and array entities.
 
 ### Available constant numerical values:
 - e.g. 2*π -> 2 PI *

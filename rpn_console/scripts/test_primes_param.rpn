@@ -1,0 +1,9 @@
+qshift tonumber >x clear // get first parameter only
+$x 2 = ?
+if TRUE 
+else {
+	2 1 $x sqrt seq
+	size times { $x qshift mod 0 = }
+	all times { qshift not }
+	all -- times and
+}
