@@ -18,6 +18,7 @@ const
 	TBOO = 6;
 	TOBJ = 7;
 	TFUN = 8;
+	TEXC = 9;
 	SHELL_BASH = '/bin/bash';
 	SHELL_ZSH  = '/bin/zsh';
 	SHELL_SH   = '/bin/sh';
@@ -65,12 +66,6 @@ procedure raiserror(Const msg : string);
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
 
-procedure assertEntity(val : Entity; const wtype : Integer);
-procedure assertEntityLocated(val : Entity; const wtype : Integer; operand : String);
-procedure assertNotNegativeLocated(val : Entity; operand : String);
-procedure assertIntegerLocated(val : Entity; operand : String);
-procedure assertNaturalLocated(val : Entity; operand : String);
-
 procedure swapEntities(var e1 : Entity; var e2 : Entity);
 
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
@@ -78,6 +73,7 @@ function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
 function buildFunction(val : String) : Entity;
+function buildException(val : String) : Entity;
 function buildNull() : Entity;
 
 function buildVariable(namevar : String; contentvar : Entity) : Variable;
@@ -146,42 +142,6 @@ begin
   end;
 end;
 
-procedure assertEntity(val : Entity; const wtype : Integer);
-begin
-  if (val.EntityType <> wtype) then 
-    raiserror('Type mismatch: <'+getEntityTypeName(wtype)+'> expected, got <'+getEntitySpec(val)+'>');
-end;
-
-procedure assertEntityLocated(val : Entity; const wtype : Integer; operand : String);
-begin
-  if (val.EntityType <> wtype) then 
-    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(wtype)+'> expected, got '+getEntitySpec(val)+'.');
-end;
-
-procedure assertNotNegativeLocated(val : Entity; operand : String);
-begin
-  if (val.EntityType <> TNUM) then 
-    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.');
-  if (val.Num < 0) then 
-    raiserror('Exception when taking a numeric value at "'+operand+'": an positive real number or zero expected');
-end;
-
-procedure assertIntegerLocated(val : Entity; operand : String);
-begin
-  if (val.EntityType <> TNUM) then 
-    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.');
-  if (val.Num <> trunc(val.Num)) then 
-    raiserror('Exception when taking a numeric value at "'+operand+'": integer expected, got a real number');
-end;
-
-procedure assertNaturalLocated(val : Entity; operand : String);
-begin
-  if (val.EntityType <> TNUM) then 
-    raiserror('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.');
-  if (val.Num < 0) or (val.Num <> trunc(val.Num)) then 
-    raiserror('Exception when taking a numeric value at "'+operand+'": an positive integer or zero expected');
-end;
-
 procedure swapEntities(var e1 : Entity; var e2 : Entity);
 var
 	pom : Entity;
@@ -246,6 +206,16 @@ begin
 	pom.Str := val;
 	pom.Num := Length(val);
 	buildFunction := pom;
+end;
+
+function buildException(val : String) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TEXC;
+	pom.Str := val;
+	pom.Num := Length(val);
+	buildException := pom;
 end;
 
 function buildNull() : Entity;

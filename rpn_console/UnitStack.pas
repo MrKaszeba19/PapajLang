@@ -25,12 +25,20 @@ function stack_showBeautiful(poc : StackDB; mask : String) : String;
 function stack_showFull(poc : StackDB) : String;
 function stack_reverse(poc : StackDB) : StackDB;
 
+function stack_searchException(poc : StackDB) : Boolean;
+
 function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
 function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
 function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
 procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
 procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
 procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
+
+function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
+function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
+function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertIntegerLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
 
 implementation
 
@@ -124,6 +132,7 @@ begin
         if (i.EntityType = TBOO) then z := z + i.Str + ' ';
         if (i.EntityType = TOBJ) then z := z + '<object> ';
         if (i.EntityType = TFUN) then z := z + '<function> '; 
+        if (i.EntityType = TEXC) then z := z + '<exception> '; 
     end;
     z := LeftStr(z, Length(z)-1);
     stack_show := z;
@@ -185,6 +194,18 @@ begin
     end;
     stack_reverse := pom;   
 end;
+
+function stack_searchException(poc : StackDB) : Boolean;
+begin
+    if (Length(poc.Values) > 0) and (poc.Values[Length(poc.Values)-1].EntityType = TEXC) then 
+    begin 
+        stack_searchException := True;
+    end else begin
+        stack_searchException := False;
+    end;
+end;
+
+
 
 function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
 var
@@ -249,6 +270,65 @@ begin
     for i := 0 to Length(poc.Values)-2 do poc.Values[i] := poc.Values[i+1];
     SetLength(poc.Values, Length(poc.Values)-1);
     stack_firstpop := pom;
+end;
+
+// ====== assertions
+
+function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
+begin
+    if (val.EntityType <> wtype) then
+    begin 
+        stack_push(stack, buildException('Type mismatch: <'+getEntityTypeName(wtype)+'> expected, got <'+getEntitySpec(val)+'>'));
+        assertEntity := true;
+    end else assertEntity := false;
+end;
+
+function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
+begin
+    if (val.EntityType <> wtype) then 
+    begin
+        stack_push(stack, buildException('Type mismatch at "'+operand+'": <'+getEntityTypeName(wtype)+'> expected, got '+getEntitySpec(val)+'.'));
+        assertEntityLocated := true;
+    end else assertEntityLocated := false;
+end;
+
+function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, buildException('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.'));
+        assertNotNegativeLocated := true;    
+    end else if (val.Num < 0) then
+    begin 
+        stack_push(stack, buildException('Exception when taking a numeric value at "'+operand+'": an positive real number or zero expected'));
+        assertNotNegativeLocated := true;
+    end else assertNotNegativeLocated := false;
+end;
+
+function assertIntegerLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, buildException('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.'));
+        assertIntegerLocated := true;
+    end else if (val.Num <> trunc(val.Num)) then 
+    begin
+        stack_push(stack, buildException('Exception when taking a numeric value at "'+operand+'": integer expected, got a real number'));
+        assertIntegerLocated := true;
+    end else assertIntegerLocated := false;
+end;
+
+function assertNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, buildException('Type mismatch at "'+operand+'": <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+'.'));  
+        assertNaturalLocated := true;
+    end else if (val.Num < 0) or (val.Num <> trunc(val.Num)) then 
+    begin
+        stack_push(stack, buildException('Exception when taking a numeric value at "'+operand+'": an positive integer or zero expected'));
+        assertNaturalLocated := true;
+    end else assertNaturalLocated := false;
 end;
 
 end.

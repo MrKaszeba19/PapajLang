@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-November 8, 2018  
+November 12, 2018  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -72,8 +72,8 @@ Golden number | φ | 1.6180339887498 | FI
 | log     | logarithm               |
 | div     | integer division (`-5 3 div` returns `-1`) |
 | mod     | modulo (`-5 3 mod` returns `-2`)           |
-| cdiv    | integer division (`-5 3 div` returns `-2`) |
-| cmod    | modulo (`-5 3 div` returns `1`)            |
+| cdiv    | integer division (`-5 3 div` returns `-2`) _removed so far_ |
+| cmod    | modulo (`-5 3 div` returns `1`) _removed so far_ |
 | choose  | Binomial coefficient                       |
 | gcd     | Greatest Common Divisor                    |
 | lcm     | Least Common Multiplier                    |
@@ -258,6 +258,11 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 - `boolean`, e.g. `TRUE, FALSE`
 - `null`
 - `function`, e.g. `fun{ -1 * }`
+- `exception`, (as of now just basic ones, _to be improved_)
+
+**Planned for the future**
+- `array`
+- `object`
 
 #### Variables
 
@@ -367,11 +372,11 @@ Operand | Purpose
 
 **Examples:**
 - `@int 14.89` prints a stack with "15"
-- `@int trunc 14.89` prints stack with "14"
-- `@silent @int trunc 14.89` doesn't print the stack
+- `@int 14.89 trunc` prints stack with "14"
+- `@silent @int 14.89 trunc` doesn't print the stack
 - `2 3 +` prints a stack with "5"
-- `@autoclear(true) 2 3 +` prints a stack with "5" - as 2 and 3 were removed automatically after usage
-- `@autoclear(false) 2 3 +` prints a stack with "2 3 5"
+- `@autoclear(TRUE) 2 3 +` prints a stack with "5" - as 2 and 3 were removed automatically after usage
+- `@autoclear(FALSE) 2 3 +` prints a stack with "2 3 5"
 
 **Notes**
 - Disabling autoclear does not apply to instructions of `times`, `rprint`, `rprintln`, `++`, `--`, stack manipulators and stack aggregating functions
@@ -379,6 +384,8 @@ Operand | Purpose
 
 ## REPL Commands
 - `\` at the very end of the input line allows for multi-line commands 
+- `\autoreset:BOOL` - allow REPL to reset the stack every move (BOOL=true/false, false by default)
+- `\autoreset` - same as `\autoreset:true`
 - `\reset` - reset the REPL.
 - `\export:FILE` - export your history to a file (FILE is a relative or absolute path)
 - `\history` - display the previously typed commands
