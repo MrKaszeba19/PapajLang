@@ -74,6 +74,7 @@ function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
 function buildFunction(val : String) : Entity;
 function buildException(val : String) : Entity;
+function raiseException(val : String) : Entity;
 function buildNull() : Entity;
 
 function buildVariable(namevar : String; contentvar : Entity) : Variable;
@@ -122,6 +123,7 @@ begin
     TBOO : getEntityTypeName := 'boolean';
     TOBJ : getEntityTypeName := 'object';
     TFUN : getEntityTypeName := 'function';
+    TEXC : getEntityTypeName := 'exception';
     else getEntityTypeName := 'unknown';
   end;
 end;
@@ -214,8 +216,18 @@ var
 begin
 	pom.EntityType := TEXC;
 	pom.Str := val;
-	pom.Num := Length(val);
+	pom.Num := 0;
 	buildException := pom;
+end;
+
+function raiseException(val : String) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TEXC;
+	pom.Str := val;
+	pom.Num := 1;
+	raiseException := pom;
 end;
 
 function buildNull() : Entity;

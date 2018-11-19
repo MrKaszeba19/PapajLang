@@ -17,8 +17,8 @@ end;
 
 function commentcut(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
-function parseScoped(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
-function parseOpen(input : string; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
+function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function buildNewEnvironment() : PSEnvironment;
 
@@ -41,6 +41,10 @@ begin
     Steps := 1;
 
     StrEcx := i;
+    if (sets.StrictType) and (stack_searchException(pocz)) then
+    begin
+		raiserror(stack_pop(pocz).Str);
+	end;
 
     if not (sets.CaseSensitive) then i := LowerCase(i);
     Val (i,Im,Code);
@@ -52,13 +56,19 @@ begin
         if not lib_variables(i, pocz, Steps, sets, vardb) then
         if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
         if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
+        if not lib_exceptions(i, pocz, Steps, sets, vardb) then
         if (sets.StrictType) and (stack_searchException(pocz)) then
-        begin
+    	begin
 			raiserror(stack_pop(pocz).Str);
 		end else stack_push(pocz, buildString(StrEcx));
     end else begin
         stack_push(pocz, buildNumber(Im));
     end;
+
+    if (sets.StrictType) and (stack_searchException(pocz)) then
+    begin
+		raiserror(stack_pop(pocz).Str);
+	end;
 end;
 
 function commentcut(input : String) : String;
@@ -80,12 +90,12 @@ begin
 	commentcut := pom;
 end;
 
-function parseScoped(input : string; var pocz : StackDB; var sets : TSettings; vardb : VariableDB) : String;
+function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
 end;
 
-function parseOpen(input : string; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
 	L      : TStrings;
 	i      : String;
@@ -137,7 +147,7 @@ begin
 	    				  parseScoped(nesttx, pocz, sets, vardb); 
 	    				until EOF;
 	    				stack_pop(pocz);
-	    			end else for step := 1 to Steps do parseScoped(nesttx, pocz, sets, vardb);
+	    			end else for step := 1 to Steps do pocz := parseScoped(nesttx, pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
             end else if L[index] = 'fun{' then begin
@@ -174,9 +184,9 @@ begin
 	    end;
     	Inc(index);
   	end;
-	z := '';
+	//z := '';
 	L.Free;
-  	parseOpen := z;
+  	parseOpen := pocz;
 end;
 
 function buildNewEnvironment() : PSEnvironment;

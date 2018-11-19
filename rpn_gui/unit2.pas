@@ -20,7 +20,7 @@ var
     env : PSEnvironment;
 begin
     env := buildNewEnvironment();
-    res := parseOpen(input, env.Stack, env.Settings, env.Variables);
+    env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
     res := stack_show(env.Stack, env.Settings.Mask);
     if (env.Settings.Prevent) then res := '';
     PS_parseString := res;
@@ -31,7 +31,7 @@ end;
 procedure repl_showshorthelp();
 begin
     writeln('Type \reset to reset the REPL.');
-    writeln('Type \help to display this help again.');
+    writeln('Type \help to display help.');
     writeln('Type \q or \quit to exit the REPL.');
     writeln();
 end;
@@ -61,7 +61,6 @@ var
     i       : Integer;
     Im      : Extended;
     Code    : Longint;
-    alright : Boolean;
     fp      : Text;
     fname   : String;
 begin
@@ -71,7 +70,6 @@ begin
     writeln();
     repl_showshorthelp();
     repeat
-        alright := true;
         input := '';
         TextColor(14);
         write('=> ');
@@ -250,8 +248,8 @@ begin
                     history[Length(history)-1] := input;
                 end;
                 try
-                    if (env.AutoReset) then res := parseOpen('clear', env.Stack, env.Settings, env.Variables);
-                    res := parseOpen(input, env.Stack, env.Settings, env.Variables);
+                    if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
+                    env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
                     res := stack_show(env.Stack, env.Settings.Mask);
                     if not (env.Settings.Prevent) then 
                     begin

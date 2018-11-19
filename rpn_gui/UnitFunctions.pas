@@ -12,7 +12,7 @@ const
 	EU = 2.7182818284590452353602874713526;
 	FI = 1.6180339887498948482045868343656;
 
-function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -20,12 +20,13 @@ function lib_constants(i : String; var pocz : StackDB; var Steps : Integer; var 
 function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 
 implementation
 
 uses Unit5, UnitEnvironment;
 
-function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : String;
+function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
   fun, S : String;
   fp     : Text;
@@ -40,8 +41,8 @@ begin
     fun := fun + ' ' + S;
   end;
   closefile(fp);
-  S := parseScoped(fun, pocz, sets, vardb);
-  read_sourcefile := S;
+  pocz := parseScoped(fun, pocz, sets, vardb);
+  read_sourcefile := pocz;
 end;
 
 //function lib_template(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -452,7 +453,7 @@ begin
             stack_push(pocz, buildNumber(z));
         end;
         '/' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TNUM, i)) then Exit;
+            if (sets.StrictType) and (assertNonZeroLocated(pocz, stack_get(pocz), i)) then Exit;
             y := stack_pop(pocz).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TNUM, i)) then Exit;
             x := stack_pop(pocz).Num;
@@ -1116,7 +1117,7 @@ begin
         'strparse' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
-            StrEcx := parseScoped(StrEbx, pocz, sets, vardb);
+            pocz := parseScoped(StrEbx, pocz, sets, vardb);
             if not (sets.Autoclear) then begin
             	stack_push(pocz, buildString(StrEbx));
             end;
@@ -1134,7 +1135,7 @@ begin
         'call' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
-            StrEcx := parseScoped(StrEbx, pocz, sets, vardb);
+            pocz := parseScoped(StrEbx, pocz, sets, vardb);
             if not (sets.Autoclear) then begin
               stack_push(pocz, buildString(StrEbx));
             end;
@@ -1614,6 +1615,8 @@ begin
         end;
 
         else begin
+            Found := false;
+            {*
             case LeftStr(i, 1) of
             	'X' : begin
               		if (RightStr(i, Length(i)-1) = '*') and (not (Unit5.is_gui)) then Steps := -1
@@ -1624,6 +1627,7 @@ begin
                 	Found := false;
               	end;
             end;
+            *}
         end;
     end;
     lib_ultravanilla := Found;
@@ -1780,7 +1784,7 @@ begin
               		if (RightStr(i, 2) = '")') then begin
                 		StrEax := RightStr(i, Length(i)-9);
                 		StrEax := LeftStr(StrEax, Length(StrEax)-2);
-                		StrEbx := read_sourcefile(StrEax, pocz, sets, vardb);
+                		pocz := read_sourcefile(StrEax, pocz, sets, vardb);
               		end else begin
                 		raiserror('Exception when attempting to read the file stream: Syntax error');
               		end;
@@ -1947,7 +1951,7 @@ begin
             EntEax := getVariable(vardb, StrEax);
             if (sets.StrictType) and (assertEntityLocated(pocz, EntEax, TFUN, i)) then Exit;  
             StrEbx := EntEax.Str;
-            StrEbx := parseScoped(StrEbx, pocz, sets, vardb);
+            pocz := parseScoped(StrEbx, pocz, sets, vardb);
             if not (sets.Autoclear) then begin
                 stack_push(pocz, buildString(StrEax));
             end;
@@ -1998,7 +2002,7 @@ begin
                                 EntEax := getVariable(vardb, StrEax);
                                 if (sets.StrictType) and (assertEntityLocated(pocz, EntEax, TFUN, i)) then Exit;   
                                 StrEbx := EntEax.Str;
-                                StrEbx := parseScoped(StrEbx, pocz, sets, vardb);
+                                pocz := parseScoped(StrEbx, pocz, sets, vardb);
                             end else begin
                                 raiserror('Exception when executing function: You cannot execute an unnamed function by this method.');
                             end;
@@ -2171,6 +2175,38 @@ begin
         end;
     end;
     lib_consolemanipulators := Found;
+end;
+
+function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+    Found  : Boolean;
+    ExcEax : Entity;
+begin
+    Found := true;
+    case i of
+        'EXC' : begin
+            stack_push(pocz, buildException(''));
+        end;
+        'excbuild' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
+            stack_push(pocz, buildException(stack_pop(pocz).Str));
+        end;
+        'excraise' : begin
+            if (stack_get(pocz).EntityType = TEXC) then
+            begin
+                ExcEax := stack_pop(pocz);
+                ExcEax.Num := 1;
+                stack_push(pocz, ExcEax);
+            end else if (stack_get(pocz).EntityType = TSTR) then
+            begin
+                stack_push(pocz, raiseException(stack_pop(pocz).Str));    
+            end;
+        end;
+        else begin
+            Found := false;
+        end;
+    end;
+    lib_exceptions := Found;
 end;
 
 end.

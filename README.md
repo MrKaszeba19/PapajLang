@@ -49,7 +49,7 @@ Its structure is based mostly on Reverse Polish Notation (with a handful of exce
 Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions, functions or exceptions.  
 The future enhancements of the language include an introduction of objects, better file management and array entities.
 
-### Available constant numerical values:
+### Constant numerical values:
 - e.g. 2*π -> 2 PI *
 
 Name | Symbol | Approximated value | Programme Operand
@@ -57,6 +57,18 @@ Name | Symbol | Approximated value | Programme Operand
 Pi | π | 3.1415926535897 | PI
 Euler number | e | 2.7182818284590 | EU
 Golden number | φ | 1.6180339887498 | FI
+
+### Char/string contants
+- `\n` new line
+- `\t` horizontal tab
+- `\\` a backslash
+- if a char or string that is already a built-in function, then use `\` before it (e.g. `<=` - equal or less - then use `\<=`)
+_to be extended_
+
+### Other constants
+- `TRUE` and `FALSE` for boolean types
+- `NULL`
+- `EXC` (an empty unraised exception)
 
 
 ### Commands for numeric expressions
@@ -260,7 +272,7 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 - `boolean`, e.g. `TRUE, FALSE`
 - `null`
 - `function`, e.g. `fun{ -1 * }`
-- `exception`, (as of now just basic ones, _to be improved_)
+- `exception`, e.g. `EXC` (as of now just basic ones, _to be improved_)
 
 **Planned for the future**
 - `array`
@@ -285,6 +297,9 @@ Syntax: `fun{ <set_of_instructions> }`
 - If a function is a variable, then you may call it directly either via `vcall` or via `@@vname` (where vname is a name of the function).
 
 ### Other operands and directives
+
+#### Exception management
+- excraise - (syntax `X excraise`) if X is a string, then raise an exception with a X message (np. `"Error!" excraise`). If X is an exception, then this command raises it. An expression of `EXC excraise` raises an empty exception.
 
 #### Input-output operands
 
