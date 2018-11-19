@@ -1,4 +1,4 @@
-scan tonumber >x
+scan toNumber >x
 $x 2 = ?
 if TRUE 
 else {

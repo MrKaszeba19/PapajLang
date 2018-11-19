@@ -87,6 +87,29 @@ begin
      fact := s;
 end;
 
+function isPrime(x : LongInt) : Boolean;
+var
+    i : LongInt;
+    s : Boolean;
+begin
+    case x of
+        0 : isPrime := False;
+        1 : isPrime := False;
+        else begin
+            s := True;
+            for i := 2 to trunc(sqrt(x)) do
+            begin
+                if (x mod i = 0) then 
+                begin
+                    s := False;
+                    break;
+                end;
+            end;
+            isPrime := s;
+        end;
+    end;
+end;
+
 function newton_int(n, k : Extended) : Extended;
 begin
      //newton (n, 0) = 1;
@@ -937,7 +960,7 @@ begin
             stack_push(pocz, buildString(StrEcx));
         end;
         'dechar' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
+            if (sets.StrictType) and (assertCharLocated(pocz, stack_get(pocz), i)) then Exit; 
             StrEcx := stack_pop(pocz).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
@@ -986,7 +1009,7 @@ begin
             HelpTStrings.Free;
         end;
         'splitby' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
+            if (sets.StrictType) and (assertCharLocated(pocz, stack_get(pocz), i)) then Exit; 
             StrEcx := stack_pop(pocz).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
             StrEbx := stack_get(pocz).Str;
@@ -1175,12 +1198,12 @@ begin
           	if (sets.Autoclear) then stack_pop(pocz);
           	stack_push(pocz, buildString(getEntityTypeName(EntEax.EntityType)));
         end;
-        'tostring' : begin
+        'toString' : begin
           	EntEax := stack_get(pocz);
             if (sets.Autoclear) then stack_pop(pocz);
             stack_push(pocz, buildString(EntEax.Str));
         end;
-        'tonumber' : begin
+        'toNumber' : begin
             //if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
             EntEax := stack_get(pocz);
             if (sets.Autoclear) then stack_pop(pocz);
@@ -1192,6 +1215,18 @@ begin
                 stack_push(pocz, buildException('Exception at tonumber: Got a non-numeric string.'))
             	else stack_push(pocz, buildNumber(EntEax.Num));
             end;
+        end;
+        'makeChar' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+            y := stack_get(pocz).Num;
+            if (sets.Autoclear) then stack_pop(pocz);
+            stack_push(pocz, buildString(Chr(trunc(y))));
+        end;
+        'getAscii' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz, stack_get(pocz), i)) then Exit; 
+            StrEcx := stack_get(pocz).Str;
+            if (sets.Autoclear) then stack_pop(pocz);
+            stack_push(pocz, buildNumber(Ord(StrEcx[1])));
         end;
         'length' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
@@ -1297,48 +1332,36 @@ begin
         	stack_clear(pocz);
         end;
         'keep' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+          	if (sets.StrictType) and (assertPositiveNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
           	y := stack_pop(pocz).Num;
-          	if (y >= 1) then begin
-          		SetLength(HelpETable, trunc(y));
-          		for index := 0 to trunc(y)-1 do HelpETable[index] := stack_pop(pocz);
-          		stack_clear(pocz);
-          		for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
-          		SetLength(HelpETable, 0);
-          	end else if (y = 0) then begin
-          		stack_clear(pocz);
-          	end;
+          	SetLength(HelpETable, trunc(y));
+          	for index := 0 to trunc(y)-1 do HelpETable[index] := stack_pop(pocz);
+          	stack_clear(pocz);
+          	for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
+          	SetLength(HelpETable, 0);
         end;
         'copy' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+          	if (sets.StrictType) and (assertPositiveNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
             y := stack_get(pocz).Num;
             stack_pop(pocz);
-            if (y >= 1) then begin
-            	SetLength(HelpETable, trunc(y));
-            	for index := 0 to trunc(y)-1 do HelpETable[index] := stack_pop(pocz);
-            	for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
-            	for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
-            	SetLength(HelpETable, 0);
-            end else if (y = 0) then begin
-            	stack_clear(pocz);
-            end;
+            SetLength(HelpETable, trunc(y));
+            for index := 0 to trunc(y)-1 do HelpETable[index] := stack_pop(pocz);
+            for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
+            for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
+            SetLength(HelpETable, 0);
         end;
         'mcopy' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+          	if (sets.StrictType) and (assertPositiveNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
           	y := stack_get(pocz).Num;
           	stack_pop(pocz);
-          	if (y >= 1) then begin
-          		SetLength(HelpETable, trunc(y));
-          		for index := 0 to trunc(y)-1 do begin
-          			HelpETable[index] := stack_get(pocz);
-          			stack_pop(pocz);
-          		end;
-          		for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
-          		for index := 0 to trunc(y)-1 do stack_push(pocz, HelpETable[index]);
-          		SetLength(HelpETable, 0);
-          	end else if (y = 0) then begin
-          	    stack_clear(pocz);
+          	SetLength(HelpETable, trunc(y));
+          	for index := 0 to trunc(y)-1 do begin
+          		HelpETable[index] := stack_get(pocz);
+          		stack_pop(pocz);
           	end;
+          	for index := trunc(y)-1 downto 0 do stack_push(pocz, HelpETable[index]);
+          	for index := 0 to trunc(y)-1 do stack_push(pocz, HelpETable[index]);
+          	SetLength(HelpETable, 0);
         end;
         'sort' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;
@@ -1376,6 +1399,14 @@ begin
         end;
         'swap' : begin
             stack_reverseCollection(pocz, 2);
+        end;
+
+        // boolean functions for numbers
+        'isPrime' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+            y := stack_pop(pocz).Num;
+            if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
+            stack_push(pocz, buildBoolean(isPrime(trunc(y))));
         end;
              
 
@@ -2187,17 +2218,17 @@ begin
         'EXC' : begin
             stack_push(pocz, buildException(''));
         end;
-        'excbuild' : begin
+        'toException' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
             stack_push(pocz, buildException(stack_pop(pocz).Str));
         end;
-        'excraise' : begin
+        'raiseException' : begin
             if (stack_get(pocz).EntityType = TEXC) then
             begin
                 ExcEax := stack_pop(pocz);
                 ExcEax.Num := 1;
                 stack_push(pocz, ExcEax);
-            end else if (stack_get(pocz).EntityType = TSTR) then
+            end else //if (stack_get(pocz).EntityType = TSTR) then
             begin
                 stack_push(pocz, raiseException(stack_pop(pocz).Str));    
             end;

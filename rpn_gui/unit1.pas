@@ -91,7 +91,7 @@ begin
      end;
      on E : Exception do begin
        Edit1.Text := '';
-       Edit2.Text := '';
+       Edit2.Text := E.Message;
      end;
      end;
 end;

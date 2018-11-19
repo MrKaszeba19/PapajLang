@@ -17,7 +17,7 @@ begin
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
      writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
-     writeln('Run ''rpn parse (FILENAME)'' to parse a RPN script file');
+     writeln('Run ''rpn parse (FILENAME)'' to parse a PS script file');
      writeln('Run ''rpn repl'' to run a REPL for PapajScript');
      writeln('');
      writeln('More help at github.com/RooiGevaar19/RPNCalculator');
@@ -153,8 +153,8 @@ begin
     writeln('Other operations: ');
     writeln('      rand : Get a random integer value from 0 to N-1 (execute "N rand")');
     writeln('      scan : Scan any value from input');
-    writeln('  tonumber : Convert anything to number if possible');
-    writeln('  tostring : Convert anything to string');
+    writeln('  toNumber : Convert anything to number if possible');
+    writeln('  toString : Convert anything to string');
     writeln('     print : Print a value being on the top of the stack');
     writeln('   println : Same as above and end the line.');
     writeln('     clone : Clone the value being on the top of the stack');

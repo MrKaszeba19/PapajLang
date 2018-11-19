@@ -1,1 +1,1 @@
-scannum clone ++ * 2 /
+scan toNumber clone ++ * 2 /

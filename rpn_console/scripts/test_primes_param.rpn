@@ -1,4 +1,4 @@
-qshift tonumber >x clear // get first parameter only
+qshift toNumber >x clear // get first parameter only
 $x 2 = ?
 if TRUE 
 else {

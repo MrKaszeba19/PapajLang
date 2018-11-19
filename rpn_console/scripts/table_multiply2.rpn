@@ -1,6 +1,6 @@
 @silent
 "Type a number: " print 
-scan tonumber >n
+scan toNumber >n
 0 >i
 $n ++ times {
 	clear

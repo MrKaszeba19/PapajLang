@@ -7,7 +7,7 @@ fun{
 	else FALSE
 } >toboolean
 
-scan tonumber 
+scan toNumber 
 clone 
 @@invert println
 @@toboolean println

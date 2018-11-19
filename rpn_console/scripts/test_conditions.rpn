@@ -1,6 +1,6 @@
 @silent
 
-scan tonumber 
+scan toNumber 
 clone 0 >= ?
 if {
 	"You entered a natural number." println

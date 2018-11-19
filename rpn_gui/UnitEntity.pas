@@ -114,33 +114,33 @@ end;
 function getEntityTypeName(const x : Integer) : String;
 begin
   case x of
-    TNIL : getEntityTypeName := 'null';
-    TNUM : getEntityTypeName := 'number';
-    TSTR : getEntityTypeName := 'string';
-    TVEN : getEntityTypeName := 'vector<number>';
-    TVES : getEntityTypeName := 'vector<string>';
-    TVEC : getEntityTypeName := 'vector';
-    TBOO : getEntityTypeName := 'boolean';
-    TOBJ : getEntityTypeName := 'object';
-    TFUN : getEntityTypeName := 'function';
-    TEXC : getEntityTypeName := 'exception';
-    else getEntityTypeName := 'unknown';
+    TNIL : getEntityTypeName := 'Null';
+    TNUM : getEntityTypeName := 'Number';
+    TSTR : getEntityTypeName := 'String';
+    TVEN : getEntityTypeName := 'Array<Number>';
+    TVES : getEntityTypeName := 'Array<String>';
+    TVEC : getEntityTypeName := 'Array';
+    TBOO : getEntityTypeName := 'Boolean';
+    TOBJ : getEntityTypeName := 'Object';
+    TFUN : getEntityTypeName := 'Function';
+    TEXC : getEntityTypeName := 'Exception';
+    else getEntityTypeName := 'Unknown';
   end;
 end;
 
 function getEntitySpec(x : Entity) : String;
 begin
   case x.EntityType of
-    TNIL : getEntitySpec := '<null>';
-    TNUM : getEntitySpec := FormatFloat('0.###############', x.Num) + ' : <number>';
-    TSTR : getEntitySpec := '"' + x.Str + '" : <string>';
-    TVEN : getEntitySpec := '<vector<number>>';
-    TVES : getEntitySpec := '<vector<string>>';
-    TVEC : getEntitySpec := '<vector>';
-    TBOO : getEntitySpec := x.Str + ' : <boolean>';
-    TOBJ : getEntitySpec := '<object>';
-    TFUN : getEntitySpec := '<function>';
-    else getEntitySpec := '<unknown>';
+    TNIL : getEntitySpec := '<Null>';
+    TNUM : getEntitySpec := FormatFloat('0.###############', x.Num) + ' : <Number>';
+    TSTR : getEntitySpec := '"' + x.Str + '" : <String>';
+    TVEN : getEntitySpec := '<Array<Number>>';
+    TVES : getEntitySpec := '<Array<String>>';
+    TVEC : getEntitySpec := '<Array>';
+    TBOO : getEntitySpec := x.Str + ' : <Boolean>';
+    TOBJ : getEntitySpec := '<Object>';
+    TFUN : getEntitySpec := '<Function>';
+    else getEntitySpec := '<Unknown>';
   end;
 end;
 

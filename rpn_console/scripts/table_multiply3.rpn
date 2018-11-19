@@ -1,5 +1,5 @@
 @silent
-scan tonumber >n
+scan toNumber >n
 0 >i
 $n ++ times {
 	clear

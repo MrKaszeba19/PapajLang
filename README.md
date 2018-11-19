@@ -34,8 +34,6 @@ then provide them after the FILENAME delimited by space, e.g. `rpn parse FILENAM
 All these params are treated as PS expressions. For example `rpn parse script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 
-**Flags are actually removed and won't be available in the next releases, from 0.4.1 onwards**
-
 ### GUI Application
 - Open an app executable.
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
@@ -70,6 +68,17 @@ _to be extended_
 - `NULL`
 - `EXC` (an empty unraised exception)
 
+### Commands for type casting
+**Change of syntax for type casting from 0.4.2 onwards**
+
+Syntax: `X command`
+ 
+Programme Operand | Purpose
+----------------- | -------
+toString | convert to a string
+toNumber | convert to a number
+toException | build an exception (if X is a string, then it creates an unraised exception with this string message)
+raiseException | same as above, but it raises exception too
 
 ### Commands for numeric expressions
 - number1 number2 operand
@@ -102,7 +111,7 @@ inc | increment
 dec | decrement
 abs | absolute value
 sqrt | suqare root
-exp | exponential
+exp | exponential (e^N1, raise an Euler number to n-th power)
 ! | factorial
 fact | factorial
 sin | sine
@@ -116,9 +125,10 @@ fib | Fibonacci number
 trunc | truncate
 round | round
 times | do something N1 times
-tostring | convert to a string
 floor | floor
 ceiling | ceiling
+isPrime | returns `TRUE` if a number is a prime, otherwise it returns `FALSE`
+makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
 
 ### Commands for string expressions
 
@@ -132,7 +142,7 @@ concat | Concatenates two strings
 dechar | Removes all chars of S2 from a string S1
 occur | Returns a count of occurences of a substring S2 in a string S1
 pos | Returns an index of the first occurence of a substring S2 in a string S1
-splitby | Splits a string S1 according to a char of S2 (and a space char too)
+splitby | Splits a string S1 according to a char of S2 (and a space char too, S2 must be a single char)
 strremove | Removes the first occurence a substring S2 from a string S1
 
 - string1 string2 string3 operand
@@ -179,6 +189,7 @@ onespace | Eliminates combo space chars (e.g. "2   3" -> "2 3")
 split | Splits a string according to space chars
 strparse | Parses a string like it was a set of RPN commands
 shell | Execute a command being included in S1
+getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 
 
 **Examples:**
@@ -260,23 +271,24 @@ The `if` launches the next instruction only when the recent ?-check was successf
 The `else` launches the next instruction only when the recent ?-check was unsuccesful.
 
 **Examples**
-- `scan tonumber 2 mod ? if { "This number is even." println } else { "This number is odd." println }`
-- `scan tonumber 5 > ? if { "This number is greater than 5" println }`
-- `scan tonumber 5 <= ? else { "This number is greater than 5" println }`
-- `scan tonumber 10 mod ? if 1 else 0`
+- `scan toNumber 2 mod ? if { "This number is even." println } else { "This number is odd." println }`
+- `scan toNumber 5 > ? if { "This number is greater than 5" println }`
+- `scan toNumber 5 <= ? else { "This number is greater than 5" println }`
+- `scan toNumber 10 mod ? if 1 else 0`
 
 #### Data types
 **Current data types:**
-- `number`, e.g. `5, 2, -10, 20.5`
-- `string`, e.g. `"Hello world!", "Shalom!", "h"`
-- `boolean`, e.g. `TRUE, FALSE`
-- `null`
-- `function`, e.g. `fun{ -1 * }`
-- `exception`, e.g. `EXC` (as of now just basic ones, _to be improved_)
+_**(Capitalized type names from 0.4.2 onwards)**_
+- `Number`, e.g. `5, 2, -10, 20.5`
+- `String`, e.g. `"Hello world!", "Shalom!", "h"`
+- `Boolean`, e.g. `TRUE, FALSE`
+- `Null`
+- `Function`, e.g. `fun{ -1 * }`
+- `Exception`, e.g. `EXC` (as of now just basic ones, _to be improved_)
 
 **Planned for the future**
-- `array`
-- `object`
+- `Array`
+- `Object`
 
 #### Variables
 
@@ -299,7 +311,7 @@ Syntax: `fun{ <set_of_instructions> }`
 ### Other operands and directives
 
 #### Exception management
-- excraise - (syntax `X excraise`) if X is a string, then raise an exception with a X message (np. `"Error!" excraise`). If X is an exception, then this command raises it. An expression of `EXC excraise` raises an empty exception.
+- raiseException - (syntax `X raiseException`) if X is a string, then raise an exception with a X message (np. `"Error!" raiseException`). If X is an exception, then this command raises it. An expression of `EXC excraise` raises an empty exception.
 
 #### Input-output operands
 
@@ -309,8 +321,8 @@ type | Check the type of the value being on the top of the stack
 scan | Scan 1 value from an input (e.g. standard input) and add it on the top of the stack of values
 scannum | Scan 1 numerical value from input
 scanstr | Scan 1 string value from input
-tostring | Convert anything to string
-tonumber | Convert anything to number
+toString | Convert anything to string
+toNumber | Convert anything to number
 rand | Generate a random integer value within a range [0..N-1]
 print | Print a value being on the top of the stack
 println | Same as above and end the line.
