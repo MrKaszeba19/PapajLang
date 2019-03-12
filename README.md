@@ -2,26 +2,10 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-November 19, 2018  
+March 12, 2019  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
-
-## About RPN
-**Reverse Polish Notation** (RPN) is a mathematical notation in which operators follow their operands. It allows to evaluate the mathematical expressions without using parentheses.
-
-**More info:** https://en.wikipedia.org/wiki/Reverse_Polish_notation
-
-### Examples of simple RPN expressions
-
-Ordinary expression | RPN Expression
-------------------- | --------------
-5 | 5
-2 + 3 | 2 3 +
-(2.5 * 2) + 5 | 2.5 2 * 5 +
--4 * (2 / 3) | -4 2 3 / *
-(2 + 5) * (11 - 7) | 2 5 + 11 7 - *
-((8 - 2) / 3 + (1 + 4) * 2) / 6 | 8 2 - 3 / 1 4 + 2 * + 6 /
 
 ## How to use it
 
@@ -39,13 +23,15 @@ All these params are treated as PS expressions. For example `rpn parse script.rp
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
-## PapajScript and its features:
+## PapajScript:
 
 ### About the language
 **PapajScript** (PS) is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
 Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
 Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions, functions or exceptions.  
 The future enhancements of the language include an introduction of objects, better file management and array entities.
+
+Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNCalculator/wiki).
 
 ### Constant numerical values:
 - e.g. 2*π -> 2 PI *
@@ -129,6 +115,7 @@ floor | floor
 ceiling | ceiling
 isPrime | returns `TRUE` if a number is a prime, otherwise it returns `FALSE`
 makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
+rand | Generate a random integer value within a range [0..N-1]
 
 ### Commands for string expressions
 
@@ -196,6 +183,13 @@ getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 - `5 times 2 sum` sums five 2's
 - `5 times scan all sum` sums five numbers scanned by an input
 - `"ls" shell` executes `ls` (assuming RPN uses `bash`)
+
+### Other built-in functions
+
+Programme Operand | Syntax | Purpose
+----------------- | ------ | -------
+callIf | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
+callUnless | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
 
 ### Stack operations
 
@@ -323,7 +317,6 @@ scannum | Scan 1 numerical value from input
 scanstr | Scan 1 string value from input
 toString | Convert anything to string
 toNumber | Convert anything to number
-rand | Generate a random integer value within a range [0..N-1]
 print | Print a value being on the top of the stack
 println | Same as above and end the line.
 rprint | Print a value being on the top of the stack and remove it from this stack.
@@ -433,7 +426,7 @@ Operand | Purpose
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
 
-## Improvements
+## Releases history
 
 Version | Version Name | Date of Release | Improvements
 ------- | ------------ |:---------------:| ------------

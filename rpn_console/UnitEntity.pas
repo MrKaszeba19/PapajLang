@@ -49,6 +49,14 @@ type Entity = record
 	Str        : String;
 end;
 
+//type Entity = ^TStos;
+//TStos = record
+//    EntityType : Integer;
+//	Num        : Extended;	// plans to make them arrays
+//	Str        : String;
+//    EArray     : array of Entity;
+//end;
+
 type TEntities = array of Entity;
 
 type Variable = record 
@@ -158,55 +166,65 @@ function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 var
   pom : Entity;
 begin
-  pom.EntityType := TNUM;
-  pom.Num := val;
-  pom.Str := FormatFloat(sets.Mask, val);
-  buildNumberFormattted := pom;
+	//pom := New(Entity);
+	pom.EntityType := TNUM;
+	pom.Num := val;
+	pom.Str := FormatFloat(sets.Mask, val);
+	//pom.EArray := nil;
+	buildNumberFormattted := pom;
 end;
 
 function buildNumber(val : Extended) : Entity;
 var
   pom : Entity;
 begin
-  pom.EntityType := TNUM;
-  pom.Num := val;
-  pom.Str := '' + FormatFloat('0.###############' ,val);
-  buildNumber := pom;
+	//pom := New(Entity);
+	pom.EntityType := TNUM;
+	pom.Num := val;
+	pom.Str := '' + FormatFloat('0.###############' ,val);
+	//pom.EArray := nil;
+	buildNumber := pom;
 end;
 
 function buildString(val : String) : Entity;
 var
   pom : Entity;
 begin
-  pom.EntityType := TSTR;
-  pom.Str := val;
-  pom.Num := Length(val);
-  buildString := pom;
+	//pom := New(Entity);
+	pom.EntityType := TSTR;
+	pom.Str := val;
+	pom.Num := Length(val);
+	//pom.EArray := nil;
+	buildString := pom;
 end;
 
 function buildBoolean(val : Boolean) : Entity;
 var
   pom : Entity;
 begin
-  pom.EntityType := TBOO;
-  if (val) then
-  begin
-    pom.Str := 'TRUE';
-    pom.Num := 0;
-  end else begin
-    pom.Str := 'FALSE';
-    pom.Num := 1;
-  end;
-  buildBoolean := pom;
+	//pom := New(Entity);
+	pom.EntityType := TBOO;
+	if (val) then
+	begin
+		pom.Str := 'TRUE';
+		pom.Num := 0;
+	end else begin
+		pom.Str := 'FALSE';
+		pom.Num := 1;
+	end;
+	//pom.EArray := nil;
+	buildBoolean := pom;
 end;
 
 function buildFunction(val : String) : Entity;
 var
 	pom : Entity;
 begin
+	//pom := New(Entity);
 	pom.EntityType := TFUN;
 	pom.Str := val;
 	pom.Num := Length(val);
+	//pom.EArray := nil;
 	buildFunction := pom;
 end;
 
@@ -214,9 +232,11 @@ function buildException(val : String) : Entity;
 var
 	pom : Entity;
 begin
+	//pom := New(Entity);
 	pom.EntityType := TEXC;
 	pom.Str := val;
 	pom.Num := 0;
+	//pom.EArray := nil;
 	buildException := pom;
 end;
 
@@ -224,9 +244,11 @@ function raiseException(val : String) : Entity;
 var
 	pom : Entity;
 begin
+	//pom := New(Entity);
 	pom.EntityType := TEXC;
 	pom.Str := val;
 	pom.Num := 1;
+	//pom.EArray := nil;
 	raiseException := pom;
 end;
 
@@ -234,10 +256,12 @@ function buildNull() : Entity;
 var
   pom : Entity;
 begin
-  pom.EntityType := TNIL;
-  pom.Str := 'NULL';
-  pom.Num := 0;
-  buildNull := pom;
+	//pom := New(Entity);
+	pom.EntityType := TNIL;
+	pom.Str := 'NULL';
+	pom.Num := 0;
+	//pom.EArray := nil;
+	buildNull := pom;
 end;
 
 // VARIABLES OPERATIONS
