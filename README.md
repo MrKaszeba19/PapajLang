@@ -13,7 +13,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
-- If you want to parse an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
+- If you want to run an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
 then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. 
 All these params are treated as PS expressions. For example `rpn run script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
@@ -437,5 +437,6 @@ Version | Version Name | Date of Release | Improvements
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
-0.4.2 | Chet | soon | Arrays and more
+0.4.2 | Chet | very soon | postfix calls, further code reconstruction
+0.4.3 | Tet | soon | Arrays and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
