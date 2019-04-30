@@ -13,9 +13,9 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
-- If you want to parse an PS script file, then execute `rpn parse FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
-then provide them after the FILENAME delimited by space, e.g. `rpn parse FILENAME param1 param2 param3`. 
-All these params are treated as PS expressions. For example `rpn parse script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
+- If you want to parse an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
+then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. 
+All these params are treated as PS expressions. For example `rpn run script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 
 ### GUI Application
@@ -189,7 +189,7 @@ getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 Programme Operand | Syntax | Purpose
 ----------------- | ------ | -------
 callIf | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
-callUnless | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
+callUnless | *bool1* *func1* **callUnless** | Calls a function whether *bool1* = `true`
 
 ### Stack operations
 

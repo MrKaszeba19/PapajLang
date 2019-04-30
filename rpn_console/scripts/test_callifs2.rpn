@@ -1,0 +1,4 @@
+2 31 ^ -- isPrime
+clone
+fun{ "yes" println } callIf
+fun{ "no" println } callUnless

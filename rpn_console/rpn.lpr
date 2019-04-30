@@ -271,7 +271,7 @@ begin
                         end;
                     end;
                 end;
-                'parse' : begin
+                'run' : begin
                     try
                         x := read_file(ParamStr(2));
                         if (x <> '') then writeln(x);
@@ -309,7 +309,7 @@ begin
                         end;
                     end;
                 end;
-                'parse' : begin
+                'run' : begin
                     try
                         y := '';
                         for i := 3 to ParamCount do y := y + ParamStr(i) + ' ';

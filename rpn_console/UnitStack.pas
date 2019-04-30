@@ -36,6 +36,7 @@ procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
 
 function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
 function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
+function assertEitherLocated(var stack : StackDB; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
 function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
 function assertIntegerLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
 function assertNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
@@ -292,6 +293,15 @@ begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(wtype)+': <'+getEntityTypeName(wtype)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
         assertEntityLocated := true;
     end else assertEntityLocated := false;
+end;
+
+function assertEitherLocated(var stack : StackDB; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
+begin
+    if (val.EntityType <> wtype1) and (val.EntityType <> wtype2) then 
+    begin
+        stack_push(stack, raiseException('EType:CEntityType: <'+getEntityTypeName(wtype1)+'> or <'+getEntityTypeName(wtype2)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
+        assertEitherLocated := true;
+    end else assertEitherLocated := false;
 end;
 
 function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;

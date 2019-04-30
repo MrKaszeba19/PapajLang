@@ -432,6 +432,7 @@ var
 	StrEcx, StrEdx : String;
 	EntEax         : Entity;
 	ExtEax         : Extended;
+    LogEax         : Boolean;
 	HelpTStrings   : TStrings;
 	HelpETable     : array of Entity;
     HelpSTable     : array of String;
@@ -567,7 +568,7 @@ begin
             end;
             stack_push(pocz, buildNumber(z));
         end;
-        {*'cdiv' : begin
+        'cdiv' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz, stack_get(pocz), i)) then Exit;
             y := stack_pop(pocz).Num;
             if (sets.StrictType) and (assertIntegerLocated(pocz, stack_get(pocz), i)) then Exit;
@@ -589,9 +590,9 @@ begin
             if (sets.StrictType) and (assertIntegerLocated(pocz, stack_get(pocz), i)) then Exit;
             x := stack_pop(pocz).Num;
             if (x > 0) and (y < 0) then begin
-            	z := ((trunc(x) mod trunc(y))+trunc(y-1))*(-1);
+            	z := ((trunc(x) mod trunc(y)) + trunc(y+y)) mod trunc(y);
             end else if (x < 0) and (y > 0) then begin
-            	z := (trunc(x) mod trunc(y))+trunc(y-1);
+            	z := ((trunc(x) mod trunc(y)) + trunc(y)) mod trunc(y);
             end else begin
             	z := trunc(x) mod trunc(y);
             end;
@@ -600,7 +601,7 @@ begin
             	stack_push(pocz, buildNumber(y));
             end;
             stack_push(pocz, buildNumber(z));
-        end;*}
+        end;
         'choose' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz, stack_get(pocz), i)) then Exit;
             y := stack_pop(pocz).Num;
@@ -1159,10 +1160,67 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
             pocz := parseScoped(StrEbx, pocz, sets, vardb);
-            if not (sets.Autoclear) then begin
-              stack_push(pocz, buildString(StrEbx));
+        end;
+//        'callIf' : begin
+//            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+//            if stack_pop(pocz).Num = 0 then 
+//            begin
+//                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+//                StrEbx := stack_pop(pocz).Str;
+//                pocz := parseScoped(StrEbx, pocz, sets, vardb);
+//            end else begin
+//                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+//                stack_justpop(pocz);
+//            end;
+//        end;
+        //'callIf' : begin
+        //    //stack_get(pocz) val.EntityType <> wtype    
+        //    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+        //    StrEbx := stack_pop(pocz).Str;
+        //    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+        //    if stack_pop(pocz).Num = 0 then pocz := parseScoped(StrEbx, pocz, sets, vardb);
+        //end;
+        'callIf' : begin
+            if (sets.StrictType) and (assertEitherLocated(pocz, stack_get(pocz), TFUN, TBOO, i)) then Exit; 
+            if (stack_get(pocz).EntityType = TFUN) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                StrEbx := stack_pop(pocz).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+                if stack_pop(pocz).Num = 0 then pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            end else begin
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+                if stack_pop(pocz).Num = 0 then begin
+                    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                    StrEbx := stack_pop(pocz).Str;
+                    pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                end else begin
+                    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                    StrEbx := stack_pop(pocz).Str;
+                end;
             end;
-        end;          
+        end;   
+        'callUnless' : begin
+            if (sets.StrictType) and (assertEitherLocated(pocz, stack_get(pocz), TFUN, TBOO, i)) then Exit; 
+            if (stack_get(pocz).EntityType = TFUN) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                StrEbx := stack_pop(pocz).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+                if stack_pop(pocz).Num <> 0 then pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            end else begin
+                if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TBOO, i)) then Exit;  
+                if stack_pop(pocz).Num <> 0 then begin
+                    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                    StrEbx := stack_pop(pocz).Str;
+                    pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                end else begin
+                    if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TFUN, i)) then Exit;  
+                    StrEbx := stack_pop(pocz).Str;
+                end;
+            end;
+        end;   
+        //callLoop         
 
 
         // single operands
@@ -1215,6 +1273,12 @@ begin
                 stack_push(pocz, buildException('Exception at tonumber: Got a non-numeric string.'))
             	else stack_push(pocz, buildNumber(EntEax.Num));
             end;
+        end;
+        'toBoolean' : begin
+            EntEax := stack_get(pocz);
+            if (sets.Autoclear) then stack_pop(pocz);
+            if EntEax.Num = 0 then LogEax := true else LogEax := false;
+            stack_push(pocz, buildBoolean(LogEax));
         end;
         'makeChar' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
