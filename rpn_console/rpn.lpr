@@ -5,7 +5,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. April 30, 2019.');
+    writeln('Paul Lipkowski. May 7, 2019.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -85,8 +85,8 @@ end;
 // stacks
 procedure show_operands3();
 begin
-	writeln('Stack operations model (set of expressions put on the stack) (operand),'); 
-	writeln('e.g. 5 2 3 + 7 sum => 5 5 7 sum => 17');
+	writeln('Stack operations model (set of expressions put on the stack) (amount of top elements) (operand),'); 
+	writeln('e.g. 5 2 3 + 7 all sum => 5 5 7 all sum => 17');
 	writeln('Available stack operations:');
 	writeln('       sum   product     count       avg');
 	writeln('       min       max');

@@ -1,11 +1,11 @@
 @silent
 
 "█" >fill
-1 textbackground newln
+1 textBackground newln
 clrscr
 
 // ==================== Draw upper Israel 
-2 textcolor
+2 textColor
 2 times newln
 12 times { " " print } 
 10 times { $fill print } newln
@@ -31,27 +31,27 @@ clrscr
 16 times { $fill print } newln
 
 // ==================== Draw Negev Desert
-14 textcolor // sand color
+14 textColor // sand color
 1 1 14 seq size copy size 2 / times {
 	qshift 2 + times { " " print } times { $fill print } newln
 }
 
 // Cities
-12 textbackground
-15 textcolor
+12 textBackground
+15 textColor
 
-13 7 gotoxy "*Natzrat" print
-5 8 gotoxy "*Haifa" print
-5 11 gotoxy "*Netanya" print
-5 14 gotoxy "*Tel Aviv" print
-14 16 gotoxy "*Jerusalem" print
-9 19 gotoxy "*Beersheva" print
-17 35 gotoxy "*Eilat" print
+13 7 gotoXY "*Natzrat" print
+5 8 gotoXY "*Haifa" print
+5 11 gotoXY "*Netanya" print
+5 14 gotoXY "*Tel Aviv" print
+14 16 gotoXY "*Jerusalem" print
+9 19 gotoXY "*Beersheva" print
+17 35 gotoXY "*Eilat" print
 
 
 // Reset
-0 textbackground
-7 textcolor
+0 textBackground
+7 textColor
 newln
 newln
 1 40 gotoxy getchar clrscr

@@ -22,10 +22,10 @@ if {
 	if {
 		"You cannot divide by zero!" println
 	} else {
-		$na tostring 
-		$nb tostring 
+		$na toString 
+		$nb toString 
 		$op
-		2 times bind strparse toString >result
+		2 times bind strParse toString >result
 		"Result:" $result bind println
 	}
 }

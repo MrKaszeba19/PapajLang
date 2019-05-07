@@ -837,7 +837,7 @@ begin
             for index := 1 to Length(HelpSTable)-1 do stack_push(pocz, buildString(HelpSTable[index])); 
             SetLength(HelpSTable, 0);
         end;
-        'crushby' : begin
+        'crushBy' : begin
           	SetLength(HelpSTable, 0);
           	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;  
             y := stack_pop(pocz).Num;
@@ -858,7 +858,7 @@ begin
             for index := 1 to Length(HelpSTable)-1 do stack_push(pocz, buildString(HelpSTable[index])); 
             SetLength(HelpSTable, 0);
         end;
-        'leftstr' : begin
+        'strLeft' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;  
             y := stack_pop(pocz).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
@@ -870,7 +870,7 @@ begin
             end;
             stack_push(pocz, buildString(StrEax));
         end;
-        'rightstr' : begin
+        'strRight' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
             y := stack_pop(pocz).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
@@ -983,7 +983,7 @@ begin
             end;
             stack_push(pocz, buildString(StrEcx));
         end;
-        'bindby' : begin
+        'bindBy' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
             StrEcx := stack_pop(pocz).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
@@ -1009,7 +1009,7 @@ begin
             for StrEax in HelpTStrings do stack_push(pocz, buildString(StrEax)); 
             HelpTStrings.Free;
         end;
-        'splitby' : begin
+        'splitBy' : begin
             if (sets.StrictType) and (assertCharLocated(pocz, stack_get(pocz), i)) then Exit; 
             StrEcx := stack_pop(pocz).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
@@ -1038,7 +1038,7 @@ begin
             end;
             stack_push(pocz, buildString(StrEax)); 
         end;
-        'strbetween' : begin
+        'strBetween' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
             y := stack_pop(pocz).Num;
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
@@ -1053,7 +1053,7 @@ begin
             end;
             stack_push(pocz, buildString(StrEax)); 
         end;
-        'pos' : begin
+        'strPos' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
@@ -1065,7 +1065,7 @@ begin
             end;
             stack_push(pocz, buildNumber(ExtEax)); 
         end;
-        'strremove' : begin 
+        'strRemove' : begin 
           	if (stack_get(pocz).EntityType = TSTR) then
           	begin
           	  	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit; 
@@ -1094,7 +1094,7 @@ begin
               	stack_push(pocz, buildString(StrEax));
           	end;
         end;
-        'strinsert' : begin
+        'strInsert' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
             y := stack_pop(pocz).Num;
           	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
@@ -1108,7 +1108,22 @@ begin
             end;
             stack_push(pocz, buildString(StrEax)); 
         end;
-        'npos' : begin
+        'strReplace' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit; 
+            y := stack_pop(pocz).Num;
+          	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz).Str;
+            Delete(StrEax, Length(StrEbx), trunc(y)); 
+            Insert(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz, buildString(StrEax));
+            	stack_push(pocz, buildString(StrEbx));
+            end;
+            stack_push(pocz, buildString(StrEax)); 
+        end;
+        'strNPos' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;  
             y := stack_pop(pocz).Num;
           	if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
@@ -1138,7 +1153,7 @@ begin
             end;
             stack_push(pocz, buildNumber(IntEax)); 
         end;
-        'strparse' : begin
+        'strParse' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz, stack_get(pocz), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz).Str;
             pocz := parseScoped(StrEbx, pocz, sets, vardb);
@@ -2241,19 +2256,19 @@ var
 begin
     Found := true;
     case i of
-        'textcolor' : begin
+        'textColor' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;
             y := trunc(stack_pop(pocz).Num);
             TextColor(y);
             if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
         end;
-        'textbackground' : begin
+        'textBackground' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;
             y := trunc(stack_pop(pocz).Num);
             TextBackground(y);
             if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
         end;
-        'gotoxy' : begin
+        'gotoXY' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;
             y := trunc(stack_pop(pocz).Num);
             if (sets.StrictType) and (assertNaturalLocated(pocz, stack_get(pocz), i)) then Exit;
@@ -2263,6 +2278,9 @@ begin
             if not (sets.Autoclear) then stack_push(pocz, buildNumber(y));
         end;
         'clrscr' : begin
+            clrscr();
+        end;
+        'clearScreen' : begin
             clrscr();
         end;
         else begin
