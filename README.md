@@ -128,38 +128,39 @@ crush | Splits a string S1 to single chars
 concat | Concatenates two strings
 dechar | Removes all chars of S2 from a string S1
 occur | Returns a count of occurences of a substring S2 in a string S1
-pos | Returns an index of the first occurence of a substring S2 in a string S1
-splitby | Splits a string S1 according to a char of S2 (and a space char too, S2 must be a single char)
-strremove | Removes the first occurence a substring S2 from a string S1
+strPos | Returns an index of the first occurence of a substring S2 in a string S1
+splitBy | Splits a string S1 according to a char of S2 (and a space char too, S2 must be a single char)
+strRemove | Removes the first occurence a substring S2 from a string S1
 
 - string1 string2 string3 operand
 
 Programme Operand | Purpose
 ----------------- | -------
-bindby | Concatenates two strings S1 S2 with a delimiter of a S3 delimiter
+bindBy | Concatenates two strings S1 S2 with a delimiter of a S3 delimiter
 
 - string1 number1 operand
 
 Programme Operand | Purpose
 ----------------- | -------
-crushby | Splits a string S1 to the parts of the same length of N1 (except for the last part, if len(S1) is not divisible by N1)
-leftstr | Extracts a substring from a string S1 of the first N1 letters
-rightstr | Extracts a substring from a string S1 of the last N1 letters
+crushBy | Splits a string S1 to the parts of the same length of N1 (except for the last part, if len(S1) is not divisible by N1)
+strLeft | Extracts a substring from a string S1 of the first N1 letters
+strRight | Extracts a substring from a string S1 of the last N1 letters
 
 - string1 number1 number2 operand
 
 Programme Operand | Purpose
 ----------------- | -------
-strbetween | Extracts a substring from a string S1 positioned between N1 and N2
-strremove | Removes a substring from a string S1, starting in N1 and being N2 chars long
+strBetween | Extracts a substring from a string S1 positioned between N1 and N2
+strRemove | Removes a substring from a string S1, starting in N1 and being N2 chars long
 substr | Extracts a substring from a string S1, starting in N1 and being N2 chars long
 
 - string1 string2 number1 operand
 
 Programme Operand | Purpose
 ----------------- | -------
-npos | Returns an index of the N1-th occurence of a substring S2 in a string S1
-strinsert | Inserts a string S2 into the string S1 in the position N1, making the following chars shift right
+strNPos | Returns an index of the N1-th occurence of a substring S2 in a string S1
+strInsert | Inserts a string S2 into the string S1 in the position N1, making the following chars shift right
+strReplace | Inserts a string S2 into the string S1 in the position N1, making the following chars be replaced
 
 - string1 operand
 
@@ -174,7 +175,7 @@ trim | Eliminates whitespace on the both left and right sides
 despace | Eliminates space chars
 onespace | Eliminates combo space chars (e.g. "2   3" -> "2 3")
 split | Splits a string according to space chars
-strparse | Parses a string like it was a set of RPN commands
+strParse | Parses a string like it was a set of RPN commands
 shell | Execute a command being included in S1
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 
