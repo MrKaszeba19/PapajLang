@@ -10,7 +10,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 ## How to use it
 
 ### Console application
-- Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn operands`.
+- Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
 - If you want to run an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
