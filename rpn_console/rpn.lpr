@@ -4,8 +4,8 @@ uses Unit2, UnitEnvironment, Sysutils;
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
-    writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. May 7, 2019.');
+    writeln('Version 0.4.2 (Chet)');
+    writeln('Paul Lipkowski. May 16, 2019.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -16,7 +16,7 @@ begin
      writeln('');
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-     writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
+     writeln('Run ''rpn functions [page]'' to obtain info about available operands.');
      writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
      writeln('Run ''rpn repl'' to run a REPL for PapajScript');
      writeln('');
@@ -31,7 +31,7 @@ begin
 	writeln('');
 	writeln('Type ''rpn operands'' to check out the available operands.');
 	writeln('');
-	writeln('EXAMPLES');
+	writeln('MATHEMATICAL EXAMPLES');
 	writeln(' 6              -> 6');
 	writeln(' 2+3            -> 2 3 +');
 	writeln(' (12-6)/3.5     -> 12 6 - 3.5 /');
@@ -43,14 +43,14 @@ end;
 
 procedure show_operands;
 begin
-	writeln('OPERANDS:');
-	writeln('Page 1: Binary operands');
-	writeln('Page 2: Unary operands');
+	writeln('FUNCTIONS:');
+	writeln('Page 1: Binary functions');
+	writeln('Page 2: Unary functions');
 	writeln('Page 3: Stack operations');
 	writeln('Page 4: Constants');
 	writeln('Page 5: Parsing directives');
     writeln('Page 6: Variables and data types');
-    writeln('Page 7: Conditionals and functions');
+    writeln('Page 7: Conditionals and functions management');
 	writeln('Page 8: Other');
 	writeln;
 	writeln('Type ''rpn operands [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
@@ -60,7 +60,7 @@ end;
 // binary
 procedure show_operands1();
 begin
-	writeln('Binary operands model: (expr1) (expr2) (operand), e.g. 2 4 +');
+	writeln('Binary functions model: (expr1) (expr2) (operand), e.g. 2 4 +');
     writeln('Available binary operands:');
     writeln('       +       -       *       /     div');
     writeln('       ^     pow    root     log     mod');
@@ -70,7 +70,7 @@ end;
 // unary
 procedure show_operands2();
 begin
-    writeln('Unary operands model: (expr0) (operand), e.g. 2 sin');
+    writeln('Unary functions model: (expr0) (operand), e.g. 2 sin');
     writeln('Available unary operands:');
     writeln('     abs    sqrt     exp      ln       !    fact');
     writeln('     sin     cos     tan     csc     sec     cot');
@@ -229,7 +229,7 @@ begin
      				show_version();
      				show_expressions();
      			end;
-     			'operands' : begin
+     			'functions' : begin
      				show_version();
      				show_operands();
      			end
@@ -248,7 +248,7 @@ begin
 		end;
         2 : begin
             case ParamStr(1) of
-                'operands' : begin
+                'functions' : begin
                     show_version();
                     case ParamStr(2) of
                         '1' : show_operands1();
@@ -286,7 +286,7 @@ begin
         end
 		else begin
 			case ParamStr(1) of
-                'operands' : begin
+                'functions' : begin
                     show_version();
                     case ParamStr(2) of
                         '1' : show_operands1();
