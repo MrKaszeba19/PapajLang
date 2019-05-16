@@ -5,7 +5,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. May 7, 2019.');
+    writeln('Paul Lipkowski. May 16, 2019.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -16,7 +16,7 @@ begin
      writeln('');
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-     writeln('Run ''rpn operands [page]'' to obtain info about available operands.');
+     writeln('Run ''rpn functions [page]'' to obtain info about available operands.');
      writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
      writeln('Run ''rpn repl'' to run a REPL for PapajScript');
      writeln('');
@@ -29,9 +29,9 @@ begin
 	writeln('Remember - the expression in console mode must be a "quoted" string');
 	writeln('and each operation must be separated by 1 space.');
 	writeln('');
-	writeln('Type ''rpn operands'' to check out the available operands.');
+	writeln('Type ''rpn functions'' to check out the available operands.');
 	writeln('');
-	writeln('EXAMPLES');
+	writeln('MATHEMATICAL EXAMPLES');
 	writeln(' 6              -> 6');
 	writeln(' 2+3            -> 2 3 +');
 	writeln(' (12-6)/3.5     -> 12 6 - 3.5 /');
@@ -43,18 +43,18 @@ end;
 
 procedure show_operands;
 begin
-	writeln('OPERANDS:');
-	writeln('Page 1: Binary operands');
-	writeln('Page 2: Unary operands');
-	writeln('Page 3: Stack operations');
+	writeln('FUNCTIONS:');
+	writeln('Page 1: Binary functions');
+	writeln('Page 2: Unary functions');
+	writeln('Page 3: Stack functions');
 	writeln('Page 4: Constants');
 	writeln('Page 5: Parsing directives');
     writeln('Page 6: Variables and data types');
-    writeln('Page 7: Conditionals and functions');
+    writeln('Page 7: Conditionals and custom functions');
 	writeln('Page 8: Other');
 	writeln;
-	writeln('Type ''rpn operands [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
-	writeln('Type ''rpn operands all'' to print all pages at once.');
+	writeln('Type ''rpn functions [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
+	writeln('Type ''rpn functions all'' to print all pages at once.');
 end;
 
 // binary
@@ -229,7 +229,7 @@ begin
      				show_version();
      				show_expressions();
      			end;
-     			'operands' : begin
+     			'functions' : begin
      				show_version();
      				show_operands();
      			end
@@ -248,7 +248,7 @@ begin
 		end;
         2 : begin
             case ParamStr(1) of
-                'operands' : begin
+                'functions' : begin
                     show_version();
                     case ParamStr(2) of
                         '1' : show_operands1();
@@ -286,7 +286,7 @@ begin
         end
 		else begin
 			case ParamStr(1) of
-                'operands' : begin
+                'functions' : begin
                     show_version();
                     case ParamStr(2) of
                         '1' : show_operands1();
