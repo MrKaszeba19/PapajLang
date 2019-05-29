@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-May 16, 2019  
+May 29, 2019  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -424,6 +424,7 @@ Operand | Purpose
 - :denmark: **Danish** (Dansk)
 - :poland: **Polish** (Polski)
 - :de: German (Deutsch) - *to be implemented*
+- :nl: Dutch (Nederlands) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
 

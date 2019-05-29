@@ -7,47 +7,49 @@ interface
 
 uses UnitEntity, Classes, SysUtils;
 
-type StackDB = record
+type TStack = record
   Values : TEntities;
 end;
 
-function stack_null() : StackDB;
-procedure stack_push(var pocz:StackDB; node : Entity);
-function stack_pop(var pocz:StackDB) : Entity;
-function stack_firstpop(var poc : StackDB) : Entity;
-procedure stack_justpop(var pocz:StackDB);
-procedure stack_clear(var pocz:StackDB);
-function stack_get(pocz : StackDB) : Entity;
-function stack_getback(pocz : StackDB; index : LongInt) : Entity;
-function stack_size(poc : StackDB) : Longint;
-function stack_show(poc : StackDB; mask : String) : String;
-function stack_showBeautiful(poc : StackDB; mask : String) : String;
-function stack_showFull(poc : StackDB) : String;
-function stack_reverse(poc : StackDB) : StackDB;
+type StackDB = array of TStack;
 
-function stack_searchException(poc : StackDB) : Boolean;
+function stack_null() : TStack;
+procedure stack_push(var pocz:TStack; node : Entity);
+function stack_pop(var pocz:TStack) : Entity;
+function stack_firstpop(var poc : TStack) : Entity;
+procedure stack_justpop(var pocz:TStack);
+procedure stack_clear(var pocz:TStack);
+function stack_get(pocz : TStack) : Entity;
+function stack_getback(pocz : TStack; index : LongInt) : Entity;
+function stack_size(poc : TStack) : Longint;
+function stack_show(poc : TStack; mask : String) : String;
+function stack_showBeautiful(poc : TStack; mask : String) : String;
+function stack_showFull(poc : TStack) : String;
+function stack_reverse(poc : TStack) : TStack;
 
-function stack_popback(var poc : StackDB; index : LongInt) : Entity;
-function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
-function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
-procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
-procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
-procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
+function stack_searchException(poc : TStack) : Boolean;
 
-procedure stack_pushFront(var pocz : StackDB; node : Entity; index : LongInt);
-function stack_popFront(var pocz : StackDB; index : LongInt) : Entity;
-procedure stack_replaceFront(var pocz : StackDB; node : Entity; index : LongInt);
-function stack_getFront(pocz : StackDB; index : LongInt) : Entity;
+function stack_popback(var poc : TStack; index : LongInt) : Entity;
+function stack_getCollection(poc : TStack; index : LongInt) : TEntities;
+function stack_popCollection(var poc : TStack; index : LongInt) : TEntities;
+procedure stack_justpopCollection(var poc : TStack; index : LongInt);
+procedure stack_pushCollection(var poc : TStack; nodes : TEntities);
+procedure stack_reverseCollection(var poc : TStack; index : LongInt);
 
-function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
-function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
-function assertEitherLocated(var stack : StackDB; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
-function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
-function assertIntegerLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
-function assertNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
-function assertNonZeroLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
-function assertPositiveNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
-function assertCharLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+procedure stack_pushFront(var pocz : TStack; node : Entity; index : LongInt);
+function stack_popFront(var pocz : TStack; index : LongInt) : Entity;
+procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
+function stack_getFront(pocz : TStack; index : LongInt) : Entity;
+
+function assertEntity(var stack : TStack; val : Entity; const wtype : Integer) : Boolean;
+function assertEntityLocated(var stack : TStack; val : Entity; const wtype : Integer; operand : String) : Boolean;
+function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
+function assertNotNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertIntegerLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 
 implementation
 
@@ -70,15 +72,15 @@ end;
 
 // STACK OPERATIONS
 
-function stack_null() : StackDB;
+function stack_null() : TStack;
 var
-    pom : StackDB;
+    pom : TStack;
 begin
     SetLength(pom.Values, 0);
     stack_null := pom;
 end;
 
-procedure stack_push(var pocz:StackDB; node : Entity);
+procedure stack_push(var pocz:TStack; node : Entity);
 var
     len : LongInt;
 begin
@@ -87,7 +89,7 @@ begin
     pocz.Values[len] := node;
 end;
 
-function stack_pop(var pocz:StackDB) : Entity;
+function stack_pop(var pocz:TStack) : Entity;
 var
     len : LongInt;
     pom : Entity;
@@ -98,7 +100,7 @@ begin
     stack_pop := pom;
 end;
 
-procedure stack_justpop(var pocz:StackDB);
+procedure stack_justpop(var pocz:TStack);
 var
     len : LongInt;
 begin
@@ -106,27 +108,27 @@ begin
     SetLength(pocz.Values, len-1);
 end;
 
-procedure stack_clear(var pocz:StackDB);
+procedure stack_clear(var pocz:TStack);
 begin
     while Length(pocz.Values) > 0 do stack_justpop(pocz);
 end;
 
-function stack_get(pocz : StackDB) : Entity;
+function stack_get(pocz : TStack) : Entity;
 begin
     stack_get := pocz.Values[Length(pocz.Values)-1];
 end;
 
-function stack_getback(pocz : StackDB; index : LongInt) : Entity;
+function stack_getback(pocz : TStack; index : LongInt) : Entity;
 begin
     stack_getback := pocz.Values[Length(pocz.Values)-index];
 end;
 
-function stack_size(poc : StackDB) : Longint;
+function stack_size(poc : TStack) : Longint;
 begin
     stack_size := Length(poc.Values);
 end;
 
-function stack_show(poc : StackDB; mask : String) : String;
+function stack_show(poc : TStack; mask : String) : String;
 var
   z : String;
   i : Entity;
@@ -146,7 +148,7 @@ begin
     stack_show := z;
 end;
 
-function stack_showBeautiful(poc : StackDB; mask : String) : String;
+function stack_showBeautiful(poc : TStack; mask : String) : String;
 var
   z   : String;
   i   : Entity;
@@ -175,7 +177,7 @@ begin
     identTabs := s;
 end;
 
-function stack_showFull(poc : StackDB) : String;
+function stack_showFull(poc : TStack) : String;
 var
   z : String;
   i : LongInt;
@@ -190,9 +192,9 @@ begin
     stack_showFull := z;
 end;
 
-function stack_reverse(poc : StackDB) : StackDB;
+function stack_reverse(poc : TStack) : TStack;
 var
-  pom : StackDB;
+  pom : TStack;
   i   : LongInt;
 begin
     pom := stack_null();
@@ -203,7 +205,7 @@ begin
     stack_reverse := pom;   
 end;
 
-function stack_searchException(poc : StackDB) : Boolean;
+function stack_searchException(poc : TStack) : Boolean;
 begin
     if (Length(poc.Values) > 0) and (poc.Values[Length(poc.Values)-1].EntityType = TEXC) and (poc.Values[Length(poc.Values)-1].Num = 1) then
     begin 
@@ -215,7 +217,7 @@ end;
 
 
 
-function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
+function stack_popback(var poc : TStack; index : LongInt) : Entity; 
 var
 	pom : Entity;
 	i   : LongInt;
@@ -226,7 +228,7 @@ begin
 	stack_popback := pom;
 end;
 
-procedure stack_pushFront(var pocz : StackDB; node : Entity; index : LongInt);
+procedure stack_pushFront(var pocz : TStack; node : Entity; index : LongInt);
 var
     len, i : LongInt;
 begin
@@ -236,7 +238,7 @@ begin
     pocz.Values[index] := node;
 end;
 
-function stack_popFront(var pocz : StackDB; index : LongInt) : Entity;
+function stack_popFront(var pocz : TStack; index : LongInt) : Entity;
 var
 	pom : Entity;
 	i   : LongInt;
@@ -247,17 +249,17 @@ begin
 	stack_popFront := pom;
 end;
 
-procedure stack_replaceFront(var pocz : StackDB; node : Entity; index : LongInt);
+procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
 begin
     pocz.Values[index] := node;
 end;
 
-function stack_getFront(pocz : StackDB; index : LongInt) : Entity;
+function stack_getFront(pocz : TStack; index : LongInt) : Entity;
 begin
     stack_getFront := pocz.Values[index];
 end;
 
-function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
+function stack_getCollection(poc : TStack; index : LongInt) : TEntities;
 var
 	pom : TEntities;
 	i   : LongInt;
@@ -267,7 +269,7 @@ begin
 	stack_getCollection := pom;
 end;
 
-function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
+function stack_popCollection(var poc : TStack; index : LongInt) : TEntities;
 var
 	pom : TEntities;
 	i   : LongInt;
@@ -278,12 +280,12 @@ begin
 	stack_popCollection := pom;
 end;
 
-procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
+procedure stack_justpopCollection(var poc : TStack; index : LongInt);
 begin
 	SetLength(poc.Values, Length(poc.Values)-index);
 end;
 
-procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
+procedure stack_pushCollection(var poc : TStack; nodes : TEntities);
 var
     len : LongInt;
     i   : LongInt;
@@ -293,14 +295,14 @@ begin
     for i := 0 to Length(nodes)-1 do poc.Values[len+i] := nodes[i];
 end;
 
-procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
+procedure stack_reverseCollection(var poc : TStack; index : LongInt);
 var
 	i : LongInt;
 begin
 	for i := 0 to (index div 2)-1 do swapEntities(poc.Values[Length(poc.Values)-index+i], poc.Values[Length(poc.Values)-i-1]);
 end;
 
-function stack_firstpop(var poc:StackDB) : Entity;
+function stack_firstpop(var poc:TStack) : Entity;
 var
     pom : Entity;
     i   : LongInt;
@@ -313,7 +315,7 @@ end;
 
 // ====== assertions
 
-function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
+function assertEntity(var stack : TStack; val : Entity; const wtype : Integer) : Boolean;
 begin
     if (val.EntityType <> wtype) then
     begin 
@@ -322,7 +324,7 @@ begin
     end else assertEntity := false;
 end;
 
-function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
+function assertEntityLocated(var stack : TStack; val : Entity; const wtype : Integer; operand : String) : Boolean;
 begin
     if (val.EntityType <> wtype) then 
     begin
@@ -331,7 +333,7 @@ begin
     end else assertEntityLocated := false;
 end;
 
-function assertEitherLocated(var stack : StackDB; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
+function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
 begin
     if (val.EntityType <> wtype1) and (val.EntityType <> wtype2) then 
     begin
@@ -340,7 +342,7 @@ begin
     end else assertEitherLocated := false;
 end;
 
-function assertNotNegativeLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertNotNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TNUM) then 
     begin
@@ -353,7 +355,7 @@ begin
     end else assertNotNegativeLocated := false;
 end;
 
-function assertIntegerLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertIntegerLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TNUM) then 
     begin
@@ -366,7 +368,7 @@ begin
     end else assertIntegerLocated := false;
 end;
 
-function assertNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TNUM) then 
     begin
@@ -379,7 +381,7 @@ begin
     end else assertNaturalLocated := false;
 end;
 
-function assertPositiveNaturalLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TNUM) then 
     begin
@@ -392,7 +394,7 @@ begin
     end else assertPositiveNaturalLocated := false;
 end;
 
-function assertNonZeroLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TNUM) then 
     begin
@@ -405,7 +407,7 @@ begin
     end else assertNonZeroLocated := false;
 end;
 
-function assertCharLocated(var stack : StackDB; val : Entity; operand : String) : Boolean;
+function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 begin
     if (val.EntityType <> TSTR) then 
     begin

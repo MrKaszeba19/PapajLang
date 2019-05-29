@@ -21,7 +21,8 @@ var
 begin
     env := buildNewEnvironment();
     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
-    res := stack_show(env.Stack, env.Settings.Mask);
+    res := stack_show(env.Stack[0], env.Settings.Mask);
+    disposeEnvironment(env);
     if (env.Settings.Prevent) then res := '';
     PS_parseString := res;
 end;
@@ -224,6 +225,7 @@ begin
                 TextColor(7);
             end;
             '\reset' : begin
+                disposeEnvironment(env);
                 env := buildNewEnvironment();
                 SetLength(history, 0);
                 TextColor(10);
@@ -250,7 +252,7 @@ begin
                 try
                     if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
                     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
-                    res := stack_show(env.Stack, env.Settings.Mask);
+                    res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
                     if not (env.Settings.Prevent) then 
                     begin
                         TextColor(3);
@@ -269,6 +271,7 @@ begin
             end;
         end;
     until not ((input <> '\q') and (input <> '\quit'));
+    disposeEnvironment(env);
 end;
 
 end.

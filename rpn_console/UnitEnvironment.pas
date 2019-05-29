@@ -21,6 +21,7 @@ function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function buildNewEnvironment() : PSEnvironment;
+procedure disposeEnvironment(var env : PSEnvironment);
 
 implementation
 
@@ -41,9 +42,9 @@ begin
     Steps := 1;
 
     StrEcx := i;
-    if (sets.StrictType) and (stack_searchException(pocz)) then
+    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     begin
-		raiserror(stack_pop(pocz).Str);
+		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 	end;
 
     if not (sets.CaseSensitive) then i := LowerCase(i);
@@ -57,17 +58,17 @@ begin
         if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
         if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
         if not lib_exceptions(i, pocz, Steps, sets, vardb) then
-        if (sets.StrictType) and (stack_searchException(pocz)) then
+        if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin
-			raiserror(stack_pop(pocz).Str);
-		end else stack_push(pocz, buildString(StrEcx));
+			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+		end else stack_push(pocz[sets.StackPointer], buildString(StrEcx));
     end else begin
-        stack_push(pocz, buildNumber(Im));
+        stack_push(pocz[sets.StackPointer], buildNumber(Im));
     end;
 
-    if (sets.StrictType) and (stack_searchException(pocz)) then
+    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     begin
-		raiserror(stack_pop(pocz).Str);
+		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 	end;
 end;
 
@@ -121,7 +122,7 @@ begin
   	while index < L.Count do
 	begin
 		if L[index] = '?' then begin
-			cond := trunc(stack_pop(pocz).Num);
+			cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
 		end else if (L[index] = 'if') then begin
 			if cond = 0 then permit := True
 			else permit := False;
@@ -144,9 +145,9 @@ begin
 	    		if (permit) then
 	    			if Steps = -1 then begin
 	    				repeat
-	    				  parseScoped(nesttx, pocz, sets, vardb); 
+	    					pocz := parseScoped(nesttx, pocz, sets, vardb); 
 	    				until EOF;
-	    				stack_pop(pocz);
+	    				stack_pop(pocz[sets.StackPointer]);
 	    			end else for step := 1 to Steps do pocz := parseScoped(nesttx, pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
@@ -165,10 +166,10 @@ begin
                 if (permit) then
                     if Steps = -1 then begin
                         repeat
-                            stack_push(pocz, buildFunction(nesttx)); 
+                            stack_push(pocz[sets.StackPointer], buildFunction(nesttx)); 
                         until EOF;
-                        stack_pop(pocz);
-                    end else for step := 1 to Steps do stack_push(pocz, buildFunction(nesttx));
+                        stack_pop(pocz[sets.StackPointer]);
+                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(nesttx));
                 permit := True;
                 index := cursor - 1;
             end else begin
@@ -177,7 +178,7 @@ begin
 	    				repeat
 	    					evaluate(L[index], pocz, Steps, sets, vardb);
 	    				until EOF;
-	    				stack_pop(pocz);
+	    				stack_pop(pocz[sets.StackPointer]);
 	    			end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
 	    		permit := True; 
 	    	end;
@@ -193,11 +194,20 @@ function buildNewEnvironment() : PSEnvironment;
 var
 	env : PSEnvironment;
 begin
-	env.Stack := stack_null();
+	SetLength(env.Stack, 1);
+	env.Stack[0] := stack_null();
 	env.Settings := default_settings();
     env.Variables := createVariables();
     env.AutoReset := False;
     buildNewEnvironment := env;
+end;
+
+procedure disposeEnvironment(var env : PSEnvironment);
+var
+	i : LongInt;
+begin
+	for i := 0 to Length(env.Stack)-1 do stack_clear(env.Stack[i]);
+	SetLength(env.Stack, 0);
 end;
 
 end.

@@ -36,6 +36,7 @@ type TSettings = record
     StrictType         : Boolean;
     CaseSensitive      : Boolean;
     Shell              : String;
+	StackPointer       : LongInt;
 end;
 // sorts
 // 0 - bubblesort
@@ -104,6 +105,7 @@ begin
   pom.SortType := 1;
   pom.StrictType := true;
   pom.CaseSensitive := true;
+  pom.StackPointer := 0;
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}
