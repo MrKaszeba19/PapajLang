@@ -53,7 +53,7 @@ end;
 //	case i of
 //	
 //	end;
-//	lib_vanilla := Found;
+//	lib_template := Found;
 //end;
 
 // MATHEMATICAL FUNCTIONS

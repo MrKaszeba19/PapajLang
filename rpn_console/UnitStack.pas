@@ -27,12 +27,17 @@ function stack_reverse(poc : StackDB) : StackDB;
 
 function stack_searchException(poc : StackDB) : Boolean;
 
-function stack_popback(var poc : StackDB; index : LongInt) : Entity; 
+function stack_popback(var poc : StackDB; index : LongInt) : Entity;
 function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
 function stack_popCollection(var poc : StackDB; index : LongInt) : TEntities;
 procedure stack_justpopCollection(var poc : StackDB; index : LongInt);
 procedure stack_pushCollection(var poc : StackDB; nodes : TEntities);
 procedure stack_reverseCollection(var poc : StackDB; index : LongInt);
+
+procedure stack_pushFront(var pocz : StackDB; node : Entity; index : LongInt);
+function stack_popFront(var pocz : StackDB; index : LongInt) : Entity;
+procedure stack_replaceFront(var pocz : StackDB; node : Entity; index : LongInt);
+function stack_getFront(pocz : StackDB; index : LongInt) : Entity;
 
 function assertEntity(var stack : StackDB; val : Entity; const wtype : Integer) : Boolean;
 function assertEntityLocated(var stack : StackDB; val : Entity; const wtype : Integer; operand : String) : Boolean;
@@ -219,6 +224,37 @@ begin
 	for i := Length(poc.Values)-index to Length(poc.Values)-2 do poc.Values[i] := poc.Values[i+1];
 	SetLength(poc.Values, Length(poc.Values)-1);
 	stack_popback := pom;
+end;
+
+procedure stack_pushFront(var pocz : StackDB; node : Entity; index : LongInt);
+var
+    len, i : LongInt;
+begin
+    len := Length(pocz.Values);
+    SetLength(pocz.Values, len+1);
+    for i := index to len-1 do pocz.Values[i+1] := pocz.Values[i];
+    pocz.Values[index] := node;
+end;
+
+function stack_popFront(var pocz : StackDB; index : LongInt) : Entity;
+var
+	pom : Entity;
+	i   : LongInt;
+begin
+	pom := pocz.Values[index];
+	for i := index+1 to Length(pocz.Values)-2 do pocz.Values[i] := pocz.Values[i+1];
+	SetLength(pocz.Values, Length(pocz.Values)-1);
+	stack_popFront := pom;
+end;
+
+procedure stack_replaceFront(var pocz : StackDB; node : Entity; index : LongInt);
+begin
+    pocz.Values[index] := node;
+end;
+
+function stack_getFront(pocz : StackDB; index : LongInt) : Entity;
+begin
+    stack_getFront := pocz.Values[index];
 end;
 
 function stack_getCollection(poc : StackDB; index : LongInt) : TEntities;
