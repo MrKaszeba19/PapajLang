@@ -424,7 +424,7 @@ Operand | Purpose
 - :denmark: **Danish** (Dansk)
 - :poland: **Polish** (Polski)
 - :de: German (Deutsch) - *to be implemented*
-- :nl: Dutch (Nederlands) - *to be implemented*
+- 🇳🇱 Dutch (Nederlands) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
 - :israel: Hebrew (עברית) - *to be implemented*
 
