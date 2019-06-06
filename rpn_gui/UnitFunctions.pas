@@ -21,6 +21,7 @@ function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var 
 function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 
 implementation
 
@@ -1308,10 +1309,17 @@ begin
             stack_push(pocz[sets.StackPointer], buildNumber(Ord(StrEcx[1])));
         end;
         'length' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_get(pocz[sets.StackPointer]).Str;
-            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                StrEax := stack_get(pocz[sets.StackPointer]).Str;
+                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNumber(StrToInt(StrEax)));
+            end else begin
+                StrEax := stack_get(pocz[sets.StackPointer]).Str;
+                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+            end;
         end;
         'len' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
@@ -1337,6 +1345,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str);
             if (EntEax.EntityType = TNIL) then write(EntEax.Str);
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'println' : begin
             EntEax := stack_get(pocz[sets.StackPointer]);
@@ -1345,6 +1354,7 @@ begin
             if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str);
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'rprint' : begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
@@ -1352,6 +1362,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str);
             if (EntEax.EntityType = TNIL) then write(EntEax.Str);
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'rprintln' : begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
@@ -1359,6 +1370,7 @@ begin
             if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str);
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'colprint' : begin
         	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
@@ -1369,6 +1381,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num) : trunc(y));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TNIL) then write(EntEax.Str : trunc(y));
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
         end;
         'colprintln' : begin
         	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
@@ -1379,6 +1392,7 @@ begin
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TBOO) then writeln(EntEax.Str : trunc(y));
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
         end;
         'newln' : begin
             writeln();
@@ -1992,6 +2006,15 @@ begin
         '\}' : begin
           stack_push(pocz[sets.StackPointer], buildString('}'));
         end;
+        '\[' : begin
+          stack_push(pocz[sets.StackPointer], buildString('['));
+        end;
+        '\]' : begin
+          stack_push(pocz[sets.StackPointer], buildString(']'));
+        end;
+        '\[]' : begin
+          stack_push(pocz[sets.StackPointer], buildString('[]'));
+        end;
         '\t' : begin
           stack_push(pocz[sets.StackPointer], buildString(''+#9));
         end;
@@ -2320,6 +2343,50 @@ begin
         end;
     end;
     lib_exceptions := Found;
+end;
+
+function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+	Found          : Boolean;
+    IntEax, IntEbx : LongInt;
+    ArrEax         : Entity;
+    EntEax         : Entity;
+begin
+	Found := true;
+	case i of
+        '[]' : begin
+            stack_push(pocz[sets.StackPointer], buildNewArray(pocz, sets, 0));
+        end;
+        'toArray' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            // expection about boundaries
+            if (IntEax > stack_size(pocz[sets.StackPointer])) then IntEax := stack_size(pocz[sets.StackPointer]); 
+            stack_push(pocz[sets.StackPointer], buildNewArray(pocz, sets, IntEax));
+        end;
+        'getAt' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[IntEax]);
+        end;
+        'setAt' : begin
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            pocz[trunc(ArrEax.Num)].Values[IntEax] := EntEax;
+        end;
+
+        // push, crush, pop, shift, pushAt, popAt, swapAt
+
+        else begin
+            Found := false;
+        end;
+	end;
+	lib_arrays := Found;
 end;
 
 end.

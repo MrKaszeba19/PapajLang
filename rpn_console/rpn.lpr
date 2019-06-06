@@ -5,7 +5,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. May 29, 2019.');
+    writeln('Paul Lipkowski. June 6, 2019.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;

@@ -57,6 +57,7 @@ begin
         if not lib_variables(i, pocz, Steps, sets, vardb) then
         if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
         if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
+		if not lib_arrays(i, pocz, Steps, sets, vardb) then		
         if not lib_exceptions(i, pocz, Steps, sets, vardb) then
         if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin

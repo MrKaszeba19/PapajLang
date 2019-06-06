@@ -74,6 +74,7 @@ procedure raiserror(Const msg : string);
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
+function printEntityValue(x : Entity; mask : String) : String;
 
 procedure swapEntities(var e1 : Entity; var e2 : Entity);
 
@@ -152,6 +153,22 @@ begin
     TFUN : getEntitySpec := '<Function>';
     else getEntitySpec := '<Unknown>';
   end;
+end;
+
+function printEntityValue(x : Entity; mask : String) : String;
+var
+  z : String;
+begin
+    z := '';
+    if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num);
+    if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
+    if (x.EntityType = TNIL) then z := x.Str;
+    if (x.EntityType = TBOO) then z := x.Str;
+    if (x.EntityType = TVEC) then z := '<Array>';
+    if (x.EntityType = TOBJ) then z := '<Object>';
+    if (x.EntityType = TFUN) then z := '<Function>'; 
+    if (x.EntityType = TEXC) then z := '<Exception>'; 
+    printEntityValue := z;
 end;
 
 procedure swapEntities(var e1 : Entity; var e2 : Entity);

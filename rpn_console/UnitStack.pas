@@ -25,6 +25,8 @@ function stack_size(poc : TStack) : Longint;
 function stack_show(poc : TStack; mask : String) : String;
 function stack_showBeautiful(poc : TStack; mask : String) : String;
 function stack_showFull(poc : TStack) : String;
+function stack_showArray(poc : TStack; mask : String) : String;
+function stack_showArrayFull(poc : TStack; db : StackDB; mask : String) : String;
 function stack_reverse(poc : TStack) : TStack;
 
 function stack_searchException(poc : TStack) : Boolean;
@@ -50,6 +52,8 @@ function assertNaturalLocated(var stack : TStack; val : Entity; operand : String
 function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+
+function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 
 implementation
 
@@ -140,6 +144,7 @@ begin
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TNIL) then z := z + i.Str + ' ';
         if (i.EntityType = TBOO) then z := z + i.Str + ' ';
+        if (i.EntityType = TVEC) then z := z + '<Array> ';
         if (i.EntityType = TOBJ) then z := z + '<Object> ';
         if (i.EntityType = TFUN) then z := z + '<Function> '; 
         if (i.EntityType = TEXC) then z := z + '<Exception> '; 
@@ -165,6 +170,60 @@ begin
     end;
     z := LeftStr(z, Length(z)-1);
     stack_showBeautiful := z;
+end;
+
+function printEntityValueFull(x : Entity; db : StackDB; mask : String) : String;
+var
+  z : String;
+begin
+    z := '';
+    if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num);
+    if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
+    if (x.EntityType = TNIL) then z := x.Str;
+    if (x.EntityType = TBOO) then z := x.Str;
+    if (x.EntityType = TVEC) then z := stack_showArrayFull(db[trunc(x.Num)], db, mask);
+    if (x.EntityType = TOBJ) then z := '<Object>';
+    if (x.EntityType = TFUN) then z := '<Function>'; 
+    if (x.EntityType = TEXC) then z := '<Exception>'; 
+    printEntityValueFull := z;
+end;
+
+function stack_showArray(poc : TStack; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := '[';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-2 do
+        begin
+            z := z + printEntityValue(poc.Values[i], mask) + ', ';
+        end;
+        z := z + printEntityValue(poc.Values[Length(poc.Values)-1], mask) + '] ';
+        z := LeftStr(z, Length(z)-1);
+        stack_showArray := z;
+    end else begin
+        stack_showArray := '[]';
+    end;
+end;
+
+function stack_showArrayFull(poc : TStack; db : StackDB; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := '[';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-2 do
+        begin
+            z := z + printEntityValueFull(poc.Values[i], db, mask) + ', ';
+        end;
+        z := z + printEntityValueFull(poc.Values[Length(poc.Values)-1], db, mask) + '] ';
+        z := LeftStr(z, Length(z)-1);
+        stack_showArrayFull := z;
+    end else begin
+        stack_showArrayFull := '[]';
+    end;
 end;
 
 function identTabs(x : Integer) : String;
@@ -418,6 +477,25 @@ begin
         stack_push(stack, raiseException('EConstraint:CChar: a single char expected at "'+operand+'".'));
         assertCharLocated := true;
     end else assertCharLocated := false;
+end;
+
+// ============= Arrays
+
+function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+var
+    pom     : TEntities;
+    memsize : LongInt;
+    ent     : Entity;
+begin
+    pom := stack_popCollection(db[sets.StackPointer], count);
+    memsize := Length(db);
+    SetLength(db, memsize+1);
+    stack_pushCollection(db[memsize], pom);
+
+	ent.EntityType := TVEC;
+	ent.Str := IntToStr(count);
+	ent.Num := memsize;
+	buildNewArray := ent;
 end;
 
 end.
