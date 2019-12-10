@@ -1275,7 +1275,12 @@ begin
         'toString' : begin
           	EntEax := stack_get(pocz[sets.StackPointer]);
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
+            if (EntEax.EntityType = TVEC) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildString(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask))); 
+            end else begin
+                stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
+            end;
         end;
         'toNumber' : begin
             //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
@@ -1312,9 +1317,9 @@ begin
             if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
             if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
             begin
-                StrEax := stack_get(pocz[sets.StackPointer]).Str;
+                IntEax := trunc(stack_get(pocz[sets.StackPointer]).Num);
                 if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-                stack_push(pocz[sets.StackPointer], buildNumber(StrToInt(StrEax)));
+                stack_push(pocz[sets.StackPointer], buildNumber(stack_size(pocz[IntEax])));
             end else begin
                 StrEax := stack_get(pocz[sets.StackPointer]).Str;
                 if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
@@ -2276,6 +2281,7 @@ function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Int
 var
     Found : Boolean;
     x, y  : ShortInt;
+    a     : Integer;
 begin
     Found := true;
     case i of
@@ -2290,6 +2296,21 @@ begin
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextBackground(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'delay' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            Delay(a);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'startSound' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            Sound(a);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'stopSound' : begin
+            NoSound();
         end;
         'gotoXY' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -2379,8 +2400,26 @@ begin
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             pocz[trunc(ArrEax.Num)].Values[IntEax] := EntEax;
         end;
+        'push' : begin
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[trunc(ArrEax.Num)], EntEax);
+        end;
+        'pop' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            EntEax := stack_pop(pocz[trunc(ArrEax.Num)]);
+            stack_push(pocz[sets.StackPointer], EntEax);
+        end;
+        'shift' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            EntEax := stack_firstpop(pocz[trunc(ArrEax.Num)]);
+            stack_push(pocz[sets.StackPointer], EntEax);
+        end;
 
-        // push, crush, pop, shift, pushAt, popAt, swapAt
+        // crush, pushAt, popAt, swapAt, toString
 
         else begin
             Found := false;

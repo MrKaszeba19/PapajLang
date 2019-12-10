@@ -479,6 +479,10 @@ begin
     end else assertCharLocated := false;
 end;
 
+// exceed boundaries
+// not null
+// isEmpty
+
 // ============= Arrays
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;

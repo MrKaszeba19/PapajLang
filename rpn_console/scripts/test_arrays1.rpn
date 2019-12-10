@@ -1,0 +1,19 @@
+20 times { 10 rand } all toArray >tab
+
+fun{
+	$tab println
+	$tab length println
+} >call
+
+newln "Stan początkowy" println
+@@call
+
+newln "Dodajemy" println
+$tab 20 push
+@@call
+
+newln "Zdejmujemy" println
+3 times { $tab pop println }
+
+newln "Stan końcowy" println
+@@call
