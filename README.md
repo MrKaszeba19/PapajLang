@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-October 10, 2019  
+December 10, 2019  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -182,6 +182,8 @@ getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 
 ### Commands for array
 
+**Note**: Array indexes start from 0, i.e. a N-elements array has indexes of [0..N-1] 
+
 - array1 function
 
 Programme Function | Purpose
@@ -192,13 +194,15 @@ length | Returns length of an array
 
 Programme Function | Purpose
 ------------------ | -------
-getAt | Returns length of an array
+getAt | Get a valur from N1 index
+popAt | Pop an element from a N1 index
 
 - array1 number1 entity1 function
 
 Programme Function | Purpose
 ------------------ | -------
-setAt | Returns length of an array
+setAt | Set a value at a N1 index
+pushAt | Push an element before a N1 index 
 
 
 

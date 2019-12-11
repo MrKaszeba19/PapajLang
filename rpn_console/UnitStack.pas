@@ -293,7 +293,7 @@ var
 begin
     len := Length(pocz.Values);
     SetLength(pocz.Values, len+1);
-    for i := index to len-1 do pocz.Values[i+1] := pocz.Values[i];
+    for i := len-1 downto index do pocz.Values[i+1] := pocz.Values[i];
     pocz.Values[index] := node;
 end;
 
@@ -303,7 +303,7 @@ var
 	i   : LongInt;
 begin
 	pom := pocz.Values[index];
-	for i := index+1 to Length(pocz.Values)-2 do pocz.Values[i] := pocz.Values[i+1];
+	for i := index to Length(pocz.Values)-2 do pocz.Values[i] := pocz.Values[i+1];
 	SetLength(pocz.Values, Length(pocz.Values)-1);
 	stack_popFront := pom;
 end;
