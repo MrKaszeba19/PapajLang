@@ -1177,25 +1177,6 @@ begin
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             pocz := parseScoped(StrEbx, pocz, sets, vardb);
         end;
-//        'callIf' : begin
-//            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
-//            if stack_pop(pocz[sets.StackPointer]).Num = 0 then 
-//            begin
-//                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
-//                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-//                pocz[sets.StackPointer] := parseScoped(StrEbx, pocz[sets.StackPointer], sets, vardb);
-//            end else begin
-//                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
-//                stack_justpop(pocz[sets.StackPointer]);
-//            end;
-//        end;
-        //'callIf' : begin
-        //    //stack_get(pocz[sets.StackPointer]) val.EntityType <> wtype    
-        //    if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
-        //    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-        //    if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
-        //    if stack_pop(pocz[sets.StackPointer]).Num = 0 then pocz[sets.StackPointer] := parseScoped(StrEbx, pocz[sets.StackPointer], sets, vardb);
-        //end;
         'callIf' : begin
             if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, TBOO, i)) then Exit; 
             if (stack_get(pocz[sets.StackPointer]).EntityType = TFUN) then
@@ -1238,6 +1219,12 @@ begin
         end;   
         //callLoop         
 
+        'break' : begin
+            sets.KeepWorking := 0;
+        end;
+        'continue' : begin
+            sets.KeepWorking := 1;
+        end;
 
         // single operands
         'scan' : begin

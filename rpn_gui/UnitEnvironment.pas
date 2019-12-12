@@ -120,8 +120,15 @@ begin
   	cond := -1;
   	permit := True;
   	index := 0;
-  	while index < L.Count do
+  	while (index < L.Count) and (sets.KeepWorking > 0) do
 	begin
+		if (sets.KeepWorking = 1) then
+		begin
+			Inc(index);
+			sets.KeepWorking := 2;
+			continue;
+		end;
+
 		if L[index] = '?' then begin
 			cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
 		end else if (L[index] = 'if') then begin
@@ -131,6 +138,11 @@ begin
 			if cond = 0 then permit := False
 			else permit := True;
 		end else begin
+			//if L[index] = 'break' then break
+			//else if L[index] = 'continue' then begin 
+			//	Inc(index);
+			//	continue;
+			//end else 
 			if L[index] = '{' then begin
 	    		nestlv := 1;
 	    		nesttx := '';
@@ -186,6 +198,7 @@ begin
 	    end;
     	Inc(index);
   	end;
+	sets.KeepWorking := 2;
 	//z := '';
 	L.Free;
   	parseOpen := pocz;

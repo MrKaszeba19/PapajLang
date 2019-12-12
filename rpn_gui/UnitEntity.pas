@@ -29,20 +29,23 @@ const
 	FI = 1.6180339887498948482045868343656;
 
 type TSettings = record
-    Prevent            : Boolean;
-    Autoclear          : Boolean;
-    Mask               : String;
-    SortType           : ShortInt;
-    StrictType         : Boolean;
-    CaseSensitive      : Boolean;
-    Shell              : String;
-	StackPointer       : LongInt;
+    Prevent       : Boolean;
+    Autoclear     : Boolean;
+    Mask          : String;
+    SortType      : ShortInt;
+    StrictType    : Boolean;
+    CaseSensitive : Boolean;
+    Shell         : String;
+	StackPointer  : LongInt;
+	KeepWorking   : ShortInt;
 end;
 // sorts
 // 0 - bubblesort
 // 1 - quicksort
 // 2 - mergesort
 // 3 - bogosort
+
+// KeepWorking: 2 - do, 1 - continue, 0 - break
 
 type Entity = record
 	EntityType : Integer;
@@ -107,6 +110,7 @@ begin
   pom.StrictType := true;
   pom.CaseSensitive := true;
   pom.StackPointer := 0;
+  pom.KeepWorking := 2;
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}

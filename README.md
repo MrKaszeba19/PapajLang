@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-December 10, 2019  
+December 12, 2019  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -180,7 +180,7 @@ strParse | Parses a string like it was a set of RPN commands
 shell | Execute a command being included in S1
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 
-### Commands for array
+### Commands for arrays
 
 **Note**: Array indexes start from 0, i.e. a N-elements array has indexes of [0..N-1] 
 
@@ -189,13 +189,21 @@ getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 Programme Function | Purpose
 ------------------ | -------
 length | Returns length of an array
+pop | Pops the last element of an array
+shift | Pops the first element to an array
 
 - array1 number1 function
 
 Programme Function | Purpose
 ------------------ | -------
-getAt | Get a valur from N1 index
+getAt | Get a value from N1 index
 popAt | Pop an element from a N1 index
+
+- array1 entity1 function
+
+Programme Function | Purpose
+------------------ | -------
+push | Pushes an entity to the array (as its last element)
 
 - array1 number1 entity1 function
 
@@ -203,7 +211,6 @@ Programme Function | Purpose
 ------------------ | -------
 setAt | Set a value at a N1 index
 pushAt | Push an element before a N1 index 
-
 
 
 **Examples:**
@@ -216,7 +223,9 @@ pushAt | Push an element before a N1 index
 Programme Operand | Syntax | Purpose
 ----------------- | ------ | -------
 callIf | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
-callUnless | *bool1* *func1* **callUnless** | Calls a function whether *bool1* = `true`
+callUnless | *bool1* *func1* **callUnless** | Calls a function whether *bool1* = `false`
+break | **break** | Interrupt the loop and exit it
+continue | **continue** | Break the current step of a loop and start the next one
 
 ### Stack operations
 
@@ -299,6 +308,8 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 - `scan toNumber 5 <= ? else { "This number is greater than 5" println }`
 - `scan toNumber 10 mod ? if 1 else 0`
 
+*This style of conditionals is not made in a RPN philosophy, but it was introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
+
 #### Data types
 **Current data types:**
 _**(Capitalized type names from 0.4.2 onwards)**_
@@ -367,6 +378,23 @@ tilleof | As above
 - `"Hello world!" type` puts "string" on the top of the stack
 - `"Hello world!" println` prints "Hello world!"
 
+#### Console and program manipulators
+
+Programme Operand | Purpose
+----------------- | -------
+textColor | Sets a color of a console text output
+textBackground | Sets a background color of a console text output
+gotoXY | Moves a cursor to N1,N2 position
+clearScreen | Clears a screen
+clrscr | As above
+startSound | Plays a sound of a frequency of N1 Hz
+stopSound | Stops a sound
+delay | freezes a program for N1 milliseconds
+
+**Examples:**
+- `440 startSound` keeps playing a sound of 440 Hz
+- `500 delay` freezes a program for 500 milliseconds (0.5s)
+- `1 1 gotoXT` moves a cursor to a upper-left edge of a console window (1,1)
 
 #### Files management directives
 
@@ -382,7 +410,6 @@ Operand | Purpose
 - `@source` is recommended when you use a file that consists only of values and you want to put them on the stack.
 
 *to be extended and rebuilt completely*
-
 
 #### Parsing directives
 
