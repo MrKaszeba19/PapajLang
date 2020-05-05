@@ -38,6 +38,7 @@ type TSettings = record
     Shell         : String;
 	StackPointer  : LongInt;
 	KeepWorking   : ShortInt;
+	UseString     : Boolean;
 end;
 // sorts
 // 0 - bubblesort

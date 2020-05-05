@@ -15,6 +15,7 @@ const
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_strings(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_constants(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -809,383 +810,7 @@ begin
         end;
 
         // String operations
-        'String.concat' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := concat(StrEax, StrEbx);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.crush' : begin
-          	SetLength(HelpSTable, 0);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            IntEbx := 1;
-            while (IntEbx <= Length(StrEbx)) do begin
-            	SetLength(HelpSTable, IntEbx+1);
-            	HelpSTable[IntEbx] := Copy(StrEbx, IntEbx, 1);
-            	IntEbx := IntEbx + 1; 
-            end;
-            if not (sets.Autoclear) then begin
-              //stack_push(pocz[sets.StackPointer], buildNumber(y));
-              stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            for index := 1 to Length(HelpSTable)-1 do stack_push(pocz[sets.StackPointer], buildString(HelpSTable[index])); 
-            SetLength(HelpSTable, 0);
-        end;
-        'String.crushBy' : begin
-          	SetLength(HelpSTable, 0);
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            IntEax := 1;
-            IntEbx := 1;
-            while (IntEax <= Length(StrEbx)) do begin
-            	SetLength(HelpSTable, IntEbx+1);
-            	HelpSTable[IntEbx] := Copy(StrEbx, IntEax, trunc(y));
-            	IntEax := IntEax + trunc(y);
-            	IntEbx := IntEbx + 1; 
-            end;
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            for index := 1 to Length(HelpSTable)-1 do stack_push(pocz[sets.StackPointer], buildString(HelpSTable[index])); 
-            SetLength(HelpSTable, 0);
-        end;
-        'String.left' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEax := LeftStr(StrEbx, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax));
-        end;
-        'String.right' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEax := RightStr(StrEbx, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax));
-        end;
-        'String.trim' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := Trim(StrEbx);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.trimLeft' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := TrimLeft(StrEbx);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.trimRight' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := TrimRight(StrEbx);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.padLeft' : begin
-        	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadLeft(StrEbx, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.padRight' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadRight(StrEbx, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.pad' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadCenter(StrEbx, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.despace' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := DelChars(StrEbx, ' ');
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.onespace' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := DelSpace1(StrEbx);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.dechar' : begin
-            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := DelChars(StrEbx, StrEcx[1]);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.bind' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := StrEax + ' ' + StrEbx;
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'String.bindBy' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEdx := StrEax + StrEcx + StrEbx;
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEdx));
-        end;
-        'String.split' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_get(pocz[sets.StackPointer]).Str;
-            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]); 
-            HelpTStrings := TStringlist.Create;
-            HelpTStrings.Delimiter := ' ';
-            HelpTStrings.QuoteChar := '"';
-            HelpTStrings.StrictDelimiter := false;
-            HelpTStrings.DelimitedText := StrEbx;
-            for StrEax in HelpTStrings do stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-            HelpTStrings.Free;
-        end;
-        'String.splitBy' : begin
-            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_get(pocz[sets.StackPointer]).Str;
-            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);   
-            HelpTStrings := TStringlist.Create;
-            HelpTStrings.Delimiter := StrEcx[1];
-            HelpTStrings.QuoteChar := '"';
-            HelpTStrings.StrictDelimiter := false;
-            HelpTStrings.DelimitedText := StrEbx;
-            for StrEax in HelpTStrings do stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-            HelpTStrings.Free;
-        end;
-        'String.substring' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            x := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEax := Copy(StrEbx, trunc(x), trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildNumber(x));
-            	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-        end;
-        'String.between' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            x := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEax := Copy(StrEbx, trunc(x), trunc(y)-trunc(x)+1);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildNumber(x));
-            	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-        end;
-        'String.position' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := Pos(StrEbx, StrEax);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
-        end;
-        'String.remove' : begin 
-          	if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
-          	begin
-          	  	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-              	StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-              	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-              	StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-              	Delete(StrEax, Pos(StrEbx, StrEax), Length(StrEbx));
-              	if not (sets.Autoclear) then begin
-              	  	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-              	  	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-              	end;
-              	stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-          	end else begin
-          	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-              	y := stack_pop(pocz[sets.StackPointer]).Num;
-          	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-              	x := stack_pop(pocz[sets.StackPointer]).Num;
-              	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-              	StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-              	Delete(StrEax, trunc(x), trunc(y)); 
-              	if not (sets.Autoclear) then begin
-              	  	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-              	  	stack_push(pocz[sets.StackPointer], buildNumber(x));
-              	  	stack_push(pocz[sets.StackPointer], buildNumber(y));
-              	end;
-              	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-          	end;
-        end;
-        'String.insert' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            Insert(StrEbx, StrEax, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-        end;
-        'String.replace' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            Delete(StrEax, Length(StrEbx), trunc(y)); 
-            Insert(StrEbx, StrEax, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
-        end;
-        'String.nthPosition' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := NPos(StrEbx, StrEax, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
-        end;
-        'String.positionFrom' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := PosEx(StrEbx, StrEax, trunc(y));
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
-        end;
-        'String.occurs' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            IntEax := 0;
-            repeat
-            	IntEbx := NPos(StrEbx, StrEax, IntEax+1);
-            	if (IntEbx <> 0) then Inc(IntEax);
-            until (IntEbx = 0);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildNumber(IntEax)); 
-        end;
-        'String.run' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            pocz := parseScoped(StrEbx, pocz, sets, vardb);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            //stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-        'system' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := executeCommand(StrEbx, sets.Shell);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
+        
         'call' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
@@ -1332,17 +957,6 @@ begin
             StrEax := stack_get(pocz[sets.StackPointer]).Str;
             //if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
-        end;
-        'String.val' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_get(pocz[sets.StackPointer]).Str;
-            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-            val(StrEax, ExtEax, IntEax); 
-            if (IntEax = 0) then begin
-              stack_push(pocz[sets.StackPointer], buildNumber(ExtEax));
-            end else begin
-              stack_push(pocz[sets.StackPointer], buildString(StrEax));
-            end;
         end;
         'print' : begin
             EntEax := stack_get(pocz[sets.StackPointer]);
@@ -1763,6 +1377,424 @@ begin
     lib_ultravanilla := Found;
 end;
 
+function lib_strings(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+	Found          : Boolean;
+	x, y, z, a     : Extended;
+	Size           : Longint;
+    Sizer          : StackDB;
+	index          : Longint;
+	IntEax, IntEbx : LongInt;
+	StrEax, StrEbx : String;
+	StrEcx, StrEdx : String;
+	EntEax         : Entity;
+	ExtEax         : Extended;
+    LogEax         : Boolean;
+	HelpTStrings   : TStrings;
+	HelpETable     : array of Entity;
+    HelpSTable     : array of String;
+begin
+	Found := true;
+	case i of
+		'String.concat' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := concat(StrEax, StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.crush' : begin
+          	SetLength(HelpSTable, 0);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            IntEbx := 1;
+            while (IntEbx <= Length(StrEbx)) do begin
+            	SetLength(HelpSTable, IntEbx+1);
+            	HelpSTable[IntEbx] := Copy(StrEbx, IntEbx, 1);
+            	IntEbx := IntEbx + 1; 
+            end;
+            if not (sets.Autoclear) then begin
+              //stack_push(pocz[sets.StackPointer], buildNumber(y));
+              stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            for index := 1 to Length(HelpSTable)-1 do stack_push(pocz[sets.StackPointer], buildString(HelpSTable[index])); 
+            SetLength(HelpSTable, 0);
+        end;
+        'String.crushBy' : begin
+          	SetLength(HelpSTable, 0);
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            IntEax := 1;
+            IntEbx := 1;
+            while (IntEax <= Length(StrEbx)) do begin
+            	SetLength(HelpSTable, IntEbx+1);
+            	HelpSTable[IntEbx] := Copy(StrEbx, IntEax, trunc(y));
+            	IntEax := IntEax + trunc(y);
+            	IntEbx := IntEbx + 1; 
+            end;
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            for index := 1 to Length(HelpSTable)-1 do stack_push(pocz[sets.StackPointer], buildString(HelpSTable[index])); 
+            SetLength(HelpSTable, 0);
+        end;
+        'String.left' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEax := LeftStr(StrEbx, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax));
+        end;
+        'String.right' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEax := RightStr(StrEbx, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax));
+        end;
+        'String.trim' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := Trim(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.trimLeft' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := TrimLeft(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.trimRight' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := TrimRight(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.padLeft' : begin
+        	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := PadLeft(StrEbx, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.padRight' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := PadRight(StrEbx, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.pad' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := PadCenter(StrEbx, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.despace' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := DelChars(StrEbx, ' ');
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.onespace' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := DelSpace1(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.dechar' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := DelChars(StrEbx, StrEcx[1]);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.bind' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := StrEax + ' ' + StrEbx;
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.bindBy' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEdx := StrEax + StrEcx + StrEbx;
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEdx));
+        end;
+        'String.split' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_get(pocz[sets.StackPointer]).Str;
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]); 
+            HelpTStrings := TStringlist.Create;
+            HelpTStrings.Delimiter := ' ';
+            HelpTStrings.QuoteChar := '"';
+            HelpTStrings.StrictDelimiter := false;
+            HelpTStrings.DelimitedText := StrEbx;
+            for StrEax in HelpTStrings do stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+            HelpTStrings.Free;
+        end;
+        'String.splitBy' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_get(pocz[sets.StackPointer]).Str;
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);   
+            HelpTStrings := TStringlist.Create;
+            HelpTStrings.Delimiter := StrEcx[1];
+            HelpTStrings.QuoteChar := '"';
+            HelpTStrings.StrictDelimiter := false;
+            HelpTStrings.DelimitedText := StrEbx;
+            for StrEax in HelpTStrings do stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+            HelpTStrings.Free;
+        end;
+        'String.substring' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEax := Copy(StrEbx, trunc(x), trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+        end;
+        'String.between' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEax := Copy(StrEbx, trunc(x), trunc(y)-trunc(x)+1);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+        end;
+        'String.position' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            ExtEax := Pos(StrEbx, StrEax);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
+        end;
+        'String.remove' : begin 
+          	if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+          	begin
+          	  	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+              	StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+              	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+              	StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+              	Delete(StrEax, Pos(StrEbx, StrEax), Length(StrEbx));
+              	if not (sets.Autoclear) then begin
+              	  	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+              	  	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+              	end;
+              	stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+          	end else begin
+          	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+              	y := stack_pop(pocz[sets.StackPointer]).Num;
+          	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+              	x := stack_pop(pocz[sets.StackPointer]).Num;
+              	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+              	StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+              	Delete(StrEax, trunc(x), trunc(y)); 
+              	if not (sets.Autoclear) then begin
+              	  	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+              	  	stack_push(pocz[sets.StackPointer], buildNumber(x));
+              	  	stack_push(pocz[sets.StackPointer], buildNumber(y));
+              	end;
+              	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+          	end;
+        end;
+        'String.insert' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            Insert(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+        end;
+        'String.replace' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            Delete(StrEax, Length(StrEbx), trunc(y)); 
+            Insert(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
+        end;
+        'String.nthPosition' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            ExtEax := NPos(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
+        end;
+        'String.positionFrom' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            ExtEax := PosEx(StrEbx, StrEax, trunc(y));
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(ExtEax)); 
+        end;
+        'String.occurs' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            IntEax := 0;
+            repeat
+            	IntEbx := NPos(StrEbx, StrEax, IntEax+1);
+            	if (IntEbx <> 0) then Inc(IntEax);
+            until (IntEbx = 0);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(IntEax)); 
+        end;
+        'String.run' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            //stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.system' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := executeCommand(StrEbx, sets.Shell);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+		'String.length' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_get(pocz[sets.StackPointer]).Str;
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+        end;
+        'String.value' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_get(pocz[sets.StackPointer]).Str;
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            val(StrEax, ExtEax, IntEax); 
+            if (IntEax = 0) then begin
+              stack_push(pocz[sets.StackPointer], buildNumber(ExtEax));
+            end else begin
+              stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            end;
+        end;
+		else Found := false;
+	end;
+	lib_strings := Found;
+end;
+
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
 	Found          : Boolean;
@@ -1908,6 +1940,14 @@ begin
         '@useshell(PWSH)' : begin
            sets.Shell := SHELL_PWSH;
         end;
+
+		'@use(String)' : begin
+           sets.UseString := true;
+        end;
+		'@unuse(String)' : begin
+           sets.UseString := false;
+        end;
+		
         else begin
         	case LeftStr(i, 9) of
             	'@source("' : begin

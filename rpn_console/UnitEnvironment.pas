@@ -51,11 +51,14 @@ begin
     Val (i,Im,Code);
     If Code<>0 then
     begin
+		if (not sets.UseString) or ((sets.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
+
         if not lib_directives(i, pocz, Steps, sets, vardb) then
         if not lib_constants(i, pocz, Steps, sets, vardb) then
         if not lib_logics(i, pocz, Steps, sets, vardb) then
         if not lib_variables(i, pocz, Steps, sets, vardb) then
         if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
+		if not lib_strings(i, pocz, Steps, sets, vardb) then
         if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
 		if not lib_arrays(i, pocz, Steps, sets, vardb) then		
         if not lib_exceptions(i, pocz, Steps, sets, vardb) then

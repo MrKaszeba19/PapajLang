@@ -173,9 +173,8 @@ String.replace | Inserts a string S2 into the string S1 in the position N1, maki
 
 Programme Operand | Purpose
 ----------------- | -------
-String.val | Converts to a number (if possible)
-len | Gets string length (does not remove the used string and is invulnerable to autoclear)
-length | Gets string length (vulnerable to autoclear, not recommended)
+String.value | Converts to a number (if possible)
+String.length | Gets string length
 String.trimLeft | Eliminates whitespace on the left side
 String.trimRight | Eliminates whitespace on the right side
 String.trim | Eliminates whitespace on the both left and right sides
@@ -328,6 +327,7 @@ _**(Capitalized type names from 0.4.2 onwards)**_
 
 **Planned for the future**
 - `Object`
+- `File`
 
 #### Variables
 
@@ -436,22 +436,31 @@ Operand | Purpose
 | @sorttype(STYPE)     | Set a type of sorting a stack                                                                           |
 | @casesensitive(BOOL) | Whether it does matter if you type a command like THIS, or this, or tHiS                                |
 | @useshell(SHELL)     | Specify what shell do you want to use                                                                   |
+| @use(PACKAGE)        | Use a package                                                                                           |
+| @unuse(PACKAGE)      | Stop using a package                                                                                    |
 | //                   | One-line comment (only parsing text files)                                                              |
 
-*BOOL* available values are `TRUE` or `FALSE` (or also `true`/`false`, for compatibility with older scripts)
+*BOOL* – available values are `TRUE` or `FALSE` (or also `true`/`false`, for compatibility with older scripts)
 
-*STYPE* available values are
+*STYPE* – available values:
 - `BUBBLESORT` or `BSORT` or `0` - bubblesort
 - `QUICKSORT` or `QSORT` or `1` - quicksort (*set by default*)
 - `MERGESORT` or `MSORT` or `2` - mergesort
 - `RANDOMSORT` or `RSORT` or `3` or `BOGOSORT` - random sort/bogosort (_for devils and masochists only, use at **your own** risk_)
 
-*SHELL* available values are
+*SHELL* – available values:
 - `BASH` - use /bin/bash shell (*set by default on UNIX systems*)
 - `CMD` - use cmd.exe shell (*set by default on Windows systems*)
 - `PWSH` or `POWERSHELL` - use PowerShell
 - `SH` - use /bin/sh shell
 - `ZSH` - use /bin/zsh shell
+
+*PACKAGE* – available packages:
+- `String` with string functions
+- `Math` with mathematical functions (*coming soon*) 
+- `Array` with array functions (*coming soon*)
+- `File` with file I/O functions (*coming soon*) 
+- `System` with system functions (*coming soon*)
 
 **Examples:**
 - `@int 14.89` prints a stack with "15"
@@ -460,6 +469,7 @@ Operand | Purpose
 - `2 3 +` prints a stack with "5"
 - `@autoclear(TRUE) 2 3 +` prints a stack with "5" - as 2 and 3 were removed automatically after usage
 - `@autoclear(FALSE) 2 3 +` prints a stack with "2 3 5"
+- `@use(String)` allows using String commands with their shorter forms, e.g. `concat` instead of `String.concat`.
 
 **Notes**
 - Disabling autoclear does not apply to instructions of `times`, `rprint`, `rprintln`, `++`, `--`, stack manipulators and stack aggregating functions
