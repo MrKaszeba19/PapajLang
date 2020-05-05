@@ -1,5 +1,5 @@
 @silent
 // this comment works
 "hello // this comment does not work" println
-"but next one does work" // "Hello world" concat println
+"but next one does work" // "Hello world" String.concat println
 println

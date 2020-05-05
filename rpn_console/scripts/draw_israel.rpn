@@ -28,5 +28,5 @@
 12 times { "|" print } newln
 
 1 1 12 seq size times {
-	 clone >x times "|" $x -- times concat 12 colprintln
+	 clone >x times "|" $x -- times String.concat 12 colprintln
 }

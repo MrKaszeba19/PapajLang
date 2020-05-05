@@ -6,13 +6,13 @@ scan toNumber >na
 scan toNumber >nb
 
 "Type what do you want to do: " println
-\t "+ sum" concat println
-\t "- difference" concat println
-\t "* product" concat println
-\t "/ quotient" concat println
+\t "+ sum" String.concat println
+\t "- difference" String.concat println
+\t "* product" String.concat println
+\t "/ quotient" String.concat println
 scan toString >op
 
-"+-*/" $op occur 0 <= ?
+"+-*/" $op String.occurs 0 <= ?
 if {
 	"Wrong operand" println
 } else {

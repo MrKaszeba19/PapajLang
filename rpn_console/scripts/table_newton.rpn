@@ -1,5 +1,6 @@
 @silent
 
+"Insert a natural number: " print
 scan toNumber clone >n
 2 ^ toString length ++ >len
 

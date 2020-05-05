@@ -5,7 +5,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. December 12, 2019.');
+    writeln('Paul Lipkowski. May 5, 2030.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -16,7 +16,7 @@ begin
      writeln('');
      writeln('Run ''rpn help'' or ''rpn'' to display this again.');
      writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-     writeln('Run ''rpn functions [page]'' to obtain info about available operands.');
+     writeln('Run ''rpn functions [page]'' to obtain info about available functions.');
      writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
      writeln('Run ''rpn repl'' to run a REPL for PapajScript');
      writeln('');
