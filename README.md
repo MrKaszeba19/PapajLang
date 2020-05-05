@@ -121,6 +121,8 @@ rand | Generate a random integer value within a range [0..N-1]
 
 ### Commands for string expressions
 
+**Note**: If you do not want to type `String.` every time, just type `@use(String)` before.
+
 - string1 string2 operand
 
 Programme Operand | Purpose

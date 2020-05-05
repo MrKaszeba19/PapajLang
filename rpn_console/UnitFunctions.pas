@@ -427,17 +427,14 @@ var
 	Found          : Boolean;
 	x, y, z, a     : Extended;
 	Size           : Longint;
-    Sizer          : StackDB;
 	index          : Longint;
-	IntEax, IntEbx : LongInt;
+	IntEax         : LongInt;
 	StrEax, StrEbx : String;
-	StrEcx, StrEdx : String;
+	StrEcx         : String;
 	EntEax         : Entity;
 	ExtEax         : Extended;
     LogEax         : Boolean;
-	HelpTStrings   : TStrings;
 	HelpETable     : array of Entity;
-    HelpSTable     : array of String;
 begin
 	Found := true;
 	case i of
@@ -1380,18 +1377,13 @@ end;
 function lib_strings(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
 	Found          : Boolean;
-	x, y, z, a     : Extended;
-	Size           : Longint;
-    Sizer          : StackDB;
+	x, y           : Extended;
 	index          : Longint;
 	IntEax, IntEbx : LongInt;
 	StrEax, StrEbx : String;
 	StrEcx, StrEdx : String;
-	EntEax         : Entity;
 	ExtEax         : Extended;
-    LogEax         : Boolean;
 	HelpTStrings   : TStrings;
-	HelpETable     : array of Entity;
     HelpSTable     : array of String;
 begin
 	Found := true;
@@ -1797,8 +1789,8 @@ end;
 
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found          : Boolean;
-	StrEax, StrEbx : String;
+	Found  : Boolean;
+	StrEax : String;
 begin
 	Found := true;
 	case i of
@@ -2081,7 +2073,6 @@ var
 	StrEax, StrEbx : String;
 	EntEax : Entity;
 	LogEax : Boolean;
-	IntEax : LongInt;
 begin
 	Found := true;
 	case i of
@@ -2409,11 +2400,11 @@ end;
 
 function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found          : Boolean;
-    IntEax, IntEbx : LongInt;
-    ArrEax         : Entity;
-    EntEax         : Entity;
-    index          : Integer;
+	Found  : Boolean;
+    IntEax : LongInt;
+    ArrEax : Entity;
+    EntEax : Entity;
+    index  : Integer;
 begin
 	Found := true;
 	case i of
