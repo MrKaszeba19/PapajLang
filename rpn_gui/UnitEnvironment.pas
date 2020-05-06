@@ -41,38 +41,48 @@ var
 begin
     Steps := 1;
 
-    StrEcx := i;
+    StrEcx := i.Substring(1, i.Length - 2);
     if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     begin
 		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 	end;
 
-    if not (sets.CaseSensitive) then i := LowerCase(i);
-    Val (i,Im,Code);
-    If Code<>0 then
-    begin
-		if (not sets.UseString) or ((sets.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
-
-        if not lib_directives(i, pocz, Steps, sets, vardb) then
-        if not lib_constants(i, pocz, Steps, sets, vardb) then
-        if not lib_logics(i, pocz, Steps, sets, vardb) then
-        if not lib_variables(i, pocz, Steps, sets, vardb) then
-        if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
-		if not lib_strings(i, pocz, Steps, sets, vardb) then
-        if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
-		if not lib_arrays(i, pocz, Steps, sets, vardb) then		
-        if not lib_exceptions(i, pocz, Steps, sets, vardb) then
-        if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+	
+	if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
+	begin
+		if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin
 			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 		end else stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-    end else begin
-        stack_push(pocz[sets.StackPointer], buildNumber(Im));
-    end;
+	end else begin
+    	if not (sets.CaseSensitive) then i := LowerCase(i);
+    	Val (i,Im,Code);
+    	If Code<>0 then
+    	begin
+			if (not sets.UseString) or ((sets.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
 
-    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    begin
-		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+    	    if not lib_directives(i, pocz, Steps, sets, vardb) then
+    	    if not lib_constants(i, pocz, Steps, sets, vardb) then
+    	    if not lib_logics(i, pocz, Steps, sets, vardb) then
+    	    if not lib_variables(i, pocz, Steps, sets, vardb) then
+    	    if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
+			if not lib_strings(i, pocz, Steps, sets, vardb) then
+    	    if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
+			if not lib_arrays(i, pocz, Steps, sets, vardb) then		
+    	    if not lib_exceptions(i, pocz, Steps, sets, vardb) then
+    	    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    		begin
+				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+			end else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+    	end else begin
+    	    stack_push(pocz[sets.StackPointer], buildNumber(Im));
+    	end;
+
+		if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    	begin
+			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+		end;
+
 	end;
 end;
 
@@ -102,7 +112,8 @@ end;
 
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
-	L      : TStrings;
+	//L      : TStrings;
+	L      : TStringArray;
 	i      : String;
 	index  : LongInt;
 	z      : String;
@@ -113,18 +124,23 @@ var
 	cond   : ShortInt;
 	permit : Boolean;
 begin
-	L := TStringlist.Create;
-	L.Delimiter := ' ';
-	L.QuoteChar := '"';
-	L.StrictDelimiter := false;
-	L.DelimitedText := input;
+	//L := TStringlist.Create;
+	//L.Delimiter := ' ';
+	//L.QuoteChar := '"';
+	//L.StrictDelimiter := false;
+	//L.DelimitedText := input;
+
+	L := input.Split(' ', '"');
 
   	Steps := 1;
   	cond := -1;
   	permit := True;
   	index := 0;
-  	while (index < L.Count) and (sets.KeepWorking > 0) do
+  	//while (index < L.Count) and (sets.KeepWorking > 0) do
+	while (index < Length(L)) and (sets.KeepWorking > 0) do
 	begin
+		//writeln(L.Text);
+
 		if (sets.KeepWorking = 1) then
 		begin
 			Inc(index);
@@ -150,7 +166,8 @@ begin
 	    		nestlv := 1;
 	    		nesttx := '';
 	    		cursor := index + 1;
-	    		while (nestlv > 0) and (cursor < L.Count) do begin
+	    		//while (nestlv > 0) and (cursor < L.Count) do begin
+				while (nestlv > 0) and (cursor < Length(L)) do begin
 	    			if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
 	    			if (L[cursor] = '}') then Dec(nestlv);
@@ -167,11 +184,13 @@ begin
 	    			end else for step := 1 to Steps do pocz := parseScoped(nesttx, pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
+
             end else if L[index] = 'fun{' then begin
                 nestlv := 1;
                 nesttx := '';
                 cursor := index + 1;
-                while (nestlv > 0) and (cursor < L.Count) do begin
+				//while (nestlv > 0) and (cursor < L.Count) do begin
+                while (nestlv > 0) and (cursor < Length(L)) do begin
                     if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
                     if (L[cursor] = '}') then Dec(nestlv);
@@ -188,6 +207,7 @@ begin
                     end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(nesttx));
                 permit := True;
                 index := cursor - 1;
+				
             end else begin
 	    		if (permit) then
 	    			if Steps = -1 then begin
@@ -203,7 +223,7 @@ begin
   	end;
 	sets.KeepWorking := 2;
 	//z := '';
-	L.Free;
+	//L.Free;
   	parseOpen := pocz;
 end;
 

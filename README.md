@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-May 5, 2020  
+May 6, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -119,72 +119,11 @@ makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 rand | Generate a random integer value within a range [0..N-1]
 
-### Commands for string expressions
+### Functions for string expressions
 
 **Note**: If you do not want to type `String.` every time, just type `@use(String)` before.
 
-- string1 string2 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.bind | Concatenates two strings with a delimiter of a space char
-String.crush | Splits a string S1 to single chars
-String.concat | Concatenates two strings
-String.dechar | Removes all chars of S2 from a string S1
-String.occurs | Returns a count of occurences of a substring S2 in a string S1
-String.position | Returns the position of the first occurence of a substring S2 in a string S1
-String.strPos | Returns an index of the first occurence of a substring S2 in a string S1
-String.splitBy | Splits a string S1 according to a char of S2 (and a space char too, S2 must be a single char)
-String.remove | Removes the first occurence a substring S2 from a string S1
-
-- string1 string2 string3 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.bindBy | Concatenates two strings S1 S2 with a delimiter of a S3 delimiter
-
-- string1 number1 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.crushBy | Splits a string S1 to the parts of the same length of N1 (except for the last part, if len(S1) is not divisible by N1)
-String.left | Extracts a substring from a string S1 of the first N1 letters
-String.right | Extracts a substring from a string S1 of the last N1 letters
-String.pad | Fills a S1 string with spaces to reach the length of N1, and the string is centered
-String.padLeft | Fills a S1 string with spaces to reach the length of N1, and the string is right-justified
-String.padRight | Fills a S1 string with spaces to reach the length of N1, and the string is left-justified
-
-- string1 number1 number2 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.between | Extracts a substring from a string S1 positioned between N1 and N2
-String.remove | Removes a substring from a string S1, starting in N1 and being N2 chars long
-String.substring | Extracts a substring from a string S1, starting in N1 and being N2 chars long
-
-- string1 string2 number1 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.nthOccur | Returns an index of the N1-th occurence of a substring S2 in a string S1
-String.positionFrom | Returns the position of the next occurence of a substring S2 in a string S1, starting from N1 position
-String.insert | Inserts a string S2 into the string S1 in the position N1, making the following chars shift right
-String.replace | Inserts a string S2 into the string S1 in the position N1, making the following chars be replaced
-
-- string1 operand
-
-Programme Operand | Purpose
------------------ | -------
-String.value | Converts to a number (if possible)
-String.length | Gets string length
-String.trimLeft | Eliminates whitespace on the left side
-String.trimRight | Eliminates whitespace on the right side
-String.trim | Eliminates whitespace on the both left and right sides
-String.despace | Eliminates space chars
-String.onespace | Eliminates combo space chars (e.g. "2   3" -> "2 3")
-String.split | Splits a string according to space chars
-String.run | Runs a string like it was a PS script
-String.system | Execute a command being included in S1
+Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/String-(package)) for String package functions. 
 
 ### Commands for arrays
 
@@ -460,6 +399,7 @@ Operand | Purpose
 *PACKAGE* – available packages:
 - `String` with string functions
 - `Math` with mathematical functions (*coming soon*) 
+- `ASCII` with system functions (*coming soon*)
 - `Array` with array functions (*coming soon*)
 - `File` with file I/O functions (*coming soon*) 
 - `System` with system functions (*coming soon*)

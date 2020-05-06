@@ -53,6 +53,8 @@ function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String
 function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 
+function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
+
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 
 implementation
@@ -477,6 +479,11 @@ begin
         stack_push(stack, raiseException('EConstraint:CChar: a single char expected at "'+operand+'".'));
         assertCharLocated := true;
     end else assertCharLocated := false;
+end;
+
+function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
+begin
+    raiseExceptionUnknownCommand := raiseException('EInput:CUnknown: Unknown expression at "'+operand+'".');
 end;
 
 // exceed boundaries

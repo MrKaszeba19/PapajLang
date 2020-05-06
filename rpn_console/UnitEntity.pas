@@ -112,6 +112,7 @@ begin
   pom.CaseSensitive := true;
   pom.StackPointer := 0;
   pom.KeepWorking := 2;
+  pom.UseString := false;
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}
