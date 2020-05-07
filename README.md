@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-May 6, 2020  
+May 7, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -435,10 +435,11 @@ Operand | Purpose
 - :uk: **English** - *default*
 - :denmark: **Danish** (Dansk)
 - :poland: **Polish** (Polski)
+- :israel: **Hebrew** (עברית)
 - :de: German (Deutsch) - *to be implemented*
 - 🇳🇱 Dutch (Nederlands) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
-- :israel: Hebrew (עברית) - *to be implemented*
+
 
 ## Releases history
 
@@ -452,5 +453,5 @@ Version | Version Name | Date of Release | Improvements
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
-0.4.3 | Tet | soon | Arrays and more
+0.4.3 | Tet | soon | Hebrew language for GUI, syntax changes, Arrays and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

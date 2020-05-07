@@ -55,6 +55,7 @@ begin
           'den' : Unit3.set2DEN();
           'eng' : Unit3.set2ENG();
           'pol' : Unit3.set2POL();
+          'hbr' : Unit3.set2HBR();
           else Unit3.set2ENG();
      end;
 end;

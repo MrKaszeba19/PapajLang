@@ -5,7 +5,11 @@ unit UnitFunctions;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Crt, Process, UnitStack, UnitEntity;
+	Classes, SysUtils, StrUtils, Crt, Process,
+	{$IFDEF MSWINDOWS}
+		ShellApi,
+ 	{$ENDIF}
+	UnitStack, UnitEntity;
 
 const
 	PI = 3.1415926535897932384626433832795;
@@ -301,6 +305,42 @@ begin
 end;
 
 
+// SORT STRINGS
+
+procedure sortStringsPosition(var tab : TEntities; index : Integer); 
+var
+	i, j : Longint;
+	pom  : Entity;
+begin
+	for j := Length(tab)-1 downto 1 do
+	begin
+		for i := 0 to j-1 do 
+		begin
+    		if (tab[i].Str[index] > tab[i+1].Str[index]) then begin
+        		pom := tab[i];
+        		tab[i] := tab[i+1];
+        		tab[i+1] := pom;
+      		end;
+		end;
+	end;
+	
+end;
+
+procedure strings_sort(var tab : TEntities);
+var
+	i, min : Integer;
+begin
+	min := Length(tab[0].Str);
+	for i := 0 to Length(tab)-1 do 
+	begin
+		if min < Length(tab[i].Str) then 
+			min := Length(tab[i].Str);
+	end;
+
+	for i := min downto 1 do
+		sortStringsPosition(tab, i); 
+end;
+
 // TABLES AGGREGATE
 
 procedure table_reverse(var tab : TEntities);
@@ -415,7 +455,8 @@ var
 begin
 	s := '';
 	{$IFDEF MSWINDOWS}
-	RunCommand(Shell,['/c', input],s);
+	//RunCommand(Shell,['/c', input],s);
+	if ShellExecute(0,nil, PChar('cmd'),PChar('/c '+input),nil,1) =0 then;
  	{$ELSE}
   	RunCommand(Shell,['-c', input],s);
  	{$ENDIF}
@@ -1087,6 +1128,21 @@ begin
                 if (sets.sorttype = 1) then quicksort(HelpETable);
                 if (sets.sorttype = 2) then mergesort(HelpETable);
                 if (sets.sorttype = 3) then bogosort(HelpETable);
+                stack_pushCollection(pocz[sets.StackPointer], HelpETable);
+                SetLength(HelpETable, 0);
+            end;
+        end;
+		'strsort' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
+                else 
+                    HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
+                strings_sort(HelpETable);
                 stack_pushCollection(pocz[sets.StackPointer], HelpETable);
                 SetLength(HelpETable, 0);
             end;

@@ -24,12 +24,14 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
+    procedure MenuItem7Click(Sender: TObject);
   private
     { private declarations }
   public
@@ -102,16 +104,20 @@ begin
      // showmessage(GetLocaleLanguage);
      case (GetLocaleLanguage) of
           'da_DK.UTF-8' : language := 'den';
+          'Danish_Denmark.1252' : language := 'den';
           'en.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
           'pl.UTF-8' : language := 'pol';
           'Polish_Poland.1250' : language := 'pol';
+          'he_IL.utf8' : language := 'hbr';
+          'Hebrew_Israel.1255' : language := 'hbr';
           else language := 'eng';
      end;
      case language of
           'den' : set1DEN();
           'eng' : set1ENG();
           'pol' : set1POL();
+		  'hbr' : set1HBR();
           else set1ENG();
      end;
 end;
@@ -134,6 +140,11 @@ end;
 procedure TForm1.MenuItem6Click(Sender: TObject);
 begin
      Unit3.set1DEN();
+end;
+
+procedure TForm1.MenuItem7Click(Sender: TObject);
+begin
+     Unit3.set1HBR();
 end;
 
 end.

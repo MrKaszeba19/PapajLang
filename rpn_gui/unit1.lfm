@@ -5,17 +5,17 @@ object Form1: TForm1
   Width = 800
   BorderStyle = bsSingle
   Caption = 'RPN Calculator'
-  ClientHeight = 135
+  ClientHeight = 136
   ClientWidth = 800
   Constraints.MinHeight = 160
   Constraints.MinWidth = 800
   Menu = MainMenu1
   OnCreate = FormCreate
   Position = poMainFormCenter
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '2.0.6.0'
   object Edit1: TEdit
     Left = 16
-    Height = 28
+    Height = 26
     Top = 40
     Width = 664
     AutoSelect = False
@@ -33,15 +33,15 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 16
-    Height = 20
+    Height = 16
     Top = 19
-    Width = 59
+    Width = 54
     Caption = 'RPN Text'
     ParentColor = False
   end
   object Edit2: TEdit
     Left = 16
-    Height = 28
+    Height = 26
     Top = 72
     Width = 664
     AutoSelect = False
@@ -73,6 +73,10 @@ object Form1: TForm1
       object MenuItem5: TMenuItem
         Caption = 'Polski'
         OnClick = MenuItem5Click
+      end
+      object MenuItem7: TMenuItem
+        Caption = 'עברית'
+        OnClick = MenuItem7Click
       end
     end
   end
