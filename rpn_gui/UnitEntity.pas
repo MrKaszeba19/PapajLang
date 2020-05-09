@@ -28,6 +28,12 @@ const
 	EU = 2.7182818284590452353602874713526;
 	FI = 1.6180339887498948482045868343656;
 
+type TPackages = record
+	UseAnything : Boolean;
+	UseMath     : Boolean;
+	UseString   : Boolean;
+end;
+
 type TSettings = record
     Prevent       : Boolean;
     Autoclear     : Boolean;
@@ -38,7 +44,7 @@ type TSettings = record
     Shell         : String;
 	StackPointer  : LongInt;
 	KeepWorking   : ShortInt;
-	UseString     : Boolean;
+	Packages      : TPackages;
 end;
 // sorts
 // 0 - bubblesort
@@ -73,6 +79,7 @@ type VariableDB = record
 	Content : array of Variable;
 end;
 
+function verifyPackages(var L : TPackages) : Boolean;
 function default_settings() : TSettings;
 procedure raiserror(Const msg : string);  
 
@@ -101,6 +108,20 @@ procedure destroyVariables(var db : VariableDB);
 
 implementation
 
+function verifyPackages(var L : TPackages) : Boolean;
+begin
+	verifyPackages := L.UseMath or L.UseString;
+end;
+
+function default_packages() : TPackages;
+var pom : TPackages;
+begin
+	pom.UseMath := false;
+	pom.UseString := false;
+	pom.UseAnything := false;
+	default_packages := pom;
+end;
+
 function default_settings() : TSettings;
 var pom : TSettings;
 begin
@@ -112,7 +133,7 @@ begin
   pom.CaseSensitive := true;
   pom.StackPointer := 0;
   pom.KeepWorking := 2;
-  pom.UseString := false;
+  pom.Packages := default_packages();
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}

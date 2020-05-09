@@ -340,7 +340,7 @@ delay | freezes a program for N1 milliseconds
 **Examples:**
 - `440 startSound` keeps playing a sound of 440 Hz
 - `500 delay` freezes a program for 500 milliseconds (0.5s)
-- `1 1 gotoXT` moves a cursor to a upper-left edge of a console window (1,1)
+- `1 1 gotoXY` moves a cursor to a upper-left edge of a console window (1,1)
 
 #### Files management directives
 
@@ -399,6 +399,7 @@ Operand | Purpose
 *PACKAGE* – available packages:
 - `String` with string functions
 - `Math` with mathematical functions (*coming soon*) 
+- `Aggregate` with aggregate functions (*coming soon*) 
 - `ASCII` with system functions (*coming soon*)
 - `Array` with array functions (*coming soon*)
 - `File` with file I/O functions (*coming soon*) 

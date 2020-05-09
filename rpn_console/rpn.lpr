@@ -1,5 +1,7 @@
 program rpn;
-uses Unit2, UnitEnvironment, SysUtils, StrUtils;
+uses Unit2, UnitEnvironment, 
+//StrUtils, 
+SysUtils;
 
 procedure show_version();
 begin
@@ -12,15 +14,16 @@ end;
 
 procedure show_help();
 begin
-     writeln('SYNTAX: rpn "quoted_rpn_expression"');
-     writeln('');
-     writeln('Run ''rpn help'' or ''rpn'' to display this again.');
-     writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-     writeln('Run ''rpn functions [page]'' to obtain info about available functions.');
-     writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
-     writeln('Run ''rpn repl'' to run a REPL for PapajScript');
-     writeln('');
-     writeln('More help at github.com/RooiGevaar19/RPNCalculator');
+    writeln('SYNTAX: rpn "quoted_rpn_expression"');
+    writeln('');
+    writeln('Run ''rpn help'' or ''rpn'' to display this again.');
+    writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
+    writeln('Run ''rpn functions [page]'' to obtain info about available functions.');
+    writeln('Run ''rpn packages'' to check the packages for PapajScript');
+    writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
+    writeln('Run ''rpn repl'' to run a REPL for PapajScript');
+    writeln('');
+    writeln('More help at github.com/RooiGevaar19/RPNCalculator');
 end;
 
 procedure show_expressions;
@@ -30,6 +33,7 @@ begin
 	writeln('and each operation must be separated by 1 space.');
 	writeln('');
 	writeln('Type ''rpn functions'' to check out the available operands.');
+    writeln('Type ''rpn packages'' to check the packages for PapajScript');
 	writeln('');
 	writeln('MATHEMATICAL EXAMPLES');
 	writeln(' 6              -> 6');
@@ -37,8 +41,8 @@ begin
 	writeln(' (12-6)/3.5     -> 12 6 - 3.5 /');
 	writeln(' 5*(2-9)        -> 5 2 9 - *');
 	writeln(' (12-4)/(4^0.5) -> 12 4 - 4 0.5 ^ /');
-	writeln(' (2*PI)^E       -> 2 PI * E ^');
-	writeln(' sin(5) + 1     -> 5 sin 1 +');
+	writeln(' (2*PI)^E       -> 2 Math.PI * Math.EU ^');
+	writeln(' sin(5) + 1     -> 5 Math.sin 1 +');
 end;
 
 procedure show_operands;
@@ -53,28 +57,27 @@ begin
     writeln('Page 7: Conditionals and custom functions');
 	writeln('Page 8: Other');
 	writeln;
-	writeln('Type ''rpn functions [page_num]'' to obtain info about specific operands, e.g. ''rpn operands 1''');
+	writeln('Type ''rpn functions [page_num]'' to obtain info about specific functions, e.g. ''rpn functions 1''');
 	writeln('Type ''rpn functions all'' to print all pages at once.');
+    writeln('Type ''rpn packages'' to check the packages for PapajScript');
 end;
 
 // binary
 procedure show_operands1();
 begin
-	writeln('Binary operands model: (expr1) (expr2) (operand), e.g. 2 4 +');
-    writeln('Available binary operands:');
+	writeln('Binary functions model: (expr1) (expr2) (function), e.g. 2 4 +');
+    writeln('Available binary functions:');
     writeln('       +       -       *       /     div');
     writeln('       ^     pow    root     log     mod');
-    writeln('  choose     gcd     lcm');
 end;
 
 // unary
 procedure show_operands2();
 begin
-    writeln('Unary operands model: (expr0) (operand), e.g. 2 sin');
-    writeln('Available unary operands:');
-    writeln('     abs    sqrt     exp      ln       !    fact');
-    writeln('     sin     cos     tan     csc     sec     cot');
-    writeln('   trunc   round     inc     dec      ++      --');
+    writeln('Unary functions model: (expr0) (function), e.g. 2 sin');
+    writeln('Available unary functions:');
+    writeln('     inc     dec      ++      --');
+    writeln('     abs    sqrt   trunc');
     writeln();
     writeln(' X times - do the next thing X times');
     writeln('  X keep - Keep the top n values on the stack (e.g. "2 3 1 4 5 3 keep" results in a stack of "1 4 5")');
@@ -100,9 +103,9 @@ end;
 procedure show_operands4();
 begin
     writeln('Available constants: ');
-    writeln('      PI = ~3.1415926535897');
-	writeln('      EU = ~2.7182818284590');
-	writeln('      FI = ~1.6180339887498');
+    writeln('      Math.PI = ~3.1415926535897');
+	writeln('      Math.EU = ~2.7182818284590');
+	writeln('      Math.FI = ~1.6180339887498');
 end;
 
 procedure show_operands5();
@@ -120,6 +123,8 @@ begin
     writeln('  @silent           : Work the same way as @silent(TRUE)');
 	writeln('  @sorttype(VAL)    : Choose a sorting algorithm (VAL=[0..3], 1 is default, 3 is risky)');
 	writeln('  @source("FNAME")  : Use an another RPN script and execute its code directly on the main stack ("FNAME" is a quoted path to a filename)');
+    writeln('  @use(PKG)         : Use the package.');
+    writeln('  @unuse(PKG)       : Stop using the package.');
 end;
 
 procedure show_operands6();
@@ -161,6 +166,40 @@ begin
     writeln('       rem : Remove a value from the top of the stack');
     writeln('      keep : Keep the top n values on the stack (e.g. "2 3 1 4 5  3 keep" results in a stack of "1 4 5")');
     writeln('        // : One-line comment (when parsing files)');
+end;
+
+procedure show_packages();
+begin
+    writeln('Packages:');
+	writeln('Page 1: Math');
+	writeln('Page 2: String');
+	writeln;
+    writeln('Type ''@use(package_name)'' in code to use the package.');
+    writeln('Type ''@unuse(package_name)'' in code to stop using the package.');
+    writeln('Type ''package_name.function_name'' to use a single function from it.');
+	writeln('Type ''rpn packages [page_num]'' to obtain info about specific packages, e.g. ''rpn packages 1''');
+    writeln('Type ''rpn packages all'' to obtain info about all packages.');
+end;
+
+procedure show_packages1();
+begin
+    writeln('Math package functions:');
+    writeln(' - Unary');
+    writeln('     exp      ln       !    fact   floor ceiling   round');
+    writeln('     sin     cos     tan     csc     sec     cot');
+    writeln(' - Binary');
+    writeln('  choose     gcd     lcm');
+    show_operands4();
+end;
+
+procedure show_packages2();
+begin
+    writeln('String package functions:');
+    writeln('  between    bind  bindBy   concat       crush      crushBy');
+	writeln('   dechar despace  insert     left nthPosition       occurs');
+	writeln(' onespace     pad padLeft padRight    position positionFrom');
+	writeln('   remove replace   right      run       split      splitBy');
+	writeln('substring  system    trim trimLeft   trimRight');
 end;
 
 
@@ -236,6 +275,10 @@ begin
      			'functions' : begin
      				show_version();
      				show_operands();
+     			end;
+                'packages' : begin
+     				show_version();
+     				show_packages();
      			end
      			else begin
      				try
@@ -272,6 +315,17 @@ begin
                             show_operands6(); writeln();
                             show_operands7(); writeln();
                             show_operands8();
+                        end;
+                    end;
+                end;
+                'packages' : begin
+                    show_version();
+                    case ParamStr(2) of
+                        '1' : show_packages1();
+                        '2' : show_packages2();
+                        'all': begin 
+                            show_packages1(); writeln();
+                            show_packages2(); 
                         end;
                     end;
                 end;

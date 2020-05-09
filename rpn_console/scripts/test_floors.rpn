@@ -1,5 +1,6 @@
 @silent
 @autoclear(false)
+@use(Math)
 
 5.5 println
 "Round:   " rprint round rprintln

@@ -1,4 +1,4 @@
-fun{ 2 31 ^ -- isPrime } >expr
+fun{ 2 31 ^ -- Math.isPrime } >expr
 
 "TEST 1" println
 @@expr clone

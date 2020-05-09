@@ -1,1 +1,1 @@
-qshift toNumber isPrime
+qshift toNumber Math.isPrime
