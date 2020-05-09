@@ -54,4 +54,4 @@ clrscr
 7 textColor
 newln
 newln
-1 40 gotoxy getchar clrscr
+1 40 gotoXY getchar clrscr

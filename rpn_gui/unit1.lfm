@@ -11,6 +11,7 @@ object Form1: TForm1
   Constraints.MinWidth = 800
   Menu = MainMenu1
   OnCreate = FormCreate
+  ParentBiDiMode = False
   Position = poMainFormCenter
   LCLVersion = '2.0.6.0'
   object Edit1: TEdit
@@ -35,8 +36,9 @@ object Form1: TForm1
     Left = 16
     Height = 16
     Top = 19
-    Width = 54
+    Width = 660
     Caption = 'RPN Text'
+    Constraints.MinWidth = 660
     ParentColor = False
   end
   object Edit2: TEdit

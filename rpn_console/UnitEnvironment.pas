@@ -130,7 +130,9 @@ begin
 	//L.StrictDelimiter := false;
 	//L.DelimitedText := input;
 
-	L := input.Split(' ', '"');
+	input := trim(input);
+	L := input.Split([' ', #9, #13, #10], '"');
+	//writeln(input);
 
   	Steps := 1;
   	cond := -1;
@@ -141,7 +143,7 @@ begin
 	begin
 		//writeln(L.Text);
 
-		if (sets.KeepWorking = 1) then
+		if (sets.KeepWorking = 1) or (L[index] = '') then
 		begin
 			Inc(index);
 			sets.KeepWorking := 2;
@@ -170,18 +172,20 @@ begin
 				while (nestlv > 0) and (cursor < Length(L)) do begin
 	    			if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
-	    			if (L[cursor] = '}') then Dec(nestlv);
-	    			if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-	    			else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    			if (L[cursor] = '}') then Dec(nestlv);//;
+	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+	    			//else 
+					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
+				//writeln(nesttx);
 	    		if (permit) then
 	    			if Steps = -1 then begin
 	    				repeat
-	    					pocz := parseScoped(nesttx, pocz, sets, vardb); 
+	    					pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
 	    				until EOF;
 	    				stack_pop(pocz[sets.StackPointer]);
-	    			end else for step := 1 to Steps do pocz := parseScoped(nesttx, pocz, sets, vardb);
+	    			end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
 
@@ -194,20 +198,21 @@ begin
                     if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
                     if (L[cursor] = '}') then Dec(nestlv);
-                    if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-                    else if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+                    //if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+                    //else 
+					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
                     Inc(cursor);
                 end;
+				//writeln(nesttx);
                 if (permit) then
                     if Steps = -1 then begin
                         repeat
-                            stack_push(pocz[sets.StackPointer], buildFunction(nesttx)); 
+                            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
                         until EOF;
                         stack_pop(pocz[sets.StackPointer]);
-                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(nesttx));
+                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                 permit := True;
                 index := cursor - 1;
-				
             end else begin
 	    		if (permit) then
 	    			if Steps = -1 then begin

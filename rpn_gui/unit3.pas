@@ -30,6 +30,10 @@ begin
      Unit1.Form1.MenuItem1.Caption := 'Applikation';
      Unit1.Form1.MenuItem2.Caption := 'Sprog';
      Unit1.Form1.MenuItem3.Caption := 'Luk';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
 procedure set1ENG();
@@ -42,6 +46,10 @@ begin
      Unit1.Form1.MenuItem1.Caption := 'Application';
      Unit1.Form1.MenuItem2.Caption := 'Language';
      Unit1.Form1.MenuItem3.Caption := 'Close';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
 procedure set1POL();
@@ -54,6 +62,10 @@ begin
      Unit1.Form1.MenuItem1.Caption := 'Aplikacja';
      Unit1.Form1.MenuItem2.Caption := 'Język';
      Unit1.Form1.MenuItem3.Caption := 'Zamknij';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
 procedure set1HBR();
@@ -66,6 +78,10 @@ begin
      Unit1.Form1.MenuItem1.Caption := 'אפליקציה';
      Unit1.Form1.MenuItem2.Caption := 'שפה';
      Unit1.Form1.MenuItem3.Caption := 'סגור';
+     Unit1.Form1.BiDiMode := bdRightToLeft;
+     Unit1.Form1.Label1.BiDiMode := bdRightToLeft;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
 procedure set2ENG();
@@ -73,6 +89,9 @@ begin
      Unit4.Form2.Caption := 'Scan an expression';
      Unit4.Form2.Label1.Caption := 'Expression';
      Unit4.Form2.Button1.Caption := 'Submit';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
 
 procedure set2DEN();
@@ -80,6 +99,9 @@ begin
      Unit4.Form2.Caption := 'Scan en expression';
      Unit4.Form2.Label1.Caption := 'Expression';
      Unit4.Form2.Button1.Caption := 'Bekræft';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
 
 procedure set2POL();
@@ -87,6 +109,9 @@ begin
      Unit4.Form2.Caption := 'Wczytaj wyrażenie';
      Unit4.Form2.Label1.Caption := 'Wyrażenie';
      Unit4.Form2.Button1.Caption := 'Zatwierdź';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
 
 procedure set2HBR();
@@ -94,6 +119,9 @@ begin
      Unit4.Form2.Caption := 'העלה ביטוי';
      Unit4.Form2.Label1.Caption := 'ביטוי';
      Unit4.Form2.Button1.Caption := 'אישור';
+     Unit4.Form2.BiDiMode := bdRightToLeft;
+     Unit4.Form2.Label1.BiDiMode := bdRightToLeft;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
 
 end.

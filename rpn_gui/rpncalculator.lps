@@ -20,9 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="96"/>
-        <CursorPos X="21" Y="147"/>
+        <TopLine Value="103"/>
+        <CursorPos X="28" Y="123"/>
         <UsageCount Value="28"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -41,9 +40,10 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="33"/>
-        <CursorPos X="42" Y="24"/>
+        <TopLine Value="43"/>
+        <CursorPos X="44" Y="79"/>
         <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -55,7 +55,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit4"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="20"/>
+        <TopLine Value="24"/>
         <CursorPos X="32" Y="52"/>
         <UsageCount Value="25"/>
         <Loaded Value="True"/>

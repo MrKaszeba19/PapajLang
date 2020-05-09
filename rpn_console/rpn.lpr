@@ -1,11 +1,11 @@
 program rpn;
-uses Unit2, UnitEnvironment, Sysutils;
+uses Unit2, UnitEnvironment, SysUtils, StrUtils;
 
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. May 6, 2020.');
+    writeln('Paul Lipkowski. May 9, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -133,8 +133,8 @@ begin
     writeln('    xyz vcall :    @@xyz : If the var is a function, then call it directly.');
     writeln();
     writeln('Data types: ');
-    writeln('number    string    boolean   null');
-    writeln('function  exception ');
+    writeln('Number    String    Boolean   NULL');
+    writeln('Function  Exception ');
 end;
 
 procedure show_operands7();
@@ -176,9 +176,13 @@ begin
         begin
             readln(fp, S);
             if (S <> '') then S := commentcut(S);
+            //S := DelChars(S, #13);
+            //S := DelChars(S, #10);
+            S := trim(S);
             fun := fun + ' ' + S;
         end;
         closefile(fp);
+        //writeln(fun);
     read_file := PS_parseString(fun);
 end;
 

@@ -2202,7 +2202,7 @@ begin
                 		EntEax := getVariable(vardb, StrEax);
             			stack_push(pocz[sets.StackPointer], EntEax);
               		end else begin
-                		raiserror('Exception when getting variable: You cannot get a value from an unnamed variable.');
+                		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
               		end;
              	end;
              	'>' : begin 
@@ -2212,7 +2212,7 @@ begin
                 		else EntEax := stack_get(pocz[sets.StackPointer]);
             			setVariable(vardb, StrEax, EntEax);
               		end else begin
-                		raiserror('Exception when setting variable: You cannot set a value to an unnamed variable.');
+                		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
               		end;
              	end;
              	'?' : begin 
@@ -2221,7 +2221,7 @@ begin
             			LogEax := isVarAssigned(vardb, StrEax);
             			stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
               		end else begin
-                		raiserror('Exception when checking: You cannot check nothing.');
+                		raiserror('EVariable:CCheck: You cannot check nothing.');
               		end;
              	end;
              	'~' : begin 
@@ -2229,7 +2229,7 @@ begin
                 		StrEax := RightStr(i, Length(i)-1);
             			destroyVariable(vardb, StrEax);
               		end else begin
-                		raiserror('Exception when destroying variable: You cannot destroy an unnamed variable.');
+                		raiserror('EVariable:CDestroy: You cannot destroy an unnamed variable.');
               		end;
              	end;
              	else begin
@@ -2242,7 +2242,7 @@ begin
                                 StrEbx := EntEax.Str;
                                 pocz := parseScoped(StrEbx, pocz, sets, vardb);
                             end else begin
-                                raiserror('Exception when executing function: You cannot execute an unnamed function by this method.');
+                                raiserror('EVariable:CExecute: You cannot execute an unnamed function by this method.');
                             end;
                         end;
                         else begin
