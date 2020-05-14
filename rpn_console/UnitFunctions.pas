@@ -1444,6 +1444,27 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+		'Math.log' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(x)/ln(y);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+		'Math.lbin' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(x)/ln(2);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
         'Math.abs' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1500,7 +1521,7 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
-        'Math.fact' : begin
+        'Math.factorial' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             z := fact(y);

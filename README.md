@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-May 9, 2020  
+May 14, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -41,8 +41,9 @@ Name | Symbol | Approximated value | Programme Operand
 Pi | π | 3.1415926535897 | Math.PI
 Euler number | e | 2.7182818284590 | Math.EU
 Golden number | φ | 1.6180339887498 | Math.FI
+Euler-Mascheroni constant | γ | 0.5772156649015 | Math.EM
 
-### Char/string contants
+### Char/string constants (about to be obsolete)
 - `\n` new line
 - `\t` horizontal tab
 - `\\` a backslash
@@ -79,14 +80,10 @@ raiseException | same as above, but it raises exception too
 | ^       | power                   |
 | pow     | power                   |
 | root    | root                    |
-| log     | logarithm               |
 | div     | integer division (`-5 3 div` returns `-1`) |
 | mod     | modulo (`-5 3 mod` returns `-2`)           |
 | cdiv    | integer division (`-5 3 div` returns `-2`) _removed so far_ |
 | cmod    | modulo (`-5 3 div` returns `1`) _removed so far_ |
-| choose  | Binomial coefficient                       |
-| gcd     | Greatest Common Divisor                    |
-| lcm     | Least Common Multiplier                    |
 
 - number1 operand
 
@@ -96,28 +93,16 @@ Programme Operand | Purpose
 inc | increment
 -- | decrement
 dec | decrement
-abs | absolute value
 sqrt | suqare root
-exp | exponential (e^N1, raise an Euler number to n-th power)
-! | factorial
-fact | factorial
-sin | sine
-cos | cosine
-tan | tangent
-cot | cotangent
-sec | secant
-csc | cosecant
-ln | natural logarithm
-fib | Fibonacci number
 trunc | truncate
-round | round
-times | do something N1 times
-floor | floor
-ceiling | ceiling
-isPrime | returns `TRUE` if a number is a prime, otherwise it returns `FALSE`
 makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
 rand | Generate a random integer value within a range [0..N-1]
+
+### Advanced mathematical functions
+**Note**: If you do not want to type `Math.` every time, just type `@use(Math)` before.
+
+Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Math) for Math package functions. 
 
 ### Functions for string expressions
 
@@ -206,6 +191,7 @@ _to be expanded to arrays_
 
 Programme Operand | Name
 ----------------- | ----
+times | do something N1 times
 size | Get the size of current stack without clearing that stack
 all | As above
 clone | Clone the value being on the top of the stack
@@ -398,7 +384,7 @@ Operand | Purpose
 
 *PACKAGE* – available packages:
 - `String` with string functions
-- `Math` with mathematical functions (*coming soon*) 
+- `Math` with mathematical functions
 - `Aggregate` with aggregate functions (*coming soon*) 
 - `ASCII` with system functions (*coming soon*)
 - `Array` with array functions (*coming soon*)
@@ -454,5 +440,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
-0.4.3 | Tet | soon | Hebrew language for GUI, syntax changes, Arrays and more
+0.4.3 | Tet | very soon | Hebrew language for GUI, syntax changes, Arrays, Packages and more
+0.5.0 | Yod | soon | Array mapping and reducing, more packages, file management, objects and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
