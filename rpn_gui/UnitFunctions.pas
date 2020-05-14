@@ -567,6 +567,23 @@ begin
 	table_stddev := sqrt(table_variance(tab));
 end;
 
+function string_toC(dupa : String) : String;
+begin
+	dupa := StringReplace(dupa, '\a', #7, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\b', #8, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\e', #27, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\f', #12, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\n', #10, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\r', #13, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\t', #9, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\v', #11, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\\', '\', [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\''', #39, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\"', #34, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\?', '?', [rfReplaceAll]);
+	string_toC := dupa;
+end;
+
 // COMMANDS' EXECUTION
 
 function executeCommand(input, Shell : String) : String;
@@ -1444,6 +1461,27 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+		'Math.log' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(x)/ln(y);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+		'Math.lbin' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(x)/ln(2);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
         'Math.abs' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1500,7 +1538,7 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
-        'Math.fact' : begin
+        'Math.factorial' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             z := fact(y);
@@ -2037,6 +2075,15 @@ begin
             end else begin
               stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
+        end;
+		'String.inC' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := string_toC(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
 		else Found := false;
 	end;
