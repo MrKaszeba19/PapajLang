@@ -38,9 +38,9 @@ Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNC
 
 Name | Symbol | Approximated value | Programme Operand
 ---- | ------ | ------------------ | -----------------
-Pi | π | 3.1415926535897 | PI
-Euler number | e | 2.7182818284590 | EU
-Golden number | φ | 1.6180339887498 | FI
+Pi | π | 3.1415926535897 | Math.PI
+Euler number | e | 2.7182818284590 | Math.EU
+Golden number | φ | 1.6180339887498 | Math.FI
 
 ### Char/string contants
 - `\n` new line

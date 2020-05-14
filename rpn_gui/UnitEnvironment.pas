@@ -16,6 +16,7 @@ type PSEnvironment = record
 end;
 
 function commentcut(input : String) : String;
+function cutCommentMultiline(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
@@ -46,7 +47,6 @@ begin
     begin
 		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 	end;
-
 	
 	if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
 	begin
@@ -107,6 +107,60 @@ begin
 	commentcut := pom;
 end;
 
+function cutCommentMultiline(input : String) : String;
+var
+    pom         : String;
+    togglequote : Boolean;
+    commentmode : Boolean;
+    i           : LongInt;
+begin
+    pom := '';
+    togglequote := false;
+    commentmode := false;
+    i := 0;
+    while i <= Length(input) do 
+    begin
+        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (not togglequote) and ((input[i] = '/') and (input[i+1] = '*')) then commentmode := true;
+        if (not commentmode) then pom := concat(pom, input[i]);
+        if     (commentmode) and (not togglequote) and ((input[i] = '*') and (input[i+1] = '/')) then 
+        begin
+            i := i + 2; 
+            commentmode := false;
+        end else begin
+            i := i + 1;
+        end;
+    end;
+    cutCommentMultiline := trim(pom);
+end;
+
+function cutCommentEndline(input : String) : String;
+var
+    pom         : String;
+    togglequote : Boolean;
+    commentmode : Boolean;
+    i           : LongInt;
+begin
+    pom := '';
+    togglequote := false;
+    commentmode := false;
+    i := 0;
+    while i <= Length(input) do 
+    begin
+        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (not togglequote) and ((input[i] = '/') and (input[i+1] = '/')) then commentmode := true;
+        if (not commentmode) then pom := concat(pom, input[i]);
+        if     (commentmode) and (not togglequote) and (input[i] = #10) then 
+        begin
+            i := i + 1; 
+            commentmode := false;
+        end else begin
+            i := i + 1;
+        end;
+    end;
+    cutCommentEndline := trim(pom);
+end;
+
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
@@ -132,16 +186,19 @@ begin
 	//L.StrictDelimiter := false;
 	//L.DelimitedText := input;
 
-	input := trim(input);
+    if (Length(input) > 0) then 
+    begin 
+        input := cutCommentMultiline(input);
+        input := cutCommentEndline(input);
+    end;
 	L := input.Split([' ', #9, #13, #10], '"');
-	//writeln(input);
 
   	Steps := 1;
   	cond := -1;
   	permit := True;
   	index := 0;
   	//while (index < L.Count) and (sets.KeepWorking > 0) do
-	while (index < Length(L)) and (sets.KeepWorking > 0) do
+	while (input <> '') and (input <> #10) and (index < Length(L)) and (sets.KeepWorking > 0) do
 	begin
 		//writeln(L.Text);
 

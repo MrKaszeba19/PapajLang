@@ -15,6 +15,7 @@ const
 	PI = 3.1415926535897932384626433832795;
 	EU = 2.7182818284590452353602874713526;
 	FI = 1.6180339887498948482045868343656;
+    EM = 0.5772156649015328606065120900824;
 
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
@@ -129,18 +130,18 @@ end;
 function newton_real(n, k : Extended) : Extended;
 var s, j : Extended;
 begin
-  s := 1;
-  if (n < 0) then
-    newton_real := pow(-1.0, k) * newton_real(k-n-1, k)
-  else begin
-    j := 1.0;
-    while (j <= k) do
-    begin
-      s := s * (n-k+j)/j;
-      j := j + 1;
-    end;
-    newton_real := s;
-  end;
+	s := 1;
+	if (n < 0) then
+		newton_real := pow(-1.0, k) * newton_real(k-n-1, k)
+	else begin
+		j := 1.0;
+		while (j <= k) do
+		begin
+			s := s * (n-k+j)/j;
+			j := j + 1;
+		end;
+    	newton_real := s;
+  	end;
 end;
 
 function gcd(a, b : Extended) : Extended;
@@ -165,20 +166,138 @@ begin
      else fib := fib(n-1.0) + fib(n-2.0);
 end;
 
+function fgamma(x : Extended) : Extended;
+var
+	limit, n : Integer;
+	s, s1    : Extended;
+	epsilon  : Extended;
+begin
+	if (x = trunc(x)) then fgamma := fact(x-1) 
+	else begin
+		if (x > 100) then limit := trunc(100000*x)+1;
+		limit := trunc(1000000*x)+1;
+		n := 1;
+		s := 1.0;
+		epsilon := 50.0;
+		while (n < limit) and (epsilon > 0.0000001) do
+		//while (epsilon > 0.0000001) do
+		begin
+			s1 := s;
+			s := s * ((pow2(1+1/n, x))/(1+x/n));
+			//writeln(s, #9, epsilon);
+			epsilon := abs(s-s1);
+			n := n + 1;
+		end;
+		fgamma := s/x;
+
+		//s := exp(-EM*x)/x;
+		//for n := 1 to 1000000*trunc(x)+1 do 
+		//begin
+		//	s1 := s;
+		//	s := s * (1/(1 + x/n) * exp(x/n));
+		//	if (abs(s1-s) < 0.000001) then break;
+		//end;
+		//fgamma := s;
+	end;
+end;
+
+function dstdnorm(x : Extended) : Extended;
+var
+	sum    : Extended;
+	//sum1   : Extended;
+	t, eps : Extended;
+	limit  : Extended;
+begin
+	eps := 0.000001;
+	limit := 5;
+	if (x < -limit) then 
+	begin 
+		dstdnorm := 0.00000000001 
+	end
+	else if (x > limit) then 
+	begin 
+		dstdnorm := 0.99999999999 
+	end else if (x = 0) then
+	begin
+		dstdnorm := 0.5;
+	end
+	else if (x = -1) then
+	begin
+		dstdnorm := 0.158655253931457;
+	end
+	else if (x = 1) then
+	begin
+		dstdnorm := 0.841344746068543;
+	end else if (x <= -1) then
+	begin
+		eps := 0.0001;
+		sum := 0;
+		t := x;
+		//sum1 := 50;
+		while (t >= -limit) do
+		//while (t >= -limit) and (abs(sum-sum1) > eps) do
+		begin
+			//sum1 := sum;
+			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
+			t := t - eps;
+		end; 
+		dstdnorm := sum/sqrt(2*PI)*(2/3);
+	end else if (x < 0) then
+	begin
+		sum := 0;
+		t := x;
+		while (t <= 0) do
+		begin
+			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
+			t := t + eps;
+		end; 
+		dstdnorm := 0.5 - sum/sqrt(2*PI)*(2/3);
+	end else if (x <= 1) then begin
+		sum := 0;
+		t := x;
+		while (t > 0) do
+		begin
+			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
+			t := t - eps;
+		end; 
+		dstdnorm := 0.5 + sum/sqrt(2*PI)*(2/3);
+	end else begin
+		eps := 0.0001;
+		sum := 0;
+		t := x;
+		while (t <= limit) do
+		//while (t <= limit) and (abs(sum-sum1) > eps) do
+		begin
+			//sum1 := sum;
+			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
+			t := t + eps;
+		end; 
+		dstdnorm := 1 - sum/sqrt(2*PI)*(2/3);
+	end;
+end;
+
+// 0.841344746068543
+// 0.158655253931457
+
+function dnorm(x, mu, si : Extended) : Extended;
+begin
+	dnorm := dstdnorm((x-mu)/si);
+end;
+
 // SORTS
 
 procedure bubblesort(var tab : TEntities);
 var
-  i, j : Longint;
-  pom  : Entity;
+	i, j : Longint;
+	pom  : Entity;
 begin
-  for j := Length(tab)-1 downto 1 do
-    for i := 0 to j-1 do 
-      if (tab[i].Num > tab[i+1].Num) then begin
-        pom := tab[i];
-        tab[i] := tab[i+1];
-        tab[i+1] := pom;
-      end;
+	for j := Length(tab)-1 downto 1 do
+		for i := 0 to j-1 do 
+			if (tab[i].Num > tab[i+1].Num) then begin
+				pom := tab[i];
+				tab[i] := tab[i+1];
+				tab[i+1] := pom;
+      		end;
 end;
 
 procedure qs_engine(var AI: TEntities; ALo, AHi: Integer);
@@ -186,32 +305,32 @@ var
   Lo, Hi   : Integer;
   Pivot, T : Entity;
 begin
-  Lo := ALo;
-  Hi := AHi;
-  Pivot := AI[(Lo + Hi) div 2];
-  repeat
-    while AI[Lo].Num < Pivot.Num do
-      Inc(Lo) ;
-    while AI[Hi].Num > Pivot.Num do
-      Dec(Hi) ;
-    if Lo <= Hi then
-    begin
-      T := AI[Lo];
-      AI[Lo] := AI[Hi];
-      AI[Hi] := T;
-      Inc(Lo);
-      Dec(Hi);
-    end;
-  until Lo > Hi;
-  if Hi > ALo then
-    qs_engine(AI, ALo, Hi);
-  if Lo < AHi then
-    qs_engine(AI, Lo, AHi);
+	Lo := ALo;
+	Hi := AHi;
+	Pivot := AI[(Lo + Hi) div 2];
+	repeat
+		while AI[Lo].Num < Pivot.Num do
+			Inc(Lo) ;
+		while AI[Hi].Num > Pivot.Num do
+			Dec(Hi) ;
+		if Lo <= Hi then
+		begin
+			T := AI[Lo];
+			AI[Lo] := AI[Hi];
+			AI[Hi] := T;
+			Inc(Lo);
+			Dec(Hi);
+		end;
+	until Lo > Hi;
+	if Hi > ALo then
+		qs_engine(AI, ALo, Hi);
+	if Lo < AHi then
+		qs_engine(AI, Lo, AHi);
 end;
 
 procedure quicksort(var tab : TEntities);
 begin
-  qs_engine(tab, 0, Length(tab)-1);
+	qs_engine(tab, 0, Length(tab)-1);
 end;
 
 procedure ms_merge(var a : TEntities; l,r,x,y:Integer);
@@ -219,58 +338,58 @@ var
   i,j,k,s : Integer;
   c       : TEntities;
 begin
-  i := l;
-  j := y;
-  k := 0;
-  SetLength(c,r-l+1+y-x+1);
-  while (l<=r) and (x<=y) do
-  begin
-    if a[l].Num < a[x].Num then
-    begin
-      c[k] := a[l];
-      inc(l);
-    end else begin
-      c[k] := a[x];
-      inc(x);
-    end;
-    inc(k);
-  end;
+	i := l;
+	j := y;
+	k := 0;
+	SetLength(c,r-l+1+y-x+1);
+	while (l<=r) and (x<=y) do
+	begin
+		if a[l].Num < a[x].Num then
+		begin
+			c[k] := a[l];
+			inc(l);
+		end else begin
+			c[k] := a[x];
+      		inc(x);
+    	end;
+    	inc(k);
+	end;
 
-  if l<=r then
-    for s:=l to r do
-    begin
-      c[k]:=a[s];
-      inc(k);
-    end 
-  else
-    for s:=x to y do
-    begin
-      c[k]:=a[s];
-      inc(k);
-    end;
+  	if l<=r then
+    	for s:=l to r do
+    	begin
+    		c[k]:=a[s];
+    		inc(k);
+    	end 
+	else
+    	for s:=x to y do
+    	begin
+			c[k]:=a[s];
+			inc(k);
+		end;
 
-  k:=0;
-  for s:=i to j do
-  begin
-    a[s]:=c[k];
-    inc(k);
-  end;
+	k:=0;
+	for s:=i to j do
+	begin
+		a[s]:=c[k];
+		inc(k);
+	end;
 end;
 
 procedure ms_engine(var a : TEntities; l,r:Integer);
 var 
   m : Integer;
 begin
-  if l=r then Exit;
-  m:=(l+r) div 2;
-  ms_engine(a, l, m);
-  ms_engine(a, m+1, r);
-  ms_merge(a, l, m, m+1, r);
+	if l=r then Exit;
+	m:=(l+r) div 2;
+	ms_engine(a, l, m);
+	ms_engine(a, m+1, r);
+	ms_merge(a, l, m, m+1, r);
 end;
 
 procedure mergesort(var tab : TEntities);
 begin
-  ms_engine(tab, 0, Length(tab)-1);
+	ms_engine(tab, 0, Length(tab)-1);
 end;
 
 function bs_isSorted(var data : TEntities) : Boolean;
@@ -278,31 +397,31 @@ var
   Count : Longint;
   res   : Boolean;
 begin
-  res := true;
-  for count := Length(data)-1 downto 1 do
-    if (data[count].Num < data[count - 1].Num) then res := false;
-  bs_isSorted := res;
+	res := true;
+	for count := Length(data)-1 downto 1 do
+		if (data[count].Num < data[count - 1].Num) then res := false;
+	bs_isSorted := res;
 end;
 
 procedure bs_shuffle(var data : TEntities);
 var
-  Count, rnd, i : Longint;
-  pom           : Entity;
+	Count, rnd, i : Longint;
+	pom           : Entity;
 begin
-  Count := Length(data);
-  for i := 0 to Count-1 do
-  begin   
-    rnd := random(count);
-    pom := data[i];
-    data[i] := data[rnd];
-    data[rnd] := pom;
-  end;
+	Count := Length(data);
+	for i := 0 to Count-1 do
+	begin   
+		rnd := random(count);
+		pom := data[i];
+		data[i] := data[rnd];
+		data[rnd] := pom;
+	end;
 end;
 
 procedure bogosort(var tab : TEntities);
 begin
-  randomize();
-  while not (bs_isSorted(tab)) do bs_shuffle(tab);
+	randomize();
+	while not (bs_isSorted(tab)) do bs_shuffle(tab);
 end;
 
 
@@ -1269,8 +1388,8 @@ end;
 
 function lib_math(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found   : Boolean;
-	x, y, z : Extended;
+	Found      : Boolean;
+	x, y, z, w : Extended;
 begin
 	Found := true;
 	case i of
@@ -1452,6 +1571,32 @@ begin
             stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) = y));
         end;
 
+		'Math.Gamma' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := fgamma(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+		'Math.distNormStd' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := dstdnorm(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+		'Math.distNorm' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := dnorm(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+
 		// constants
 		'Math.PI' : begin
           stack_push(pocz[sets.StackPointer], buildNumber(PI));
@@ -1461,6 +1606,9 @@ begin
         end;
         'Math.FI' : begin
           stack_push(pocz[sets.StackPointer], buildNumber(FI));
+        end;
+		'Math.EM' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(EM));
         end;
 
 		else begin

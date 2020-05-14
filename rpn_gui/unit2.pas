@@ -19,6 +19,7 @@ var
     res : String;
     env : PSEnvironment;
 begin
+    if (input <> '') then input := cutCommentMultiline(input);
     env := buildNewEnvironment();
     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
     res := stack_show(env.Stack[0], env.Settings.Mask);

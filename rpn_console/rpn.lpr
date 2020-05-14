@@ -1,13 +1,26 @@
 program rpn;
+{$APPTYPE CONSOLE}
+
 uses Unit2, UnitEnvironment, 
 //StrUtils, 
+{$IFDEF UNIX}
+BaseUnix,
+{$ENDIF}
 SysUtils;
+
+{$IFDEF UNIX}
+procedure HandleSigInt(aSignal: LongInt); cdecl;
+begin
+    Writeln('Ctrl + C used');
+    Halt(1);
+end;
+{$ENDIF}
 
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan)');
-    writeln('Paul Lipkowski. May 9, 2020.');
+    writeln('Paul Lipkowski. May 14, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -214,11 +227,11 @@ begin
         while not eof(fp) do
         begin
             readln(fp, S);
-            if (S <> '') then S := commentcut(S);
+            //if (S <> '') then S := cutCommentMultiline(S);
             //S := DelChars(S, #13);
             //S := DelChars(S, #10);
             S := trim(S);
-            fun := fun + ' ' + S;
+            fun := fun + #10 + S;
         end;
         closefile(fp);
         //writeln(fun);
@@ -236,8 +249,8 @@ begin
         while not eof(fp) do
         begin
             readln(fp, S);
-            if (S <> '') then S := commentcut(S);
-            fun := fun + ' ' + S;
+            //if (S <> '') then S := cutCommentMultiline(S);
+            fun := fun + #10 + S;
         end;
         closefile(fp);
     read_file_params := PS_parseString(params+fun);
@@ -252,7 +265,13 @@ var
 {$R *.res}
 
 begin
-	randomize();
+    {$IFDEF UNIX}
+    if FpSignal(SigInt, @HandleSigInt) = signalhandler(SIG_ERR) then begin
+        Writeln('Failed to install signal error: ', fpGetErrno);
+        Halt(1);
+    end;
+    {$ENDIF}
+    randomize();
 	case ParamCount of
 		0 : begin
 			show_version();
