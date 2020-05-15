@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
-Version X.X.X (Leviathan)  
+Version 0.4.3 (Tet)  
 May 15, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
@@ -115,7 +115,7 @@ Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/String-(package)
 ### Advanced mathematical functions
 **Note**: If you do not want to type `Array.` every time, just type `@use(Array)` before.
 
-Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Array) for Array package functions. 
+Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Array-(package)) for Array package functions. 
 
 **Note**: Array indexes start from 0, i.e. a N-elements array has indexes of [0..N-1] 
 
@@ -445,6 +445,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
-0.4.3 | Tet | very soon | Hebrew language for GUI, syntax changes, Arrays, Packages and more
+0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | soon | Array mapping and reducing, more packages, file management, objects and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
