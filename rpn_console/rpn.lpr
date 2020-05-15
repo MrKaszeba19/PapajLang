@@ -19,7 +19,7 @@ end;
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
-    writeln('Version 0.4.3 (Tet)');
+    writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
     writeln('Paul Lipkowski. May 15, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
