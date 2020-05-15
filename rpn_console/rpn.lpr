@@ -1,6 +1,12 @@
 program rpn;
 {$APPTYPE CONSOLE}
 
+//{$R *.res}
+//{$IFDEF MSWINDOWS}
+//{$R project.rc} 
+//{$ENDIF}
+
+
 uses Unit2, UnitEnvironment, 
 //StrUtils, 
 {$IFDEF UNIX}
