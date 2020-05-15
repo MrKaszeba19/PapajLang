@@ -15,7 +15,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - If you need help, you can type `rpn help`.
 - If you want to run an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
 then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. 
-All these params are treated as PS expressions. For example `rpn run script.rpn 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
+All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 
 ### GUI Application
@@ -34,7 +34,7 @@ The future enhancements of the language include an introduction of objects, bett
 Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNCalculator/wiki).
 
 ### Constant numerical values:
-- e.g. 2*π -> 2 PI *
+- e.g. 2*π -> 2 Math.PI *
 
 Name | Symbol | Approximated value | Programme Operand
 ---- | ------ | ------------------ | -----------------
