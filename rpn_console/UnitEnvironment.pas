@@ -61,6 +61,7 @@ begin
     	begin
 			if (not sets.Packages.UseMath) or ((sets.Packages.UseMath) and (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb))) then
 			if (not sets.Packages.UseString) or ((sets.Packages.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
+            if (not sets.Packages.UseArray) or ((sets.Packages.UseArray) and (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb))) then
 
     	    if not lib_directives(i, pocz, Steps, sets, vardb) then
     	    if not lib_constants(i, pocz, Steps, sets, vardb) then

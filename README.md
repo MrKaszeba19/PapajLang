@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
 Version X.X.X (Leviathan)  
-May 14, 2020  
+May 15, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -112,41 +112,41 @@ Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/String-(package)
 
 ### Commands for arrays
 
+### Advanced mathematical functions
+**Note**: If you do not want to type `Array.` every time, just type `@use(Array)` before.
+
+Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Array) for Array package functions. 
+
 **Note**: Array indexes start from 0, i.e. a N-elements array has indexes of [0..N-1] 
 
 - array1 function
 
 Programme Function | Purpose
 ------------------ | -------
-length | Returns length of an array
-pop | Pops the last element of an array
-shift | Pops the first element to an array
+Array.length | Returns length of an array
+Array.pop | Pops the last element of an array
+Array.shift | Pops the first element to an array
 
 - array1 number1 function
 
 Programme Function | Purpose
 ------------------ | -------
-getAt | Get a value from N1 index
-popAt | Pop an element from a N1 index
+Array.getAt | Get a value from N1 index
+Array.popAt | Pop an element from a N1 index
 
 - array1 entity1 function
 
 Programme Function | Purpose
 ------------------ | -------
-push | Pushes an entity to the array (as its last element)
+Array.push | Pushes an entity to the array (as its last element)
 
 - array1 number1 entity1 function
 
 Programme Function | Purpose
 ------------------ | -------
-setAt | Set a value at a N1 index
-pushAt | Push an element before a N1 index 
+Array.setAt | Set a value at a N1 index
+Array.pushAt | Push an element before a N1 index 
 
-
-**Examples:**
-- `5 times 2 sum` sums five 2's
-- `5 times scan all sum` sums five numbers scanned by an input
-- `"ls" shell` executes `ls` (assuming RPN uses `bash`)
 
 ### Other built-in functions
 
@@ -177,11 +177,15 @@ rev | reverse the top N elements of the stack
 
 _to be expanded to arrays_
 
+**Examples:**
+- `5 times 2 sum` sums five 2's
+- `5 times scan all sum` sums five numbers scanned by an input
+
 
 **Examples:**
 - `2 3 4 5 6 2 avg` brings a result of 5.5, as avg(5,6) = 5.5. The bottom values stay on the stack and now the stack looks like `2 3 4 5.5`.
 - `2 3 4 5 6 all avg` brings a result of 4, as avg(2,3,4,5,6) = 4.
-- `5 3 8 10 32.5 4 sin 2 2 + 5 10 all sum` sums all values previously put on the stack
+- `5 3 8 10 32.5 4 Math.sin 2 2 + 5 10 all sum` sums all values previously put on the stack
 
 **Protips and notes:**
 - If you want to aggregate all stack, then just type as a number of top elements a value of `all` or `size`, e.g. `all sum` or `size stddev`.
@@ -197,7 +201,8 @@ all | As above
 clone | Clone the value being on the top of the stack
 keep | Keeps the top n values on the stack
 copy | Copies the top n values on the stack and puts them on the stack
-sort | Sorts a stack
+sort | Sorts a stack according to numerical values
+strsort | Sorts the strings alphabetically
 mcopy | Copies the top n values on the stack and puts them on the stack in reversed order
 rem | Remove a value from the top of the stack
 clear | Clear entire stack

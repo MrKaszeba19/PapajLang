@@ -1,3 +1,5 @@
+@use(Array)
+
 20 times { 10 rand } all toArray >tab
 
 fun{
@@ -13,7 +15,7 @@ $tab 20 push
 @@call
 
 newln "Zdejmujemy" println
-3 times { $tab pop println }
+3 times { $tab shift println }
 
 newln "Stan końcowy" println
 @@call

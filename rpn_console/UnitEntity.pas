@@ -32,6 +32,7 @@ type TPackages = record
 	UseAnything : Boolean;
 	UseMath     : Boolean;
 	UseString   : Boolean;
+    UseArray    : Boolean;
 end;
 
 type TSettings = record
@@ -110,7 +111,7 @@ implementation
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
-	verifyPackages := L.UseMath or L.UseString;
+	verifyPackages := L.UseMath or L.UseString or L.UseArray;
 end;
 
 function default_packages() : TPackages;
@@ -119,6 +120,7 @@ begin
 	pom.UseMath := false;
 	pom.UseString := false;
 	pom.UseAnything := false;
+    pom.UseArray := false;
 	default_packages := pom;
 end;
 

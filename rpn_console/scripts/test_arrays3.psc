@@ -1,3 +1,5 @@
+@use(Array)
+
 1 1 20 seq all toArray >tab
 
 "Stage 1" println
