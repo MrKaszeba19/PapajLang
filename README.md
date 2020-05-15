@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of PapajScript  
-Version X.X.X (Leviathan)  
+Version 0.4.3 (Tet)  
 May 15, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
