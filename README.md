@@ -34,7 +34,7 @@ The future enhancements of the language include an introduction of objects, bett
 Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNCalculator/wiki).
 
 ### Constant numerical values:
-- e.g. 2*π -> 2 PI *
+- e.g. 2*π -> 2 Math.PI *
 
 Name | Symbol | Approximated value | Programme Operand
 ---- | ------ | ------------------ | -----------------
