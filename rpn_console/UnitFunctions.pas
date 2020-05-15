@@ -2735,6 +2735,7 @@ var
     IntEax : LongInt;
     ArrEax : Entity;
     EntEax : Entity;
+    StrEax : String;
     index  : Integer;
 begin
 	Found := true;
