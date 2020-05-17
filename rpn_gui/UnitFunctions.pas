@@ -5,7 +5,7 @@ unit UnitFunctions;
 interface
 
 uses
-	Classes, SysUtils, StrUtils, Crt, Process,
+	Classes, SysUtils, StrUtils, Crt, Math, Process,
 	{$IFDEF MSWINDOWS}
 		ShellApi,
  	{$ENDIF}
@@ -123,6 +123,7 @@ begin
      //newton (n, 0) = 1;
      //newton (n, n) = 1;
      //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
+     if (k > n-k) then newton_int := newton_int(n, n-k);
      if (k = 0.0) or (k = n) then newton_int := 1.0
      else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
 end;
@@ -282,6 +283,57 @@ end;
 function dnorm(x, mu, si : Extended) : Extended;
 begin
 	dnorm := dstdnorm((x-mu)/si);
+end;
+
+function fnorm(x, mu, si : Extended) : Extended;
+begin
+    fnorm := 1/(si*sqrt(2*PI))*exp(-0.5*sqr((x-mu)/si));
+end;
+
+//function rnorm(mean, sd: Extended) : Extended;
+//var
+//    u1, u2: Extended;
+//begin
+//    u1 := random;
+//    u2 := random;
+//    rnorm := mean * abs(1 + sqrt(-2 * (ln(u1))) * cos(2 * pi * u2) * sd);
+//end;
+
+function fbinom(n : LongInt; k : LongInt; p : Extended) : Extended;
+begin
+    fbinom := newton_int(n, k)*pow(p, k)*pow(1-p, n-k);
+end;
+
+function dbinom(n, k : LongInt; p : Extended) : Extended;
+var
+    i : LongInt;
+    s : Extended;
+begin
+    s := 0;
+    if (k <= n-k) then 
+    begin
+        for i := 0 to k do
+            s += fbinom(n, i, p);
+        dbinom := s; 
+    end else begin
+        for i := n downto n-k+1 do
+            s += fbinom(n, i, p);
+        dbinom := 1-s; 
+    end;
+end; 
+
+function rbinom(n : LongInt; p : Extended) : Extended;
+var
+    x      : Extended;
+    i, res : LongInt;
+begin
+    res := 0;
+    for i := 1 to n do
+    begin
+        x := random;
+        if (x <= p) then Inc(res);
+    end;
+    rbinom := res;
 end;
 
 // SORTS
@@ -1139,14 +1191,6 @@ begin
                 SetLength(HelpETable, 0);
             end;
         end;
-        'rand' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_get(pocz[sets.StackPointer]).Num;
-            stack_pop(pocz[sets.StackPointer]);
-            z := random(trunc(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
         'reverse' : begin
             pocz[sets.StackPointer] := stack_reverse(pocz[sets.StackPointer]);
         end;
@@ -1307,7 +1351,7 @@ begin
                     HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
                 else 
                     HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
-                ExtEax := table_variance(HelpETable);
+                ExtEax := table_stddev(HelpETable);
                 stack_push(pocz[sets.StackPointer], buildNumber(sqrt(ExtEax)));
                 SetLength(HelpETable, 0);
             end else begin
@@ -1417,6 +1461,7 @@ function lib_math(i : String; var pocz : StackDB; var Steps : Integer; var sets 
 var
 	Found      : Boolean;
 	x, y, z, w : Extended;
+    index      : LongInt;
 begin
 	Found := true;
 	case i of
@@ -1541,6 +1586,34 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Math.arcsin' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arcsin(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccos' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arccos(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arctan' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arctan(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccot' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := PI/2-arctan(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
         'Math.!' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1619,6 +1692,15 @@ begin
             stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) = y));
         end;
 
+        'Math.random' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_get(pocz[sets.StackPointer]).Num;
+            stack_pop(pocz[sets.StackPointer]);
+            z := random(trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+
 		'Math.Gamma' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1633,6 +1715,28 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Math.funcNormStd' : begin
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := fnorm(x, 0, 1);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomNormStd' : begin
+            z := randg(0, 1);
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genNormStd' : begin
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := randg(0, 1);
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+        end;
 		'Math.distNorm' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             z := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1640,9 +1744,92 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
 			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := dnorm(x, y, z);
+            w := dnorm(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.funcNorm' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := fnorm(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomNorm' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := randg(x, y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genNorm' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := randg(y, z);
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genBinom' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := rbinom(trunc(y), z);
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.funcBinom' : begin
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := fbinom(trunc(y), trunc(x), z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.distBinom' : begin
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := dbinom(trunc(y), trunc(x), z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
 
 		// constants
@@ -2735,6 +2922,7 @@ var
     IntEax : LongInt;
     ArrEax : Entity;
     EntEax : Entity;
+    StrEax : String;
     index  : Integer;
 begin
 	Found := true;

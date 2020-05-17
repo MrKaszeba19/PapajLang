@@ -1,0 +1,20 @@
+@silent
+@use(Math)
+@use(String)
+
+"Podaj ilość testów: " print
+scan toNumber >N 
+
+"Podaj wartość oczekiwaną (mu): " print
+scan toNumber >mu
+
+"Podaj odchylenie standardowe (sigma): " print
+scan toNumber >sigma
+
+// średnia próby
+$N $mu $sigma genNorm
+all avg >m1
+
+
+"Średnia z prób:     " $m1 toString concat println
+"Wartość oczekiwana: " $mu toString concat println

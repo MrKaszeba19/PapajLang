@@ -17,6 +17,8 @@ end;
 
 function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
+function cutCommentEndline(input : String) : String;
+function cutShebang(input : String) : String;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
@@ -162,6 +164,42 @@ begin
     cutCommentEndline := trim(pom);
 end;
 
+function cutShebang(input : String) : String;
+var
+    pom         : String;
+    togglequote : Boolean;
+    commentmode : Boolean;
+    able        : Boolean;
+    i           : LongInt;
+begin
+    if ((input[1] = '#') and (input[2] = '!')) then
+    begin
+        pom := '';
+        togglequote := false;
+        commentmode := false;
+        able        := true;
+        i := 0;
+        while i <= Length(input) do 
+        begin
+            if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+            if (able) and (not commentmode) and (not togglequote) and ((input[i] = '#') and (input[i+1] = '!')) then 
+            begin 
+                commentmode := true;
+                able := false;
+            end;
+            if (not commentmode) then pom := concat(pom, input[i]);
+            if     (commentmode) and (not togglequote) and (input[i] = #10) then 
+            begin
+                i := i + 1; 
+                commentmode := false;
+            end else begin
+                i := i + 1;
+            end;
+        end;
+        cutShebang := trim(pom);
+    end else cutShebang := input;
+end;
+
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
@@ -187,11 +225,6 @@ begin
 	//L.StrictDelimiter := false;
 	//L.DelimitedText := input;
 
-    if (Length(input) > 0) then 
-    begin 
-        input := cutCommentMultiline(input);
-        input := cutCommentEndline(input);
-    end;
 	L := input.Split([' ', #9, #13, #10], '"');
 
   	Steps := 1;

@@ -12,10 +12,10 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 ## How to use it
 
 ### Console application
-- Execute a command **rpn** with a quoted PS expression (e.g. `rpn "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn functions`.
+- Execute a command **rpn do** with a quoted PS expression (e.g. `rpn do "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`.
-- If you want to run an PS script file, then execute `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
+- If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
 then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. 
 All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
@@ -99,7 +99,7 @@ sqrt | suqare root
 trunc | truncate
 makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
-rand | Generate a random integer value within a range [0..N-1]
+Math.random | Generate a random integer value within a range [0..N-1]
 
 ### Advanced mathematical functions
 **Note**: If you do not want to type `Math.` every time, just type `@use(Math)` before.

@@ -19,7 +19,12 @@ var
     res : String;
     env : PSEnvironment;
 begin
-    if (input <> '') then input := cutCommentMultiline(input);
+    if (Length(input) > 0) then 
+    begin
+        input := cutShebang(input); 
+        input := cutCommentMultiline(input);
+        input := cutCommentEndline(input);
+    end;
     env := buildNewEnvironment();
     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
     res := stack_show(env.Stack[0], env.Settings.Mask);
@@ -252,6 +257,11 @@ begin
                 end;
                 try
                     if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
+                    if (Length(input) > 0) then 
+                    begin
+                        input := cutCommentMultiline(input);
+                        input := cutCommentEndline(input);
+                    end;
                     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
                     res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
                     if not (env.Settings.Prevent) then 

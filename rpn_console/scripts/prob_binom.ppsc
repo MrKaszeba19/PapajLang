@@ -1,0 +1,22 @@
+@silent
+@use(Math)
+@use(String)
+
+"Podaj ilość testów: " print
+scan toNumber >N 
+
+"Podaj ilość prób (n): " print
+scan toNumber >n
+
+"Podaj prawdopodobieństwo sukcesu (p): " print
+scan toNumber >p
+
+// średnia próby
+$N $n $p genBinom
+all avg >m1
+
+$n $p * >m2
+
+
+"Średnia z prób:     " $m1 toString concat println
+"Wartość oczekiwana: " $m2 toString concat println

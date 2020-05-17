@@ -26,14 +26,15 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski. May 15, 2020.');
+    writeln('Paul Lipkowski. May 17, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
 
 procedure show_help();
 begin
-    writeln('SYNTAX: rpn "quoted_rpn_expression"');
+    writeln('SYNTAX: rpn do "quoted_PS_code"');
+    writeln('        rpn FILENAME');
     writeln('');
     writeln('Run ''rpn help'' or ''rpn'' to display this again.');
     writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
@@ -190,8 +191,9 @@ end;
 procedure show_packages();
 begin
     writeln('Packages:');
-	writeln('Page 1: Math');
-	writeln('Page 2: String');
+    writeln('Page 1: Array');
+	writeln('Page 2: Math');
+	writeln('Page 3: String');
 	writeln;
     writeln('Type ''@use(package_name)'' in code to use the package.');
     writeln('Type ''@unuse(package_name)'' in code to stop using the package.');
@@ -202,16 +204,24 @@ end;
 
 procedure show_packages1();
 begin
+    writeln('Array package functions:');
+    writeln('   crush   getAt   setAt');
+    writeln('    push     pop  pushAt');
+    writeln('   popAt   shift  length');
+end;
+
+procedure show_packages2();
+begin
     writeln('Math package functions:');
     writeln(' - Unary');
     writeln('     exp      ln       !    fact   floor ceiling   round');
-    writeln('     sin     cos     tan     csc     sec     cot');
+    writeln('     sin     cos     tan     csc     sec     cot  random');
     writeln(' - Binary');
     writeln('  choose     gcd     lcm');
     show_operands4();
 end;
 
-procedure show_packages2();
+procedure show_packages3();
 begin
     writeln('String package functions:');
     writeln('  between    bind  bindBy   concat       crush      crushBy');
@@ -307,7 +317,7 @@ begin
      			end
      			else begin
      				try
-     					x := PS_parseString(ParamStr(1));
+                        x := read_file(ParamStr(1));
         				if (x <> '') then writeln(x);
               		except
               			On E : Exception do
@@ -348,9 +358,22 @@ begin
                     case ParamStr(2) of
                         '1' : show_packages1();
                         '2' : show_packages2();
+                        '3' : show_packages3();
                         'all': begin 
                             show_packages1(); writeln();
-                            show_packages2(); 
+                            show_packages2(); writeln();
+                            show_packages3(); 
+                        end;
+                    end;
+                end;
+                'do' : begin
+                    try
+                        x := PS_parseString(ParamStr(2));
+                        if (x <> '') then writeln(x);
+                    except
+                        On E : Exception do
+                        begin
+                            writeln(StdErr, E.ToString);
                         end;
                     end;
                 end;
