@@ -1,14 +1,14 @@
 @silent
-"INPUT:    " print @source("data.rpn") statusln clear
-"SORTED:   " print @source("data.rpn") sort statusln clear
+"INPUT:    " print @source("data.ppsc") statusln clear
+"SORTED:   " print @source("data.ppsc") sort statusln clear
 
-"Sum:      " print @source("data.rpn") all sum      println clear
-"Product:  " print @source("data.rpn") all product  println clear
-"Avg:      " print @source("data.rpn") all avg      println clear
-"Min:      " print @source("data.rpn") all min      println clear
-"Max:      " print @source("data.rpn") all max      println clear
-"Count:    " print @source("data.rpn")     count    println clear
-"Median:   " print @source("data.rpn") all median   println clear
-"Variance: " print @source("data.rpn") all variance println clear
-"Stddev:   " print @source("data.rpn") all stddev   println clear
+"Sum:      " print @source("data.ppsc") all sum      println clear
+"Product:  " print @source("data.ppsc") all product  println clear
+"Avg:      " print @source("data.ppsc") all avg      println clear
+"Min:      " print @source("data.ppsc") all min      println clear
+"Max:      " print @source("data.ppsc") all max      println clear
+"Count:    " print @source("data.ppsc")     count    println clear
+"Median:   " print @source("data.ppsc") all median   println clear
+"Variance: " print @source("data.ppsc") all variance println clear
+"Stddev:   " print @source("data.ppsc") all stddev   println clear
 

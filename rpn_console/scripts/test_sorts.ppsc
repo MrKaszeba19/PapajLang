@@ -1,20 +1,20 @@
 @silent
 
-@source("data.rpn")
+@source("data.ppsc")
 statusln clear
 
 @sorttype(BSORT)
-@source("data.rpn")
+@source("data.ppsc")
 all sort statusln clear
 
 @sorttype(QSORT)
-@source("data.rpn")
+@source("data.ppsc")
 all sort statusln clear
 
 @sorttype(MSORT)
-@source("data.rpn")
+@source("data.ppsc")
 all sort statusln clear
 
 @sorttype(RSORT)
-@source("data.rpn")
+@source("data.ppsc")
 all sort statusln clear

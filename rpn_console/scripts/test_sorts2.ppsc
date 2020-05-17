@@ -2,24 +2,24 @@
 
 @sorttype(0)
 "Bubblesort:" println
-10 times { 100 rand } statusln
+10 times { 100 random } statusln
 all sort statusln
 clear newln
 
 @sorttype(1)
 "Quicksort:" println
-10 times { 100 rand } statusln
+10 times { 100 random } statusln
 all sort statusln
 clear newln
 
 @sorttype(2)
 "Mergesort:" println
-10 times { 100 rand } statusln
+10 times { 100 random } statusln
 all sort statusln 
 clear newln
 
 @sorttype(3)
 "Bogosort:" println
-10 times { 100 rand } statusln
+10 times { 100 random } statusln
 all sort statusln 
 clear

@@ -940,6 +940,19 @@ begin
             sets.KeepWorking := 1;
         end;
 
+        'rand' : begin
+            z := random();
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'random' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_get(pocz[sets.StackPointer]).Num;
+            stack_pop(pocz[sets.StackPointer]);
+            z := random(trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+
         // single operands
         'scan' : begin
             EntEax := scan_value();
@@ -1690,15 +1703,6 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) = y));
-        end;
-
-        'Math.random' : begin
-          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_get(pocz[sets.StackPointer]).Num;
-            stack_pop(pocz[sets.StackPointer]);
-            z := random(trunc(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
 
 		'Math.Gamma' : begin

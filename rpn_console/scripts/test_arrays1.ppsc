@@ -1,7 +1,6 @@
-@use(Math)
 @use(Array)
 
-20 times { 10 random } all toArray >tab
+20 times { 10 rand } all toArray >tab
 
 fun{
 	$tab println

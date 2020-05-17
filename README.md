@@ -71,7 +71,7 @@ toException | build an exception (if X is a string, then it creates an unraised 
 raiseException | same as above, but it raises exception too
 
 ### Commands for numeric expressions
-- number1 number2 operand
+- number1 number2 function
 
 | Name    | Purpose                 |
 |:-------:| ----------------------- |
@@ -87,7 +87,7 @@ raiseException | same as above, but it raises exception too
 | cdiv    | integer division (`-5 3 div` returns `-2`) _removed so far_ |
 | cmod    | modulo (`-5 3 div` returns `1`) _removed so far_ |
 
-- number1 operand
+- number1 function
 
 Programme Operand | Purpose
 ----------------- | -------
@@ -99,7 +99,13 @@ sqrt | suqare root
 trunc | truncate
 makeChar | assuming N1 is an ASCII code, it returns a char from the ASCII table
 getAscii | Return an ASCII code number of a char S1 (it must be a single char)
-Math.random | Generate a random integer value within a range [0..N-1]
+random | Return a random integer from a range [0; N1-1]
+
+- function
+
+Programme Function | Purpose
+------------------ | -------
+rand | Return a random real from a range [0; 1)
 
 ### Advanced mathematical functions
 **Note**: If you do not want to type `Math.` every time, just type `@use(Math)` before.

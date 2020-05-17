@@ -1,3 +1,2 @@
-@use(Math)
 1000000 times { 1000000 random } 
 all sum
