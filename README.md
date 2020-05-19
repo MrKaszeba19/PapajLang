@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-May 15, 2020  
+May 19, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -50,7 +50,6 @@ Euler-Mascheroni constant | γ | 0.5772156649015 | Math.EM
 - `\t` horizontal tab
 - `\\` a backslash
 - if a char or string that is already a built-in function, then use `\` before it (e.g. `<=` - equal or less - then use `\<=`)
-_to be extended_
 
 ### Other constants
 - `TRUE` and `FALSE` for boolean types
@@ -120,41 +119,12 @@ Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/String-(package)
 
 ### Commands for arrays
 
-### Advanced mathematical functions
+### Advanced array functions
 **Note**: If you do not want to type `Array.` every time, just type `@use(Array)` before.
 
 Visit [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Array-(package)) for Array package functions. 
 
 **Note**: Array indexes start from 0, i.e. a N-elements array has indexes of [0..N-1] 
-
-- array1 function
-
-Programme Function | Purpose
------------------- | -------
-Array.length | Returns length of an array
-Array.pop | Pops the last element of an array
-Array.shift | Pops the first element to an array
-
-- array1 number1 function
-
-Programme Function | Purpose
------------------- | -------
-Array.getAt | Get a value from N1 index
-Array.popAt | Pop an element from a N1 index
-
-- array1 entity1 function
-
-Programme Function | Purpose
------------------- | -------
-Array.push | Pushes an entity to the array (as its last element)
-
-- array1 number1 entity1 function
-
-Programme Function | Purpose
------------------- | -------
-Array.setAt | Set a value at a N1 index
-Array.pushAt | Push an element before a N1 index 
-
 
 ### Other built-in functions
 
@@ -310,8 +280,6 @@ status | Print the stack.
 statusln | Same as above and end the line.
 statusfull | Print the stack in a more "beautiful" and detailed way.
 newln | Start a new line
-Xn | Do the next thing n-times. ('n' is a constant integer value, n >= 1)
-X* | Do the next thing until the end of input (very risky and permitted only in console app)
 tilleof | As above
 
 

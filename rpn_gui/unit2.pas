@@ -21,7 +21,7 @@ var
 begin
     if (Length(input) > 0) then 
     begin
-        input := cutShebang(input); 
+        //input := cutShebang(input); 
         input := cutCommentMultiline(input);
         input := cutCommentEndline(input);
     end;

@@ -26,7 +26,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski. May 17, 2020.');
+    writeln('Paul Lipkowski. May 19, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -214,8 +214,9 @@ procedure show_packages2();
 begin
     writeln('Math package functions:');
     writeln(' - Unary');
-    writeln('     exp      ln       !    fact   floor ceiling   round');
-    writeln('     sin     cos     tan     csc     sec     cot  random');
+    writeln('     exp      ln       !    fact   floor ceiling');
+    writeln('     sin     cos     tan     csc     sec     cot');
+    writeln('  arcsin  arccos  arctan  arccot   round');
     writeln(' - Binary');
     writeln('  choose     gcd     lcm');
     show_operands4();

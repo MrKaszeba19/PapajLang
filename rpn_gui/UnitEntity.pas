@@ -6,7 +6,7 @@ unit UnitEntity;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, crt;
 
 const
 	TNIL = 0;
@@ -83,6 +83,7 @@ end;
 function verifyPackages(var L : TPackages) : Boolean;
 function default_settings() : TSettings;
 procedure raiserror(Const msg : string);  
+procedure checkSIGINT();
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
@@ -150,6 +151,16 @@ begin
   get_caller_addr(get_frame),  
   get_caller_frame(get_frame);  
 end; 
+
+procedure checkSIGINT();
+begin
+    if KeyPressed then         
+        if ReadKey = ^C then
+        begin
+            writeln('Halted!');
+            Halt(1);
+        end;
+end;
 
 function getEntityTypeName(const x : Integer) : String;
 begin

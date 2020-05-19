@@ -44,6 +44,8 @@ var
 begin
     Steps := 1;
 
+    checkSIGINT();
+
     StrEcx := i.Substring(1, i.Length - 2);
     if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     begin
@@ -169,35 +171,26 @@ var
     pom         : String;
     togglequote : Boolean;
     commentmode : Boolean;
-    able        : Boolean;
     i           : LongInt;
 begin
-    if ((input[1] = '#') and (input[2] = '!')) then
+    pom := '';
+    togglequote := false;
+    commentmode := false;
+    i := 0;
+    while i <= Length(input) do 
     begin
-        pom := '';
-        togglequote := false;
-        commentmode := false;
-        able        := true;
-        i := 0;
-        while i <= Length(input) do 
+        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (not togglequote) and (input[i] = '#') then commentmode := true;
+        if (not commentmode) then pom := concat(pom, input[i]);
+        if     (commentmode) and (not togglequote) and (input[i] = #10) then 
         begin
-            if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
-            if (able) and (not commentmode) and (not togglequote) and ((input[i] = '#') and (input[i+1] = '!')) then 
-            begin 
-                commentmode := true;
-                able := false;
-            end;
-            if (not commentmode) then pom := concat(pom, input[i]);
-            if     (commentmode) and (not togglequote) and (input[i] = #10) then 
-            begin
-                i := i + 1; 
-                commentmode := false;
-            end else begin
-                i := i + 1;
-            end;
+            i := i + 1; 
+            commentmode := false;
+        end else begin
+            i := i + 1;
         end;
-        cutShebang := trim(pom);
-    end else cutShebang := input;
+    end;
+    cutShebang := trim(pom);
 end;
 
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;

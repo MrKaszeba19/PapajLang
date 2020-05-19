@@ -83,6 +83,7 @@ end;
 function verifyPackages(var L : TPackages) : Boolean;
 function default_settings() : TSettings;
 procedure raiserror(Const msg : string);  
+procedure checkSIGINT();
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
@@ -108,6 +109,8 @@ procedure destroyVariable(var db : VariableDB; guess : String);
 procedure destroyVariables(var db : VariableDB);
 
 implementation
+
+uses crt;
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
@@ -150,6 +153,16 @@ begin
   get_caller_addr(get_frame),  
   get_caller_frame(get_frame);  
 end; 
+
+procedure checkSIGINT();
+begin
+    if KeyPressed then         
+        if ReadKey = ^C then
+        begin
+            writeln('Halted!');
+            Halt(1);
+        end;
+end;
 
 function getEntityTypeName(const x : Integer) : String;
 begin
