@@ -1,0 +1,19 @@
+@silent
+@use(Math)
+@use(String)
+
+"Podaj ilość testów: " print
+scan toNumber >N 
+
+"Podaj prawdopodobieństwo sukcesu (p): " print
+scan toNumber >p
+
+// średnia próby
+$N $p genGeom
+all avg >m1
+
+1 $p / >m2
+
+
+"Średnia z prób:     " $m1 toString concat println
+"Wartość oczekiwana: " $m2 toString concat println

@@ -1,0 +1,19 @@
+@silent
+@use(Math)
+@use(String)
+
+"Podaj ilość testów: " print
+scan toNumber >N 
+
+"Podaj wspolczynnik lambda (l): " print
+scan toNumber >l
+
+// średnia próby
+$N $l genExp
+all avg >m1
+
+1 $l / >m2
+
+
+"Średnia z prób:     " $m1 toString concat println
+"Wartość oczekiwana: " $m2 toString concat println
