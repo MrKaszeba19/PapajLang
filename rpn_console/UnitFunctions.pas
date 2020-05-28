@@ -6,9 +6,6 @@ interface
 
 uses
 	Classes, SysUtils, StrUtils, Math, Process,
-	{$IFDEF MSWINDOWS}
-		ShellApi,
- 	{$ENDIF}
 	UnitStack, UnitEntity;
 
 const
@@ -32,7 +29,13 @@ function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var set
 
 implementation
 
-uses Unit5, crt, UnitEnvironment;
+uses Unit5,
+    {$IFDEF MSWINDOWS}
+		ShellApi, crt,
+    {$ELSE}
+        ConsoleUtils,
+ 	{$ENDIF}
+    UnitEnvironment;
 
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
@@ -183,7 +186,7 @@ begin
 		while (n < limit) and (epsilon > 0.0000001) do
 		//while (epsilon > 0.0000001) do
 		begin
-            checkSIGINT();
+            //checkSIGINT();
 			s1 := s;
 			s := s * ((pow2(1+1/n, x))/(1+x/n));
 			//writeln(s, #9, epsilon);
@@ -210,7 +213,7 @@ var
 	t, eps : Extended;
 	limit  : Extended;
 begin
-    checkSIGINT();
+    //checkSIGINT();
 	eps := 0.000001;
 	limit := 5;
 	if (x < -limit) then 
@@ -1431,14 +1434,14 @@ begin
             begin
             	while (x <= z) do 
             	begin
-                    checkSIGINT();
+                    //checkSIGINT();
             		stack_push(pocz[sets.StackPointer], buildNumber(x));
             		x := x + y;
             	end;
             end else begin
             	while (x >= z) do 
             	begin
-                    checkSIGINT();
+                    //checkSIGINT();
             		stack_push(pocz[sets.StackPointer], buildNumber(x));
             		x := x - y;
             	end;
@@ -1454,7 +1457,7 @@ begin
             a := 1.0;
           	while (a <= z) do 
             begin
-                checkSIGINT();
+                //checkSIGINT();
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	x := x + y;
             	a := a + 1.0;
@@ -1471,14 +1474,14 @@ begin
             begin
               while (x <= z) do 
               begin
-                checkSIGINT();
+                //checkSIGINT();
                 stack_push(pocz[sets.StackPointer], buildNumber(x));
                 x := x * y;
               end;
             end else begin
               while (x >= z) do 
               begin
-                checkSIGINT();
+                //checkSIGINT();
                 stack_push(pocz[sets.StackPointer], buildNumber(x));
                 x := x / y;
               end;
@@ -1494,7 +1497,7 @@ begin
             a := 1.0;
           	while (a <= z) do 
             begin
-                checkSIGINT();
+                //checkSIGINT();
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	x := x * y;
             	a := a + 1.0;
@@ -1786,7 +1789,7 @@ begin
             x := stack_pop(pocz[sets.StackPointer]).Num;
             for index := 1 to trunc(x) do
             begin
-                checkSIGINT();
+                //checkSIGINT();
                 w := randg(0, 1);
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
@@ -1837,7 +1840,7 @@ begin
             x := stack_pop(pocz[sets.StackPointer]).Num;
             for index := 1 to trunc(x) do
             begin
-                checkSIGINT();
+                //checkSIGINT();
                 w := randg(y, z);
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
@@ -2995,6 +2998,7 @@ begin
             TextBackground(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
+        {$IFDEF MSWINDOWS}
         'delay' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
@@ -3010,6 +3014,7 @@ begin
         'stopSound' : begin
             NoSound();
         end;
+        {$ENDIF}
         'gotoXY' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);

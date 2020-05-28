@@ -17,7 +17,7 @@ SysUtils;
 {$IFDEF UNIX}
 procedure HandleSigInt(aSignal: LongInt); cdecl;
 begin
-    Writeln('Ctrl + C used');
+    Writeln('RPN has been halted by SIGINT.');
     Halt(1);
 end;
 {$ENDIF}

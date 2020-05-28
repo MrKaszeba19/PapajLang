@@ -9,6 +9,8 @@ uses
 
 procedure TextBackground(x : ShortInt);
 procedure TextColor(x : ShortInt);
+procedure GotoXY(x, y : ShortInt);
+procedure clrscr();
 
 implementation
 
@@ -58,6 +60,16 @@ begin
         15 : write(#27+'[1;37m'); // white
         else ;
     end;
+end;
+
+procedure GotoXY(x, y : ShortInt);
+begin
+    write(#27+'[3'+IntToStr(y)+';'+IntToStr(x)+'9f');
+end;
+
+procedure clrscr();
+begin
+    write(#27+'[1;1H'+#27+'[2J');
 end;
 
 end.

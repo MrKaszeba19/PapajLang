@@ -83,7 +83,7 @@ end;
 function verifyPackages(var L : TPackages) : Boolean;
 function default_settings() : TSettings;
 procedure raiserror(Const msg : string);  
-procedure checkSIGINT();
+//procedure checkSIGINT();
 
 function getEntityTypeName(const x : Integer) : String;
 function getEntitySpec(x : Entity) : String;
@@ -110,7 +110,12 @@ procedure destroyVariables(var db : VariableDB);
 
 implementation
 
+{$IFDEF MSWINDOWS}
 uses crt;
+{$ELSE}
+uses ConsoleUtils;
+{$ENDIF}
+
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
@@ -154,6 +159,8 @@ begin
   get_caller_frame(get_frame);  
 end; 
 
+
+{*
 procedure checkSIGINT();
 begin
     if KeyPressed then         
@@ -163,6 +170,7 @@ begin
             Halt(1);
         end;
 end;
+*}
 
 function getEntityTypeName(const x : Integer) : String;
 begin

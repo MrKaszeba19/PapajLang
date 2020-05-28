@@ -30,7 +30,7 @@ procedure disposeEnvironment(var env : PSEnvironment);
 
 implementation
 
-uses Unit5, crt;
+uses Unit5;
 
 var
 	Steps : Integer;
@@ -77,7 +77,7 @@ var
 begin
     Steps := 1;
 
-    checkSIGINT();
+    //checkSIGINT();
 
     StrEcx := i.Substring(1, i.Length - 2);
     if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
