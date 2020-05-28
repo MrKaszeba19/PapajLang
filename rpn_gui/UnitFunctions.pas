@@ -2980,23 +2980,59 @@ end;
 
 function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-    Found : Boolean;
-    x, y  : ShortInt;
-    a     : Integer;
+    Found   : Boolean;
+    x, y, z : ShortInt;
+    a       : Integer;
 begin
     Found := true;
     case i of
         'textColor' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextColor(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
         'textBackground' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextBackground(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'textColorANSI' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            TextColorANSI(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'textBackgroundANSI' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            TextBackgroundANSI(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'textColorRGB' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            z := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            TextColorRGB(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'textBackgroundRGB' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            z := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            TextBackgroundRGB(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         {$IFDEF MSWINDOWS}
         'delay' : begin

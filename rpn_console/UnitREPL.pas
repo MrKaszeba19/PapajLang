@@ -105,23 +105,10 @@ begin
     th.ColorWarn    := -1;
     th.ColorRzulta1 := -1;
     th.ColorRzulta2 := -1;
-    th.ColorReset   := -1;
-end;
-
-procedure normalTheme(var th : REPLTheme);
-begin
-    th.ColorPrompt1 := 11;
-    th.ColorPrompt2 :=  3;
-    th.ColorStack   :=  6;
-    th.ColorGood    := 10;
-    th.ColorBad     :=  9;
-    th.ColorWarn    := 15;
-    th.ColorRzulta1 := 11;
-    th.ColorRzulta2 := 15;
     th.ColorReset   := 7;
 end;
 
-procedure blueTheme(var th : REPLTheme);
+procedure normalTheme(var th : REPLTheme);
 begin
     th.ColorPrompt1 := 14;
     th.ColorPrompt2 :=  6;
@@ -129,9 +116,22 @@ begin
     th.ColorGood    := 10;
     th.ColorBad     := 12;
     th.ColorWarn    := 15;
-    th.ColorRzulta1 := 11;
+    th.ColorRzulta1 := 14;
     th.ColorRzulta2 := 15;
-    th.ColorReset   := -1;
+    th.ColorReset   := 7;
+end;
+
+procedure blueTheme(var th : REPLTheme);
+begin
+    th.ColorPrompt1 := 11;
+    th.ColorPrompt2 :=  3;
+    th.ColorStack   :=  4;
+    th.ColorGood    := 10;
+    th.ColorBad     :=  1;
+    th.ColorWarn    := 15;
+    th.ColorRzulta1 := 14;
+    th.ColorRzulta2 := 15;
+    th.ColorReset   := 7;
 end;
 {$ENDIF}
 

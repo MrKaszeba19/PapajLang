@@ -1,0 +1,9 @@
+@silent
+0 1 23 seq 
+size times {
+	qshift clone textBackgroundANSI 
+	3 colprint
+	-1 textBackgroundANSI
+	newln
+}
+-1 textBackground

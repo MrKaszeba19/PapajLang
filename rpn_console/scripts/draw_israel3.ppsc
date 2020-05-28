@@ -5,9 +5,9 @@ clrscr
 
 // ==================== Draw flag and logo
 
-0 textBackground
-15 textBackground
+
 1 textColor
+15 textBackground
 "                          " println
 "==========================" println    
 "            ^             " println
@@ -20,12 +20,14 @@ clrscr
 "            -             " println
 "==========================" println 
 "                          " println
-0 textBackground
+
 7 textColor
+0 textBackground
 
 // ==================== Draw upper Israel 
-1 textBackground newln // sea color
 2 textColor            // grass color
+1 textBackground newln // sea color
+
 12 times { " " print } 10 times { $fill print } newln
 4 times {
 	6 times { " " print } 
@@ -47,15 +49,17 @@ clrscr
 2 times { " " print } 16 times { $fill print } newln
 
 // ==================== Draw Negev Desert
-0 textBackground
+
 14 textColor // sand color
+-1 textBackground
+
 1 1 14 seq all copy size 2 / times {
 	qshift 2 + times { " " print } times { $fill print } newln
 }
 
 // Cities
-12 textBackground
 15 textColor
+12 textBackground
 13 18 gotoXY "*Natzrat" print
 5 19 gotoXY "*Haifa" print
 5 22 gotoXY "*Netanya" print
@@ -65,8 +69,8 @@ clrscr
 17 46 gotoXY "*Eilat" print
 
 // Reset
-0 textBackground
 7 textColor
+-1 textBackground
 newln
 "  _                    _  " println
 " (_)                  | | " println
