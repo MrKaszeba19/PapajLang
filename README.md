@@ -35,6 +35,10 @@ The future enhancements of the language include an introduction of objects, bett
 
 Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNCalculator/wiki).
 
+Find basic functions [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Vanilla).
+
+Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPNCalculator/tree/leviathan/rpn_console/scripts).
+
 ### Constant numerical values:
 - e.g. 2*π -> 2 Math.PI *
 
@@ -158,9 +162,6 @@ _to be expanded to arrays_
 **Examples:**
 - `5 times 2 sum` sums five 2's
 - `5 times scan all sum` sums five numbers scanned by an input
-
-
-**Examples:**
 - `2 3 4 5 6 2 avg` brings a result of 5.5, as avg(5,6) = 5.5. The bottom values stay on the stack and now the stack looks like `2 3 4 5.5`.
 - `2 3 4 5 6 all avg` brings a result of 4, as avg(2,3,4,5,6) = 4.
 - `5 3 8 10 32.5 4 Math.sin 2 2 + 5 10 all sum` sums all values previously put on the stack
@@ -280,14 +281,11 @@ status | Print the stack.
 statusln | Same as above and end the line.
 statusfull | Print the stack in a more "beautiful" and detailed way.
 newln | Start a new line
-tilleof | As above
 
 
 **Examples:**
 - `scan scan +` scans 2 values and adds them
-- `X2 scan +` equivalent of the expression above
-- `X* scan all sum` read all values from an input and sums them
-- `scan 3 rand +` scans a value, generates a random number from a range [0..3] and adds the numbers
+- `scan 3 random +` scans a value, generates a random number from a range [0..3] and adds the numbers
 - `"Hello world!" type` puts "string" on the top of the stack
 - `"Hello world!" println` prints "Hello world!"
 
@@ -366,9 +364,7 @@ Operand | Purpose
 *PACKAGE* – available packages:
 - `String` with string functions
 - `Math` with mathematical functions
-- `Aggregate` with aggregate functions (*coming soon*) 
-- `ASCII` with system functions (*coming soon*)
-- `Array` with array functions (*coming soon*)
+- `Array` with array functions 
 - `File` with file I/O functions (*coming soon*) 
 - `System` with system functions (*coming soon*)
 
