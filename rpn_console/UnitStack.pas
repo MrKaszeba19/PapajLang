@@ -26,6 +26,7 @@ function stack_show(poc : TStack; mask : String) : String;
 function stack_showBeautiful(poc : TStack; mask : String) : String;
 function stack_showFull(poc : TStack) : String;
 function stack_showArray(poc : TStack; mask : String) : String;
+function stack_showArrayPS(poc : TStack; db : StackDB; mask : String) : String;
 function stack_showArrayFull(poc : TStack; db : StackDB; mask : String) : String;
 function stack_reverse(poc : TStack) : TStack;
 
@@ -208,6 +209,26 @@ begin
         stack_showArray := '[]';
     end;
 end;
+
+function stack_showArrayPS(poc : TStack; db : StackDB; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := '[ ';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-1 do
+        begin
+            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+        end;
+        z := z + '] ';
+        z := LeftStr(z, Length(z)-1);
+        stack_showArrayPS := z;
+    end else begin
+        stack_showArrayPS := '[]';
+    end;
+end;
+
 
 function stack_showArrayFull(poc : TStack; db : StackDB; mask : String) : String;
 var

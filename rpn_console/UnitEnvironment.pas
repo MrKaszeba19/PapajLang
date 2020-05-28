@@ -38,6 +38,19 @@ var
 
 // EVALUATION
 
+function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
+var
+    env : PSEnvironment;
+    cnt : LongInt;
+begin
+    env := buildNewEnvironment();
+    env.Stack := parseOpen(input, env.Stack, env.Settings, vardb);
+    cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+    disposeEnvironment(env);
+    pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray', pocz, sets, vardb);
+    wrapArrayFromString := stack_pop(pocz[sets.StackPointer]);
+end;
+
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
 var
   fun, S : String;
@@ -278,7 +291,9 @@ begin
 				while (nestlv > 0) and (cursor < Length(L)) do begin
 	    			if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
+                    if (L[cursor] = '[') then Inc(nestlv);
 	    			if (L[cursor] = '}') then Dec(nestlv);//;
+                    if (L[cursor] = ']') then Dec(nestlv);
 	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
 	    			//else 
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
@@ -294,6 +309,32 @@ begin
 	    			end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		permit := True;
 	    		index := cursor - 1;
+            end else if L[index] = '[' then begin
+	    		nestlv := 1;
+	    		nesttx := '';
+	    		cursor := index + 1;
+	    		//while (nestlv > 0) and (cursor < L.Count) do begin
+				while (nestlv > 0) and (cursor < Length(L)) do begin
+	    			if (L[cursor] = '{') then Inc(nestlv);
+                    if (L[cursor] = 'fun{') then Inc(nestlv);
+                    if (L[cursor] = '[') then Inc(nestlv);
+	    			if (L[cursor] = '}') then Dec(nestlv);//;
+                    if (L[cursor] = ']') then Dec(nestlv);
+	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
+	    			//else 
+					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    			Inc(cursor);
+	    		end;
+				//writeln(nesttx);
+	    		if (permit) then
+	    			if Steps = -1 then begin
+	    				repeat
+	    					pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    				until EOF;
+	    				stack_pop(pocz[sets.StackPointer]);
+	    			end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
+	    		permit := True;
+	    		index := cursor - 1;
 
             end else if L[index] = 'fun{' then begin
                 nestlv := 1;
@@ -303,7 +344,9 @@ begin
                 while (nestlv > 0) and (cursor < Length(L)) do begin
                     if (L[cursor] = '{') then Inc(nestlv);
                     if (L[cursor] = 'fun{') then Inc(nestlv);
-                    if (L[cursor] = '}') then Dec(nestlv);
+                    if (L[cursor] = '[') then Inc(nestlv);
+	    			if (L[cursor] = '}') then Dec(nestlv);//;
+                    if (L[cursor] = ']') then Dec(nestlv);
                     //if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
                     //else 
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];

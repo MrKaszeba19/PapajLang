@@ -1035,7 +1035,7 @@ begin
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
             if (EntEax.EntityType = TVEC) then
             begin
-                stack_push(pocz[sets.StackPointer], buildString(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask))); 
+                stack_push(pocz[sets.StackPointer], buildString(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask))); 
             end else begin
                 stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
             end;
@@ -3145,6 +3145,16 @@ begin
                 StrEax := stack_get(pocz[sets.StackPointer]).Str;
                 if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
                 stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+            end;
+        end;
+        'Array.toJSString' : begin
+          	EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if (EntEax.EntityType = TVEC) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildString(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask))); 
+            end else begin
+                stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
             end;
         end;
 

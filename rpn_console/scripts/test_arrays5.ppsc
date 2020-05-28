@@ -1,0 +1,7 @@
+@silent
+@money
+"Just a regular array:                              " print
+[ 2 1 3 7 ] toString println
+"Just an array of 10 random values between 0 and 1: " print
+[ 10 times rand ] toString println
+
