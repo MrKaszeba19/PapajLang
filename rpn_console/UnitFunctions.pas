@@ -1104,7 +1104,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str);
             if (EntEax.EntityType = TNIL) then write(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'println' : begin
             EntEax := stack_get(pocz[sets.StackPointer]);
@@ -1113,7 +1113,7 @@ begin
             if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'rprint' : begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
@@ -1121,7 +1121,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str);
             if (EntEax.EntityType = TNIL) then write(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'rprintln' : begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
@@ -1129,7 +1129,7 @@ begin
             if (EntEax.EntityType = TNUM) then writeln(FormatFloat(sets.Mask, EntEax.Num));
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str);
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask));
         end;
         'colprint' : begin
         	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
@@ -1140,7 +1140,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(FormatFloat(sets.Mask, EntEax.Num) : trunc(y));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TNIL) then write(EntEax.Str : trunc(y));
-            if (EntEax.EntityType = TVEC) then write(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
         end;
         'colprintln' : begin
         	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
@@ -1151,7 +1151,7 @@ begin
             if (EntEax.EntityType = TSTR) then writeln(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str : trunc(y));
             if (EntEax.EntityType = TBOO) then writeln(EntEax.Str : trunc(y));
-            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayFull(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
+            if (EntEax.EntityType = TVEC) then writeln(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask) : trunc(y));
         end;
         'newln' : begin
             writeln();

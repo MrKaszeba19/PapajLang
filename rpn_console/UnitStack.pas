@@ -184,7 +184,7 @@ begin
     if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
     if (x.EntityType = TNIL) then z := x.Str;
     if (x.EntityType = TBOO) then z := x.Str;
-    if (x.EntityType = TVEC) then z := stack_showArrayFull(db[trunc(x.Num)], db, mask);
+    if (x.EntityType = TVEC) then z := stack_showArrayPS(db[trunc(x.Num)], db, mask);
     if (x.EntityType = TOBJ) then z := '<Object>';
     if (x.EntityType = TFUN) then z := '<Function>'; 
     if (x.EntityType = TEXC) then z := '<Exception>'; 
