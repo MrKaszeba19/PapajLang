@@ -45,8 +45,8 @@ begin
   while not eof(fp) do
   begin
     readln(fp, S);
-    if (S <> '') then S := commentcut(S);
-    fun := fun + ' ' + S;
+    if (S <> '') then S := trim(S);
+    fun := fun + #10 + S;
   end;
   closefile(fp);
   pocz := parseScoped(fun, pocz, sets, vardb);

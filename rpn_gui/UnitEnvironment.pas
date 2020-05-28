@@ -15,6 +15,8 @@ type PSEnvironment = record
     AutoReset : Boolean;
 end;
 
+function read_source(filename : String; var env : PSEnvironment) : StackDB;
+
 function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
 function cutCommentEndline(input : String) : String;
@@ -35,6 +37,24 @@ var
 
 
 // EVALUATION
+
+function read_source(filename : String; var env : PSEnvironment) : StackDB;
+var
+  fun, S : String;
+  fp     : Text;
+begin
+  fun := '';
+  assignfile(fp, filename);
+  reset(fp);
+  while not eof(fp) do
+  begin
+    readln(fp, S);
+    fun := fun + ' ' + S;
+  end;
+  closefile(fp);
+  writeln(fun);
+  read_source := parseScoped(trim(fun), env.Stack, env.Settings, env.Variables); 
+end;
 
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 var

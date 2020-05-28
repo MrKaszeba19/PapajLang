@@ -6,7 +6,7 @@ unit UnitEntity;
 interface
 
 uses
-  Classes, SysUtils, crt;
+  Classes, SysUtils;
 
 const
 	TNIL = 0;
@@ -109,6 +109,8 @@ procedure destroyVariable(var db : VariableDB; guess : String);
 procedure destroyVariables(var db : VariableDB);
 
 implementation
+
+uses crt;
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin

@@ -1,13 +1,19 @@
 === UNITS
 Units that are identical for both projects (PapajScript files):
 – Unit2.pas (the main engine of PS)
-– UnitEntity.pas (PS'S entities, variables, settings and some constants)
+– UnitEntity.pas (PS's entities, variables, settings and some constants)
 – UnitFunctions.pas (PS's built-in functions)
 – UnitStack.pas (PS's semi-stack)
 – UnitEnvironment.pas (PS environment and interpreter main mechanisms)
 
+Units that are identical for both projects (not PapajScript files):
+– ConsoleUtils.pas (a better Crt substitute for Unix systems)
+
 Units that exist in both projects, but they differ slightly in each of them.
 – Unit5.pas (A connector between the console output or GUI and PS language)
+
+Additional units of rpn_console
+– UnitREPL.pas (REPL of PapajScript)
 
 Additional units of rpn_gui
 – Unit1.pas (the GUI application code)
@@ -16,9 +22,12 @@ Additional units of rpn_gui
 
 
 === REQUIREMENTS TO COMPILE THE PROJECT
-– Have installed Lazarus IDE (I use Lazarus 1.6, it would probably work on higher versions too)
-– if you are using Windows systems, then compile it using Lazarus IDE by clicking "Run" or "Compile"
-– if you are using Linux, then you can either do the same as Windows users or just run the ./compile.sh scripts
+– Have installed Lazarus IDE (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now)
+– There are two ways to build RPN Calculator
+    a) compile it using Lazarus IDE by clicking "Run" or "Compile"
+    c) simply run compile.sh (in Unix/Linux systems) or compile.bat (in Windows systems) to compile the project
+– Windows users can make a Desktop shortcut to a RPN REPL by running installREPL.bat
+
 
 === REPORTED FLAWS
 – The variables' scopes don't work always properly.
@@ -28,4 +37,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 11/12/2018
+Paul Lipkowski, 5/28/2020
