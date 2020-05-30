@@ -7,8 +7,8 @@
 "Array:  " print $tab println
 "Length: " print $tab length println
 
-$tab 10 1488 pushAt 
-$tab 12 2137 pushAt
+$tab 10 1488 pushAt rem 
+$tab 12 2137 pushAt rem
 
 "Stage 2" println
 "Array:  " print $tab println

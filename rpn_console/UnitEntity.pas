@@ -45,6 +45,7 @@ type TSettings = record
     Shell         : String;
 	StackPointer  : LongInt;
 	KeepWorking   : ShortInt;
+    InfMode       : Boolean;
 	Packages      : TPackages;
 end;
 // sorts
@@ -57,7 +58,8 @@ end;
 
 type Entity = record
 	EntityType : Integer;
-	Num        : Extended;	// plans to make them arrays
+	Num        : Extended;
+    Num2       : Extended;
 	Str        : String;
 end;
 
@@ -144,6 +146,7 @@ begin
   pom.StackPointer := 0;
   pom.KeepWorking := 2;
   pom.Packages := default_packages();
+  pom.InfMode := false;
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}
@@ -238,6 +241,7 @@ begin
 	//pom := New(Entity);
 	pom.EntityType := TNUM;
 	pom.Num := val;
+    pom.Num2 := 0;
 	pom.Str := FormatFloat(sets.Mask, val);
 	//pom.EArray := nil;
 	buildNumberFormattted := pom;
@@ -250,6 +254,7 @@ begin
 	//pom := New(Entity);
 	pom.EntityType := TNUM;
 	pom.Num := val;
+    pom.Num2 := 0;
 	pom.Str := '' + FormatFloat('0.###############' ,val);
 	//pom.EArray := nil;
 	buildNumber := pom;
@@ -263,6 +268,7 @@ begin
 	pom.EntityType := TSTR;
 	pom.Str := val;
 	pom.Num := Length(val);
+    pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildString := pom;
 end;
@@ -277,9 +283,11 @@ begin
 	begin
 		pom.Str := 'TRUE';
 		pom.Num := 0;
+        pom.Num2 := 0;
 	end else begin
 		pom.Str := 'FALSE';
 		pom.Num := 1;
+        pom.Num2 := 0;
 	end;
 	//pom.EArray := nil;
 	buildBoolean := pom;
@@ -293,6 +301,7 @@ begin
 	pom.EntityType := TFUN;
 	pom.Str := val;
 	pom.Num := Length(val);
+    pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildFunction := pom;
 end;
@@ -305,6 +314,7 @@ begin
 	pom.EntityType := TEXC;
 	pom.Str := val;
 	pom.Num := 0;
+    pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildException := pom;
 end;
@@ -317,6 +327,7 @@ begin
 	pom.EntityType := TEXC;
 	pom.Str := val;
 	pom.Num := 1;
+    pom.Num2 := 0;
 	//pom.EArray := nil;
 	raiseException := pom;
 end;
@@ -329,6 +340,7 @@ begin
 	pom.EntityType := TNIL;
 	pom.Str := 'NULL';
 	pom.Num := 0;
+    pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildNull := pom;
 end;

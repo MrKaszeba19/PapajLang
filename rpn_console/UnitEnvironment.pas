@@ -44,7 +44,7 @@ var
     cnt : LongInt;
 begin
     env := buildNewEnvironment();
-    env.Stack := parseOpen(input, env.Stack, env.Settings, vardb);
+    env.Stack := parseOpen(input, env.Stack, sets, vardb);
     cnt := stack_size(env.Stack[env.Settings.StackPointer]);
     disposeEnvironment(env);
     pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray', pocz, sets, vardb);

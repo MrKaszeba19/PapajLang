@@ -595,9 +595,31 @@ var
 	s : Extended;
 begin
 	s := 0.0;
-  for i := 0 to Length(tab)-1 do
-  	s := s + tab[i].Num;
-  table_avg := s/Length(tab);
+    for i := 0 to Length(tab)-1 do
+        s := s + tab[i].Num;
+    table_avg := s/Length(tab);
+end;
+
+function table_avg2(tab : TEntities) : Extended;
+var
+	i : Integer;
+	s : Extended;
+begin
+	s := 0.0;
+    for i := 0 to Length(tab)-1 do
+        s := s + tab[i].Num * tab[i].Num;
+    table_avg2 := sqrt(s/Length(tab));
+end;
+
+function table_avg_geom(tab : TEntities) : Extended;
+var
+	i : Integer;
+	s : Extended;
+begin
+	s := 1.0;
+    for i := 0 to Length(tab)-1 do
+        s := s * tab[i].Num;
+    table_avg_geom := pow2(s, 1/Length(tab));
 end;
 
 function table_min(tab : TEntities) : Extended;
@@ -622,6 +644,35 @@ begin
   		s := tab[i].Num;
   	end; 
   table_max := s;
+end;
+
+function table_avg_power(tab : TEntities; factor : Extended) : Extended;
+var
+	i : Integer;
+	s : Extended;
+begin
+    if factor = 0 then begin
+        table_avg_power := table_avg_geom(tab);
+    end else if factor = 1 then begin
+        table_avg_power := table_avg(tab);
+    end else if factor = 2 then begin
+        table_avg_power := table_avg2(tab);
+    end else if factor = Infinity then begin
+        table_avg_power := table_max(tab);
+    end else if factor = -Infinity then begin
+        table_avg_power := table_min(tab);
+    end else begin
+        s := 0.0;
+        if (factor = trunc(factor)) then
+        begin
+            for i := 0 to Length(tab)-1 do
+  	            s := s + pow(tab[i].Num, factor);
+        end else begin
+            for i := 0 to Length(tab)-1 do
+  	            s := s + pow2(tab[i].Num, factor);
+        end;
+        table_avg_power := pow2(s/Length(tab), 1/factor);
+    end;
 end;
 
 function table_median(tab : TEntities) : Extended;
@@ -727,7 +778,17 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := x-y;
+            if (not sets.InfMode) then
+            begin 
+                z := x-y;
+            end else begin 
+                if ((y = Infinity) or (y = -Infinity)) and ((x = Infinity) or (x = -Infinity)) then
+                begin
+                    z := NaN;
+                end else begin
+                    z := x-y;
+                end;
+            end;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	stack_push(pocz[sets.StackPointer], buildNumber(y));
@@ -747,11 +808,33 @@ begin
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         '/' : begin
-            if (sets.StrictType) and (assertNonZeroLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (not sets.InfMode) and (sets.StrictType) and (assertNonZeroLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := x/y;
+            if (not sets.InfMode) then
+            begin 
+                z := x/y;
+            end else begin 
+                if (y = 0) then
+                begin
+                    z := x*Infinity;
+                end else if (y = 0) and (x = 0) then
+                begin
+                    z := NaN;
+                end else if ((y = Infinity) or (y = -Infinity)) and ((x = Infinity) or (x = -Infinity)) then
+                begin
+                    z := NaN;
+                end else if (y = Infinity) then
+                begin
+                    z := 0;
+                end else if (y = -Infinity) then
+                begin
+                    z := 0;
+                end else begin
+                    z := x/y;
+                end;
+            end;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	stack_push(pocz[sets.StackPointer], buildNumber(y));
@@ -885,8 +968,14 @@ begin
         'INF' : begin
           stack_push(pocz[sets.StackPointer], buildNumber(Infinity));
         end;
+        '+INF' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(Infinity));
+        end;
         '-INF' : begin
           stack_push(pocz[sets.StackPointer], buildNumber(-Infinity));
+        end;
+        'NaN' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(NaN));
         end;
 
         // unary
@@ -1333,6 +1422,23 @@ begin
                 stack_push(pocz[sets.StackPointer], buildNumber(0.0));
             end;
         end;
+        'mean' : begin
+          	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                if (sets.Autoclear) then 
+                    HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
+                else 
+                    HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
+                ExtEax := table_avg(HelpETable);
+                stack_push(pocz[sets.StackPointer], buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(pocz[sets.StackPointer], buildNumber(0.0));
+            end;
+        end;
         'min' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
@@ -1677,6 +1783,76 @@ begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             z := PI/2-arctan(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.sinh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.cosh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.csch' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.sech' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.tanh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sinh(y)/cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.coth' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cosh(y)/sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcsinh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arcsinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccosh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arccosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arctanh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arctanh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccoth' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 0.5*ln((y+1)/(x-1));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -2496,6 +2672,21 @@ begin
         '@casesensitive(FALSE)' : begin
            sets.CaseSensitive := false;
         end;
+        '@infmode' : begin
+           sets.InfMode := true;
+        end;
+        '@infmode(TRUE)' : begin
+           sets.InfMode := true;
+        end;
+        '@infmode(FALSE)' : begin
+           sets.InfMode := false;
+        end;
+        '@infmode(true)' : begin
+           sets.InfMode := true;
+        end;
+        '@infmode(false)' : begin
+           sets.InfMode := false;
+        end;
         '@real' : begin
            sets.Mask := '0.################';
         end;
@@ -3112,6 +3303,7 @@ var
     ArrEax : Entity;
     EntEax : Entity;
     StrEax : String;
+    ExtEax : Extended;
     index  : Integer;
 begin
 	Found := true;
@@ -3140,12 +3332,14 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             pocz[trunc(ArrEax.Num)].Values[IntEax] := EntEax;
+            stack_push(pocz[sets.StackPointer], ArrEax);
         end;
         'Array.push' : begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[trunc(ArrEax.Num)], EntEax);
+            stack_push(pocz[sets.StackPointer], ArrEax);
         end;
         'Array.pop' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
@@ -3160,6 +3354,7 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             stack_pushFront(pocz[trunc(ArrEax.Num)], EntEax, IntEax);
+            stack_push(pocz[sets.StackPointer], ArrEax);
         end;
         'Array.popAt' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -3197,6 +3392,88 @@ begin
             end else begin
                 stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
             end;
+        end;
+        'Array.reduceSum' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_sum(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceProduct' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_product(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceAvg' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMean' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMeanGeom' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg_geom(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMeanHarm' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg_power(pocz[trunc(ArrEax.Num)].Values, -1)));
+        end;
+        'Array.reduceMeanSq' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg2(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reducePowerMean' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;  
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_avg_power(pocz[trunc(ArrEax.Num)].Values, ExtEax)));
+        end;
+        'Array.reduceVariance' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_variance(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceStddev' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_stddev(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMedian' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_median(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMin' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_min(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceMax' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_min(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.sortNumbers' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.sorttype = 0) then bubblesort(pocz[trunc(ArrEax.Num)].Values);
+            if (sets.sorttype = 1) then quicksort(pocz[trunc(ArrEax.Num)].Values);
+            if (sets.sorttype = 2) then mergesort(pocz[trunc(ArrEax.Num)].Values);
+            if (sets.sorttype = 3) then bogosort(pocz[trunc(ArrEax.Num)].Values);
+            stack_push(pocz[sets.StackPointer], ArrEax);
+        end;
+        'Array.sortStrings' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            strings_sort(pocz[trunc(ArrEax.Num)].Values);
+            stack_push(pocz[sets.StackPointer], ArrEax);
         end;
 
         // crush, pushAt, popAt, swapAt, toString, size

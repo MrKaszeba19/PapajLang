@@ -530,4 +530,17 @@ begin
 	buildNewArray := ent;
 end;
 
+//function arrayTransfer(var db : StackDB; sets : TSettings; i, j : LongInt) : Entity;
+//var
+//    memsize : LongInt;
+//    index   : LongInt;
+//begin
+//    memsize := stack_size(db[i]);
+//    SetLength(db[j], i);
+//    for index := 0 to i-1 do
+//    begin
+//        db[j] := db[i];
+//    end;
+//end;
+
 end.

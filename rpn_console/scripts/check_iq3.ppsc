@@ -1,0 +1,17 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+
+"Enter the population size: " print
+scan toNumber >n
+
+[ $n 100 15 genNorm ] >sample 
+$sample reduceAvg >m1
+$sample reduceStddev >s1
+
+
+"Sample mean IQ:       " $m1 toString concat println
+"Theoretical mean IQ:  100" println
+"Sample standard IQ deviation:       " $s1 toString concat println
+"Theoretical standard IQ deviation:  15" println

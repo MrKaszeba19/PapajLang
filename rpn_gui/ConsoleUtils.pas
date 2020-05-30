@@ -7,14 +7,28 @@ interface
 uses
   Classes, SysUtils;
 
+procedure clrscr();
+procedure GotoXY(x, y : ShortInt);
 procedure TextBackground(x : ShortInt);
 procedure TextColor(x : ShortInt);
 procedure TextBackgroundANSI(x : ShortInt);
 procedure TextColorANSI(x : ShortInt);
 procedure TextBackgroundRGB(r,g,b : ShortInt);
 procedure TextColorRGB(r,g,b : ShortInt);
-procedure GotoXY(x, y : ShortInt);
-procedure clrscr();
+procedure TextReset();
+procedure TextBold();
+procedure TextItalic();
+procedure TextUnderline();
+procedure TextBlink();
+procedure TextFastBlink();
+procedure TextInverse();
+procedure TextBoldOff();
+procedure TextItalicOff();
+procedure TextUnderlineOff();
+procedure TextBlinkOff();
+procedure TextFastBlinkOff();
+procedure TextInverseOff();
+
 
 implementation
 
@@ -148,6 +162,60 @@ end;
 procedure clrscr();
 begin
     write(#27+'[1;1H'+#27+'[2J');
+end;
+
+procedure TextReset();
+begin
+    write(#27+'[0m');
+end;
+procedure TextBold();
+begin
+    write(#27+'[1m');
+end;
+procedure TextItalic();
+begin
+    write(#27+'[3m');
+end;
+procedure TextUnderline();
+begin
+    write(#27+'[4m');
+end;
+procedure TextBlink();
+begin
+    write(#27+'[5m');
+end;
+procedure TextFastBlink();
+begin
+    write(#27+'[6m');
+end;
+procedure TextInverse();
+begin
+    write(#27+'[7m');
+end;
+
+procedure TextBoldOff();
+begin
+    write(#27+'[21m');
+end;
+procedure TextItalicOff();
+begin
+    write(#27+'[23m');
+end;
+procedure TextUnderlineOff();
+begin
+    write(#27+'[24m');
+end;
+procedure TextBlinkOff();
+begin
+    write(#27+'[25m');
+end;
+procedure TextFastBlinkOff();
+begin
+    write(#27+'[26m');
+end;
+procedure TextInverseOff();
+begin
+    write(#27+'[27m');
 end;
 
 end.

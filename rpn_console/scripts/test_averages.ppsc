@@ -1,0 +1,17 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+
+[ 10000 times rand ] >tab
+
+"Power    Mean" println
+"-INF " 9 colprint 
+$tab -INF reducePowerMean 8 colprintln
+-100 0.25 100 seq size times {
+	qshift >i
+	$i 8 colprint " " print 
+	$tab $i reducePowerMean 8 colprintln
+}
+"+INF " 9 colprint $tab 
++INF reducePowerMean 8 colprintln

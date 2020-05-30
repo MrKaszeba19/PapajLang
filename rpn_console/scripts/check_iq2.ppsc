@@ -1,0 +1,13 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+
+"Enter the population size: " print
+scan toNumber >n
+
+[ $n 100 15 genNorm ] reduceMin >m1
+
+
+"Sample's Lowest IQ: " $m1 toString concat println
+"Forrest Gump's IQ:  70" println

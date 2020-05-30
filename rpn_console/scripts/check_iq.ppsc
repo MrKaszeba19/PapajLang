@@ -1,0 +1,13 @@
+@silent
+@use(Math)
+@use(String)
+
+"Podaj ilość ludzi: " print
+scan toNumber >n
+
+$n 100 15 genNorm
+all avg >m1
+
+
+"Średnia z prób:     " $m1 toString concat println
+"Wartość oczekiwana: 100" println
