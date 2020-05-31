@@ -8,6 +8,7 @@ uses
   Classes, SysUtils;
 
 procedure clrscr();
+procedure clrln();
 procedure GotoXY(x, y : ShortInt);
 procedure TextBackground(x : ShortInt);
 procedure TextColor(x : ShortInt);
@@ -162,6 +163,11 @@ end;
 procedure clrscr();
 begin
     write(#27+'[1;1H'+#27+'[2J');
+end;
+
+procedure clrln();
+begin
+    write(#27+'2dK');
 end;
 
 procedure TextReset();

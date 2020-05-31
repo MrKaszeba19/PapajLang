@@ -27,7 +27,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski. May 30, 2020.');
+    writeln('Paul Lipkowski. May 31, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
@@ -195,6 +195,7 @@ begin
     writeln('Page 1: Array');
 	writeln('Page 2: Math');
 	writeln('Page 3: String');
+    writeln('Page 4: Console');
 	writeln;
     writeln('Type ''@use(package_name)'' in code to use the package.');
     writeln('Type ''@unuse(package_name)'' in code to stop using the package.');
@@ -231,6 +232,17 @@ begin
 	writeln(' onespace     pad padLeft padRight    position positionFrom');
 	writeln('   remove replace   right      run       split      splitBy');
 	writeln('substring  system    trim trimLeft   trimRight');
+end;
+
+procedure show_packages4();
+begin
+    writeln('Console package functions:');
+    writeln('          clrscr     clearScreen             whereX          whereY            gotoXY');
+    writeln('  textBackground       textColor textBackgroundANSI   textColorANSI textBackgroundRGB');
+    writeln('    textColorRGB       textReset           textBold      textItalic     textUnderline');
+    writeln('       textBlink   textFastBlink        textInverse     textBoldOff     textItalicOff');
+    writeln('textUnderlineOff    textBlinkOff   textFastBlinkOff  textInverseOff        runCommand');
+    writeln('      startSound       stopSound         runCommand');
 end;
 
 
@@ -361,10 +373,12 @@ begin
                         '1' : show_packages1();
                         '2' : show_packages2();
                         '3' : show_packages3();
+                        '4' : show_packages4();
                         'all': begin 
                             show_packages1(); writeln();
                             show_packages2(); writeln();
-                            show_packages3(); 
+                            show_packages3(); writeln();
+                            show_packages4(); 
                         end;
                     end;
                 end;
