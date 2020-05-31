@@ -1,6 +1,7 @@
 @silent
 @use(String)
 @use(Math)
+@use(Console)
 
 " " >empty
 "█" >fill

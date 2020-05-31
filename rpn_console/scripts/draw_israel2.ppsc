@@ -1,4 +1,5 @@
 @silent
+@use(Console)
 
 "█" >fill
 1 textBackground newln

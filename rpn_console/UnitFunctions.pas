@@ -377,6 +377,42 @@ begin
     rexp := -ln(random)/lambda;
 end;
 
+function fpoisson(x, lambda : Extended): Extended;
+begin
+    fpoisson := exp(-lambda)*pow(lambda, x)/fact(x);
+end;
+
+function dpoisson(x, lambda : Extended): Extended;
+var 
+    s : Extended;
+    i : LongInt;
+begin
+    s := 0;
+    for i := 0 to trunc(x) do
+        s += fpoisson(i, lambda);
+    dpoisson := s; 
+end;
+
+function rpoisson(mean: Extended): Extended;
+{ Generator for Poisson distribution (Donald Knuth's algorithm) }
+const
+  RESOLUTION = 1000;
+var
+  k    : Extended;
+  b, l : Extended;
+begin
+  //assert(mean > 0, 'mean < 1');
+  k := 0;
+  b := 1;
+  l := exp(-mean);
+  while b > l do
+  begin
+    k := k + 1;
+    b := b * random(RESOLUTION) / RESOLUTION;
+  end;
+  rpoisson := k - 1;
+end;
+
 // SORTS
 
 procedure bubblesort(var tab : TEntities);
@@ -1907,6 +1943,20 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Math.toRadians' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := degtorad(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.toDegrees' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := degtorad(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
 
 		// boolean functions for numbers
         'Math.isPrime' : begin
@@ -2153,6 +2203,46 @@ begin
             for index := 1 to trunc(x) do
             begin
                 w := rexp(y);
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end;
+        'Math.funcPoisson' : begin
+            if (sets.StrictType) and (assertPositiveNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := fpoisson(trunc(x), trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.distPoisson' : begin
+			if (sets.StrictType) and (assertPositiveNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := dpoisson(trunc(x), trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomPoisson' : begin
+			if (sets.StrictType) and (assertPositiveNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := rpoisson(trunc(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.genPoisson' : begin
+            if (sets.StrictType) and (assertPositiveNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := rpoisson(trunc(y));
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
@@ -2799,6 +2889,14 @@ begin
            sets.Packages.UseArray := false;
 		   sets.Packages.UseAnything := verifyPackages(sets.Packages);
         end;
+        '@use(Console)' : begin
+           sets.Packages.UseConsole := true;
+		   sets.Packages.UseAnything := true;
+        end;
+		'@unuse(Console)' : begin
+           sets.Packages.UseConsole := false;
+		   sets.Packages.UseAnything := verifyPackages(sets.Packages);
+        end;
 		
         else begin
         	case LeftStr(i, 9) of
@@ -3173,35 +3271,39 @@ function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Int
 var
     Found   : Boolean;
     x, y, z : ShortInt;
+    StrEax  : String; 
+    StrEbx  : String;
+    StrEcx  : String;
     a       : Integer;
 begin
     Found := true;
     case i of
-        'textColor' : begin
+        'Console.textColor' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextColor(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'textBackground' : begin
+        'Console.textBackground' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextBackground(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'textColorANSI' : begin
+        {$IfNDef MSWINDOWS}
+        'Console.textColorANSI' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextColorANSI(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'textBackgroundANSI' : begin
+        'Console.textBackgroundANSI' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             TextBackgroundANSI(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'textColorRGB' : begin
+        'Console.textColorRGB' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             z := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -3213,7 +3315,7 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
-        'textBackgroundRGB' : begin
+        'Console.textBackgroundRGB' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             z := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -3225,24 +3327,70 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Console.textReset' : begin
+            TextReset();
+        end;
+        'Console.textBold' : begin
+            TextBold();
+        end;
+        'Console.textItalic' : begin
+            TextItalic();
+        end;
+        'Console.textUnderline' : begin
+            TextUnderline();
+        end;
+        'Console.textBlink' : begin
+            TextBlink();
+        end;
+        'Console.textFastBlink' : begin
+            TextFastBlink();
+        end;
+        'Console.textInverse' : begin
+            TextInverse();
+        end;
+        'Console.textBoldOff' : begin
+            TextBoldOff();
+        end;
+        'Console.textItalicOff' : begin
+            TextItalicOff();
+        end;
+        'Console.textUnderlineOff' : begin
+            TextUnderlineOff();
+        end;
+        'Console.textBlinkOff' : begin
+            TextBlinkOff();
+        end;
+        'Console.textFastBlinkOff' : begin
+            TextFastBlinkOff();
+        end;
+        'Console.textInverseOff' : begin
+            TextInverseOff();
+        end;
+        {$ENDIF}
         {$IFDEF MSWINDOWS}
-        'delay' : begin
+        'Console.whereX' : begin
+            stack_push(pocz[sets.StackPointer], buildNumber(WhereX()));
+        end;
+        'Console.whereY' : begin
+            stack_push(pocz[sets.StackPointer], buildNumber(WhereY()));
+        end;
+        'Console.delay' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             Delay(a);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'startSound' : begin
+        'Console.startSound' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             Sound(a);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'stopSound' : begin
+        'Console.stopSound' : begin
             NoSound();
         end;
         {$ENDIF}
-        'gotoXY' : begin
+        'Console.gotoXY' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := trunc(stack_pop(pocz[sets.StackPointer]).Num);
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -3251,11 +3399,20 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-        'clrscr' : begin
+        'Console.clrscr' : begin
             clrscr();
         end;
-        'clearScreen' : begin
+        'Console.clearScreen' : begin
             clrscr();
+        end;
+        'Console.runCommand' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := executeCommand(StrEbx, sets.Shell);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
         else begin
             Found := false;

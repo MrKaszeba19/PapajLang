@@ -33,6 +33,7 @@ type TPackages = record
 	UseMath     : Boolean;
 	UseString   : Boolean;
     UseArray    : Boolean;
+    UseConsole  : Boolean;
 end;
 
 type TSettings = record
@@ -121,7 +122,7 @@ uses ConsoleUtils;
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
-	verifyPackages := L.UseMath or L.UseString or L.UseArray;
+	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole;
 end;
 
 function default_packages() : TPackages;
@@ -131,6 +132,7 @@ begin
 	pom.UseString := false;
 	pom.UseAnything := false;
     pom.UseArray := false;
+    pom.UseConsole := false;
 	default_packages := pom;
 end;
 

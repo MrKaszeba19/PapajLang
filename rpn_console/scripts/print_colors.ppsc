@@ -1,4 +1,6 @@
 @silent
+@use(Console)
+
 0 1 23 seq 
 size times {
 	qshift clone textBackgroundANSI 

@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-May 30, 2020  
+May 31, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -24,6 +24,13 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
 - Open an app executable.
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
+
+## Requirements
+- Have installed Lazarus IDE (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now)
+- There are two ways to build RPN Calculator
+    * compile it using Lazarus IDE by clicking "Run" or "Compile"
+    * simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
+- Windows users can make a Desktop shortcut to a RPN REPL by running `installREPL.bat`
 
 ## PapajScript:
 
@@ -293,14 +300,14 @@ newln | Start a new line
 
 Programme Operand | Purpose
 ----------------- | -------
-textColor | Sets a color of a console text output
-textBackground | Sets a background color of a console text output
-gotoXY | Moves a cursor to N1,N2 position
-clearScreen | Clears a screen
-clrscr | As above
-startSound | Plays a sound of a frequency of N1 Hz
-stopSound | Stops a sound
-delay | freezes a program for N1 milliseconds
+Console.textColor | Sets a color of a console text output
+Console.textBackground | Sets a background color of a console text output
+Console.gotoXY | Moves a cursor to N1,N2 position
+Console.clearScreen | Clears a screen
+Console.clrscr | As above
+Console.startSound | Plays a sound of a frequency of N1 Hz
+Console.stopSound | Stops a sound
+Console.delay | freezes a program for N1 milliseconds
 
 **Examples:**
 - `440 startSound` keeps playing a sound of 440 Hz
