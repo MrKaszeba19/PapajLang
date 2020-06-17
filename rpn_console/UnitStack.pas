@@ -57,6 +57,7 @@ function assertCharLocated(var stack : TStack; val : Entity; operand : String) :
 function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
 
 implementation
 
@@ -529,6 +530,22 @@ begin
 	ent.Num := memsize;
 	buildNewArray := ent;
 end;
+
+function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
+var
+    memsize : LongInt;
+    ent     : Entity;
+begin
+    memsize := Length(db);
+    SetLength(db, memsize+1);
+    stack_pushCollection(db[memsize], pom);
+
+	ent.EntityType := TVEC;
+	ent.Str := IntToStr(Length(pom));
+	ent.Num := memsize;
+	buildNewArray := ent;
+end;
+
 
 //function arrayTransfer(var db : StackDB; sets : TSettings; i, j : LongInt) : Entity;
 //var

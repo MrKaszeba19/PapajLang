@@ -1,0 +1,12 @@
+@use(Math)
+@money
+
+20 >n
+0.5 >p
+
+fun{ $n $p distBinom } >f
+
+0 1 $n seq size times { qshift 6 colprint }
+newln
+0 1 $n seq size times { qshift @@f 6 colprint }
+newln

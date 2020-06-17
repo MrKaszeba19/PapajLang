@@ -9,13 +9,13 @@ uses
 
 procedure clrscr();
 procedure clrln();
-procedure GotoXY(x, y : ShortInt);
+procedure GotoXY(x, y : Integer);
 procedure TextBackground(x : ShortInt);
 procedure TextColor(x : ShortInt);
 procedure TextBackgroundANSI(x : ShortInt);
 procedure TextColorANSI(x : ShortInt);
-procedure TextBackgroundRGB(r,g,b : ShortInt);
-procedure TextColorRGB(r,g,b : ShortInt);
+procedure TextBackgroundRGB(r,g,b : Byte);
+procedure TextColorRGB(r,g,b : Byte);
 procedure TextReset();
 procedure TextBold();
 procedure TextItalic();
@@ -145,17 +145,17 @@ begin
     end;
 end;
 
-procedure TextBackgroundRGB(r,g,b : ShortInt);
+procedure TextBackgroundRGB(r,g,b : Byte);
 begin
     write(#27+'[48;2;'+IntToStr(r)+';'+IntToStr(g)+';'+IntToStr(b)+'m');
 end;
 
-procedure TextColorRGB(r,g,b : ShortInt);
+procedure TextColorRGB(r,g,b : Byte);
 begin
     write(#27+'[38;2;'+IntToStr(r)+';'+IntToStr(g)+';'+IntToStr(b)+'m');
 end;
 
-procedure GotoXY(x, y : ShortInt);
+procedure GotoXY(x, y : Integer);
 begin
     write(#27+'['+IntToStr(y)+';'+IntToStr(x)+'f');
 end;

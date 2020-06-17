@@ -1,0 +1,56 @@
+104 183 +
+>v010
+104 213 +
+>v020
+115 322 23 all sum
+>v021
+129 431 22 all sum
+>v030
+218 637 25 all sum
+>v031
+302 2171 53 all sum
+>v040
+371 2154 254 274 426 53 all sum
+373 204 2325 385 329 274 53 all sum
+3532 -
+>v042
+3532 >v041
+421 316 2825 512 406 278 53 all sum
+>v043
+[ $v010 $v020 $v021 $v030 $v031 $v040 $v041 $v042 $v043 ]
+>T
+$T println
+@use(Array)
+1 1 $T length seq
+rem
+size times { qshift >i $T $i getAt $T $i -- getAt - println }
+86
+69
+33
+11
+10
+28
+3
+25
+all sum
+clear
+80
+31
+33
+18
+31
+11
+10
+8
+3
+9
+all sum
+clear
+126
+17
+28
+11
+10
+5
+3
+all sum

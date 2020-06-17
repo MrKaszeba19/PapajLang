@@ -121,14 +121,26 @@ begin
     end;
 end;
 
+//function newton_int(n, k : Extended) : Extended;
+//begin
+//     //newton (n, 0) = 1;
+//     //newton (n, n) = 1;
+//     //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
+//     //writeln('Counting (',trunc(n),',',trunc(k),')');
+//     if (k > n/2) then newton_int := newton_int(n, n-k);
+//     if (k = 0.0) or (k = n) then newton_int := 1.0
+//     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
+//end;
+
 function newton_int(n, k : Extended) : Extended;
 begin
-     //newton (n, 0) = 1;
-     //newton (n, n) = 1;
-     //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
-     if (k > n-k) then newton_int := newton_int(n, n-k);
-     if (k = 0.0) or (k = n) then newton_int := 1.0
-     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
+    if(k > n) then newton_int := 1.0/0.0
+    else if(k = 0) then 
+        newton_int := 1
+    else if (k > n/2) then
+        newton_int := newton_int(n,n-k)
+    else 
+        newton_int := n * newton_int(n-1,k-1) / k;
 end;
 
 function newton_real(n, k : Extended) : Extended;
@@ -315,16 +327,16 @@ var
     s : Extended;
 begin
     s := 0;
-    if (k <= n-k) then 
-    begin
+    //if (k <= n/2) then 
+    //begin
         for i := 0 to k do
             s += fbinom(n, i, p);
         dbinom := s; 
-    end else begin
-        for i := n downto n-k+1 do
-            s += fbinom(n, i, p);
-        dbinom := 1-s; 
-    end;
+    //end else begin
+    //    for i := n downto n-k+1 do
+    //        s += fbinom(n, i, p);
+    //    dbinom := s; 
+    //end;
 end; 
 
 function rbinom(n : LongInt; p : Extended) : Extended;

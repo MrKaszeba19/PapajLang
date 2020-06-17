@@ -1,0 +1,23 @@
+@silent
+@use(Console)
+fun{ textColorRGB println textReset } >colorize
+
+//             R   G   B
+"     Black"   0   0   0 @@colorize
+" Dark Gray"  63  63  63 @@colorize
+"      Gray" 127 127 127 @@colorize
+"Light Gray" 191 191 191 @@colorize
+"     White" 255 255 255 @@colorize
+"       Red" 255   0   0 @@colorize
+"    Orange" 255 128   0 @@colorize
+"    Yellow" 255 255   0 @@colorize
+"      Lime" 128 255   0 @@colorize
+"     Green"   0 255   0 @@colorize
+"      Teal"   0 255 128 @@colorize
+"      Cyan"   0 255 255 @@colorize
+" Turquoise"   0 128 255 @@colorize
+"      Blue"   0   0 255 @@colorize
+"    Violet" 128   0 255 @@colorize
+"   Magenta" 255   0 255 @@colorize
+"      Pink" 255   0 128 @@colorize
+

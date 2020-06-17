@@ -9,13 +9,25 @@ uses
 
 procedure clrscr();
 procedure clrln();
-procedure GotoXY(x, y : ShortInt);
+procedure ClrEol;
+procedure ClrLine;
+procedure CursorOn;
+procedure CursorOff;
+procedure MoveUp(const Lines: word = 1);
+procedure MoveDown(const Lines: word = 1);
+procedure MoveRight(const Cols: word = 1);
+procedure MoveLeft(const Cols: word = 1);
+procedure MoveLineUp(const Lines: word = 1);
+procedure MoveLineDown(const Lines: word = 1);
+procedure GotoLine(const Line: word = 1);
+procedure GotoColumn(const Col: word = 1);
+procedure GotoXY(x, y : Integer);
 procedure TextBackground(x : ShortInt);
 procedure TextColor(x : ShortInt);
 procedure TextBackgroundANSI(x : ShortInt);
 procedure TextColorANSI(x : ShortInt);
-procedure TextBackgroundRGB(r,g,b : ShortInt);
-procedure TextColorRGB(r,g,b : ShortInt);
+procedure TextBackgroundRGB(r,g,b : Byte);
+procedure TextColorRGB(r,g,b : Byte);
 procedure TextReset();
 procedure TextBold();
 procedure TextItalic();
@@ -44,8 +56,8 @@ begin
         4  : write(#27+'[41m'); // dark blue
         5  : write(#27+'[45m'); // dark magenta
         6  : write(#27+'[43m'); // dark cyan
-        7  : write(#27+'[47m'); // dark gray
-        8  : write(#27+'[40m'); // bright gray
+        7  : write(#27+'[47m'); // bright gray
+        8  : write(#27+'[40m'); // dark gray
         9  : write(#27+'[44m'); // bright red
         10 : write(#27+'[42m'); // bright green
         11 : write(#27+'[46m'); // bright yellow
@@ -68,8 +80,8 @@ begin
         4  : write(#27+'[0;31m'); // dark red
         5  : write(#27+'[0;35m'); // dark magenta
         6  : write(#27+'[0;33m'); // dark yellow
-        7  : write(#27+'[0;37m'); // dark gray
-        8  : write(#27+'[1;30m'); // bright gray
+        7  : write(#27+'[0;37m'); // bright gray
+        8  : write(#27+'[1;30m'); // dark gray
         9  : write(#27+'[1;34m'); // bright red
         10 : write(#27+'[1;32m'); // bright green
         11 : write(#27+'[1;36m'); // bright yellow
@@ -92,14 +104,14 @@ begin
         4  : write(#27+'[44m'); // dark blue
         5  : write(#27+'[45m'); // dark magenta
         6  : write(#27+'[46m'); // dark cyan
-        7  : write(#27+'[47m'); // dark gray
-        8  : write(#27+'[40m'); // bright gray
-        9  : write(#27+'[41m'); // bright red
-        10 : write(#27+'[42m'); // bright green
-        11 : write(#27+'[43m'); // bright yellow
-        12 : write(#27+'[44m'); // bright blue
-        13 : write(#27+'[45m'); // bright magenta
-        14 : write(#27+'[46m'); // bright cyan
+        7  : write(#27+'[47m'); // gray
+        8  : write(#27+'[40m'); // dark gray
+        9  : write(#27+'[41m'); // red
+        10 : write(#27+'[42m'); // green
+        11 : write(#27+'[43m'); // yellow
+        12 : write(#27+'[44m'); // blue
+        13 : write(#27+'[45m'); // magenta
+        14 : write(#27+'[46m'); // cyan
         15 : write(#27+'[47m'); // white
         16 : write(#27+'[100m'); // bright gray
         17 : write(#27+'[101m'); // bright red
@@ -124,14 +136,14 @@ begin
         4  : write(#27+'[0;34m'); // dark blue
         5  : write(#27+'[0;35m'); // dark magenta
         6  : write(#27+'[0;36m'); // dark cyan
-        7  : write(#27+'[0;37m'); // dark gray
-        8  : write(#27+'[1;30m'); // bright gray
-        9  : write(#27+'[1;31m'); // bright red
-        10 : write(#27+'[1;32m'); // bright green
-        11 : write(#27+'[1;33m'); // bright yellow
-        12 : write(#27+'[1;34m'); // bright blue
-        13 : write(#27+'[1;35m'); // bright magenta
-        14 : write(#27+'[1;36m'); // bright cyan
+        7  : write(#27+'[0;37m'); // gray
+        8  : write(#27+'[1;30m'); // dark gray
+        9  : write(#27+'[1;31m'); // red
+        10 : write(#27+'[1;32m'); // green
+        11 : write(#27+'[1;33m'); // yellow
+        12 : write(#27+'[1;34m'); // blue
+        13 : write(#27+'[1;35m'); // magenta
+        14 : write(#27+'[1;36m'); // cyan
         15 : write(#27+'[1;37m'); // white
         16 : write(#27+'[90m'); // bright gray
         17 : write(#27+'[91m'); // bright red
@@ -145,17 +157,17 @@ begin
     end;
 end;
 
-procedure TextBackgroundRGB(r,g,b : ShortInt);
+procedure TextBackgroundRGB(r,g,b : Byte);
 begin
     write(#27+'[48;2;'+IntToStr(r)+';'+IntToStr(g)+';'+IntToStr(b)+'m');
 end;
 
-procedure TextColorRGB(r,g,b : ShortInt);
+procedure TextColorRGB(r,g,b : Byte);
 begin
     write(#27+'[38;2;'+IntToStr(r)+';'+IntToStr(g)+';'+IntToStr(b)+'m');
 end;
 
-procedure GotoXY(x, y : ShortInt);
+procedure GotoXY(x, y : Integer);
 begin
     write(#27+'['+IntToStr(y)+';'+IntToStr(x)+'f');
 end;
@@ -168,6 +180,66 @@ end;
 procedure clrln();
 begin
     write(#27+'2dK');
+end;
+
+procedure ClrEol;
+begin
+    write(#27'[0K');
+end;
+
+procedure ClrLine;
+begin
+    write(#27'[2K');
+end;
+
+procedure CursorOn;
+begin
+    write(#27'[?25h');
+end;
+
+procedure CursorOff;
+begin
+    write(#27'[?25l');
+end;
+
+procedure MoveUp(const Lines: word = 1);
+begin
+    write(#27'[',lines,'A');
+end;
+
+procedure MoveDown(const Lines: word = 1);
+begin
+    write(#27'[',lines,'B');
+end;
+
+procedure MoveRight(const Cols: word = 1);
+begin
+    write(#27'[',cols,'C');
+end;
+
+procedure MoveLeft(const Cols: word = 1);
+begin
+    write(#27'[',cols,'D');
+end;
+
+procedure MoveLineDown(const Lines: word = 1);
+begin
+    write(#27'[',lines,'E');
+end;
+
+procedure MoveLineUp(const Lines: word = 1);
+begin
+    write(#27'[',lines,'F');
+end;
+
+procedure GotoColumn(const Col: word = 1);
+begin
+    write(#27'[',col,'G');
+end;
+
+procedure GotoLine(const Line: word = 1);
+begin
+    write(#27'[',line,'d');
 end;
 
 procedure TextReset();
