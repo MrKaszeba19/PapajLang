@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-June 17, 2020  
+July 6, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -219,16 +219,16 @@ reverse | reverses the entire stack
 ### Language syntax features
 
 #### Condtitional instructions (if-else)
-**Syntax:** `B1 ? if I1 else I2`
+**Syntax:** `B1 ? if: I1 else: I2`
 The question mark checks if an expression B1 is true or its numerical value is equal to 0.
-The `if` launches the next instruction only when the recent ?-check was successful.
-The `else` launches the next instruction only when the recent ?-check was unsuccesful.
+The `if:` launches the next instruction only when the recent ?-check was successful.
+The `else:` launches the next instruction only when the recent ?-check was unsuccesful.
 
 **Examples**
-- `scan toNumber 2 mod ? if { "This number is even." println } else { "This number is odd." println }`
-- `scan toNumber 5 > ? if { "This number is greater than 5" println }`
-- `scan toNumber 5 <= ? else { "This number is greater than 5" println }`
-- `scan toNumber 10 mod ? if 1 else 0`
+- `scan toNumber 2 mod ? if: { "This number is even." println } else { "This number is odd." println }`
+- `scan toNumber 5 > ? if: { "This number is greater than 5" println }`
+- `scan toNumber 5 <= ? else: { "This number is greater than 5" println }`
+- `scan toNumber 10 mod ? if: 1 else: 0`
 
 *This style of conditionals is not made in a RPN philosophy, but it was introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
 

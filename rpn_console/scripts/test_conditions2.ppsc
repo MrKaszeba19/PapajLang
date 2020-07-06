@@ -13,15 +13,15 @@ scan toNumber >nb
 scan toString >op
 
 "+-*/" $op String.occurs 0 <= ?
-if {
+if: {
 	"Wrong operand" println
-} else {
+} else: {
 	$op \/ = 
 	$nb 0 = 
 	and ?
-	if {
+	if: {
 		"You cannot divide by zero!" println
-	} else {
+	} else: {
 		$na toString 
 		$nb toString 
 		$op

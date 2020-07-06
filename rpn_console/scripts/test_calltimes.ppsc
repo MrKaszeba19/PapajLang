@@ -1,0 +1,7 @@
+fun{ 2 2 + } >f
+$f 12 callTimes
+statusln
+
+fun{ "Epstein didn't kill himself" println } >dupa
+$dupa 10 callTimes
+

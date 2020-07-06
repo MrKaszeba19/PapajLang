@@ -1115,6 +1115,15 @@ begin
                 end;
             end;
         end;   
+        'callTimes' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            for IntEax := 1 to trunc(y) do
+                pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+        end; 
         //callLoop         
 
         'break' : begin

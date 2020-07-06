@@ -4,5 +4,5 @@
 "Enter a number (greater than 2): " print
 scan toNumber >x
 1 1 $x seq
-all times { qshift clone isPrime ? unless rem }
+all times { qshift clone isPrime ? unless: rem }
 "Primes: " print statusln

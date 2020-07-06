@@ -2,15 +2,15 @@
 
 scan toNumber 
 clone 0 >= ?
-if {
+if: {
 	"You entered a natural number." println
-} else {
+} else: {
 	"You didn't enter a natural number." println
 }
 
 5 != ?
-else {
-	5 times {
+else: {
+	5 times: {
 		"And this number is 5." println
 	}
 }

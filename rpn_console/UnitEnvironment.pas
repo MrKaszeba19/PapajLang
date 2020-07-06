@@ -272,10 +272,10 @@ begin
 
 		if L[index] = '?' then begin
 			cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-		end else if (L[index] = 'if') then begin
+		end else if (L[index] = 'if:') then begin
 			if cond = 0 then permit := True
 			else permit := False;
-		end else if (L[index] = 'else') or (L[index] = 'unless') then begin
+		end else if (L[index] = 'else:') or (L[index] = 'unless:') then begin
 			if cond = 0 then permit := False
 			else permit := True;
 		end else begin

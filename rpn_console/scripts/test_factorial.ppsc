@@ -1,7 +1,7 @@
 fun{
 	clone 0 = ?
-	if { rem 1 } 
-	else { clone -- @@factorial * }
+	if: { rem 1 } 
+	else: { clone -- @@factorial * }
 } >factorial
 
 
