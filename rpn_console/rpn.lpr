@@ -166,9 +166,9 @@ end;
 procedure show_operands7();
 begin
     writeln('Conditionals: ');
-    writeln(' <expression> ?           : Check if an expression if true or equal to zero.');
-    writeln(' if { set_of_commands }   : If the last check returned true, then execute the set_of_commands');
-    writeln(' else { set_of_commands } : If the last check returned false, then execute the set_of_commands');
+    writeln(' <expression> ?            : Check if an expression if true or equal to zero.');
+    writeln(' if: { set_of_commands }   : If the last check returned true, then execute the set_of_commands');
+    writeln(' else: { set_of_commands } : If the last check returned false, then execute the set_of_commands');
     writeln();
     writeln('Functions'' syntax: fun{ set_of_commands }');
     writeln('Execute the functions via "call" command or via "vcall" or @@var (var - var name).');
