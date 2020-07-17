@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-July 6, 2020  
+July 17, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -219,18 +219,27 @@ reverse | reverses the entire stack
 ### Language syntax features
 
 #### Condtitional instructions (if-else)
-**Syntax:** `B1 ? if: I1 else: I2`
+**Old RPN syntax:** `B1 ? if: I1 else: I2`
 The question mark checks if an expression B1 is true or its numerical value is equal to 0.
 The `if:` launches the next instruction only when the recent ?-check was successful.
 The `else:` launches the next instruction only when the recent ?-check was unsuccesful.
 
+**C-like syntax:** `if ( B1 ) I1 else I2`
+The question mark checks if an expression B1 is true or its numerical value is equal to 0.
+The `if` launches the next instruction only when the recent ?-check was successful.
+The `else` launches the next instruction only when the recent ?-check was unsuccesful.
+
 **Examples**
-- `scan toNumber 2 mod ? if: { "This number is even." println } else { "This number is odd." println }`
+- `scan toNumber 2 mod ? if: { "This number is even." println } else: { "This number is odd." println }`
 - `scan toNumber 5 > ? if: { "This number is greater than 5" println }`
 - `scan toNumber 5 <= ? else: { "This number is greater than 5" println }`
 - `scan toNumber 10 mod ? if: 1 else: 0`
+- `if ( scan toNumber 2 mod ) { "This number is even." println } else { "This number is odd." println }`
+- `if ( scan toNumber 5 > ) { "This number is greater than 5" println }`
+- `if ( scan toNumber 5 <= not ) { "This number is greater than 5" println }`
+- `if ( scan toNumber 10 mod ) 1 else 0`
 
-*This style of conditionals is not made in a RPN philosophy, but it was introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
+*These styles of conditionals are not made in a RPN philosophy, but they were introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
 
 #### Data types
 **Current data types:**

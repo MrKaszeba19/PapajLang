@@ -13,16 +13,12 @@ scan toNumber >nb
 \t "/ quotient" String.concat println
 scan toString >op
 
-"+-*/" $op String.occurs 0 <= ?
-if: {
+if ( "+-*/" $op String.occurs 0 <= ) {
 	"Wrong operand" println
-} else: {
-	$op \/ = 
-	$nb 0 = 
-	and ?
-	if: {
+} else {
+	if ( $op \/ = $nb 0 = and ) {
 		"You cannot divide by zero!" println
-	} else: {
+	} else {
 		$na toString 
 		$nb toString 
 		$op

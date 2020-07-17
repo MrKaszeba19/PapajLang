@@ -1,0 +1,17 @@
+@silent
+"Insert a number: " print
+scan toNumber >x
+
+if ( $x 0 = ) { 
+	"Is it zero? :)" println
+} 
+
+if ( $x 0 >= ) { 
+	"You inserted a non-negative number" println
+} else {
+	"You inserted a negative number" println
+}
+
+if TRUE { "Hello!" println }
+
+
