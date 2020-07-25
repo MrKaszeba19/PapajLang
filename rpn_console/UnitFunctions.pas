@@ -15,6 +15,7 @@ const
     EM = 0.5772156649015328606065120900824;
 
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
+procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_math(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -26,6 +27,7 @@ function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var set
 function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_files(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 
 implementation
 
@@ -791,6 +793,22 @@ begin
  	{$ENDIF}
  	executeCommand := s;
 end;
+
+procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
+var
+    EntEax : Entity;
+begin
+    EntEax := getVariable(vardb, guess);
+    if (EntEax.EntityType = TFUN) then
+    begin
+        //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, guess)) then Exit;  
+        pocz := parseScoped(EntEax.Str, pocz, sets, vardb);
+    end else begin
+        stack_push(pocz[sets.StackPointer], EntEax);
+    end;
+end;
+
+
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
@@ -3661,6 +3679,26 @@ begin
         end;
 	end;
 	lib_arrays := Found;
+end;
+
+function lib_files(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+	Found  : Boolean;
+    StrEax : String; 
+begin
+	Found := true;
+	case i of
+        'runFile' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEax := stack_get(pocz[sets.StackPointer]).Str;
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+        	pocz := read_sourcefile(StrEax, pocz, sets, vardb);
+        end;    
+        else begin
+            Found := false;
+        end;
+	end;
+	lib_files := Found;
 end;
 
 end.

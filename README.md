@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-July 17, 2020  
+July 25, 2020  
 by Paul Lipkowski (RooiGevaar19)  
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -263,6 +263,7 @@ _**(Capitalized type names from 0.4.2 onwards)**_
 - `xyz vexists` or `?xyz` – Return true or false, depending if var "xyz" exists.
 - `xyz vdestroy` or `~xyz` – Destroy a variable "xyz" if exists.
 - `xyz vcall` or `@@xyz` – If the var is a function, then call it directly.
+- `xyz` – If the XYZ is a function, then call it, otherwise put XYZ on stack.
 
 #### Functions
 

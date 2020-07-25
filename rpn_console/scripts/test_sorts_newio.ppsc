@@ -1,0 +1,18 @@
+@silent
+
+"data.ppsc" runFile
+statusln clear
+
+fun{
+	"data.ppsc" runFile
+	all sort 
+	statusln clear
+} >runTest
+
+@sorttype(BSORT) runTest
+
+@sorttype(QSORT) runTest
+
+@sorttype(MSORT) runTest
+
+@sorttype(RSORT) runTest

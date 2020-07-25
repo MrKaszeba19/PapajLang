@@ -109,12 +109,17 @@ begin
 			if not lib_math(i, pocz, Steps, sets, vardb) then
 			if not lib_strings(i, pocz, Steps, sets, vardb) then
     	    if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
-			if not lib_arrays(i, pocz, Steps, sets, vardb) then		
+			if not lib_arrays(i, pocz, Steps, sets, vardb) then
+            if not lib_files(i, pocz, Steps, sets, vardb) then		
     	    if not lib_exceptions(i, pocz, Steps, sets, vardb) then
     	    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     		begin
 				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-			end else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+			end else begin
+                if (isVarAssigned(vardb, i)) 
+                    then runFromString(i, pocz, Steps, sets, vardb)
+                    else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+            end;
     	end else begin
     	    stack_push(pocz[sets.StackPointer], buildNumber(Im));
     	end;
