@@ -35,6 +35,21 @@ uses Unit5;
 var
 	Steps : Integer;
 
+// HELPFUL THINGS
+
+function checkLevel(input : String) : Integer;
+begin
+         if (input = '{')         then checkLevel := 1
+    else if (input = 'fun{')      then checkLevel := 1
+    else if (input = 'function{') then checkLevel := 1
+    else if (input = '[')         then checkLevel := 1
+    else if (input = '(')         then checkLevel := 1
+	else if (input = '}')         then checkLevel := -1
+    else if (input = ']')         then checkLevel := -1
+    else if (input = ')')         then checkLevel := -1
+    else checkLevel := 0;
+end;
+
 
 // EVALUATION
 
@@ -240,17 +255,18 @@ end;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
 	//L      : TStrings;
-	L      : TStringArray;
-	i      : String;
-	index  : LongInt;
-	z      : String;
-	step   : Integer;
-	cursor : LongInt;
-	nestlv : ShortInt;
-	nesttx : String;
-	cond   : ShortInt;
-	permit : Boolean;
-    ifMode : Boolean;
+	L       : TStringArray;
+	i       : String;
+	index   : LongInt;
+	z       : String;
+	step    : Integer;
+	cursor  : LongInt;
+	nestlv  : ShortInt;
+	nesttx  : String;
+	cond    : ShortInt;
+	permit  : Boolean;
+    ifMode  : Boolean;
+    funMode : Boolean;
 begin
 	//L := TStringlist.Create;
 	//L.Delimiter := ' ';
@@ -263,7 +279,8 @@ begin
   	Steps := 1;
   	cond := -1;
   	permit := True;
-    ifMode := False;
+    ifMode  := False;
+    funMode := False;
   	index := 0;
   	//while (index < L.Count) and (sets.KeepWorking > 0) do
 	while (input <> '') and (input <> #10) and (index < Length(L)) and (sets.KeepWorking > 0) do
@@ -286,6 +303,8 @@ begin
 		end else if (L[index] = 'else') or (L[index] = 'else:') or (L[index] = 'unless:') then begin
 			if cond = 0 then permit := False
 			else permit := True;
+        end else if (L[index] = 'function') or (L[index] = 'fun') then begin
+			funMode := True;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
@@ -296,45 +315,37 @@ begin
 	    		nestlv := 1;
 	    		nesttx := '';
 	    		cursor := index + 1;
-	    		//while (nestlv > 0) and (cursor < L.Count) do begin
 				while (nestlv > 0) and (cursor < Length(L)) do begin
-	    			if (L[cursor] = '{') then Inc(nestlv);
-                    if (L[cursor] = 'fun{') then Inc(nestlv);
-                    if (L[cursor] = '[') then Inc(nestlv);
-                    if (L[cursor] = '(') then Inc(nestlv);
-	    			if (L[cursor] = '}') then Dec(nestlv);//;
-                    if (L[cursor] = ']') then Dec(nestlv);
-                    if (L[cursor] = ')') then Dec(nestlv);
-	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-	    			//else 
+                    nestlv := nestlv + checkLevel(L[cursor]);
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
-				//writeln(nesttx);
-	    		if (permit) then
-	    			if Steps = -1 then begin
-	    				repeat
-	    					pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
-	    				until EOF;
-	    				stack_pop(pocz[sets.StackPointer]);
-	    			end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    		permit := True;
+                if funMode then begin
+                    if (permit) then
+                    if Steps = -1 then begin
+                        repeat
+                            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                        until EOF;
+                        stack_pop(pocz[sets.StackPointer]);
+                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                    funMode := False;
+                end else begin
+	    		    if (permit) then
+	    		    	if Steps = -1 then begin
+	    		    		repeat
+	    		    			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    		    		until EOF;
+	    		    		stack_pop(pocz[sets.StackPointer]);
+	    		    	end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                end;
+                permit := True;
 	    		index := cursor - 1;
             end else if L[index] = '[' then begin
 	    		nestlv := 1;
 	    		nesttx := '';
 	    		cursor := index + 1;
-	    		//while (nestlv > 0) and (cursor < L.Count) do begin
 				while (nestlv > 0) and (cursor < Length(L)) do begin
-	    			if (L[cursor] = '{') then Inc(nestlv);
-                    if (L[cursor] = 'fun{') then Inc(nestlv);
-                    if (L[cursor] = '[') then Inc(nestlv);
-                    if (L[cursor] = '(') then Inc(nestlv);
-	    			if (L[cursor] = '}') then Dec(nestlv);//;
-                    if (L[cursor] = ']') then Dec(nestlv);
-                    if (L[cursor] = ')') then Dec(nestlv);
-	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-	    			//else 
+                    nestlv := nestlv + checkLevel(L[cursor]);
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
@@ -348,24 +359,15 @@ begin
 	    			end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
 	    		permit := True;
 	    		index := cursor - 1;
-            end else if L[index] = 'fun{' then begin
+            end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
                 nestlv := 1;
                 nesttx := '';
                 cursor := index + 1;
-				//while (nestlv > 0) and (cursor < L.Count) do begin
                 while (nestlv > 0) and (cursor < Length(L)) do begin
-                    if (L[cursor] = '{') then Inc(nestlv);
-                    if (L[cursor] = 'fun{') then Inc(nestlv);
-                    if (L[cursor] = '(') then Inc(nestlv);
-	    			if (L[cursor] = '}') then Dec(nestlv);//;
-                    if (L[cursor] = ']') then Dec(nestlv);
-                    if (L[cursor] = ')') then Dec(nestlv);
-                    //if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-                    //else 
+                    nestlv := nestlv + checkLevel(L[cursor]);
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
                     Inc(cursor);
                 end;
-				//writeln(nesttx);
                 if (permit) then
                     if Steps = -1 then begin
                         repeat
@@ -379,27 +381,26 @@ begin
 	    		nestlv := 1;
 	    		nesttx := '';
 	    		cursor := index + 1;
-	    		//while (nestlv > 0) and (cursor < L.Count) do begin
 				while (nestlv > 0) and (cursor < Length(L)) do begin
-	    			if (L[cursor] = '{') then Inc(nestlv);
-                    if (L[cursor] = 'fun{') then Inc(nestlv);
-                    if (L[cursor] = '[') then Inc(nestlv);
-                    if (L[cursor] = '(') then Inc(nestlv);
-	    			if (L[cursor] = '}') then Dec(nestlv);//;
-                    if (L[cursor] = ']') then Dec(nestlv);
-                    if (L[cursor] = ')') then Dec(nestlv);
-	    			//if (nestlv > 0) and (L[cursor] <> DelSpace(L[cursor])) then nesttx := nesttx + ' ' + ANSIQuotedStr(L[cursor], '"')
-	    			//else 
+                    nestlv := nestlv + checkLevel(L[cursor]);
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
-				//writeln(nesttx);
                 if ifMode then begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
 			        else permit := False;
                     ifMode := False;
+                end else begin
+                    if (permit) then
+                        if Steps = -1 then begin
+                            repeat
+                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                            until EOF;
+                            stack_pop(pocz[sets.StackPointer]);
+                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                    permit := True;
                 end;
 	    		index := cursor - 1;
             end else begin

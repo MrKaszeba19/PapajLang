@@ -3,7 +3,7 @@
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
 July 25, 2020  
-by Paul Lipkowski (RooiGevaar19)  
+by Paul Lipkowski (RooiGevaar19) & Rozalia Budzynska (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 
@@ -267,11 +267,14 @@ _**(Capitalized type names from 0.4.2 onwards)**_
 
 #### Functions
 
-Syntax: `fun{ <set_of_instructions> }`
+Syntax: 
+- `fun{ <set_of_instructions> }`
+- `function{ <set_of_instructions> }`
+- `fun { <set_of_instructions> }`
+- `function { <set_of_instructions> }`
 
 **Notes**
 - The functions use the main stack, they may get the parameters from there and they manipulate it.
-- The `fun{` is a monolithic opening parenthesis of the function and must not be separated.
 - To call a function being on the stack, use an operand `call`.
 - If a function is a variable, then you may call it directly either via `vcall` or via `@@vname` (where vname is a name of the function).
 
