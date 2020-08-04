@@ -45,6 +45,8 @@ begin
     writeln('End each line with \ to make multiline commands.');
     writeln('Type \autoreset:true (or \autoreset) to reset the environment every command.');
     writeln('Type \autoreset:false to prevent from doing the thing above. (set by default)');
+    writeln('Type \display to check the max stack display');
+    writeln('Type \display:N to set the max stack display (0 - unbounded)');
     writeln('Type \export:FILE to export your history to a file (relative or absolute path)');
     writeln('Type \history to display what you did.');
     writeln('Type \hclear to clear all history');
@@ -149,8 +151,10 @@ var
     fp      : Text;
     fname   : String;
     th      : REPLTheme;
+    maxdisp : LongInt;
 begin
     normalTheme(th);
+    maxdisp := 50;
     env := buildNewEnvironment();
     SetLength(history, 0);
     writeln('REPL for PapajScript');
@@ -209,6 +213,25 @@ begin
                     TextColor(th.ColorGood);
                     writeln('Entry #',RightStr(input, Length(input)-8),' of ',QuotedStr(fname),' has been removed successfully.');
                     TextColor(th.ColorReset);
+                end;
+            input := '';
+        end else if LeftStr(input, 9) = '\display:' then
+        begin
+            Val(RightStr(input, Length(input)-9), Im, Code);
+            if Code = 0 then
+                if Trunc(Im) <= 0 then 
+                begin 
+                    maxdisp := 0;
+                    TextColor(th.ColorGood);
+                    writeln('There is no limit of max stack display now.');
+                    TextColor(th.ColorReset);
+                end else begin
+                    maxdisp := Trunc(Im);
+                    TextColor(th.ColorGood);
+                    writeln('The limit of max stack display is set to ',maxdisp,' successfully.');
+                    TextColor(th.ColorReset);
+                end else begin
+                
                 end;
             input := '';
         end else if (LeftStr(input, 8) = '\import:') or (input = '\import') then
@@ -334,6 +357,10 @@ begin
                 writeln();
                 TextColor(th.ColorReset);
             end;
+            '\loveyou' : begin
+                writeln('I love you too. <3');
+                TextColor(th.ColorReset);
+            end;
             '\reset' : begin
                 disposeEnvironment(env);
                 env := buildNewEnvironment();
@@ -342,6 +369,12 @@ begin
                 writeln('All settings, history and data have been reset.');
                 TextColor(th.ColorReset);
                 writeln();
+            end;
+            '\display' : begin
+                TextColor(th.ColorRzulta1);
+                write('Max stack display: ');
+                TextColor(th.ColorReset);
+                writeln(maxdisp);
             end;
             '\theme' : begin
                 writeln('Available themes: ');
@@ -384,7 +417,9 @@ begin
                         input := cutCommentEndline(input);
                     end;
                     env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
-                    res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
+                    if (stack_size(env.Stack[env.Settings.StackPointer]) > maxdisp) and (maxdisp <> 0) 
+                        then res := '<Stack of '+IntToStr(stack_size(env.Stack[env.Settings.StackPointer]))+' elements>'
+                        else res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
                     if not (env.Settings.Prevent) then 
                     begin
                         TextColor(th.ColorStack);

@@ -12,8 +12,8 @@ const
 	TNIL = 0;
 	TNUM = 1;
 	TSTR = 2;
-	TVEN = 3;
-	TVES = 4;
+	TEXP = 3;
+    TFIL = 4;
 	TVEC = 5;
 	TBOO = 6;
 	TOBJ = 7;
@@ -99,6 +99,7 @@ function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
 function buildFunction(val : String) : Entity;
+function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
 function buildNull() : Entity;
@@ -179,35 +180,35 @@ end;
 
 function getEntityTypeName(const x : Integer) : String;
 begin
-  case x of
-    TNIL : getEntityTypeName := 'Null';
-    TNUM : getEntityTypeName := 'Number';
-    TSTR : getEntityTypeName := 'String';
-    TVEN : getEntityTypeName := 'Array<Number>';
-    TVES : getEntityTypeName := 'Array<String>';
-    TVEC : getEntityTypeName := 'Array';
-    TBOO : getEntityTypeName := 'Boolean';
-    TOBJ : getEntityTypeName := 'Object';
-    TFUN : getEntityTypeName := 'Function';
-    TEXC : getEntityTypeName := 'Exception';
-    else getEntityTypeName := 'Unknown';
-  end;
+    case x of
+        TNIL : getEntityTypeName := 'Null';
+        TNUM : getEntityTypeName := 'Number';
+        TSTR : getEntityTypeName := 'String';
+        TVEC : getEntityTypeName := 'Array';
+        TBOO : getEntityTypeName := 'Boolean';
+        TOBJ : getEntityTypeName := 'Object';
+        TFUN : getEntityTypeName := 'Function';
+        TEXC : getEntityTypeName := 'Exception';
+        TEXP : getEntityTypeName := 'Expression';
+        TFIL : getEntityTypeName := 'File';
+        else getEntityTypeName := 'Unknown';
+    end;
 end;
 
 function getEntitySpec(x : Entity) : String;
 begin
-  case x.EntityType of
-    TNIL : getEntitySpec := '<Null>';
-    TNUM : getEntitySpec := FormatFloat('0.###############', x.Num) + ' : <Number>';
-    TSTR : getEntitySpec := '"' + x.Str + '" : <String>';
-    TVEN : getEntitySpec := '<Array<Number>>';
-    TVES : getEntitySpec := '<Array<String>>';
-    TVEC : getEntitySpec := '<Array>';
-    TBOO : getEntitySpec := x.Str + ' : <Boolean>';
-    TOBJ : getEntitySpec := '<Object>';
-    TFUN : getEntitySpec := '<Function>';
-    else getEntitySpec := '<Unknown>';
-  end;
+    case x.EntityType of
+        TNIL : getEntitySpec := '<Null>';
+        TNUM : getEntitySpec := FormatFloat('0.###############', x.Num) + ' : <Number>';
+        TSTR : getEntitySpec := '"' + x.Str + '" : <String>';
+        TVEC : getEntitySpec := '<Array>';
+        TBOO : getEntitySpec := x.Str + ' : <Boolean>';
+        TOBJ : getEntitySpec := '<Object>';
+        TFUN : getEntitySpec := '<Function>';
+        TEXP : getEntitySpec := '<Expression>';
+        TFIL : getEntitySpec := '<File>';
+        else getEntitySpec := '<Unknown>';
+    end;
 end;
 
 function printEntityValue(x : Entity; mask : String) : String;
@@ -215,14 +216,17 @@ var
   z : String;
 begin
     z := '';
-    if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num);
-    if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
-    if (x.EntityType = TNIL) then z := x.Str;
-    if (x.EntityType = TBOO) then z := x.Str;
-    if (x.EntityType = TVEC) then z := '<Array>';
-    if (x.EntityType = TOBJ) then z := '<Object>';
-    if (x.EntityType = TFUN) then z := '<Function>'; 
-    if (x.EntityType = TEXC) then z := '<Exception>'; 
+         if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num)
+    else if (x.EntityType = TSTR) then z := '"' + x.Str + '"'
+    else if (x.EntityType = TNIL) then z := x.Str
+    else if (x.EntityType = TBOO) then z := x.Str
+    else if (x.EntityType = TVEC) then z := '<Array>'
+    else if (x.EntityType = TOBJ) then z := '<Object>'
+    else if (x.EntityType = TFUN) then z := '<Function>'
+    else if (x.EntityType = TEXC) then z := '<Exception>' 
+    else if (x.EntityType = TFIL) then z := '<File>' 
+    else if (x.EntityType = TEXP) then z := '<Expression>'
+    else z := '<Unknown>'; 
     printEntityValue := z;
 end;
 
@@ -306,6 +310,17 @@ begin
     pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildFunction := pom;
+end;
+
+function buildExpression(val : String) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TEXP;
+	pom.Str := val;
+	pom.Num := Length(val);
+    pom.Num2 := 0;
+	buildExpression := pom;
 end;
 
 function buildException(val : String) : Entity;

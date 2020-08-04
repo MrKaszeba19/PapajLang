@@ -8,6 +8,12 @@ uses
   Classes, SysUtils, StrUtils, 
   UnitEntity, UnitStack, UnitFunctions;
 
+const
+    MNORM = 0;
+    MIF = 1;
+    MFUN = 2;
+    MWHILE = 3;
+
 type PSEnvironment = record
     Stack     : StackDB;
     Settings  : TSettings;
@@ -77,10 +83,13 @@ begin
   while not eof(fp) do
   begin
     readln(fp, S);
-    fun := fun + ' ' + S;
+    S := trim(S);
+    fun := fun + #10 + S;
   end;
   closefile(fp);
-  writeln(fun);
+  //writeln(fun);
+    fun := cutCommentMultiline(fun);
+    fun := cutCommentEndline(fun);
   read_source := parseScoped(trim(fun), env.Stack, env.Settings, env.Variables); 
 end;
 
@@ -255,18 +264,17 @@ end;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
 	//L      : TStrings;
-	L       : TStringArray;
-	i       : String;
-	index   : LongInt;
-	z       : String;
-	step    : Integer;
-	cursor  : LongInt;
-	nestlv  : ShortInt;
-	nesttx  : String;
-	cond    : ShortInt;
-	permit  : Boolean;
-    ifMode  : Boolean;
-    funMode : Boolean;
+	L      : TStringArray;
+	i      : String;
+	index  : LongInt;
+	z      : String;
+	step   : Integer;
+	cursor : LongInt;
+	nestlv : ShortInt;
+	nesttx : String;
+    permit : Boolean;
+	cond   : ShortInt;
+    mode   : ShortInt;
 begin
 	//L := TStringlist.Create;
 	//L.Delimiter := ' ';
@@ -279,8 +287,7 @@ begin
   	Steps := 1;
   	cond := -1;
   	permit := True;
-    ifMode  := False;
-    funMode := False;
+    mode := MNORM;
   	index := 0;
   	//while (index < L.Count) and (sets.KeepWorking > 0) do
 	while (input <> '') and (input <> #10) and (index < Length(L)) and (sets.KeepWorking > 0) do
@@ -296,7 +303,7 @@ begin
 		if L[index] = '?' then begin
 			cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
         end else if (L[index] = 'if') then begin
-			ifMode := True;
+			mode := MIF;
 		end else if (L[index] = 'if:') then begin
 			if cond = 0 then permit := True
 			else permit := False;
@@ -304,7 +311,7 @@ begin
 			if cond = 0 then permit := False
 			else permit := True;
         end else if (L[index] = 'function') or (L[index] = 'fun') then begin
-			funMode := True;
+			mode := MFUN;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
@@ -320,7 +327,7 @@ begin
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
-                if funMode then begin
+                if mode = MFUN then begin
                     if (permit) then
                     if Steps = -1 then begin
                         repeat
@@ -328,7 +335,7 @@ begin
                         until EOF;
                         stack_pop(pocz[sets.StackPointer]);
                     end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
-                    funMode := False;
+                    mode := MNORM;
                 end else begin
 	    		    if (permit) then
 	    		    	if Steps = -1 then begin
@@ -386,20 +393,21 @@ begin
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
-                if ifMode then begin
+                if mode = MIF then begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
 			        else permit := False;
-                    ifMode := False;
+                    mode := MNORM;
                 end else begin
-                    if (permit) then
-                        if Steps = -1 then begin
-                            repeat
-                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
-                            until EOF;
-                            stack_pop(pocz[sets.StackPointer]);
-                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                    stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
+                    //if (permit) then
+                    //    if Steps = -1 then begin
+                    //        repeat
+                    //            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                    //        until EOF;
+                    //        stack_pop(pocz[sets.StackPointer]);
+                    //    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                     permit := True;
                 end;
 	    		index := cursor - 1;
@@ -411,11 +419,11 @@ begin
 	    				until EOF;
 	    				stack_pop(pocz[sets.StackPointer]);
 	    			end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
-                if ifMode then begin
+                if mode = MIF then begin
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
 			        else permit := False;
-                    ifMode := False;
+                    mode := MNORM;
                 end else begin
 	    		    permit := True; 
                 end;
