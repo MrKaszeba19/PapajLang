@@ -1215,9 +1215,9 @@ begin
             if (IntEax = 0) then begin
              	stack_push(pocz[sets.StackPointer], buildNumber(ExtEax));
             end else begin
-            	if (sets.StrictType) and (EntEax.EntityType <> TBOO) then
-                stack_push(pocz[sets.StackPointer], buildException('Exception at tonumber: Got a non-numeric string.'))
-            	else stack_push(pocz[sets.StackPointer], buildNumber(EntEax.Num));
+            	if (sets.StrictType) and (EntEax.EntityType <> TBOO) 
+                    then stack_push(pocz[sets.StackPointer], buildException('EType:CNonNumeric: Got a non-numeric entity at "toNumber".'))
+            	    else stack_push(pocz[sets.StackPointer], buildNumber(EntEax.Num));
             end;
         end;
         'toBoolean' : begin

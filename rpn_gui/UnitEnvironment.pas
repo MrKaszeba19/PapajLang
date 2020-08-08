@@ -13,6 +13,10 @@ const
     MIF = 1;
     MFUN = 2;
     MWHILE = 3;
+    MDOWHILE = 4;
+    MFOR1 = 5;
+    MFOR2 = 6;
+    MELIF = 7;
 
 type PSEnvironment = record
     Stack     : StackDB;
@@ -27,6 +31,7 @@ function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
 function cutCommentEndline(input : String) : String;
 function cutShebang(input : String) : String;
+function checkParentheses(input : String) : Boolean;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
@@ -46,10 +51,12 @@ var
 function checkLevel(input : String) : Integer;
 begin
          if (input = '{')         then checkLevel := 1
+    else if (input = 'else{')     then checkLevel := 1
     else if (input = 'fun{')      then checkLevel := 1
     else if (input = 'function{') then checkLevel := 1
     else if (input = '[')         then checkLevel := 1
     else if (input = '(')         then checkLevel := 1
+    else if (input = 'if(')       then checkLevel := 1
 	else if (input = '}')         then checkLevel := -1
     else if (input = ']')         then checkLevel := -1
     else if (input = ')')         then checkLevel := -1
@@ -256,6 +263,56 @@ begin
     cutShebang := trim(pom);
 end;
 
+function checkParentheses(input : String) : Boolean;
+var
+    isValid    : Boolean;
+    v1, v2, v3 : LongInt;
+    i          : LongInt;
+begin
+    isValid := True;
+    i := 0;
+    v1 := 0; v2 := 0; v3 := 0;
+    while i <= Length(input) do 
+    begin
+        case input[i] of
+            '{' : begin
+                v1 := v1 + 1;
+            end; 
+            '}' : begin
+                v1 := v1 - 1;
+                if (v1 < 0) then begin
+                    isValid := False;
+                    Break;
+                end;
+            end; 
+            '(' : begin
+                v2 := v2 + 1;
+            end; 
+            ')' : begin
+                v2 := v2 - 1;
+                if (v2 < 0) then begin
+                    isValid := False;
+                    Break;
+                end;
+            end; 
+            '[' : begin
+                v3 := v3 + 1;
+            end; 
+            ']' : begin
+                v3 := v3 - 1;
+                if (v3 < 0) then begin
+                    isValid := False;
+                    Break;
+                end;
+            end; 
+        end;
+        i := i + 1;
+    end;
+    if (v1 <> 0) or (v2 <> 0) or (v3 <> 0) then isValid := False;
+    checkParentheses := isValid;
+end;
+
+
 function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
 begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
@@ -312,6 +369,10 @@ begin
 			else permit := True;
         end else if (L[index] = 'function') or (L[index] = 'fun') then begin
 			mode := MFUN;
+        end else if (L[index] = 'elif') then begin
+			mode := MELIF;
+            if cond = 0 then permit := False
+			else permit := True;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
@@ -366,6 +427,28 @@ begin
 	    			end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
 	    		permit := True;
 	    		index := cursor - 1;
+            end else if L[index] = 'else{' then begin
+	    		nestlv := 1;
+	    		nesttx := '';
+	    		cursor := index + 1;
+				while (nestlv > 0) and (cursor < Length(L)) do begin
+                    nestlv := nestlv + checkLevel(L[cursor]);
+					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    			Inc(cursor);
+	    		end;
+                if cond = 0 then permit := False else permit := True;
+	    		if (permit) then
+                begin
+	    		    if Steps = -1 then begin
+	    		    	repeat
+	    		    		pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    		    	until EOF;
+	    		    	stack_pop(pocz[sets.StackPointer]);
+	    		    end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                end;
+                mode := MNORM;
+                permit := True;
+	    		index := cursor - 1;
             end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
                 nestlv := 1;
                 nesttx := '';
@@ -382,7 +465,24 @@ begin
                         until EOF;
                         stack_pop(pocz[sets.StackPointer]);
                     end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                mode := MNORM;
                 permit := True;
+                index := cursor - 1;
+            end else if (L[index] = 'if(') then begin
+                mode := MIF;
+                nestlv := 1;
+                nesttx := '';
+                cursor := index + 1;
+                while (nestlv > 0) and (cursor < Length(L)) do begin
+                    nestlv := nestlv + checkLevel(L[cursor]);
+					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+                    Inc(cursor);
+                end;
+                pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    		cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                if cond = 0 then permit := True
+			    else permit := False;
+                mode := MNORM;
                 index := cursor - 1;
             end else if L[index] = '(' then begin
 	    		nestlv := 1;
@@ -397,6 +497,12 @@ begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
+			        else permit := False;
+                    mode := MNORM;
+                end else if mode = MELIF then begin
+                    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                    if cond = 0 then permit := permit and True
 			        else permit := False;
                     mode := MNORM;
                 end else begin

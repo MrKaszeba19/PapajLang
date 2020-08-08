@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-August 4, 2020  
+August 8, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -224,10 +224,17 @@ The question mark checks if an expression B1 is true or its numerical value is e
 The `if:` launches the next instruction only when the recent ?-check was successful.
 The `else:` launches the next instruction only when the recent ?-check was unsuccesful.
 
-**C-like syntax:** `if ( B1 ) I1 else I2`
+**C-like syntaxes:** 
+- `if ( B1 ) I1` 
+- `if ( B1 ) I1 else I2`
+- `if ( B1 ) I1 elif ( B2 ) I2`
+- `if ( B1 ) I1 elif ( B2 ) I2 else I3`
+- `if ( B1 ) I1 elif ( B2 ) I2 elif ( B3 ) I3 ... else IN`
+- `if ( B1 ) I1 elif ( B2 ) I2 elif ( B3 ) I3 ... elif ( BN ) IN`
 The question mark checks if an expression B1 is true or its numerical value is equal to 0.
-The `if` launches the next instruction only when the recent ?-check was successful.
-The `else` launches the next instruction only when the recent ?-check was unsuccesful.
+The `if` launches the next instruction only when the recent condition check was successful.
+The `else` launches the next instruction only when the recent condition check was unsuccesful.
+The `elif` launches the next condition if a check of the previous one was not successful.
 
 **Examples**
 - `scan toNumber 2 mod ? if: { "This number is even." println } else: { "This number is odd." println }`
@@ -238,6 +245,7 @@ The `else` launches the next instruction only when the recent ?-check was unsucc
 - `if ( scan toNumber 5 > ) { "This number is greater than 5" println }`
 - `if ( scan toNumber 5 <= not ) { "This number is greater than 5" println }`
 - `if ( scan toNumber 10 mod ) 1 else 0`
+- `if ( x 1 = ) { "X is equal to 1" println } elif ( x 2 = ) { "X is equal to 2" println } else { "X is neither equal to 1 nor equal to 2" println }`
 
 *These styles of conditionals are not made in a RPN philosophy, but they were introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
 
