@@ -51,6 +51,7 @@ begin
     writeln('Type \history to display what you did.');
     writeln('Type \hclear to clear all history');
     writeln('Type \hclear:N to clear the N-th command of history (N >= 1)');
+    writeln('Type \import:FILE to import PS code from a file to REPL');
     writeln('Type \theme to check available themes for REPL');
     writeln('Type \!! to repeat last command');
     writeln('Type \!N to execute the N-th command of history (N >= 1)');

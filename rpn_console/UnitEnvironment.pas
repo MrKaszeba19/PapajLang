@@ -14,6 +14,8 @@ const
     MFUN = 2;
     MWHILE = 3;
     MDOWHILE = 4;
+    MDOUNTIL = 9;
+    MDO = 8;
     MFOR1 = 5;
     MFOR2 = 6;
     MELIF = 7;
@@ -332,6 +334,7 @@ var
     permit : Boolean;
 	cond   : ShortInt;
     mode   : ShortInt;
+    StrCond, StrInst : String;
 begin
 	//L := TStringlist.Create;
 	//L.Delimiter := ' ';
@@ -371,8 +374,12 @@ begin
 			mode := MFUN;
         end else if (L[index] = 'elif') then begin
 			mode := MELIF;
-            if cond = 0 then permit := False
-			else permit := True;
+        end else if (L[index] = 'do') then begin
+            mode := MDO;
+        end else if (L[index] = 'while') then begin
+            if mode = MDO then mode := MDOWHILE else mode := MWHILE;
+        end else if (L[index] = 'until') then begin
+            mode := MDOUNTIL;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
@@ -397,6 +404,18 @@ begin
                         stack_pop(pocz[sets.StackPointer]);
                     end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                     mode := MNORM;
+                end else if mode = MWHILE then begin
+                    StrInst := trimLeft(nesttx);
+                    while True do
+                    begin
+                        pocz := parseScoped(StrCond, pocz, sets, vardb);
+                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if (cond <> 0) then break;
+                        pocz := parseScoped(StrInst, pocz, sets, vardb);
+                    end;
+                    mode := MNORM;
+                end else if mode = MDO then begin
+                    StrInst := trimLeft(nesttx);
                 end else begin
 	    		    if (permit) then
 	    		    	if Steps = -1 then begin
@@ -505,6 +524,29 @@ begin
                     if cond = 0 then permit := permit and True
 			        else permit := False;
                     mode := MNORM;
+                end else if mode = MWHILE then begin
+                    StrCond := trimLeft(nesttx);
+                    permit := True;
+                end else if mode = MDOWHILE then begin
+                    StrCond := trimLeft(nesttx);
+                    while True do
+                    begin
+                        pocz := parseScoped(StrInst, pocz, sets, vardb);
+                        pocz := parseScoped(StrCond, pocz, sets, vardb);
+                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if (cond <> 0) then break;
+                    end;
+                    mode := MNORM;
+                end else if mode = MDOUNTIL then begin
+                    StrCond := trimLeft(nesttx);
+                    while True do
+                    begin
+                        pocz := parseScoped(StrInst, pocz, sets, vardb);
+                        pocz := parseScoped(StrCond, pocz, sets, vardb);
+                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if (cond = 0) then break;
+                    end;
+                    mode := MNORM;
                 end else begin
                     stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
                     //if (permit) then
@@ -518,19 +560,32 @@ begin
                 end;
 	    		index := cursor - 1;
             end else begin
-	    		if (permit) then
-	    			if Steps = -1 then begin
-	    				repeat
-	    					evaluate(L[index], pocz, Steps, sets, vardb);
-	    				until EOF;
-	    				stack_pop(pocz[sets.StackPointer]);
-	    			end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
                 if mode = MIF then begin
+                    evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
 			        else permit := False;
                     mode := MNORM;
+                //end else if mode = MDO then begin
+                //    StrInst := trimLeft(L[index]);
+                //end else if mode = MDOWHILE then begin
+                //    StrCond := trimLeft(L[index]);
+                //    while True do
+                //    begin
+                //        pocz := parseScoped(StrInst, pocz, sets, vardb);
+                //        pocz := parseScoped(StrCond, pocz, sets, vardb);
+                //        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                //        if (cond <> 0) then break;
+                //    end;
+                //    mode := MNORM;
                 end else begin
+                    if (permit) then
+	    			    if Steps = -1 then begin
+	    				    repeat
+	    					    evaluate(L[index], pocz, Steps, sets, vardb);
+	    				    until EOF;
+	    				    stack_pop(pocz[sets.StackPointer]);
+	    			    end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    permit := True; 
                 end;
 	    	end;

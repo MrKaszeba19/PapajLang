@@ -1,0 +1,11 @@
+"" >command
+
+do {
+	"1 - Type \q to quit." println
+	scan toString >command
+} while ( command "\q" != )
+
+do {
+	"2 - Type \q to quit." println
+	scan toString >command
+} until ( command "\q" = )

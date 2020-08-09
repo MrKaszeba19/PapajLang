@@ -1,0 +1,5 @@
+1 >i
+while ( i 5 < ) {
+	i println
+	i ++ >i
+}
