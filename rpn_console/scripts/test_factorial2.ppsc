@@ -1,0 +1,10 @@
+fun{
+	>n
+	if ( n 0 = ) {
+		1
+	} else { 
+		n n -- factorial * 
+	}
+} >factorial
+
+scan toNumber factorial

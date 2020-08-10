@@ -1,0 +1,18 @@
+@silent
+@use(Console)
+
+
+function { 
+	NULL >command
+	do {
+		clearScreen
+		"Welcome to PapajScript SloshY!!!" println newln
+		"What do you want to do?" println
+		"    q - Quit" println newln
+		scan toString >command
+	} until ( command "q" = 
+	          command "Q" = 
+	          or ) 
+} >menu
+
+menu

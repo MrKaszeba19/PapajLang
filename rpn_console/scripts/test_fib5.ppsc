@@ -1,0 +1,19 @@
+function {
+	>n
+	if ( n 0 = ) {
+		0
+	} elif ( n 1 = ) {
+		1
+	} else {
+		@autoclear(false) 
+		0 1
+		n -- times {
+			+
+			2 keep
+		}
+		@autoclear(true)
+		1 keep
+	}
+} >fib
+
+scan toNumber fib

@@ -1,0 +1,12 @@
+@use(Array)
+@use(String)
+"Set array length: " print
+scan toNumber >n
+[] >T
+1 >i
+n times {
+	"Push the " i toString ". element: " 2 times concat print
+	T scan toNumber push rem
+	i ++ >i
+}
+T sortNumbers println

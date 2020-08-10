@@ -335,6 +335,7 @@ var
 	cond   : ShortInt;
     mode   : ShortInt;
     StrCond, StrInst : String;
+    OldCond : ShortInt;
 begin
 	//L := TStringlist.Create;
 	//L.Delimiter := ' ';
@@ -367,8 +368,11 @@ begin
 		end else if (L[index] = 'if:') then begin
 			if cond = 0 then permit := True
 			else permit := False;
-		end else if (L[index] = 'else') or (L[index] = 'else:') or (L[index] = 'unless:') then begin
-			if cond = 0 then permit := False
+		end else if  (L[index] = 'else:') or (L[index] = 'unless:') then begin
+			if (cond = 0) then permit := False
+			else permit := True;
+        end else if (L[index] = 'else') then begin
+			if (OldCond = 0) then permit := False
 			else permit := True;
         end else if (L[index] = 'function') or (L[index] = 'fun') then begin
 			mode := MFUN;
@@ -418,12 +422,15 @@ begin
                     StrInst := trimLeft(nesttx);
                 end else begin
 	    		    if (permit) then
+                    begin
 	    		    	if Steps = -1 then begin
 	    		    		repeat
 	    		    			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
 	    		    		until EOF;
 	    		    		stack_pop(pocz[sets.StackPointer]);
 	    		    	end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                        OldCond := 0;
+                    end;
                 end;
                 permit := True;
 	    		index := cursor - 1;
@@ -455,7 +462,7 @@ begin
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
 	    			Inc(cursor);
 	    		end;
-                if cond = 0 then permit := False else permit := True;
+                if (cond = 0) or (OldCond <> 0) then permit := False else permit := True;
 	    		if (permit) then
                 begin
 	    		    if Steps = -1 then begin
@@ -489,6 +496,7 @@ begin
                 index := cursor - 1;
             end else if (L[index] = 'if(') then begin
                 mode := MIF;
+                OldCond := 1;
                 nestlv := 1;
                 nesttx := '';
                 cursor := index + 1;
@@ -513,6 +521,7 @@ begin
 	    			Inc(cursor);
 	    		end;
                 if mode = MIF then begin
+                    OldCond := 1;
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
@@ -521,7 +530,7 @@ begin
                 end else if mode = MELIF then begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if cond = 0 then permit := permit and True
+                    if (cond = 0) then permit := permit
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MWHILE then begin
