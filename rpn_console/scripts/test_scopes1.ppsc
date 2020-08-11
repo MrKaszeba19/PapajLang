@@ -1,0 +1,13 @@
+function { 
+	if ( ?x ) { } else { FALSE }
+} >check
+
+?x println
+
+1 >x
+
+x check
+
+function { } >f
+
+10 times f

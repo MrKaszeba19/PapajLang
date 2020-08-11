@@ -16,8 +16,9 @@ const
     MDOWHILE = 4;
     MDOUNTIL = 9;
     MDO = 8;
-    MFOR1 = 5;
-    MFOR2 = 6;
+    MFOR = 10;
+    //MFOR1 = 5;
+    //MFOR2 = 6;
     MELIF = 7;
 
 type PSEnvironment = record
@@ -384,6 +385,8 @@ begin
             if mode = MDO then mode := MDOWHILE else mode := MWHILE;
         end else if (L[index] = 'until') then begin
             mode := MDOUNTIL;
+        end else if (L[index] = 'for') then begin
+            mode := MFOR;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
@@ -556,6 +559,8 @@ begin
                         if (cond = 0) then break;
                     end;
                     mode := MNORM;
+                end else if mode = MWHILE then begin
+                    mode := MNORM;
                 end else begin
                     stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
                     //if (permit) then
@@ -570,9 +575,16 @@ begin
 	    		index := cursor - 1;
             end else begin
                 if mode = MIF then begin
+                    OldCond := 1;
                     evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                     if cond = 0 then permit := True
+			        else permit := False;
+                    mode := MNORM;
+                end else if mode = MELIF then begin
+                    evaluate(L[index], pocz, Steps, sets, vardb);
+	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                    if (cond = 0) then permit := permit
 			        else permit := False;
                     mode := MNORM;
                 //end else if mode = MDO then begin

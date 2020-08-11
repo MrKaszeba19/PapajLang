@@ -1,6 +1,10 @@
 @silent
 @use(Console)
 
+function {
+	"Let's play!" println
+	scan rem
+} >game
 
 function { 
 	NULL >command
@@ -8,8 +12,14 @@ function {
 		clearScreen
 		"Welcome to PapajScript SloshY!!!" println newln
 		"What do you want to do?" println
+		"    a - Play" println
 		"    q - Quit" println newln
 		scan toString >command
+		if ( command "a" =
+		     command "A" =
+                      or ) {
+			game
+		}
 	} until ( command "q" = 
 	          command "Q" = 
 	          or ) 

@@ -2964,31 +2964,31 @@ begin
 	Found := true;
 	case i of
 		'PI' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(PI));
+            stack_push(pocz[sets.StackPointer], buildNumber(PI));
         end;
         'EU' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(EU));
+            stack_push(pocz[sets.StackPointer], buildNumber(EU));
         end;
         'FI' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(FI));
+            stack_push(pocz[sets.StackPointer], buildNumber(FI));
         end;
         'NULL' : begin
-          stack_push(pocz[sets.StackPointer], buildNull());
+            stack_push(pocz[sets.StackPointer], buildNull());
         end;
         'TRUE' : begin
-          stack_push(pocz[sets.StackPointer], buildBoolean(True));
+            stack_push(pocz[sets.StackPointer], buildBoolean(True));
         end;
         'FALSE' : begin
-          stack_push(pocz[sets.StackPointer], buildBoolean(False));
+            stack_push(pocz[sets.StackPointer], buildBoolean(False));
         end;
         '\\' : begin
-          stack_push(pocz[sets.StackPointer], buildString('\'));
+            stack_push(pocz[sets.StackPointer], buildString('\'));
         end;
         '\>' : begin
-          stack_push(pocz[sets.StackPointer], buildString('>'));
+            stack_push(pocz[sets.StackPointer], buildString('>'));
         end;
         '\<' : begin
-          stack_push(pocz[sets.StackPointer], buildString('<'));
+            stack_push(pocz[sets.StackPointer], buildString('<'));
         end;
         '\>>' : begin
           stack_push(pocz[sets.StackPointer], buildString('>>'));
