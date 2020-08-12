@@ -30,7 +30,7 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
 - There are two ways to build RPN Calculator
     * compile it using Lazarus IDE by clicking "Run" or "Compile"
     * simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
-- Windows users can make a Desktop shortcut to a RPN REPL by running `installREPL.bat`
+- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
 
 ## PapajScript:
 

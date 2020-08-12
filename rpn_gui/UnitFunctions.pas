@@ -69,6 +69,15 @@ begin
   read_sourcefile := pocz;
 end;
 
+procedure swapNumbers(var e1 : Extended; var e2 : Extended);
+var
+	pom : Extended;
+begin
+	pom := e1;
+	e1 := e2;
+	e2 := pom;
+end;
+
 //function lib_template(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 //var
 //	Found : Boolean;
@@ -188,11 +197,30 @@ begin
 	lcm := (a*b)/gcd(a, b);
 end;
 
+//function fib(n: Extended) : Extended;
+//begin
+//     if n = 0.0 then fib := 0.0
+//     else if n = 1.0 then fib := 1.0
+//     else fib := fib(n-1.0) + fib(n-2.0);
+//end;
+
 function fib(n: Extended) : Extended;
+var
+    a, b : Extended;
+    i    : LongInt;
 begin
-     if n = 0.0 then fib := 0.0
-     else if n = 1.0 then fib := 1.0
-     else fib := fib(n-1.0) + fib(n-2.0);
+    if n = 0.0 then fib := 0.0
+    else if n = 1.0 then fib := 1.0
+    else begin
+        a := 0.0;
+        b := 1.0;
+        for i := 2 to trunc(n) do
+        begin
+            a := a + b;
+            swapNumbers(a, b);
+        end;
+        fib := b;
+    end;
 end;
 
 function fgamma(x : Extended) : Extended;
