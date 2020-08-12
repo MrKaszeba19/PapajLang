@@ -249,7 +249,7 @@ The `elif` launches the next condition if a check of the previous one was not su
 
 *These styles of conditionals are not made in a RPN philosophy, but they were introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
 
-#### Condtitional instructions (if-else)
+#### Loops
 - `N1 times { I1 }` 
 - `while (B1) { I1 }`
 - `do { I1 } while ( B1 )`
