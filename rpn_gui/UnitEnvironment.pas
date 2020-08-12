@@ -54,16 +54,68 @@ var
 function checkLevel(input : String) : Integer;
 begin
          if (input = '{')         then checkLevel := 1
-    else if (input = 'else{')     then checkLevel := 1
+    //else if (input = 'else{')     then checkLevel := 1
     else if (input = 'fun{')      then checkLevel := 1
     else if (input = 'function{') then checkLevel := 1
     else if (input = '[')         then checkLevel := 1
     else if (input = '(')         then checkLevel := 1
-    else if (input = 'if(')       then checkLevel := 1
+    //else if (input = 'if(')       then checkLevel := 1
 	else if (input = '}')         then checkLevel := -1
     else if (input = ']')         then checkLevel := -1
     else if (input = ')')         then checkLevel := -1
     else checkLevel := 0;
+end;
+
+// LOOPS
+
+procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+begin
+    while True do
+    begin
+        pocz := parseOpen(StrCond, pocz, sets, vardb);
+        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+        pocz := parseOpen(StrInst, pocz, sets, vardb);
+    end;
+end;
+
+procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+begin
+    while True do
+    begin
+        pocz := parseOpen(StrInst, pocz, sets, vardb);
+        pocz := parseOpen(StrCond, pocz, sets, vardb);
+        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+    end;
+end;
+
+procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+begin
+    while True do
+    begin
+        pocz := parseOpen(StrInst, pocz, sets, vardb);
+        pocz := parseOpen(StrCond, pocz, sets, vardb);
+        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then break;
+    end;
+end;
+
+procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+var
+	L      : TStringArray;
+begin
+    if OccurrencesOfChar(StrCond, ';') = 2 then
+    begin
+        L := StrCond.Split(';');
+        pocz := parseOpen(L[0], pocz, sets, vardb);
+        while True do
+        begin
+            pocz := parseOpen(L[1], pocz, sets, vardb);
+            if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+            pocz := parseOpen(StrInst, pocz, sets, vardb);
+            pocz := parseOpen(L[2], pocz, sets, vardb);
+        end;
+    end else begin
+        stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(StrCond));
+    end;
 end;
 
 
@@ -413,13 +465,11 @@ begin
                     mode := MNORM;
                 end else if mode = MWHILE then begin
                     StrInst := trimLeft(nesttx);
-                    while True do
-                    begin
-                        pocz := parseScoped(StrCond, pocz, sets, vardb);
-                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                        if (cond <> 0) then break;
-                        pocz := parseScoped(StrInst, pocz, sets, vardb);
-                    end;
+                    doWhile(StrCond, StrInst, pocz, sets, vardb);
+                    mode := MNORM;
+                end else if mode = MFOR then begin
+                    StrInst := trimLeft(nesttx);
+                    doFor(StrCond, StrInst, pocz, sets, vardb);
                     mode := MNORM;
                 end else if mode = MDO then begin
                     StrInst := trimLeft(nesttx);
@@ -456,28 +506,28 @@ begin
 	    			end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
 	    		permit := True;
 	    		index := cursor - 1;
-            end else if L[index] = 'else{' then begin
-	    		nestlv := 1;
-	    		nesttx := '';
-	    		cursor := index + 1;
-				while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    			Inc(cursor);
-	    		end;
-                if (cond = 0) or (OldCond <> 0) then permit := False else permit := True;
-	    		if (permit) then
-                begin
-	    		    if Steps = -1 then begin
-	    		    	repeat
-	    		    		pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
-	    		    	until EOF;
-	    		    	stack_pop(pocz[sets.StackPointer]);
-	    		    end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-                end;
-                mode := MNORM;
-                permit := True;
-	    		index := cursor - 1;
+            //end else if L[index] = 'else{' then begin
+	    	//	nestlv := 1;
+	    	//	nesttx := '';
+	    	//	cursor := index + 1;
+			//	while (nestlv > 0) and (cursor < Length(L)) do begin
+            //        nestlv := nestlv + checkLevel(L[cursor]);
+			//		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    	//		Inc(cursor);
+	    	//	end;
+            //    if (cond = 0) or (OldCond <> 0) then permit := False else permit := True;
+	    	//	if (permit) then
+            //    begin
+	    	//	    if Steps = -1 then begin
+	    	//	    	repeat
+	    	//	    		pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    	//	    	until EOF;
+	    	//	    	stack_pop(pocz[sets.StackPointer]);
+	    	//	    end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+            //    end;
+            //    mode := MNORM;
+            //    permit := True;
+	    	//	index := cursor - 1;
             end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
                 nestlv := 1;
                 nesttx := '';
@@ -497,23 +547,23 @@ begin
                 mode := MNORM;
                 permit := True;
                 index := cursor - 1;
-            end else if (L[index] = 'if(') then begin
-                mode := MIF;
-                OldCond := 1;
-                nestlv := 1;
-                nesttx := '';
-                cursor := index + 1;
-                while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-                    Inc(cursor);
-                end;
-                pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    		cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                if cond = 0 then permit := True
-			    else permit := False;
-                mode := MNORM;
-                index := cursor - 1;
+            //end else if (L[index] = 'if(') then begin
+            //    mode := MIF;
+            //    OldCond := 1;
+            //    nestlv := 1;
+            //    nesttx := '';
+            //    cursor := index + 1;
+            //    while (nestlv > 0) and (cursor < Length(L)) do begin
+            //        nestlv := nestlv + checkLevel(L[cursor]);
+			//		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+            //        Inc(cursor);
+            //    end;
+            //    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    	//	cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            //    if cond = 0 then permit := True
+			//    else permit := False;
+            //    mode := MNORM;
+            //    index := cursor - 1;
             end else if L[index] = '(' then begin
 	    		nestlv := 1;
 	    		nesttx := '';
@@ -539,25 +589,16 @@ begin
                 end else if mode = MWHILE then begin
                     StrCond := trimLeft(nesttx);
                     permit := True;
+                end else if mode = MFOR then begin
+                    StrCond := trimLeft(nesttx);
+                    permit := True;
                 end else if mode = MDOWHILE then begin
                     StrCond := trimLeft(nesttx);
-                    while True do
-                    begin
-                        pocz := parseScoped(StrInst, pocz, sets, vardb);
-                        pocz := parseScoped(StrCond, pocz, sets, vardb);
-                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                        if (cond <> 0) then break;
-                    end;
+                    doDoWhile(StrCond, StrInst, pocz, sets, vardb);
                     mode := MNORM;
                 end else if mode = MDOUNTIL then begin
                     StrCond := trimLeft(nesttx);
-                    while True do
-                    begin
-                        pocz := parseScoped(StrInst, pocz, sets, vardb);
-                        pocz := parseScoped(StrCond, pocz, sets, vardb);
-                        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                        if (cond = 0) then break;
-                    end;
+                    doDoUntil(StrCond, StrInst, pocz, sets, vardb);
                     mode := MNORM;
                 end else if mode = MWHILE then begin
                     mode := MNORM;

@@ -26,7 +26,7 @@ Additional units of rpn_gui
 – There are two ways to build RPN Calculator
     a) compile it using Lazarus IDE by clicking "Run" or "Compile"
     c) simply run compile.sh (in Unix/Linux systems) or compile.bat (in Windows systems) to compile the project
-– Windows users can make a Desktop shortcut to a RPN REPL by running installREPL.bat
+– You can make a Desktop shortcut to a RPN REPL by running installREPL.sh (Unix/Linux) or installREPL.bat (Windows)
 
 
 === REPORTED FLAWS
@@ -38,4 +38,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 8/10/2020
+Paul Lipkowski, 8/12/2020

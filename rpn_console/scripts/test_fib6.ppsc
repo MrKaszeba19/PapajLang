@@ -1,0 +1,22 @@
+function{
+	>n
+	if ( n 0 = ) { 
+		0
+	} elif ( n 1 = ) {
+		1
+	} else {
+		// put 2 initial values we will add up
+		0 1
+		for ( 2 >i ; i n <= ; i ++ >i ) {
+			// duplicate the values and create a sum
+			2 copy +
+			// remove the LHS value: reverse 3 elements, remove the last one and order them back
+			3 rev rem swap
+			// so now we have a RHS value and the added one as the new values to sum
+			// and so on up to i <= n
+		} 
+		swap rem
+	}
+} >fib
+
+scan toNumber fib

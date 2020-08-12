@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-August 11, 2020  
+August 12, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -249,6 +249,21 @@ The `elif` launches the next condition if a check of the previous one was not su
 
 *These styles of conditionals are not made in a RPN philosophy, but they were introduced as an alternative. You can use the RPN-like functions of callIf and callUnless instead*
 
+#### Condtitional instructions (if-else)
+- `N1 times { I1 }` 
+- `while (B1) { I1 }`
+- `do { I1 } while ( B1 )`
+- `do { I1 } until ( B1 )`
+- `for ( I1 ; B1 ; I2 ) { I3 }`
+- `for ( ENT1 : ARR1 ) { I1 }` *planned*
+
+**Examples**
+- `10 times { 100 random }` which generates 10 numbers from a range [0..99] (note: we must know the exact amount of iterations here)
+- `1 >i while ( i 10 <= ) { 100 random i ++ >i }` which also generates 10 numbers from a range [0..99]
+- `1 >i do { 100 random i ++ >i } while ( i 10 <= )` which also generates 10 numbers from a range [0..99]
+- `1 >i do { 100 random i ++ >i } until ( i 10 > )` which also generates 10 numbers from a range [0..99]
+- `for ( 1 >i ; i 10 <= ; i ++ >i ) { 100 random }` which also generates 10 numbers from a range [0..99]
+
 #### Data types
 **Current data types:**
 _**(Capitalized type names from 0.4.2 onwards)**_
@@ -446,5 +461,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
-0.5.0 | Yod | soon | Array mapping and reducing, more packages, file management, objects and more
+0.5.0 | Yod | August 2020 | New generation code, more packages and more
+0.5.1 | Khaf | soon | Array mapping and reducing, dataframes, more packages, file management, objects and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

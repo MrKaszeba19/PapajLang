@@ -14,6 +14,7 @@ const
 	FI = 1.6180339887498948482045868343656;
     EM = 0.5772156649015328606065120900824;
 
+function OccurrencesOfChar(const S: string; const C: char): integer;
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 
@@ -38,6 +39,16 @@ uses Unit5,
         ConsoleUtils,
  	{$ENDIF}
     UnitEnvironment;
+
+function OccurrencesOfChar(const S: string; const C: char): integer;
+var
+    i: Integer;
+begin
+    result := 0;
+    for i := 1 to Length(S) do
+        if S[i] = C then
+            inc(result);
+end;
 
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var

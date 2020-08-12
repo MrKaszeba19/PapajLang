@@ -1,0 +1,4 @@
+NULL >i
+for ( 0 >i ; i 5 <= ; i ++ >i ) {
+	i println
+}
