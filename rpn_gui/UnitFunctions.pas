@@ -735,6 +735,28 @@ begin
   table_max := s;
 end;
 
+function table_min2(tab : TEntities) : LongInt;
+var
+	i : LongInt;
+	s : LongInt;
+begin
+	s := 0;
+    for i := 1 to Length(tab)-1 do
+        if (tab[i].Num < tab[s].Num) then s := i;
+    table_min2 := s;
+end;
+
+function table_max2(tab : TEntities) : LongInt;
+var
+	i : LongInt;
+	s : LongInt;
+begin
+	s := 0;
+    for i := 1 to Length(tab)-1 do
+        if (tab[i].Num > tab[s].Num) then s := i;
+    table_max2 := s;
+end;
+
 function table_avg_power(tab : TEntities; factor : Extended) : Extended;
 var
 	i : Integer;
@@ -3693,7 +3715,17 @@ begin
         'Array.reduceMax' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildNumber(table_min(pocz[trunc(ArrEax.Num)].Values)));
+            stack_push(pocz[sets.StackPointer], buildNumber(table_max(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.findMin' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_min2(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.findMax' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_max2(pocz[trunc(ArrEax.Num)].Values)));
         end;
         'Array.sortNumbers' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
