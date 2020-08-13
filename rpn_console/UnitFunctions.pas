@@ -793,6 +793,83 @@ begin
 	else table_median := tab[Length(tab) div 2].Num;
 end;
 
+function table_mode(tab : TEntities) : Entity;
+var
+    i        : LongInt;
+    maxval   : Entity;
+    maxcombo : Extended;
+    curval   : Entity;
+    curcombo : Extended;
+begin
+	if (Length(tab) = 0) then
+    begin
+        table_mode := buildNull();
+    end else begin
+        quicksort(tab);
+        //writeln('chuj');
+        maxval := tab[0];
+        maxcombo := 1;
+        curval := tab[0];
+        curcombo := 1;
+        for i := 1 to Length(tab)-1 do
+        begin
+            if (curval.Num = tab[i].Num) then
+            begin
+                curcombo := curcombo + 1;
+                //writeln(curval.Str, #9, curval.Num, #9, curcombo);
+            end else begin
+                if (maxcombo < curcombo) then
+                begin
+                    maxcombo := curcombo;
+                    maxval := curval;
+                end;
+                curval := tab[i];
+                curcombo := 1;
+            end;
+        end;
+        table_mode := maxval;
+    end;
+end;
+
+function table_modeStr(tab : TEntities) : Entity;
+var
+    i        : LongInt;
+    maxval   : Entity;
+    maxcombo : Extended;
+    curval   : Entity;
+    curcombo : Extended;
+begin
+	if (Length(tab) = 0) then
+    begin
+        table_modeStr := buildNull();
+    end else begin
+        strings_sort(tab);
+        //writeln('chuj');
+        maxval := tab[0];
+        maxcombo := 1;
+        curval := tab[0];
+        curcombo := 1;
+        for i := 1 to Length(tab)-1 do
+        begin
+            if (curval.Str = tab[i].Str) then
+            begin
+                curcombo := curcombo + 1;
+                //writeln(curval.Num, ' ', curcombo);
+            end else begin
+                if (maxcombo < curcombo) then
+                begin
+                    maxcombo := curcombo;
+                    maxval := curval;
+                end;
+                curval := tab[i];
+                curcombo := 1;
+            end;
+        end;
+        table_modeStr := maxval;
+    end;
+end;
+
+
 function table_abs(tab : TEntities) : Extended;
 var
 	i : Integer;
@@ -3559,6 +3636,8 @@ var
     IntEax : LongInt;
     ArrEax : Entity;
     EntEax : Entity;
+    EntEbx : Entity;
+    LogEax : Boolean;
     StrEax : String;
     ExtEax : Extended;
     index  : Integer;
@@ -3707,6 +3786,16 @@ begin
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNumber(table_median(pocz[trunc(ArrEax.Num)].Values)));
         end;
+        'Array.reduceMode' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], table_mode(pocz[trunc(ArrEax.Num)].Values));
+        end;
+        'Array.reduceModeStr' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], table_modeStr(pocz[trunc(ArrEax.Num)].Values));
+        end;
         'Array.reduceMin' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
@@ -3741,6 +3830,21 @@ begin
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             strings_sort(pocz[trunc(ArrEax.Num)].Values);
             stack_push(pocz[sets.StackPointer], ArrEax);
+        end;
+        'Array.belongs' : begin
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            LogEax := False;
+            for EntEbx in pocz[trunc(ArrEax.Num)].Values do
+            begin
+                if (EntEax.Str = EntEbx.Str) and (EntEax.Num = EntEbx.Num) then 
+                begin 
+                    LogEax := True;
+                    break;
+                end;
+    		end;
+            stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
         end;
 
         // crush, pushAt, popAt, swapAt, toString, size

@@ -1,0 +1,15 @@
+@silent
+@use(Array)
+@use(String)
+
+[ 1 1 2 2 1 7 3 7 6 7 2 7 9 3 4 5 5 ] >T
+
+T println
+"The most frequently prevalent is " T reduceMode toString "." 2 times concat println
+
+[ "Anna" "Joanna" "Sylwia" "Elżbieta" "Anna" "Anna" "Emma" "Joanna" "Olga" "Sylwia" "Sylwia" "Edyta" "Sylwia" "Wanda" "Elżbieta" "Elżbieta" "Wanda" "Emma" "Emma" "Ewelina" "Lucyna" ] >U
+
+U println
+"Most names are " U reduceMode length toString "-letter-long words." 2 times concat println
+"The most common name is " U reduceModeStr "." 2 times concat println
+
