@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-August 13, 2020  
+August 14, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -143,8 +143,6 @@ Programme Operand | Syntax | Purpose
 ----------------- | ------ | -------
 callIf | *bool1* *func1* **callIf** | Calls a function whether *bool1* = `true`
 callUnless | *bool1* *func1* **callUnless** | Calls a function whether *bool1* = `false`
-break | **break** | Interrupt the loop and exit it
-continue | **continue** | Break the current step of a loop and start the next one
 
 ### Stack operations
 
@@ -433,6 +431,7 @@ Operand | Purpose
 - `\history` - display the previously typed commands
 - `\hclear` - clear all history
 - `\hclear:N` - repeat the N-th command of history (N >= 1)
+- `\import:FILE` - run a file (FILE is a relative or absolute path)
 - `\!!` - repeat last command
 - `\!N` - execute an N-th command of `\history` (N >= 1)
 - `\help` - display the help.
@@ -461,6 +460,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
-0.5.0 | Yod | August 2020 | New generation code, more packages and more
+0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
 0.5.1 | Khaf | soon | Array mapping and reducing, dataframes, more packages, file management, objects and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
