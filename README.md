@@ -7,7 +7,7 @@ by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart:
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches (e.g. the latest one – **v043**).
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches (e.g. the latest one – **v050**).
 
 ## How to use it
 
