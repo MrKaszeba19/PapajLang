@@ -7,7 +7,7 @@ by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart:
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches (e.g. the latest one – **v050**).
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.0**, nickname Yod) [here](https://github.com/RooiGevaar19/RPNCalculator/releases/tag/v050).
 
 ## How to use it
 
@@ -25,11 +25,17 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
-## Requirements
-- Have installed Lazarus IDE (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now)
-- There are two ways to build RPN Calculator
-    * compile it using Lazarus IDE by clicking "Run" or "Compile"
-    * simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
+## Requirements and installation
+- Have installed
+    * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
+    * or **FreePascal Compiler (FPC)** (3.0.4 recommended) for Console app only – *alternative for Unix/Linux users only*
+- There are three ways to build RPN Calculator
+    * if you have Lazarus IDE and you use the GUI app,  
+    then compile it by clicking "Run" or "Compile"
+    * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
+    then simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
+    * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
+    then you may compile the project using `compileWithFPC.sh` (for Console app only)
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
 
 ## PapajScript:
