@@ -17,6 +17,14 @@
     <i18n>
       <EnableI18N LFM="False"/>
     </i18n>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MinorVersionNr Value="5"/>
+      <BuildNr Value="3"/>
+      <Language Value="0809"/>
+      <Attributes pvaPreRelease="True"/>
+      <StringTable Comments="RPN Calculator and PapajScript interpreter" CompanyName="RedThreat Productions" FileDescription="RPN Calculator and PapajScript interpreter" InternalName="Leviathan"/>
+    </VersionInfo>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
     </BuildModes>
