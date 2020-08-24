@@ -29,6 +29,10 @@ type PSEnvironment = record
 end;
 
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
+procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
+
+procedure doFunction(Str : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 
 function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
@@ -36,7 +40,7 @@ function cutCommentEndline(input : String) : String;
 function cutShebang(input : String) : String;
 function checkParentheses(input : String) : Boolean;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
-function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
+function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function buildNewEnvironment() : PSEnvironment;
@@ -68,17 +72,24 @@ end;
 
 // LOOPS
 
-procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doFunction(Str : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+var
+    i : ShortInt;
+begin
+    pocz := parseOpen(Str, pocz, sets, vardb);
+end;
+
+procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 begin
     while True do
     begin
         pocz := parseOpen(StrCond, pocz, sets, vardb);
-        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) or (sets.KeepWorking = 0) then break;
         pocz := parseOpen(StrInst, pocz, sets, vardb);
     end;
 end;
 
-procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 begin
     while True do
     begin
@@ -88,7 +99,7 @@ begin
     end;
 end;
 
-procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 begin
     while True do
     begin
@@ -98,7 +109,7 @@ begin
     end;
 end;
 
-procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 var
 	L      : TStringArray;
 begin
@@ -115,6 +126,19 @@ begin
         end;
     end else begin
         stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(StrCond));
+    end;
+end;
+
+procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
+var
+    EntEax : Entity;
+begin
+    EntEax := getVariable(vardb, guess);
+    if (EntEax.EntityType = TFUN) then
+    begin
+        doFunction(EntEax.Str, pocz, sets, vardb);
+    end else begin
+        stack_push(pocz[sets.StackPointer], EntEax);
     end;
 end;
 
@@ -368,7 +392,7 @@ begin
 end;
 
 
-function parseScoped(input : string; pocz : StackDB; var sets : TSettings; vardb : VariableDB) : StackDB;
+function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
 end;

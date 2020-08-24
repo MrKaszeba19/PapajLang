@@ -16,7 +16,6 @@ const
 
 function OccurrencesOfChar(const S: string; const C: char): integer;
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
-procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_math(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -930,20 +929,6 @@ begin
   	RunCommand(Shell,['-c', input],s);
  	{$ENDIF}
  	executeCommand := s;
-end;
-
-procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
-var
-    EntEax : Entity;
-begin
-    EntEax := getVariable(vardb, guess);
-    if (EntEax.EntityType = TFUN) then
-    begin
-        //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, guess)) then Exit;  
-        pocz := parseScoped(EntEax.Str, pocz, sets, vardb);
-    end else begin
-        stack_push(pocz[sets.StackPointer], EntEax);
-    end;
 end;
 
 
@@ -3255,8 +3240,9 @@ begin
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             EntEax := getVariable(vardb, StrEax);
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;  
-            StrEbx := EntEax.Str;
-            pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            //StrEbx := EntEax.Str;
+            //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            doFunction(EntEax.Str, pocz, sets, vardb);
             if not (sets.Autoclear) then begin
                 stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
@@ -3306,8 +3292,9 @@ begin
                                 StrEax := RightStr(i, Length(i)-2);
                                 EntEax := getVariable(vardb, StrEax);
                                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
-                                StrEbx := EntEax.Str;
-                                pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                                //StrEbx := EntEax.Str;
+                                //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                                doFunction(EntEax.Str, pocz, sets, vardb);
                             end else begin
                                 raiserror('EVariable:CExecute: You cannot execute an unnamed function by this method.');
                             end;

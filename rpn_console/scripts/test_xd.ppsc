@@ -1,0 +1,10 @@
+@use(String)
+@use(Array)
+[ "demon" "pedofil" "sługa szatana" ] >T
+"K*****r to" >S
+$T Array.length -- >l
+$T Array.crush
+all rev
+$l times { ", " bindBy } >t
+$S $t bind >S
+$S println  

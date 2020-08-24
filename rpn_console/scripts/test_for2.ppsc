@@ -1,0 +1,9 @@
+@use(String)
+@use(Array)
+[ "demon" "pedofil" "sługa szatana" ] >T
+"Karakan to" >S
+for ( 0 >i ; i T Array.length < ; i ++ >i ) {
+    S T i getAt bind >S
+    S println
+}
+$S println  

@@ -1,0 +1,65 @@
+function {
+	5 >i
+	$i println
+	if ( 3 2 > ) {
+		6 >i
+		$i println
+	}
+	$i println
+} >test1
+
+function {
+	5 >i
+	$i println
+	for ( 0 >j ; j 1 < ; j ++ >j ) {
+		6 >i
+		$i println
+	}
+	$i println
+} >test2
+
+function {
+	7 >i
+	"Hello!" >k
+	$i println
+	$k println
+} >test3a
+
+function {
+	8 >i
+	"Hello" >k
+	$i println
+	$k println
+	test3a
+	$i println
+	$k println
+} >test3
+
+function {
+	8 >i
+	"Hello" >k
+	$i println
+	$k println
+	for ( 0 >j ; j 1 < ; j ++ >j ) { test3a }
+	$i println
+	$k println
+} >test4
+
+function {
+	@use(String)
+	@use(Array)
+	[ "demon" "pedofil" "sługa szatana" ] >T
+	"Karakan to" >S
+	for ( 0 >i ; i T Array.length < ; i ++ >i ) {
+    		S T i getAt bind >S
+    		S println
+	}
+	$S println  
+} >test5
+
+"Test 1" println test1 newln
+"Test 2" println test2 newln
+"Test 3" println test3 newln
+"Test 4" println test4 newln
+"Test 5" println test5 newln
+

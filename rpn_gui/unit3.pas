@@ -82,7 +82,7 @@ begin
      Unit1.Form1.Edit2.TextHint  := 'תוצאה';
      Unit1.Form1.Button1.Caption := 'תחשיב!';
      Unit1.Form1.MenuItem1.Caption := 'אפליקציה';
-     Unit1.Form1 aaaaaaaaaaaaaaaaaaaa.................MenuItem2.Caption := 'שפה';
+     Unit1.Form1.MenuItem2.Caption := 'שפה';
      Unit1.Form1.MenuItem3.Caption := 'סגור';
      Unit1.Form1.Button2.Caption := 'הפעל';
      Unit1.Form1.Label2.Caption := 'קוד PapajScript';
