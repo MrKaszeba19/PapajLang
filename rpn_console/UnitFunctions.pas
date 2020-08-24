@@ -3637,6 +3637,16 @@ begin
             stack_reverse(pocz[trunc(ArrEax.Num)]);
             for index := 0 to stack_size(pocz[trunc(ArrEax.Num)])-1 do
             begin
+                EntEax := stack_getFront(pocz[trunc(ArrEax.Num)], index);
+                stack_push(pocz[sets.StackPointer], EntEax);
+            end;
+        end;
+        'Array.destroy' : begin
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_reverse(pocz[trunc(ArrEax.Num)]);
+            for index := 0 to stack_size(pocz[trunc(ArrEax.Num)])-1 do
+            begin
                 EntEax := stack_pop(pocz[trunc(ArrEax.Num)]);
                 stack_push(pocz[sets.StackPointer], EntEax);
             end;
