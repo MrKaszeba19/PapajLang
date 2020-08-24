@@ -5,8 +5,8 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, UnitEntity;
+  Classes, SysUtils, FileUtil, SynEdit, SynHighlighterAny, SynCompletion, Forms,
+  Controls, Graphics, Dialogs, StdCtrls, Menus, ShellCtrls, UnitEntity;
 
 type
 
@@ -14,10 +14,13 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     Edit1: TEdit;
     Edit2: TEdit;
     Label1: TLabel;
+    Label2: TLabel;
     MainMenu1: TMainMenu;
+    Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
@@ -25,7 +28,11 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    SynAnySyn1: TSynAnySyn;
+    SynAutoComplete1: TSynAutoComplete;
+    SynEdit1: TSynEdit;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
@@ -98,6 +105,24 @@ begin
      end;
 end;
 
+procedure TForm1.Button2Click(Sender: TObject);
+var
+     prevent : Integer;
+     mask    : String;
+begin
+     try
+        Memo1.Text := '';
+        Memo1.Append(PS_parseString(SynEdit1.Text));
+     except
+           on E : EAccessViolation do begin
+              Memo1.Text := 'Wrong RPN.';
+           end;
+           on E : Exception do begin
+              Memo1.Text := E.Message;
+           end;
+     end;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
      // https://docs.moodle.org/dev/Table_of_locales
@@ -117,9 +142,11 @@ begin
           'den' : set1DEN();
           'eng' : set1ENG();
           'pol' : set1POL();
-		  'hbr' : set1HBR();
+	  'hbr' : set1HBR();
           else set1ENG();
      end;
+     SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
+     Memo1.Text := '';
 end;
 
 procedure TForm1.MenuItem3Click(Sender: TObject);

@@ -13,6 +13,8 @@ const
 function scan_value() : Entity;
 function scan_number() : Entity;
 function scan_string() : Entity;
+procedure writeOnConsole(x : String);
+procedure writelnOnConsole(x : String);
 
 implementation
 
@@ -47,6 +49,16 @@ var
 begin
     read(x);
  	scan_string := buildString(x);
+end;
+
+procedure writeOnConsole(x : String);
+begin
+    write(x);
+end;
+
+procedure writelnOnConsole(x : String);
+begin
+    writeln(x);
 end;
 
 
