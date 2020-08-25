@@ -323,43 +323,50 @@ var
     isValid    : Boolean;
     v1, v2, v3 : LongInt;
     i          : LongInt;
+    comment    : Boolean;
 begin
     isValid := True;
+    comment := False;
     i := 0;
     v1 := 0; v2 := 0; v3 := 0;
     while i <= Length(input) do 
     begin
-        case input[i] of
-            '{' : begin
-                v1 := v1 + 1;
-            end; 
-            '}' : begin
-                v1 := v1 - 1;
-                if (v1 < 0) then begin
-                    isValid := False;
-                    Break;
-                end;
-            end; 
-            '(' : begin
-                v2 := v2 + 1;
-            end; 
-            ')' : begin
-                v2 := v2 - 1;
-                if (v2 < 0) then begin
-                    isValid := False;
-                    Break;
-                end;
-            end; 
-            '[' : begin
-                v3 := v3 + 1;
-            end; 
-            ']' : begin
-                v3 := v3 - 1;
-                if (v3 < 0) then begin
-                    isValid := False;
-                    Break;
-                end;
-            end; 
+        if (input[i] = '"') then
+        begin
+            comment := not comment;
+        end else if not comment then begin
+            case input[i] of
+                '{' : begin
+                    v1 := v1 + 1;
+                end; 
+                '}' : begin
+                    v1 := v1 - 1;
+                    if (v1 < 0) then begin
+                        isValid := False;
+                        Break;
+                    end;
+                end; 
+                '(' : begin
+                    v2 := v2 + 1;
+                end; 
+                ')' : begin
+                    v2 := v2 - 1;
+                    if (v2 < 0) then begin
+                        isValid := False;
+                        Break;
+                    end;
+                end; 
+                '[' : begin
+                    v3 := v3 + 1;
+                end; 
+                ']' : begin
+                    v3 := v3 - 1;
+                    if (v3 < 0) then begin
+                        isValid := False;
+                        Break;
+                    end;
+                end; 
+            end;
         end;
         i := i + 1;
     end;
