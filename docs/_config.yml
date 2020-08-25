@@ -1,4 +1,4 @@
 theme: jekyll-theme-slate
 title: RPN Calculator
 description: Reverse Polish Notation computing engine and PapajScript intepreter
-show_downloads: true
+#show_downloads: true
