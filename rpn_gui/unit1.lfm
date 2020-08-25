@@ -5,7 +5,7 @@ object Form1: TForm1
   Width = 802
   BorderStyle = bsSingle
   Caption = 'RPN Calculator'
-  ClientHeight = 576
+  ClientHeight = 581
   ClientWidth = 802
   Constraints.MinHeight = 160
   Constraints.MinWidth = 800
@@ -13,10 +13,10 @@ object Form1: TForm1
   OnCreate = FormCreate
   ParentBiDiMode = False
   Position = poMainFormCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '1.8.2.0'
   object Edit1: TEdit
     Left = 16
-    Height = 26
+    Height = 21
     Top = 40
     Width = 664
     AutoSelect = False
@@ -34,7 +34,7 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 16
-    Height = 16
+    Height = 13
     Top = 19
     Width = 660
     Caption = 'PapajScript command box'
@@ -43,7 +43,7 @@ object Form1: TForm1
   end
   object Edit2: TEdit
     Left = 16
-    Height = 26
+    Height = 21
     Top = 71
     Width = 664
     AutoSelect = False
@@ -566,7 +566,7 @@ object Form1: TForm1
     Height = 128
     Top = 440
     Width = 662
-    Color = clInfoBk
+    Color = 5914170
     Font.CharSet = ANSI_CHARSET
     Font.Color = clCream
     Font.Height = -12
@@ -581,7 +581,7 @@ object Form1: TForm1
   end
   object Label2: TLabel
     Left = 16
-    Height = 16
+    Height = 13
     Top = 104
     Width = 660
     Caption = 'PapajScript code'
