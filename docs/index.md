@@ -1,5 +1,4 @@
-<iframe src="http://ghbtns.com/github-btn.html?user=RooiGevaar19&repo=RPNCalculator&count=true&type=follow"
-  allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"></iframe>
+<a href="https://github.com/RooiGevaar19/RPNCalculator/releases/tag/v050-stable">Get the latest version</a>
 
 ## Hello
 
