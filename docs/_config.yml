@@ -1,7 +1,8 @@
 theme: jekyll-theme-minimal
 title: RPN Calculator
 description: Reverse Polish Notation computing engine and PapajScript intepreter
-logo: wall1.png
+#logo: wall1.png
+logo: icon256_1.png
 show_downloads: false
 #github:
 #  zip_url: https://github.com/RooiGevaar19/RPNCalculator/releases/download/v050-stable/RPNCalculator050.zip
