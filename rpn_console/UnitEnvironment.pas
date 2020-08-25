@@ -57,7 +57,7 @@ var
 
 function checkLevel(input : String) : Integer;
 begin
-         if (input = '{')         then checkLevel := 1
+    if (input = '{') then checkLevel := 1
     //else if (input = 'else{')     then checkLevel := 1
     else if (input = 'fun{')      then checkLevel := 1
     else if (input = 'function{') then checkLevel := 1

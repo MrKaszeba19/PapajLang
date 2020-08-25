@@ -566,6 +566,8 @@ object Form1: TForm1
     Height = 128
     Top = 440
     Width = 662
+    Color = clInfoBk
+    Font.Color = clCream
     Font.Height = -12
     Font.Name = 'Monospace'
     Lines.Strings = (
@@ -653,8 +655,14 @@ object Form1: TForm1
     top = 320
   end
   object SynAutoComplete1: TSynAutoComplete
+    AutoCompleteList.Strings = (
+      '@use(package)'
+      'if ( cond ) { instr }'
+      'if ( cond ) { instr1 } else { instr2 }'
+      'if ( cond1 ) { instr1 } elif ( cond2 ) { instr2 } else { instr3 }'
+    )
     EndOfTokenChr = '()[].'
-    ShortCut = 8224
+    ShortCut = 16416
     ExecCommandID = ecSynAutoCompletionExecute
     Editor = SynEdit1
     left = 760

@@ -28,7 +28,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski & his fiancee Rozalia. August 24, 2020.');
+    writeln('Paul Lipkowski & his fiancee Rozalia. August 25, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
