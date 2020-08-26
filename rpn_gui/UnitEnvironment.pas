@@ -357,7 +357,8 @@ begin
     begin
         if (input[i] = '"') then
         begin
-            comment := not comment;
+            if not ((i > 0) and (input[i-1] = '\')) 
+                then comment := not comment;
         end else if not comment then begin
             case input[i] of
                 '{' : begin
@@ -427,7 +428,8 @@ begin
 	//L.StrictDelimiter := false;
 	//L.DelimitedText := input;
 
-	L := input.Split([' ', #9, #13, #10], '"');
+	//L := input.Split([' ', #9, #13, #10], '"');
+    L := input.Split([' ', #9, #13, #10]);
 
   	Steps := 1;
   	cond := -1;
@@ -475,8 +477,34 @@ begin
 			//else if L[index] = 'continue' then begin 
 			//	Inc(index);
 			//	continue;
-			//end else 
-			if L[index] = '{' then begin
+			//end else
+            if (L[index] = '\"') then
+            begin
+                if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    	            begin
+			        raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+		        end else stack_push(pocz[sets.StackPointer], buildString('"'));
+            end else if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"')
+            then begin
+                nesttx := L[index];
+	    		cursor := index + 1;
+				repeat
+					nesttx := nesttx + ' ' + L[cursor];
+                    Inc(cursor);
+	    		until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
+                if (RightStr(nesttx, 1) = '"') then
+	            begin
+                    nesttx := nesttx.Substring(1, nesttx.Length - 2);
+		            if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    	            begin
+			            raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+		            end else stack_push(pocz[sets.StackPointer], buildString(nesttx));
+                end else begin
+                    raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+                end;
+                permit := True;
+	    		index := cursor - 1;
+			end else if L[index] = '{' then begin
 	    		nestlv := 1;
 	    		nesttx := '';
 	    		cursor := index + 1;
@@ -487,12 +515,12 @@ begin
 	    		end;
                 if mode = MFUN then begin
                     if (permit) then
-                    if Steps = -1 then begin
-                        repeat
-                            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
-                        until EOF;
-                        stack_pop(pocz[sets.StackPointer]);
-                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                        if Steps = -1 then begin
+                            repeat
+                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                            until EOF;
+                            stack_pop(pocz[sets.StackPointer]);
+                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                     mode := MNORM;
                 end else if mode = MWHILE then begin
                     StrInst := trimLeft(nesttx);
@@ -516,8 +544,7 @@ begin
                         OldCond := 0;
                     end;
                 end;
-                permit := True;
-	    		index := cursor - 1;
+                index := cursor - 1;
             end else if L[index] = '[' then begin
 	    		nestlv := 1;
 	    		nesttx := '';
@@ -568,6 +595,7 @@ begin
 					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
                     Inc(cursor);
                 end;
+                //writeln(trimLeft(nesttx));
                 if (permit) then
                     if Steps = -1 then begin
                         repeat

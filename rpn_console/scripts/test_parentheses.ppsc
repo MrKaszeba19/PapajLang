@@ -1,0 +1,13 @@
+"Hello!" println
+"Hello world!" println  
+"\e[1;33m\"Hello world!\e[m" String.inC println
+"\e[1;33m\"Hello world!\"\e[m" String.inC println
+"\e[1;32mHello my beautiful world!\"\e[m" String.inC println
+"\e[1;32m\"Hello my beautiful world!\"\e[m" String.inC println
+// dupa
+"Hello!" println
+"Hello world!" println  
+"\e[1;33m\"Hello world!\e[m" String.inC println
+"\e[1;33m\"Hello world!\"\e[m" String.inC println
+"\e[1;32mHello my beautiful world!\"\e[m" String.inC println
+"\e[1;32m\"Hello my beautiful world!\"\e[m" String.inC println

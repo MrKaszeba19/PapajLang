@@ -17,11 +17,11 @@ fun{
 // (from, to)
 fun{
 	2 copy < ?
-	if {	
+	if: {	
 		swap
 		2 copy -
 		swap
-		times { $empty print }
+		times { $empty print }	
 		times { $fill print }
 	}
 } >draw_between
@@ -48,6 +48,7 @@ fun{
 	27 63 @@draw_between newln
 	25 61 @@draw_between newln
 	20 58 @@draw_between newln
+
 	2 times { 20 55 @@draw_between newln }
 	2 times { 19 55 @@draw_between newln }
 	2 times { 18 55 @@draw_between newln }
@@ -67,6 +68,7 @@ fun{
 	clear
 	6 >x
 	43 -1.5 27 seql
+
 	size times { 
 		$x qshift ceiling @@draw_length newln
 		$x ++ >x
