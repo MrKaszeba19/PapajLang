@@ -124,6 +124,9 @@ begin
             pocz := parseOpen(StrInst, pocz, sets, vardb);
             pocz := parseOpen(L[2], pocz, sets, vardb);
         end;
+    end else if OccurrencesOfChar(StrCond, ':') = 1 then
+    begin
+    
     end else begin
         stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(StrCond));
     end;
@@ -274,7 +277,11 @@ begin
     i := 0;
     while i <= Length(input) do 
     begin
-        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        //if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (input[i] = '"') then 
+            if (i > 0) and (input[i-1] <> '\')
+                then togglequote := not (togglequote)
+                else if (i = 0) then togglequote := not (togglequote);
         if (not commentmode) and (not togglequote) and ((input[i] = '/') and (input[i+1] = '*')) then commentmode := true;
         if (not commentmode) then pom := concat(pom, input[i]);
         if     (commentmode) and (not togglequote) and ((input[i] = '*') and (input[i+1] = '/')) then 
@@ -301,7 +308,11 @@ begin
     i := 0;
     while i <= Length(input) do 
     begin
-        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        //if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (input[i] = '"') then 
+            if (i > 0) and (input[i-1] <> '\')
+                then togglequote := not (togglequote)
+                else if (i = 0) then togglequote := not (togglequote);
         if (not commentmode) and (not togglequote) and ((input[i] = '/') and (input[i+1] = '/')) then commentmode := true;
         if (not commentmode) then pom := concat(pom, input[i]);
         if     (commentmode) and (not togglequote) and (input[i] = #10) then 
@@ -328,7 +339,11 @@ begin
     i := 0;
     while i <= Length(input) do 
     begin
-        if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        //if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
+        if (not commentmode) and (input[i] = '"') then 
+            if (i > 0) and (input[i-1] <> '\')
+                then togglequote := not (togglequote)
+                else if (i = 0) then togglequote := not (togglequote);
         if (not commentmode) and (not togglequote) and (input[i] = '#') then commentmode := true;
         if (not commentmode) then pom := concat(pom, input[i]);
         if     (commentmode) and (not togglequote) and (input[i] = #10) then 

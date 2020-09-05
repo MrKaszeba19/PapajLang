@@ -15,6 +15,7 @@ const
     EM = 0.5772156649015328606065120900824;
 
 function OccurrencesOfChar(const S: string; const C: char): integer;
+function OccurrencesOfChar2(const S: string; const C: char): integer;
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -47,6 +48,25 @@ begin
     for i := 1 to Length(S) do
         if S[i] = C then
             inc(result);
+end;
+
+function OccurrencesOfChar2(const S: string; const C: char): integer;
+var
+    comment : Boolean;
+    i       : Integer;
+begin
+    comment := False;
+    result := 0;
+    for i := 1 to Length(S) do
+    begin
+        if (S[i] = '"') then
+            if (i > 1) and (not (S[i-1] = '\')) 
+                then comment := not comment
+                else if (i = 1) then
+                    comment := not comment;
+        if (not comment) and (S[i] = C) then
+            inc(result);
+    end;
 end;
 
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
