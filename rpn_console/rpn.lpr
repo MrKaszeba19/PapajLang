@@ -19,7 +19,7 @@ SysUtils;
 procedure HandleSigInt(aSignal: LongInt); cdecl;
 begin
     Writeln();
-    Writeln(StdErr, 'RPN has been halted by SIGINT.');
+    Writeln(StdErr, 'RPN Calculator has been halted by SIGINT.');
     Halt(1);
 end;
 {$ENDIF}
@@ -28,7 +28,7 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski & his fiancee Rozalia. September 5, 2020.');
+    writeln('Paul Lipkowski & his fiancee Rozalia. September 15, 2020.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;

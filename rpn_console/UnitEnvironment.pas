@@ -111,7 +111,8 @@ end;
 
 procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 var
-	L      : TStringArray;
+	L               : TStringArray;
+    index, location : LongInt;
 begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
     begin
@@ -126,7 +127,21 @@ begin
         end;
     end else if OccurrencesOfChar(StrCond, ':') = 1 then
     begin
-    
+        L := StrCond.Split(':');
+        L[0] := trim(L[0]);
+        L[1] := trim(L[1]);
+        if not (isVarAssigned(vardb, L[1])) then 
+            stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], L[1]))
+        else begin
+            if assertEntityLocated(pocz[sets.StackPointer], getVariable(vardb, L[1]), TVEC, L[1]) then Exit; 
+            location := trunc(getVariable(vardb, L[1]).Num);
+            for index := 0 to Length(pocz[location].Values)-1 do
+            begin
+                setVariable(vardb, L[0], pocz[location].Values[index]);
+                pocz := parseOpen(StrInst, pocz, sets, vardb);
+                pocz[location].Values[index] := getVariable(vardb, L[0]);
+            end;
+        end;
     end else begin
         stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(StrCond));
     end;

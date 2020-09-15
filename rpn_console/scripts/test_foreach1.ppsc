@@ -1,0 +1,12 @@
+[ 10 times rand ] >T
+
+for ( i : T ) {
+	i println
+	i ++ >i
+}
+
+"" println
+
+for ( i : T ) {
+	i println
+}
