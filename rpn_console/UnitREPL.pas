@@ -397,7 +397,7 @@ begin
             '\history' : begin
                 for i := 0 to Length(history)-1 do
                 begin
-                    writeln(PadLeft(IntToStr(i+1), 4) + ' : ' + history[i]);
+                    writeln(PadLeft(IntToStr(i+1), 8) + ' : ' + history[i]);
                 end;
                 writeln();
             end;

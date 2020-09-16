@@ -6,7 +6,7 @@ interface
 
 uses
 	Classes, SysUtils, StrUtils, Math, Process,
-	UnitStack, UnitEntity;
+	UnitStack, UnitEntity, UnitVariables;
 
 const
 	PI = 3.1415926535897932384626433832795;

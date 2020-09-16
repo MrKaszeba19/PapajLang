@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos Y="16"/>
+        <CursorPos X="30" Y="23"/>
         <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -29,7 +30,7 @@
         <Filename Value="unit2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="65" Y="47"/>
         <UsageCount Value="30"/>
         <Loaded Value="True"/>
@@ -38,7 +39,7 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="43"/>
         <CursorPos X="44" Y="79"/>
         <UsageCount Value="29"/>
@@ -51,7 +52,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit4"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="11"/>
         <CursorPos X="32" Y="52"/>
         <UsageCount Value="27"/>
@@ -62,7 +63,7 @@
         <Filename Value="unit5.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit5"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="5"/>
         <CursorPos X="30" Y="15"/>
         <UsageCount Value="27"/>
@@ -81,7 +82,7 @@
       <Unit8>
         <Filename Value="UnitFunctions.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="1412"/>
         <CursorPos X="18" Y="1465"/>
         <UsageCount Value="22"/>
@@ -90,7 +91,6 @@
       <Unit9>
         <Filename Value="UnitEnvironment.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="332"/>
         <CursorPos X="20" Y="347"/>
@@ -117,6 +117,14 @@
         <CursorPos X="14"/>
         <UsageCount Value="20"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="UnitVariables.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="19"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit13>
     </Units>
     <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
@@ -236,5 +244,9 @@
         <Caret Line="53" Column="5"/>
       </Position29>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
 </CONFIG>

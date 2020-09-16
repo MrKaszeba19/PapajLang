@@ -5,6 +5,7 @@ units=(
     ConsoleUtils.pas
     UnitEntity.pas
     UnitStack.pas
+    UnitVariables.pas
     UnitFunctions.pas
     UnitEnvironment.pas
     UnitREPL.pas

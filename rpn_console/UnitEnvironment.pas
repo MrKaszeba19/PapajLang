@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, StrUtils, 
-  UnitEntity, UnitStack, UnitFunctions;
+  UnitEntity, UnitStack, UnitFunctions, UnitVariables;
 
 const
     MNORM = 0;
@@ -130,8 +130,10 @@ begin
         L := StrCond.Split(':');
         L[0] := trim(L[0]);
         L[1] := trim(L[1]);
+        // check if LHS has 1 variable
+        // check if RHS is either variable or not
         if not (isVarAssigned(vardb, L[1])) then 
-            stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], L[1]))
+            stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
         else begin
             if assertEntityLocated(pocz[sets.StackPointer], getVariable(vardb, L[1]), TVEC, L[1]) then Exit; 
             location := trunc(getVariable(vardb, L[1]).Num);
@@ -141,6 +143,10 @@ begin
                 pocz := parseOpen(StrInst, pocz, sets, vardb);
                 pocz[location].Values[index] := getVariable(vardb, L[0]);
             end;
+        end;
+        if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    	begin
+			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
         end;
     end else begin
         stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(StrCond));

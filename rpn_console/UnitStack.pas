@@ -55,6 +55,7 @@ function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand 
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 
 function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
+function raiseExceptionUnknownArray(var stack : TStack; operand : String) : Entity;
 function raiseSyntaxErrorExpression(operand : String) : Entity;
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
@@ -507,6 +508,11 @@ end;
 function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
 begin
     raiseExceptionUnknownCommand := raiseException('EInput:CUnknown: Unknown expression at "'+operand+'".');
+end;
+
+function raiseExceptionUnknownArray(var stack : TStack; operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CNonArray: Array expression expected at "'+operand+'".');
 end;
 
 function raiseSyntaxErrorExpression(operand : String) : Entity;
