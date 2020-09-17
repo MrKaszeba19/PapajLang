@@ -1,0 +1,16 @@
+1 >i
+3 >j
+i println
+j println
+newln
+
+function { 
+	2 >i
+	i println
+	j println
+	newln
+} call
+
+i println
+j println
+newln

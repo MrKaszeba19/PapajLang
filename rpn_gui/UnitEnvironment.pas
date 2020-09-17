@@ -76,7 +76,9 @@ procedure doFunction(Str : String; var pocz : StackDB; sets : TSettings; vardb :
 var
     i : ShortInt;
 begin
+    vardb.addLayer();
     pocz := parseOpen(Str, pocz, sets, vardb);
+    vardb.removeLayer();
 end;
 
 procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
@@ -113,6 +115,7 @@ procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : T
 var
 	L               : TStringArray;
     index, location : LongInt;
+    addr            : VariableAddress;
 begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
     begin
@@ -132,16 +135,17 @@ begin
         L[1] := trim(L[1]);
         // check if LHS has 1 variable
         // check if RHS is either variable or not
-        if not (vardb.isVarAssigned(L[1])) then 
+        addr := vardb.locateVariable(L[1]);
+        if (addr.Layer = -1) then 
             stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
         else begin
-            if assertEntityLocated(pocz[sets.StackPointer], vardb.getVariable(L[1]), TVEC, L[1]) then Exit; 
-            location := trunc(vardb.getVariable(L[1]).Num);
+            if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
+            location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
             for index := 0 to Length(pocz[location].Values)-1 do
             begin
-                vardb.setVariable(L[0], pocz[location].Values[index]);
+                vardb.setLocalVariable(L[0], pocz[location].Values[index]);
                 pocz := parseOpen(StrInst, pocz, sets, vardb);
-                pocz[location].Values[index] := vardb.getVariable(L[0]);
+                pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
             end;
         end;
         if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then

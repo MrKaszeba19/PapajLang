@@ -13,6 +13,11 @@ type Variable = record
 	StoredVar : Entity;
 end;
 
+type VariableAddress = record
+    Layer    : LongInt; 
+    Location : LongInt;
+end;
+
 type VariableLayer = record
 	Content : array of Variable;
 end;
@@ -28,8 +33,13 @@ type VariableDB = object
         procedure addLayer();
         procedure removeLayer();
         procedure setVariable(newname : String; newvalue : Entity);
+        procedure setLocalVariable(newname : String; newvalue : Entity);
         function getVariable(guess : String) : Entity;
+        function getLocalVariable(guess : String) : Entity;
+        function getLocatedVariable(guess : String; addr : VariableAddress) : Entity;
         function isVarAssigned(guess : String) : Boolean;
+        function locateVariable(guess : String) : VariableAddress;
+        function isLocalVarAssigned(guess : String) : Boolean;
         procedure removeVariable(guess : String);
         procedure clearAllVariables();
 end; 
@@ -109,6 +119,57 @@ end;
 
 function VariableDB.getVariable(guess : String) : Entity;
 var
+	i      : LongInt;
+    j      : Variable;
+	pom    : Entity;
+    is_set : Boolean;
+begin
+    is_set := false;
+	pom := buildNull();
+    for i := Length(Layers)-1 downto 0 do
+    begin
+	    for j in Layers[i].Content do
+	    begin
+	    	if (j.VarName = guess) then
+	    	begin
+	    		pom := j.StoredVar;
+                is_set := True;
+	    		break;
+	    	end;
+	    end;
+        if is_set then break;
+    end;
+	Result := pom;
+end;
+
+procedure VariableDB.setLocalVariable(newname : String; newvalue : Entity);
+var
+	i      : LongInt;
+    latest : LongInt;
+	is_set : Boolean;
+begin
+	is_set := false;
+    latest := Length(Layers)-1;
+	for i := 0 to Length(Layers[latest].Content)-1 do 
+	begin
+		if (newname = Layers[latest].Content[i].VarName) then
+		begin
+			Layers[latest].Content[i].StoredVar := newvalue;
+			is_set := true;
+			break;
+		end;
+	end;
+	if not (is_set) then 
+	begin
+		i := Length(Layers[latest].Content);
+		SetLength(Layers[latest].Content, i+1);
+		Layers[latest].Content[i].VarName := newname;
+		Layers[latest].Content[i].StoredVar := newvalue;
+	end;
+end;
+
+function VariableDB.getLocalVariable(guess : String) : Entity;
+var
 	i      : Variable;
 	pom    : Entity;
     latest : LongInt;
@@ -126,7 +187,63 @@ begin
 	Result := pom;
 end;
 
+function VariableDB.getLocatedVariable(guess : String; addr : VariableAddress) : Entity;
+var
+	i      : Variable;
+	pom    : Entity;
+    latest : LongInt;
+begin
+    pom := buildNull();
+    if Layers[addr.Layer].Content[addr.Location].VarName = guess then
+	    pom := Layers[addr.Layer].Content[addr.Location].StoredVar;
+	Result := pom;
+end;
+
 function VariableDB.isVarAssigned(guess : String) : Boolean;
+var
+	res  : Boolean;
+	tk   : Variable;
+    i    : LongInt;
+begin
+	res := false;
+    for i := Length(Layers)-1 downto 0 do
+    begin
+	    for tk in Layers[i].Content do 
+	    	if (tk.VarName = guess) then
+	    	begin
+	    		res := true;
+	    		break;
+	    	end;
+        if res then break;
+    end;
+	Result := res;
+end;
+
+function VariableDB.locateVariable(guess : String) : VariableAddress;
+var
+	res  : VariableAddress;
+    i, j : LongInt;
+    flag : Boolean;
+begin
+    flag := False;
+	res.Layer    := -1;
+    res.Location := -1;
+    for i := Length(Layers)-1 downto 0 do
+    begin
+	    for j := 0 to Length(Layers[i].Content)-1 do 
+	    	if (Layers[i].Content[j].VarName = guess) then
+	    	begin
+	    		res.Layer    := i;
+                res.Location := j;
+                flag := True;
+	    		break;
+	    	end;
+        if Flag then break;
+    end;
+	Result := res;
+end;
+
+function VariableDB.isLocalVarAssigned(guess : String) : Boolean;
 var
 	res    : Boolean;
 	tk     : Variable;

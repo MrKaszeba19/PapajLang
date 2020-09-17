@@ -1234,7 +1234,8 @@ begin
         'call' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+            doFunction(StrEbx, pocz, sets, vardb);
         end;
         'callIf' : begin
             if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, TBOO, i)) then Exit; 
@@ -1243,13 +1244,16 @@ begin
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                 StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
-                if stack_pop(pocz[sets.StackPointer]).Num = 0 then pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                if stack_pop(pocz[sets.StackPointer]).Num = 0 then 
+                    //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    doFunction(StrEbx, pocz, sets, vardb);
             end else begin
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
                 if stack_pop(pocz[sets.StackPointer]).Num = 0 then begin
                     if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                     StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-                    pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    doFunction(StrEbx, pocz, sets, vardb);
                 end else begin
                     if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                     StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
@@ -1263,13 +1267,16 @@ begin
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                 StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
-                if stack_pop(pocz[sets.StackPointer]).Num <> 0 then pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                if stack_pop(pocz[sets.StackPointer]).Num <> 0 then 
+                    //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    doFunction(StrEbx, pocz, sets, vardb);
             end else begin
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TBOO, i)) then Exit;  
                 if stack_pop(pocz[sets.StackPointer]).Num <> 0 then begin
                     if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                     StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-                    pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    //pocz := parseScoped(StrEbx, pocz, sets, vardb);
+                    doFunction(StrEbx, pocz, sets, vardb);
                 end else begin
                     if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                     StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
@@ -3220,7 +3227,7 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             EntEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.setVariable(StrEax, EntEax);
+            vardb.setLocalVariable(StrEax, EntEax);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], EntEax);
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
@@ -3283,7 +3290,7 @@ begin
                 		StrEax := RightStr(i, Length(i)-1);
                 		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
                 		else EntEax := stack_get(pocz[sets.StackPointer]);
-            			vardb.setVariable(StrEax, EntEax);
+            			vardb.setLocalVariable(StrEax, EntEax);
               		end else begin
                 		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
               		end;
