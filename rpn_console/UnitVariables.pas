@@ -13,59 +13,109 @@ type Variable = record
 	StoredVar : Entity;
 end;
 
-type VariableDB = record
+type VariableLayer = record
 	Content : array of Variable;
 end;
 
+type VariableDB = object
+    private
+        Layers : array of VariableLayer;
+    public
+        constructor Create;
+        destructor Destroy;
+        function getGlobalLayer() : VariableLayer;
+        function getLocalLayer() : VariableLayer;
+        procedure addLayer();
+        procedure removeLayer();
+        procedure setVariable(newname : String; newvalue : Entity);
+        function getVariable(guess : String) : Entity;
+        function isVarAssigned(guess : String) : Boolean;
+        procedure removeVariable(guess : String);
+        procedure clearAllVariables();
+end; 
+
 function buildVariable(namevar : String; contentvar : Entity) : Variable;
-function createVariables() : VariableDB;
-function isVarAssigned(db : VariableDB; guess : String) : Boolean;
-function getVariable(db : VariableDB; guess : String) : Entity;
-procedure setVariable(var db : VariableDB; newname : String; newvalue : Entity);
-procedure destroyVariable(var db : VariableDB; guess : String);
-procedure destroyVariables(var db : VariableDB);
+
+
 
 implementation
 
-function buildVariable(namevar : String; contentvar : Entity) : Variable;
-var
-	pom : Variable;
+constructor VariableDB.Create;
 begin
-	pom.VarName := namevar;
-	pom.StoredVar := contentvar;
-	buildVariable := pom;
+    SetLength(Layers, 1);
+    SetLength(Layers[0].Content, 0);
 end;
 
-function createVariables() : VariableDB;
-var 
-	pom : VariableDB;
+destructor VariableDB.Destroy;
+var
+    i : LongInt;
 begin
-	SetLength(pom.Content, 0);
-	createVariables := pom;
+    for i := Length(Layers)-1 downto 0 do SetLength(Layers[i].Content, 0);
+    SetLength(Layers, 0);
 end;
 
-function isVarAssigned(db : VariableDB; guess : String) : Boolean;
-var
-	res : Boolean;
-	tk  : Variable;
+function VariableDB.getGlobalLayer() : VariableLayer;
 begin
-	res := false;
-	for tk in db.Content do 
-		if (tk.VarName = guess) then
+    Result := Layers[0];
+end;
+function VariableDB.getLocalLayer() : VariableLayer;
+begin
+    Result := Layers[Length(Layers)-1];
+end;
+
+procedure VariableDB.addLayer();
+var
+    len : LongInt;
+begin
+    len := Length(Layers);
+    SetLength(Layers, len+1);
+    SetLength(Layers[len].Content, 0);
+end;
+
+procedure VariableDB.removeLayer();
+var
+    len : LongInt;
+begin
+    len := Length(Layers);
+    SetLength(Layers[len-1].Content, 0);
+    SetLength(Layers, len-1);
+end;
+
+procedure VariableDB.setVariable(newname : String; newvalue : Entity);
+var
+	i      : LongInt;
+    latest : LongInt;
+	is_set : Boolean;
+begin
+	is_set := false;
+    latest := Length(Layers)-1;
+	for i := 0 to Length(Layers[latest].Content)-1 do 
+	begin
+		if (newname = Layers[latest].Content[i].VarName) then
 		begin
-			res := true;
+			Layers[latest].Content[i].StoredVar := newvalue;
+			is_set := true;
 			break;
 		end;
-	isVarAssigned := res;
+	end;
+	if not (is_set) then 
+	begin
+		i := Length(Layers[latest].Content);
+		SetLength(Layers[latest].Content, i+1);
+		Layers[latest].Content[i].VarName := newname;
+		Layers[latest].Content[i].StoredVar := newvalue;
+	end;
 end;
 
-function getVariable(db : VariableDB; guess : String) : Entity;
+function VariableDB.getVariable(guess : String) : Entity;
 var
-	i : Variable;
-	pom : Entity;
+	i      : Variable;
+	pom    : Entity;
+    latest : LongInt;
 begin
 	pom := buildNull();
-	for i in db.Content do
+    latest := Length(Layers)-1;
+	for i in Layers[latest].Content do
 	begin
 		if (i.VarName = guess) then
 		begin
@@ -73,43 +123,38 @@ begin
 			break;
 		end;
 	end;
-	getVariable := pom;
+	Result := pom;
 end;
 
-procedure setVariable(var db : VariableDB; newname : String; newvalue : Entity);
+function VariableDB.isVarAssigned(guess : String) : Boolean;
 var
-	i      : LongInt;
-	is_set : Boolean;
+	res    : Boolean;
+	tk     : Variable;
+    latest : LongInt;
 begin
-	is_set := false;
-	for i := 0 to Length(db.Content)-1 do 
-	begin
-		if (newname = db.Content[i].VarName) then
+    latest := Length(Layers)-1;
+	res := false;
+	for tk in Layers[latest].Content do 
+		if (tk.VarName = guess) then
 		begin
-			db.Content[i].StoredVar := newvalue;
-			is_set := true;
+			res := true;
 			break;
 		end;
-	end;
-	if not (is_set) then 
-	begin
-		i := Length(db.Content);
-		SetLength(db.Content, i+1);
-		db.Content[i].VarName := newname;
-		db.Content[i].StoredVar := newvalue;
-	end;
+	Result := res;
 end;
 
-procedure destroyVariable(var db : VariableDB; guess : String);
+procedure VariableDB.removeVariable(guess : String);
 var
     i      : LongInt;
     addr   : LongInt;
     is_set : Boolean;
+    latest : LongInt;
 begin
     is_set := False;
-    for i := 0 to Length(db.Content)-1 do  
+    latest := Length(Layers)-1;
+    for i := 0 to Length(Layers[latest].Content)-1 do  
     begin
-        if (guess = db.Content[i].VarName) then
+        if (guess = Layers[latest].Content[i].VarName) then
         begin
             addr := i;
             is_set := true;
@@ -118,15 +163,29 @@ begin
     end;
     if (is_set) then 
     begin
-        for i := addr to Length(db.Content)-2 do
-            db.Content[i] := db.Content[i+1];
-        SetLength(db.Content, Length(db.Content)-1);
+        for i := addr to Length(Layers[latest].Content)-2 do
+            Layers[latest].Content[i] := Layers[latest].Content[i+1];
+        SetLength(Layers[latest].Content, Length(Layers[latest].Content)-1);
     end;
 end;
 
-procedure destroyVariables(var db : VariableDB);
+procedure VariableDB.clearAllVariables();
+var
+    i : LongInt;
 begin
-    SetLength(db.Content, 0);
+    for i := Length(Layers)-1 downto 0 do SetLength(Layers[i].Content, 0);
+    SetLength(Layers, 0);
+end;
+
+// ========================
+
+function buildVariable(namevar : String; contentvar : Entity) : Variable;
+var
+	pom : Variable;
+begin
+	pom.VarName := namevar;
+	pom.StoredVar := contentvar;
+	buildVariable := pom;
 end;
 
 end.

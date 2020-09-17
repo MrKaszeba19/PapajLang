@@ -132,16 +132,16 @@ begin
         L[1] := trim(L[1]);
         // check if LHS has 1 variable
         // check if RHS is either variable or not
-        if not (isVarAssigned(vardb, L[1])) then 
+        if not (vardb.isVarAssigned(L[1])) then 
             stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
         else begin
-            if assertEntityLocated(pocz[sets.StackPointer], getVariable(vardb, L[1]), TVEC, L[1]) then Exit; 
-            location := trunc(getVariable(vardb, L[1]).Num);
+            if assertEntityLocated(pocz[sets.StackPointer], vardb.getVariable(L[1]), TVEC, L[1]) then Exit; 
+            location := trunc(vardb.getVariable(L[1]).Num);
             for index := 0 to Length(pocz[location].Values)-1 do
             begin
-                setVariable(vardb, L[0], pocz[location].Values[index]);
+                vardb.setVariable(L[0], pocz[location].Values[index]);
                 pocz := parseOpen(StrInst, pocz, sets, vardb);
-                pocz[location].Values[index] := getVariable(vardb, L[0]);
+                pocz[location].Values[index] := vardb.getVariable(L[0]);
             end;
         end;
         if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
@@ -157,7 +157,7 @@ procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer;
 var
     EntEax : Entity;
 begin
-    EntEax := getVariable(vardb, guess);
+    EntEax := vardb.getVariable(guess);
     if (EntEax.EntityType = TFUN) then
     begin
         doFunction(EntEax.Str, pocz, sets, vardb);
@@ -250,7 +250,7 @@ begin
     		begin
 				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 			end else begin
-                if (isVarAssigned(vardb, i)) 
+                if (vardb.isVarAssigned(i)) 
                     then runFromString(i, pocz, Steps, sets, vardb)
                     else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
             end;
@@ -762,7 +762,7 @@ begin
 	SetLength(env.Stack, 1);
 	env.Stack[0] := stack_null();
 	env.Settings := default_settings();
-    env.Variables := createVariables();
+    env.Variables.Create;
     env.AutoReset := False;
     buildNewEnvironment := env;
 end;
@@ -771,6 +771,7 @@ procedure disposeEnvironment(var env : PSEnvironment);
 var
 	i : LongInt;
 begin
+    env.Variables.Destroy;
 	for i := 0 to Length(env.Stack)-1 do stack_clear(env.Stack[i]);
 	SetLength(env.Stack, 0);
 end;

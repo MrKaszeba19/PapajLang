@@ -3220,7 +3220,7 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             EntEax := stack_pop(pocz[sets.StackPointer]);
-            setVariable(vardb, StrEax, EntEax);
+            vardb.setVariable(StrEax, EntEax);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], EntEax);
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
@@ -3229,7 +3229,7 @@ begin
 		'vget' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            EntEax := getVariable(vardb, StrEax);
+            EntEax := vardb.getVariable(StrEax);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
@@ -3238,7 +3238,7 @@ begin
         'vexists' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            LogEax := isVarAssigned(vardb, StrEax);
+            LogEax := vardb.isVarAssigned(StrEax);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
@@ -3247,18 +3247,18 @@ begin
         'vdestroy' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            destroyVariable(vardb, StrEax);
+            vardb.removeVariable(StrEax);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
         end;
         'vclear' : begin
-            destroyVariables(vardb);
+            vardb.clearAllVariables();
         end;
         'vcall' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            EntEax := getVariable(vardb, StrEax);
+            EntEax := vardb.getVariable(StrEax);
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;  
             //StrEbx := EntEax.Str;
             //pocz := parseScoped(StrEbx, pocz, sets, vardb);
@@ -3272,7 +3272,7 @@ begin
             	'$' : begin
               		if (RightStr(i, Length(i)-1) <> '') then begin
                 		StrEax := RightStr(i, Length(i)-1);
-                		EntEax := getVariable(vardb, StrEax);
+                		EntEax := vardb.getVariable(StrEax);
             			stack_push(pocz[sets.StackPointer], EntEax);
               		end else begin
                 		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
@@ -3283,7 +3283,7 @@ begin
                 		StrEax := RightStr(i, Length(i)-1);
                 		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
                 		else EntEax := stack_get(pocz[sets.StackPointer]);
-            			setVariable(vardb, StrEax, EntEax);
+            			vardb.setVariable(StrEax, EntEax);
               		end else begin
                 		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
               		end;
@@ -3291,7 +3291,7 @@ begin
              	'?' : begin 
              		if (RightStr(i, Length(i)-1) <> '') then begin
                 		StrEax := RightStr(i, Length(i)-1);
-            			LogEax := isVarAssigned(vardb, StrEax);
+            			LogEax := vardb.isVarAssigned(StrEax);
             			stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
               		end else begin
                 		raiserror('EVariable:CCheck: You cannot check nothing.');
@@ -3300,7 +3300,7 @@ begin
              	'~' : begin 
              		if (RightStr(i, Length(i)-1) <> '') then begin
                 		StrEax := RightStr(i, Length(i)-1);
-            			destroyVariable(vardb, StrEax);
+            			vardb.removeVariable(StrEax);
               		end else begin
                 		raiserror('EVariable:CDestroy: You cannot destroy an unnamed variable.');
               		end;
@@ -3310,7 +3310,7 @@ begin
                         '@@' : begin 
                             if (RightStr(i, Length(i)-2) <> '') then begin
                                 StrEax := RightStr(i, Length(i)-2);
-                                EntEax := getVariable(vardb, StrEax);
+                                EntEax := vardb.getVariable(StrEax);
                                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
                                 //StrEbx := EntEax.Str;
                                 //pocz := parseScoped(StrEbx, pocz, sets, vardb);
