@@ -19,8 +19,8 @@ function {
 } >test2
 
 function {
-	7 >i
-	"Hello!" >k
+	7 ->i
+	"Hello!" ->k
 	$i println
 	$k println
 } >test3a

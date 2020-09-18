@@ -45,7 +45,7 @@ type VariableDB = object
 end; 
 
 function buildVariable(namevar : String; contentvar : Entity) : Variable;
-
+function isValidForVariables(guess : String) : Boolean;
 
 
 implementation
@@ -93,21 +93,25 @@ end;
 
 procedure VariableDB.setVariable(newname : String; newvalue : Entity);
 var
-	i      : LongInt;
-    latest : LongInt;
+	i, j   : LongInt;
 	is_set : Boolean;
+    latest : LongInt;
 begin
 	is_set := false;
     latest := Length(Layers)-1;
-	for i := 0 to Length(Layers[latest].Content)-1 do 
-	begin
-		if (newname = Layers[latest].Content[i].VarName) then
-		begin
-			Layers[latest].Content[i].StoredVar := newvalue;
-			is_set := true;
-			break;
-		end;
-	end;
+    for j := latest downto 0 do
+    begin
+	    for i := 0 to Length(Layers[j].Content)-1 do 
+	    begin
+	    	if (newname = Layers[j].Content[i].VarName) then
+	    	begin
+	    		Layers[j].Content[i].StoredVar := newvalue;
+	    		is_set := true;
+	    		break;
+	    	end;
+	    end;
+        if is_set then break;
+    end;
 	if not (is_set) then 
 	begin
 		i := Length(Layers[latest].Content);
@@ -303,6 +307,29 @@ begin
 	pom.VarName := namevar;
 	pom.StoredVar := contentvar;
 	buildVariable := pom;
+end;
+
+// ASCII 45, 46, 48-57, 65-90, 95, 97-122
+function isValidForVariables(guess : String) : Boolean;
+var
+    i    : LongInt;
+    flag : Boolean;
+begin
+    flag := True;
+    for i := 1 to Length(guess) do 
+    begin
+        if (Ord(guess[i]) < 45) 
+        or (Ord(guess[i]) = 47) 
+        or (Ord(guess[i]) in [58..64])
+        or (Ord(guess[i]) in [91..94])
+        or (Ord(guess[i]) = 96)
+        or (Ord(guess[i]) > 123) 
+        then begin
+            flag := False;
+            break;
+        end;
+    end;
+    Result := flag;
 end;
 
 end.

@@ -135,18 +135,23 @@ begin
         L[1] := trim(L[1]);
         // check if LHS has 1 variable
         // check if RHS is either variable or not
+        if isValidForVariables(L[0]) then
+        begin
         addr := vardb.locateVariable(L[1]);
-        if (addr.Layer = -1) then 
-            stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
-        else begin
-            if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
-            location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
-            for index := 0 to Length(pocz[location].Values)-1 do
-            begin
-                vardb.setLocalVariable(L[0], pocz[location].Values[index]);
-                pocz := parseOpen(StrInst, pocz, sets, vardb);
-                pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
+            if (addr.Layer = -1) then 
+                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
+            else begin
+                if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
+                location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
+                for index := 0 to Length(pocz[location].Values)-1 do
+                begin
+                    vardb.setLocalVariable(L[0], pocz[location].Values[index]);
+                    pocz := parseOpen(StrInst, pocz, sets, vardb);
+                    pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
+                end;
             end;
+        end else begin
+            raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[0]+'"');
         end;
         if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin
