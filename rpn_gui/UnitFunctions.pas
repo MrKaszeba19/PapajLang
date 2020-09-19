@@ -3301,7 +3301,9 @@ begin
             	'$' : begin
               		if (RightStr(i, Length(i)-1) <> '') then begin
                 		StrEax := RightStr(i, Length(i)-1);
-                		EntEax := vardb.getVariable(StrEax);
+                        if LeftStr(StrEax, 7) = 'global.'  
+                            then EntEax := vardb.getGlobalVariable(StrEax)
+                            else EntEax := vardb.getVariable(StrEax);
             			stack_push(pocz[sets.StackPointer], EntEax);
               		end else begin
                 		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
@@ -3314,8 +3316,12 @@ begin
                 		else EntEax := stack_get(pocz[sets.StackPointer]);
                         if isValidForVariables(StrEax) then
                         begin
-            			    //vardb.setVariable(StrEax, EntEax);
-                            vardb.setLocalVariable(StrEax, EntEax);
+                            if LeftStr(StrEax, 7) = 'global.' 
+                                then vardb.setGlobalVariable(StrEax, EntEax)
+                                else
+            			            //vardb.setVariable(StrEax, EntEax);
+                                    vardb.setLocalVariable(StrEax, EntEax);
+                                
                         end else begin
                             raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
                         end;
@@ -3346,6 +3352,9 @@ begin
                             if (RightStr(i, Length(i)-2) <> '') then begin
                                 StrEax := RightStr(i, Length(i)-2);
                                 EntEax := vardb.getVariable(StrEax);
+                                if LeftStr(StrEax, 7) = 'global.' 
+                                    then EntEax := vardb.getGlobalVariable(StrEax)
+                                    else EntEax := vardb.getVariable(StrEax);
                                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
                                 //StrEbx := EntEax.Str;
                                 //pocz := parseScoped(StrEbx, pocz, sets, vardb);
@@ -3361,8 +3370,11 @@ begin
                         		else EntEax := stack_get(pocz[sets.StackPointer]);
             	        		if isValidForVariables(StrEax) then
                                 begin
-            			            //vardb.setVariable(StrEax, EntEax);
-                                    vardb.setLocalVariable(StrEax, EntEax);
+                                    if LeftStr(StrEax, 7) = 'global.' 
+                                        then vardb.setGlobalVariable(StrEax, EntEax) 
+                                        else
+            			                    //vardb.setVariable(StrEax, EntEax);
+                                            vardb.setLocalVariable(StrEax, EntEax);
                                 end else begin
                                     raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
                                 end;

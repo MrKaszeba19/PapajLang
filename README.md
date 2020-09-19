@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-September 18, 2020  
+September 19, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -260,7 +260,6 @@ The `elif` launches the next condition if a check of the previous one was not su
 - `do { I1 } until ( B1 )`
 - `for ( I1 ; B1 ; I2 ) { I3 }`
 - `for ( ENT1 : ARR1 ) { I1 }`
-- `for ( ENT1 : STACK1 ) { I1 }` *planned*
 
 **Examples**
 - `10 times { 100 random }` which generates 10 numbers from a range [0..99] (note: we must know the exact amount of iterations here)

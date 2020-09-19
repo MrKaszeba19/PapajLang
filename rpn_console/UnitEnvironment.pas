@@ -48,7 +48,7 @@ procedure disposeEnvironment(var env : PSEnvironment);
 
 implementation
 
-uses Unit5;
+uses Unit5, DateUtils;
 
 var
 	Steps : Integer;
@@ -116,6 +116,10 @@ var
 	L               : TStringArray;
     index, location : LongInt;
     addr            : VariableAddress;
+    input, tname    : String;
+    cnt             : LongInt;
+    env             : PSEnvironment;
+    is_set          : Boolean;
 begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
     begin
@@ -133,11 +137,25 @@ begin
         L := StrCond.Split(':');
         L[0] := trim(L[0]);
         L[1] := trim(L[1]);
-        // check if LHS has 1 variable
+        if (L[0][1] = '$') then L[0] := RightStr(L[0], Length(L[0])-1);
+        if (L[1][1] = '$') then L[1] := RightStr(L[1], Length(L[1])-1);
         // check if RHS is either variable or not
         if isValidForVariables(L[0]) then
         begin
-        addr := vardb.locateVariable(L[1]);
+            is_set := False;
+            if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
+            begin
+                input := L[1].Substring(1, L[1].Length - 2);
+                env := buildNewEnvironment();
+                env.Stack := parseOpen(input, env.Stack, sets, vardb);
+                cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+                disposeEnvironment(env);
+                tname := 'T_'+IntToStr(DateTimeToUnix(Now));
+                pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray ->'+tname, pocz, sets, vardb);
+                L[1] := tname;
+                is_set := True;
+            end;
+            addr := vardb.locateVariable(L[1]);
             if (addr.Layer = -1) then 
                 stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
             else begin
@@ -149,6 +167,10 @@ begin
                     pocz := parseOpen(StrInst, pocz, sets, vardb);
                     pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
                 end;
+            end;
+            if is_set then 
+            begin
+                pocz := parseOpen('~'+tname, pocz, sets, vardb);
             end;
         end else begin
             raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[0]+'"');

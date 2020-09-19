@@ -34,12 +34,15 @@ type VariableDB = object
         procedure removeLayer();
         procedure setVariable(newname : String; newvalue : Entity);
         procedure setLocalVariable(newname : String; newvalue : Entity);
+        procedure setGlobalVariable(newname : String; newvalue : Entity);
         function getVariable(guess : String) : Entity;
         function getLocalVariable(guess : String) : Entity;
+        function getGlobalVariable(guess : String) : Entity;
         function getLocatedVariable(guess : String; addr : VariableAddress) : Entity;
         function isVarAssigned(guess : String) : Boolean;
         function locateVariable(guess : String) : VariableAddress;
         function isLocalVarAssigned(guess : String) : Boolean;
+        function isGlobalVarAssigned(guess : String) : Boolean;
         procedure removeVariable(guess : String);
         procedure clearAllVariables();
 end; 
@@ -146,6 +149,30 @@ begin
 	Result := pom;
 end;
 
+procedure VariableDB.setGlobalVariable(newname : String; newvalue : Entity);
+var
+	i      : LongInt;
+	is_set : Boolean;
+begin
+	is_set := false;
+	for i := 0 to Length(Layers[0].Content)-1 do 
+	begin
+		if (newname = Layers[0].Content[i].VarName) then
+		begin
+			Layers[0].Content[i].StoredVar := newvalue;
+			is_set := true;
+			break;
+		end;
+	end;
+	if not (is_set) then 
+	begin
+		i := Length(Layers[0].Content);
+		SetLength(Layers[0].Content, i+1);
+		Layers[0].Content[i].VarName := newname;
+		Layers[0].Content[i].StoredVar := newvalue;
+	end;
+end;
+
 procedure VariableDB.setLocalVariable(newname : String; newvalue : Entity);
 var
 	i      : LongInt;
@@ -181,6 +208,23 @@ begin
 	pom := buildNull();
     latest := Length(Layers)-1;
 	for i in Layers[latest].Content do
+	begin
+		if (i.VarName = guess) then
+		begin
+			pom := i.StoredVar;
+			break;
+		end;
+	end;
+	Result := pom;
+end;
+
+function VariableDB.getGlobalVariable(guess : String) : Entity;
+var
+	i      : Variable;
+	pom    : Entity;
+begin
+	pom := buildNull();
+	for i in Layers[0].Content do
 	begin
 		if (i.VarName = guess) then
 		begin
@@ -256,6 +300,21 @@ begin
     latest := Length(Layers)-1;
 	res := false;
 	for tk in Layers[latest].Content do 
+		if (tk.VarName = guess) then
+		begin
+			res := true;
+			break;
+		end;
+	Result := res;
+end;
+
+function VariableDB.isGlobalVarAssigned(guess : String) : Boolean;
+var
+	res    : Boolean;
+	tk     : Variable;
+begin
+	res := false;
+	for tk in Layers[0].Content do 
 		if (tk.VarName = guess) then
 		begin
 			res := true;

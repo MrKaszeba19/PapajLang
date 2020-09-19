@@ -1,0 +1,7 @@
+@use(String)
+@use(Array)
+"Karakan to" ->S
+for ( item : [ "demon" "pedofil" "sługa szatana" ] ) {
+    	S item bind ->S
+    	S println
+}
