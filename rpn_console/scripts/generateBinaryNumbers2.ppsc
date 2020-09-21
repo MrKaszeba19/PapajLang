@@ -1,0 +1,8 @@
+"Enter a number: " print
+scan toNumber -> n
+
+[ 1 1 n seq ] -> T
+
+for ( i : T ) { 2 i ^ -> i }
+
+T Array.toJSString println 

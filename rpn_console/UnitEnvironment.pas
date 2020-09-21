@@ -539,6 +539,19 @@ begin
             mode := MDOUNTIL;
         end else if (L[index] = 'for') then begin
             mode := MFOR;
+        end else if (L[index] = '->') then begin
+            if (L[index+1][1] = '$') then L[index+1] := RightStr(L[index+1], Length(L[index+1])-1);
+            if isValidForVariables(L[index+1]) then
+            begin
+                if LeftStr(L[index+1], 7) = 'global.' 
+                    then vardb.setGlobalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]))
+                    else
+                        //vardb.setVariable(StrEax, EntEax);
+                        vardb.setLocalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]));        
+            end else begin
+                raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[index+1]+'"');
+            end;
+            index := index + 1;
 		end else begin
 			//if L[index] = 'break' then break
 			//else if L[index] = 'continue' then begin 
