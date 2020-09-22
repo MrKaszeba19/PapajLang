@@ -105,25 +105,25 @@
         <UsageCount Value="20"/>
       </Unit10>
       <Unit11>
-        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3254"/>
-        <CursorPos Y="3271"/>
-        <UsageCount Value="10"/>
-      </Unit11>
-      <Unit12>
-        <Filename Value="UnitREPL.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="14"/>
-        <UsageCount Value="20"/>
-      </Unit12>
-      <Unit13>
         <Filename Value="UnitVariables.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
         <CursorPos X="19"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3254"/>
+        <CursorPos Y="3271"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="UnitREPL.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14"/>
+        <UsageCount Value="20"/>
       </Unit13>
     </Units>
     <JumpHistory Count="29" HistoryIndex="28">

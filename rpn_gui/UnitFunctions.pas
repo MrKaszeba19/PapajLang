@@ -38,7 +38,7 @@ uses Unit5,
     {$ELSE}
         ConsoleUtils,
  	{$ENDIF}
-    UnitEnvironment;
+    UnitEnvironment, DateUtils;
 
 function OccurrencesOfChar(const S: string; const C: char): integer;
 var
@@ -3704,11 +3704,10 @@ function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var set
 var
 	Found  : Boolean;
     IntEax : LongInt;
-    ArrEax : Entity;
-    EntEax : Entity;
-    EntEbx : Entity;
+    ArrEax, ArrEbx : Entity;
+    EntEax, EntEbx : Entity;
     LogEax : Boolean;
-    StrEax : String;
+    StrEax, StrEbx : String;
     ExtEax : Extended;
     index  : Integer;
 begin
@@ -3925,6 +3924,59 @@ begin
                 end;
     		end;
             stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
+        end;
+        'Array.map' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            StrEax := 'mapi_'+IntToStr(DateTimeToUnix(Now));
+            stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, Length(pocz[trunc(ArrEax.Num)].Values)));
+            ArrEbx := stack_pop(pocz[sets.StackPointer]);
+            vardb.addLayer();
+            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            begin
+                vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);
+                pocz[trunc(ArrEbx.Num)].Values[index] := vardb.getLocalVariable(StrEax);
+    		end;
+            vardb.removeLayer();
+            stack_push(pocz[sets.StackPointer], ArrEbx);
+        end;
+        'Array.reduce' : begin
+            EntEbx := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            StrEax := 'redlacc_'+IntToStr(DateTimeToUnix(Now));
+            StrEbx := 'redlstp_'+IntToStr(DateTimeToUnix(Now));
+            vardb.addLayer();
+            vardb.setLocalVariable(StrEax, EntEbx);
+            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            begin
+                vardb.setLocalVariable(StrEbx, pocz[trunc(ArrEax.Num)].Values[index]);
+                pocz := parseOpen('$' + StrEax + ' $' + StrEbx + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);
+    		end;
+            stack_push(pocz[sets.StackPointer], vardb.getLocalVariable(StrEax));
+            vardb.removeLayer();
+        end;
+        'Array.reduceFromFirst' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            StrEax := 'redlacc_'+IntToStr(DateTimeToUnix(Now));
+            StrEbx := 'redlstp_'+IntToStr(DateTimeToUnix(Now));
+            vardb.addLayer();
+            vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[0]);
+            for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            begin
+                vardb.setLocalVariable(StrEbx, pocz[trunc(ArrEax.Num)].Values[index]);
+                pocz := parseOpen('$' + StrEax + ' $' + StrEbx + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);
+    		end;
+            stack_push(pocz[sets.StackPointer], vardb.getLocalVariable(StrEax));
+            vardb.removeLayer();
         end;
 
         // crush, pushAt, popAt, swapAt, toString, size

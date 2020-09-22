@@ -172,7 +172,7 @@ begin
         TOBJ : getEntityTypeName := 'Object';
         TFUN : getEntityTypeName := 'Function';
         TEXC : getEntityTypeName := 'Exception';
-        TEXP : getEntityTypeName := 'Expression';
+        TEXP : getEntityTypeName := 'LogicalExpression';
         TFIL : getEntityTypeName := 'File';
         else getEntityTypeName := 'Unknown';
     end;
@@ -188,7 +188,7 @@ begin
         TBOO : getEntitySpec := x.Str + ' : <Boolean>';
         TOBJ : getEntitySpec := '<Object>';
         TFUN : getEntitySpec := '<Function>';
-        TEXP : getEntitySpec := '<Expression>';
+        TEXP : getEntitySpec := '<LogicalExpression>';
         TFIL : getEntitySpec := '<File>';
         else getEntitySpec := '<Unknown>';
     end;
@@ -208,7 +208,7 @@ begin
     else if (x.EntityType = TFUN) then z := '<Function>'
     else if (x.EntityType = TEXC) then z := '<Exception>' 
     else if (x.EntityType = TFIL) then z := '<File>' 
-    else if (x.EntityType = TEXP) then z := '<Expression>'
+    else if (x.EntityType = TEXP) then z := '<LogicalExpression>'
     else z := '<Unknown>'; 
     printEntityValue := z;
 end;

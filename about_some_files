@@ -37,7 +37,6 @@ Additional units of rpn_gui
 
 
 === REPORTED FLAWS
-– The variables' scopes don't work always properly.
 – Windows systems' shell usage does not work
 – Non-linear recursion does not work
 
@@ -45,4 +44,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 9/16/2020
+Paul Lipkowski, 9/21/2020

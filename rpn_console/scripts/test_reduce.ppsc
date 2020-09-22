@@ -1,0 +1,15 @@
+@use(Array)
+@use(String)
+
+"Test 2" println
+[ 1 1 10 seq ] -> T
+$T println
+$T fun{ + } 0 reduce println
+$T fun{ * } 1 reduce println
+
+newln
+"Test 2" println
+[ "Somewhere" "over" "the rainbow" "bluebirds" "fly" ] -> words 
+$words println
+$words fun{ bind } reduceFromFirst -> txt 
+$txt println

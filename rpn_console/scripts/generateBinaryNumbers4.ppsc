@@ -1,0 +1,11 @@
+@use(Array)
+
+"Enter a number: " print
+scan toNumber -> n
+
+[ 1 1 $n seq ] -> T
+function { >i 2 $i ^ } -> func
+$T $func map -> U
+
+
+$U Array.toJSString println 

@@ -1,0 +1,19 @@
+[ 1 1 10 seq ] -> T
+
+function {
+	function { 2 ^ } -> f
+	$T $f Array.map -> U
+	$U
+} -> test1
+
+function {
+	function {
+		>x 
+		if (  [ 3 4 5 6 ] $x Array.belongs ) TRUE else FALSE
+	} -> f
+	$T $f Array.map -> U
+	$U
+} -> test2
+
+test1 println
+test2 println

@@ -151,7 +151,7 @@ begin
                 cnt := stack_size(env.Stack[env.Settings.StackPointer]);
                 disposeEnvironment(env);
                 tname := 'T_'+IntToStr(DateTimeToUnix(Now));
-                pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray ->'+tname, pocz, sets, vardb);
+                pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
                 L[1] := tname;
                 is_set := True;
             end;
@@ -742,7 +742,8 @@ begin
                 end else if mode = MWHILE then begin
                     mode := MNORM;
                 end else begin
-                    stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
+                    //stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
+                    stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(nesttx)));
                     //if (permit) then
                     //    if Steps = -1 then begin
                     //        repeat
@@ -781,12 +782,15 @@ begin
                 //    mode := MNORM;
                 end else begin
                     if (permit) then
+                    begin
 	    			    if Steps = -1 then begin
 	    				    repeat
 	    					    evaluate(L[index], pocz, Steps, sets, vardb);
 	    				    until EOF;
 	    				    stack_pop(pocz[sets.StackPointer]);
 	    			    end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
+                        OldCond := 0;
+                    end;
 	    		    permit := True; 
                 end;
 	    	end;

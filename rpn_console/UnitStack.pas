@@ -60,6 +60,7 @@ function raiseSyntaxErrorExpression(operand : String) : Entity;
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
+function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 
 implementation
 
@@ -154,6 +155,7 @@ begin
         if (i.EntityType = TOBJ) then z := z + '<Object> ';
         if (i.EntityType = TFUN) then z := z + '<Function> '; 
         if (i.EntityType = TEXC) then z := z + '<Exception> '; 
+        if (i.EntityType = TEXP) then z := z + '<LogicalExpression> '; 
     end;
     z := LeftStr(z, Length(z)-1);
     stack_show := z;
@@ -191,6 +193,7 @@ begin
     if (x.EntityType = TOBJ) then z := '<Object>';
     if (x.EntityType = TFUN) then z := '<Function>'; 
     if (x.EntityType = TEXC) then z := '<Exception>'; 
+    if (x.EntityType = TEXP) then z := '<LogicalExpression>'; 
     printEntityValueFull := z;
 end;
 
@@ -557,6 +560,24 @@ begin
 	ent.Num := memsize;
 	buildNewArray := ent;
 end;
+
+function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+var
+    i       : LongInt;
+    memsize : LongInt;
+    ent     : Entity;
+begin
+    memsize := Length(db);
+    SetLength(db, memsize+1);
+    for i := 0 to count-1 do
+        stack_push(db[memsize], buildNull());
+
+	ent.EntityType := TVEC;
+	ent.Str := IntToStr(count);
+	ent.Num := memsize;
+	Result := ent;
+end;
+
 
 
 //function arrayTransfer(var db : StackDB; sets : TSettings; i, j : LongInt) : Entity;
