@@ -620,7 +620,10 @@ begin
 	    		    			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
 	    		    		until EOF;
 	    		    		stack_pop(pocz[sets.StackPointer]);
-	    		    	end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    		    	end else if Steps > 0 then
+                        begin
+                            for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                        end else if Steps = 0 then Steps := 1;;
                         OldCond := 0;
                     end;
                 end;
@@ -641,7 +644,8 @@ begin
 	    					pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
 	    				until EOF;
 	    				stack_pop(pocz[sets.StackPointer]);
-	    			end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
+	    			end else if Steps > 0 then
+                        for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
 	    		permit := True;
 	    		index := cursor - 1;
             //end else if L[index] = 'else{' then begin
@@ -682,7 +686,10 @@ begin
                             stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
                         until EOF;
                         stack_pop(pocz[sets.StackPointer]);
-                    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                    end else if Steps > 0 then
+                    begin
+                        for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                    end else if Steps = 0 then Steps := 1;
                 mode := MNORM;
                 permit := True;
                 index := cursor - 1;
@@ -722,7 +729,7 @@ begin
                 end else if mode = MELIF then begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := permit
+                    if (cond = 0) then permit := True
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MWHILE then begin
@@ -788,7 +795,8 @@ begin
 	    					    evaluate(L[index], pocz, Steps, sets, vardb);
 	    				    until EOF;
 	    				    stack_pop(pocz[sets.StackPointer]);
-	    			    end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
+	    			    end else if Steps > 0 then
+                            for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
                         OldCond := 0;
                     end;
 	    		    permit := True; 

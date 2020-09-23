@@ -19,18 +19,16 @@ function {
 		     or or )
 			FALSE else TRUE
 	}  
-	else {
-		FALSE 
-	}
+	else FALSE 
 } >isValidString
 
 function {
 	>date
 	date "/" splitBy 
 	>y >d >m
-	m toNumber >m
-	d toNumber >d
-	y toNumber >y
+	m toNumber -> m
+	d toNumber -> d
+	y toNumber -> y
 	if ( m 0 < d 0 < y 0 < or or ) 
 		FALSE 
 	elif (
@@ -77,7 +75,7 @@ function {
 } >sayDate
 
 "Enter a date in format MM/DD/YYYY: " print
-scan toString >input
+scan toString -> input
 
 if ( input isValidString ) {
 	if ( input isValidDate ) { 

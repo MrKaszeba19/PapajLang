@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-September 22, 2020  
+September 23, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -234,7 +234,7 @@ The `else:` launches the next instruction only when the recent ?-check was unsuc
 - `if ( B1 ) I1 elif ( B2 ) I2`
 - `if ( B1 ) I1 elif ( B2 ) I2 else I3`
 - `if ( B1 ) I1 elif ( B2 ) I2 elif ( B3 ) I3 ... else IN`
-- `if ( B1 ) I1 elif ( B2 ) I2 elif ( B3 ) I3 ... elif ( BN ) IN`
+- `if ( B1 ) I1 elif ( B2 ) I2 elif ( B3 ) I3 ... elif ( BN ) IN`  
 The question mark checks if an expression B1 is true or its numerical value is equal to 0.
 The `if` launches the next instruction only when the recent condition check was successful.
 The `else` launches the next instruction only when the recent condition check was unsuccesful.

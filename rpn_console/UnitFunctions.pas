@@ -3966,11 +3966,46 @@ begin
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
-            StrEax := 'redlacc_'+IntToStr(DateTimeToUnix(Now));
-            StrEbx := 'redlstp_'+IntToStr(DateTimeToUnix(Now));
+            StrEax := 'reflacc_'+IntToStr(DateTimeToUnix(Now));
+            StrEbx := 'reflstp_'+IntToStr(DateTimeToUnix(Now));
             vardb.addLayer();
             vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[0]);
             for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            begin
+                vardb.setLocalVariable(StrEbx, pocz[trunc(ArrEax.Num)].Values[index]);
+                pocz := parseOpen('$' + StrEax + ' $' + StrEbx + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);
+    		end;
+            stack_push(pocz[sets.StackPointer], vardb.getLocalVariable(StrEax));
+            vardb.removeLayer();
+        end;
+        'Array.reduceRight' : begin
+            EntEbx := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            StrEax := 'redracc_'+IntToStr(DateTimeToUnix(Now));
+            StrEbx := 'redrstp_'+IntToStr(DateTimeToUnix(Now));
+            vardb.addLayer();
+            vardb.setLocalVariable(StrEax, EntEbx);
+            for index := Length(pocz[trunc(ArrEax.Num)].Values)-1 downto 0 do
+            begin
+                vardb.setLocalVariable(StrEbx, pocz[trunc(ArrEax.Num)].Values[index]);
+                pocz := parseOpen('$' + StrEax + ' $' + StrEbx + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);
+    		end;
+            stack_push(pocz[sets.StackPointer], vardb.getLocalVariable(StrEax));
+            vardb.removeLayer();
+        end;
+        'Array.reduceRightFromLast' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+            EntEax := stack_pop(pocz[sets.StackPointer]);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            StrEax := 'relracc_'+IntToStr(DateTimeToUnix(Now));
+            StrEbx := 'relrstp_'+IntToStr(DateTimeToUnix(Now));
+            vardb.addLayer();
+            vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[Length(pocz[trunc(ArrEax.Num)].Values)-1]);
+            for index := Length(pocz[trunc(ArrEax.Num)].Values)-2 downto 0 do
             begin
                 vardb.setLocalVariable(StrEbx, pocz[trunc(ArrEax.Num)].Values[index]);
                 pocz := parseOpen('$' + StrEax + ' $' + StrEbx + ' ' + EntEax.Str + ' >' + StrEax, pocz, sets, vardb);

@@ -4,12 +4,12 @@
 "Test 1" println
 [ 1 1 10 seq ] -> T
 $T println
-$T fun{ + } 0 reduce println
-$T fun{ * } 1 reduce println
+$T fun{ + } 0 reduceRight println
+$T fun{ * } 1 reduceRight println
 
 newln
 "Test 2" println
 [ "Somewhere" "over" "the rainbow" "bluebirds" "fly" ] -> words 
 $words println
-$words fun{ bind } reduceFromFirst -> txt 
+$words fun{ bind } reduceRightFromLast -> txt 
 $txt println
