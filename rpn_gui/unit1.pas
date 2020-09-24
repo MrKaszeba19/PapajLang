@@ -145,6 +145,12 @@ begin
 	  'hbr' : set1HBR();
           else set1ENG();
      end;
+     {$IFDEF MSWINDOWS}
+     Memo1.Font.Name := 'Consolas';
+     {$ENDIF}
+     {$IFDEF UNIX}
+     Memo1.Font.Name := 'Monospace';
+     {$ENDIF}
      SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
      Memo1.Text := '';
 end;

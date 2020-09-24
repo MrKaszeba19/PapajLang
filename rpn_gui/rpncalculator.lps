@@ -7,7 +7,6 @@
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="30" Y="23"/>
         <UsageCount Value="30"/>
@@ -20,8 +19,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <TopLine Value="120"/>
-        <CursorPos X="29" Y="151"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="123"/>
+        <CursorPos X="29" Y="152"/>
         <UsageCount Value="30"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
