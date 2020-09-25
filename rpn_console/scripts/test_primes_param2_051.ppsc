@@ -1,4 +1,4 @@
-scan toNumber >x clear // get first parameter only
+scan toNumber >x
 
 if ( $x 2 = $x 3 = or ) { 
 	TRUE 
