@@ -1,0 +1,13 @@
+@money
+[ 10 Math.genNormStd ] -> T
+$T ( 0 >= ) Array.filter -> U 
+$T ( 0 < ) Array.filter -> V
+$T println
+$U println
+$V println
+
+newln
+$T ( 0 >= ) Array.splitByExpression -> V -> U
+$T println
+$U println
+$V println

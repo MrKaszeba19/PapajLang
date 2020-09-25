@@ -1,0 +1,13 @@
+scan toNumber >x clear // get first parameter only
+
+if ( $x 2 = $x 3 = or ) { 
+	TRUE 
+} else {
+	TRUE -> guess
+	for ( 2 -> i ; $i $x sqrt <= guess and ; $i ++ >i ) {
+		if ( $x $i mod 0 = ) {
+			FALSE -> guess
+		}	
+	}
+	$guess println
+}

@@ -39,7 +39,7 @@ Additional units of rpn_gui
 === REPORTED FLAWS
 – Windows systems' shell usage does not work
 – Non-linear recursion does not work
-
+– Runtime parameters don't work
 
 
 ===========================================

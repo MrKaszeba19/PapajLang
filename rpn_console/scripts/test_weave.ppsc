@@ -1,0 +1,7 @@
+@use(Array)
+[ 1 1 10 seq ] unweave swap println println
+[ 1 1 11 seq ] unweave swap println println
+newln
+[ 1 1 12 seq ] [ 10 1 1 seq ] Array.weave -> $T
+$T println
+$T unweave println println
