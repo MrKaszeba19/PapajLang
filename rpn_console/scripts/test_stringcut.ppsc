@@ -1,0 +1,13 @@
+@use(String)
+
+"abcdefghijklmnopqrst" -> T
+
+$T println
+$T 4 left println
+$T 3 right println
+$T 4 cutLeft println
+$T 3 cutRight println
+$T 4 3 cutBothSides println
+$T 4 17 between println
+$T 4 14 substring println
+
