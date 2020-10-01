@@ -642,7 +642,7 @@ begin
                 end else if mode = MELIF then begin
                     pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := permit
+                    if (cond = 0) then permit := True //permit
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MWHILE then begin
@@ -678,13 +678,13 @@ begin
                     OldCond := 1;
                     evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if cond = 0 then permit := True
+                    if cond = 0 then permit := permit
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MELIF then begin
                     evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := permit
+                    if (cond = 0) then permit := True //permit
 			        else permit := False;
                     mode := MNORM;
                 //end else if mode = MDO then begin
@@ -701,12 +701,15 @@ begin
                 //    mode := MNORM;
                 end else begin
                     if (permit) then
+                    begin
 	    			    if Steps = -1 then begin
 	    				    repeat
 	    					    evaluate(L[index], pocz, Steps, sets, vardb);
 	    				    until EOF;
 	    				    stack_pop(pocz[sets.StackPointer]);
 	    			    end else for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
+                        OldCond := 0;
+                    end;
 	    		    permit := True; 
                 end;
 	    	end;

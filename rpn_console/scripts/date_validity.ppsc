@@ -19,7 +19,9 @@ function {
 		     or or )
 			FALSE else TRUE
 	}  
-	else FALSE
+	else {
+		FALSE 
+	}
 } >isValidString
 
 function {
@@ -34,7 +36,8 @@ function {
 	elif (
 		m 1 = d 31 <= and
 		m 2 = y 4 mod 0 = and y 400 mod 0 = and d 29 <= and
-		m 2 = y 4 mod 0 = and y 400 mod 0 != and d 28 <= and
+		m 2 = y 4 mod 0 = and y 400 mod 0 != and y 100 mod 0 != and d 29 <= and
+		m 2 = y 4 mod 0 = and y 400 mod 0 != and y 100 mod 0 = and d 28 <= and
 		m 2 = y 4 mod 0 != and d 28 <= and
 		m 3 = d 31 <= and
 		m 4 = d 30 <= and
@@ -46,7 +49,7 @@ function {
 		m 10 = d 31 <= and
 		m 11 = d 30 <= and
 		m 12 = d 31 <= and		
-		13 times or
+		14 times or
 	) TRUE else FALSE
 } >isValidDate
 
