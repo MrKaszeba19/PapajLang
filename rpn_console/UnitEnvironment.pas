@@ -786,7 +786,7 @@ begin
                 end else if mode = MELIF then begin
                     evaluate(L[index], pocz, Steps, sets, vardb);
 	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := permit
+                    if (cond = 0) then permit := True
 			        else permit := False;
                     mode := MNORM;
                 //end else if mode = MDO then begin
