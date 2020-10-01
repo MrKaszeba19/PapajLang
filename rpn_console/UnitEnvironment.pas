@@ -202,15 +202,23 @@ end;
 
 function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
 var
-    env : PSEnvironment;
-    cnt : LongInt;
+    env        : PSEnvironment;
+    cnt, index : LongInt;
+    ArrEcx     : Entity;
 begin
     env := buildNewEnvironment();
     env.Stack := parseOpen(input, env.Stack, sets, vardb);
     cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, cnt));
+    ArrEcx := stack_pop(pocz[sets.StackPointer]);
+    for index := 0 to cnt-1 do
+    begin
+        pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
+    end; 
     disposeEnvironment(env);
-    pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray', pocz, sets, vardb);
-    wrapArrayFromString := stack_pop(pocz[sets.StackPointer]);
+    //pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray', pocz, sets, vardb);
+    //wrapArrayFromString := stack_pop(pocz[sets.StackPointer]);
+    wrapArrayFromString := ArrEcx;
 end;
 
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
@@ -255,7 +263,11 @@ begin
 		if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin
 			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		end else stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+		end else begin
+            // check
+            if sets.stringmode = MCLIKE then StrEcx := string_toC(StrEcx);
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
 	end else begin
     	if not (sets.CaseSensitive) then i := LowerCase(i);
     	Val (i,Im,Code);
@@ -564,8 +576,7 @@ begin
     	            begin
 			        raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 		        end else stack_push(pocz[sets.StackPointer], buildString('"'));
-            end else if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"')
-            then begin
+            end else if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
                 nesttx := L[index];
 	    		cursor := index + 1;
 				repeat
@@ -578,7 +589,10 @@ begin
 		            if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	            begin
 			            raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		            end else stack_push(pocz[sets.StackPointer], buildString(nesttx));
+		            end else begin
+                        if sets.stringmode = MCLIKE then nesttx := string_toC(nesttx);
+                        stack_push(pocz[sets.StackPointer], buildString(nesttx));
+                    end;
                 end else begin
                     raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
                 end;

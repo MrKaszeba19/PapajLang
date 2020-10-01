@@ -1,0 +1,17 @@
+@silent
+@use(Array)
+@use(Math)
+
+[
+	do {
+		clear	
+		"Enter the size of an array: " print
+		scan toNumber -> n
+	} until ( $n isNatural )
+	$n times {
+		"Enter array value: " print
+		scan toNumber
+	}
+] -> T
+"Sorted array: " print
+$T sortNumbers println

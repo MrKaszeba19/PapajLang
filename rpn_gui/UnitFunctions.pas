@@ -1,6 +1,8 @@
 unit UnitFunctions;
 
 {$mode objfpc}{$H+}
+	
+//{$ZEROBASEDSTRINGS ON}
 
 interface
 
@@ -29,6 +31,8 @@ function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Int
 function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_files(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+
+function string_toC(dupa : String) : String;
 
 implementation
 
@@ -1508,6 +1512,9 @@ begin
         'rem' : begin
         	stack_justpop(pocz[sets.StackPointer]);
         end;
+        'frontrem' : begin
+        	stack_justpopFront(pocz[sets.StackPointer], 0);
+        end;
         'qshift' : begin
         	stack_push(pocz[sets.StackPointer], stack_firstpop(pocz[sets.StackPointer]));
         end;
@@ -2181,11 +2188,18 @@ begin
             stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) mod 2 = 1));
         end;
 		'Math.isInteger' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) = y));
         end;
+        'Math.isNatural' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildBoolean((trunc(y) = y) and (y >= 0)));
+        end;
+
 
 		'Math.Gamma' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
@@ -2706,7 +2720,7 @@ begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            x := stack_pop(pocz[sets.StackPointer]).Num;
+            x := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             StrEax := Copy(StrEbx, trunc(x), trunc(y));
@@ -2719,9 +2733,9 @@ begin
         end;
         'String.between' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            x := stack_pop(pocz[sets.StackPointer]).Num;
+            x := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             StrEax := Copy(StrEbx, trunc(x), trunc(y)-trunc(x)+1);
@@ -2759,9 +2773,9 @@ begin
               	stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
           	end else begin
           	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-              	y := stack_pop(pocz[sets.StackPointer]).Num;
+              	y := stack_pop(pocz[sets.StackPointer]).Num; // check
           	  	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-              	x := stack_pop(pocz[sets.StackPointer]).Num;
+              	x := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
               	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
               	StrEax := stack_pop(pocz[sets.StackPointer]).Str;
               	Delete(StrEax, trunc(x), trunc(y)); 
@@ -2775,7 +2789,7 @@ begin
         end;
         'String.insert' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
@@ -2789,7 +2803,7 @@ begin
         end;
         'String.replace' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-            y := stack_pop(pocz[sets.StackPointer]).Num;
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
@@ -2809,7 +2823,7 @@ begin
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := NPos(StrEbx, StrEax, trunc(y));
+            ExtEax := NPos(StrEbx, StrEax, trunc(y)) +1-sets.StringStart;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
@@ -2818,12 +2832,12 @@ begin
         end;
         'String.positionFrom' : begin
           	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
-            y := stack_pop(pocz[sets.StackPointer]).Num;
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := PosEx(StrEbx, StrEax, trunc(y));
+            ExtEax := PosEx(StrEbx, StrEax, trunc(y)) +1-sets.StringStart;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
@@ -2835,7 +2849,7 @@ begin
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-            ExtEax := LastDelimiter(StrEbx, StrEax);
+            ExtEax := LastDelimiter(StrEbx, StrEax) +1-sets.StringStart;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
@@ -3141,6 +3155,36 @@ begin
 		'@unuse(Console)' : begin
            sets.Packages.UseConsole := false;
 		   sets.Packages.UseAnything := verifyPackages(sets.Packages);
+        end;
+
+        '@stringmode' : begin
+            sets.StringStart := 0;
+            sets.StringMode := MCLIKE;
+        end;
+        '@stringmode(DEFAULT)' : begin
+            sets.StringStart := 0;
+            sets.StringMode := MCLIKE;
+        end;
+        '@stringmode(CLIKE)' : begin
+            sets.StringStart := 0;
+            sets.StringMode := MCLIKE;
+        end;
+        '@stringmode(PASCAL)' : begin
+            sets.StringStart := 1;
+            sets.StringMode := MPASCL;
+        end;
+
+        '@stringindex' : begin
+            sets.StringStart := 0;
+        end;
+        '@stringindex(DEFAULT)' : begin
+            sets.StringStart := 0;
+        end;
+        '@stringindex(0)' : begin
+            sets.StringStart := 0;
+        end;
+        '@stringindex(1)' : begin
+            sets.StringStart := 1;
         end;
 		
         else begin

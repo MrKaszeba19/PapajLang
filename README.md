@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-September 30, 2020  
+October 1, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -23,6 +23,7 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
 ### GUI Application
 - Open an app executable.
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
+- There is also a simple script running engine – just paste your PS script and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 
 ## Requirements and installation

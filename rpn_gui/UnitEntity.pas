@@ -19,6 +19,8 @@ const
 	TOBJ = 7;
 	TFUN = 8;
 	TEXC = 9;
+    MCLIKE = 1;
+    MPASCL = 0;
 	SHELL_BASH = '/bin/bash';
 	SHELL_ZSH  = '/bin/zsh';
 	SHELL_SH   = '/bin/sh';
@@ -47,6 +49,8 @@ type TSettings = record
 	StackPointer  : LongInt;
 	KeepWorking   : ShortInt;
     InfMode       : Boolean;
+    StringStart   : ShortInt;
+    StringMode    : ShortInt;
 	Packages      : TPackages;
 end;
 // sorts
@@ -133,6 +137,8 @@ begin
   pom.KeepWorking := 2;
   pom.Packages := default_packages();
   pom.InfMode := false;
+  pom.StringStart := 0;
+  pom.StringMode := MCLIKE;
   {$IFDEF MSWINDOWS}
   pom.Shell := SHELL_CMD;
   {$ELSE}

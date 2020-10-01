@@ -1,0 +1,23 @@
+function{
+	>n
+	if ( n 0 = ) { 
+		0
+	} elif ( n 1 = ) {
+		1
+	} else {
+		// put 2 initial values we will add up
+		0 1
+		n -- times {
+			// duplicate the values and create a sum
+			2 copy +
+			// simply remove the LHS value
+			frontrem
+			// so now we have a RHS value and the added one as the new values to sum
+			// and so on up to i <= n
+		} 
+		// remove the LHS value and return the RHS one
+		frontrem
+	}
+} -> fib
+
+scan toNumber fib

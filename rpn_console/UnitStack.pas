@@ -41,6 +41,7 @@ procedure stack_reverseCollection(var poc : TStack; index : LongInt);
 
 procedure stack_pushFront(var pocz : TStack; node : Entity; index : LongInt);
 function stack_popFront(var pocz : TStack; index : LongInt) : Entity;
+procedure stack_justpopFront(var pocz : TStack; index : LongInt);
 procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
 function stack_getFront(pocz : TStack; index : LongInt) : Entity;
 
@@ -335,6 +336,14 @@ begin
 	for i := index to Length(pocz.Values)-2 do pocz.Values[i] := pocz.Values[i+1];
 	SetLength(pocz.Values, Length(pocz.Values)-1);
 	stack_popFront := pom;
+end;
+
+procedure stack_justpopFront(var pocz : TStack; index : LongInt);
+var
+	i   : LongInt;
+begin
+	for i := index to Length(pocz.Values)-2 do pocz.Values[i] := pocz.Values[i+1];
+	SetLength(pocz.Values, Length(pocz.Values)-1);
 end;
 
 procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
