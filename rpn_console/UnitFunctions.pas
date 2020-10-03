@@ -2957,6 +2957,24 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEax)); 
         end;
+        'String.lower' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := LowerCase(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.upper' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := UpperCase(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
 
 		else Found := false;
 	end;
