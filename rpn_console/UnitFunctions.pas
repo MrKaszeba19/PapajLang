@@ -939,6 +939,12 @@ begin
 	string_toC := dupa;
 end;
 
+function capitalize(dupa : char) : char;
+begin
+    if (Ord(dupa) >= 97) and (Ord(dupa) <= 122) then Result := Chr(Ord(dupa)-32)
+    else Result := dupa;
+end;
+
 // COMMANDS' EXECUTION
 
 function executeCommand(input, Shell : String) : String;
@@ -2970,6 +2976,16 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             StrEcx := UpperCase(StrEbx);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.uplower' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := LowerCase(StrEbx);
+            if Length(StrEcx) > 0 then StrEcx[1] := capitalize(StrEcx[1]);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end;
