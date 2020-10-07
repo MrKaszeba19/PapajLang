@@ -3006,6 +3006,32 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
+        'String.setAt' : begin
+          	if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := StrEax;
+            StrEcx[trunc(y)] := StrEbx[1];
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx)); 
+        end;
+        'String.getAt' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num +1-sets.StringStart;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEbx := Copy(StrEax, trunc(y), 1);
+            stack_push(pocz[sets.StackPointer], buildString(StrEbx)); 
+        end;
+        'String.compare' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            stack_push(pocz[sets.StackPointer], buildNumber(CompareStr(StrEax, StrEbx)));
+        end;
 
 		else Found := false;
 	end;

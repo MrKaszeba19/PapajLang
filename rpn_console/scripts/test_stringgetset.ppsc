@@ -1,0 +1,7 @@
+@use(String)
+"kurwa" -> str
+str println
+str 2 getAt println
+str 2 "*" setAt -> str
+str println
+str 2 getAt println

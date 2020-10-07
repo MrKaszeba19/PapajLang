@@ -1,0 +1,12 @@
+@silent
+
+scan toNumber clone -> $n
+2 ^ toString length ++ -> $len
+
+for ( 0 -> $i ; $i $n <= ; $i ++ -> $i ) {
+	for ( $j : [ 0 1 $n seq ] ) {
+		$j $i *
+		$len colprint
+	}
+	newln
+}
