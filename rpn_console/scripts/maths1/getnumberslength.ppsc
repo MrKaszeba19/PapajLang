@@ -1,0 +1,11 @@
+@use(Math)
+
+function {
+	abs 10 log trunc ++
+} -> intlen
+
+2137 intlen
+123456 intlen
+2 31 ^ -- intlen
+2 63 ^ -- intlen
+2 127 ^ -- intlen
