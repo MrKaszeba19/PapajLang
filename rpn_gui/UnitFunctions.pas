@@ -2893,7 +2893,7 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildNumber(IntEax)); 
         end;
-        'String.run' : begin
+        'String.eval' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
             pocz := parseScoped(StrEbx, pocz, sets, vardb);

@@ -1,0 +1,31 @@
+@silent
+
+"Type number 1: " print
+scan tonumber >na
+"Type number 2: " print
+scan tonumber >nb
+
+"Type what do you want to do: " println
+\t "+ sum" concat println
+\t "- difference" concat println
+\t "* product" concat println
+\t "/ quotient" concat println
+scan tostring >op
+
+"+-*/" $op occur 0 <= ?
+if {
+	"Wrong operand" println
+} else {
+	$op \/ = 
+	$nb 0 = 
+	and ?
+	if {
+		"You cannot divide by zero!" println
+	} else {
+		$na tostring 
+		$nb tostring 
+		$op
+		2 times bind strparse tostring >result
+		"Result:" $result bind println
+	}
+}
