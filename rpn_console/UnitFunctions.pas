@@ -1421,25 +1421,25 @@ begin
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNumber(Ord(StrEcx[1])));
         end;
-        'length' : begin
-            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
-            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
-            begin
-                IntEax := trunc(stack_get(pocz[sets.StackPointer]).Num);
-                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-                stack_push(pocz[sets.StackPointer], buildNumber(stack_size(pocz[IntEax])));
-            end else begin
-                StrEax := stack_get(pocz[sets.StackPointer]).Str;
-                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-                stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
-            end;
-        end;
-        'len' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_get(pocz[sets.StackPointer]).Str;
-            //if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
-        end;
+        //'length' : begin
+        //    if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
+        //    if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+        //    begin
+        //        IntEax := trunc(stack_get(pocz[sets.StackPointer]).Num);
+        //        if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+        //        stack_push(pocz[sets.StackPointer], buildNumber(stack_size(pocz[IntEax])));
+        //    end else begin
+        //        StrEax := stack_get(pocz[sets.StackPointer]).Str;
+        //        if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+        //        stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+        //    end;
+        //end;
+        //'len' : begin
+        //  	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+        //    StrEax := stack_get(pocz[sets.StackPointer]).Str;
+        //    //if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+        //    stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+        //end;
         'print' : begin
             EntEax := stack_get(pocz[sets.StackPointer]);
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
@@ -2912,10 +2912,13 @@ begin
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
 		'String.length' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEax := stack_get(pocz[sets.StackPointer]).Str;
-            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+            begin
+          	    //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+                StrEax := stack_get(pocz[sets.StackPointer]).Str;
+                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
+            end else Found := false;
         end;
         'String.value' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
@@ -3961,17 +3964,13 @@ begin
             stack_push(pocz[sets.StackPointer], EntEax);
         end;
         'Array.length' : begin
-            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
+            //if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
             if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
             begin
                 IntEax := trunc(stack_get(pocz[sets.StackPointer]).Num);
                 if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
                 stack_push(pocz[sets.StackPointer], buildNumber(stack_size(pocz[IntEax])));
-            end else begin
-                StrEax := stack_get(pocz[sets.StackPointer]).Str;
-                if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-                stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
-            end;
+            end else Found := False;
         end;
         'Array.toJSString' : begin
           	EntEax := stack_get(pocz[sets.StackPointer]);

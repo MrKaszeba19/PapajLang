@@ -40,7 +40,7 @@ begin
         res := stack_show(env.Stack[0], env.Settings.Mask);
         disposeEnvironment(env);
         if (env.Settings.Prevent) then res := '';
-        PS_parseString := res;
+        Result := res;
     end;
 end;
 
