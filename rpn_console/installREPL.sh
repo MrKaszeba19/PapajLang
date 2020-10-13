@@ -10,7 +10,7 @@ else
 fi
 echo "#!/usr/bin/env xdg-open" > $path/RPN.desktop
 echo "[Desktop Entry]" >> $path/RPN.desktop
-echo "Version=0.5" >> $path/RPN.desktop
+echo "Version=0.5.0.3" >> $path/RPN.desktop
 echo "Type=Application" >> $path/RPN.desktop
 echo "Terminal=true" >> $path/RPN.desktop
 echo "Exec=$(pwd)/rpn repl" >> $path/RPN.desktop

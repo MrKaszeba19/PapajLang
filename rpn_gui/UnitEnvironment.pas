@@ -351,7 +351,7 @@ var
 begin
     isValid := True;
     comment := False;
-    i := 0;
+    i := 1;
     v1 := 0; v2 := 0; v3 := 0;
     while i <= Length(input) do 
     begin
