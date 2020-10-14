@@ -13,6 +13,7 @@ $T length println
 //$T 4 3 cutBothSides println
 //$T 4 16 between println
 $T 4 13 substring println
+$T 6 split swap 2 times println
 
 newln
 
@@ -25,5 +26,6 @@ $U length println
 //$U 4 3 cutBothSides println
 //$U 4 16 between println
 $U 4 13 subarray println
+$U 6 split swap 2 times println
 
 
