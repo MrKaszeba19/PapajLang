@@ -1,0 +1,21 @@
+@silent
+@use(Math)
+
+function { 
+	>a
+	"NUMBER:  " print $a println
+	"Round:   " print $a round println
+	"Trunc:   " print $a trunc println
+	"Floor:   " print $a floor println
+	"Ceiling: " print $a ceiling println
+} -> info
+
+[ 5.5 -5.5 5.25 -5.25 5.75 -5.75 5 -5 0
+  4.5 -4.5 4.25 -4.25 4.75 -4.75 4 -4 1 ] -> T
+
+for ( $item : $T ) {
+	$item info
+	newln
+}
+
+

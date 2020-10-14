@@ -7,7 +7,7 @@ unit UnitFunctions;
 interface
 
 uses
-	Classes, SysUtils, StrUtils, Math, Process,
+	Classes, SysUtils, StrUtils, Process,
 	UnitStack, UnitEntity, UnitVariables;
 
 const
@@ -36,7 +36,7 @@ function string_toC(dupa : String) : String;
 
 implementation
 
-uses Unit5,
+uses Unit5, MathUtils, Math,
     {$IFDEF MSWINDOWS}
 		ShellApi, crt,
     {$ELSE}
@@ -73,6 +73,17 @@ begin
     end;
 end;
 
+//function lib_template(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+//var
+//	Found : Boolean;
+//begin
+//	Found := true;
+//	case i of
+//	
+//	end;
+//	lib_template := Found;
+//end;
+
 function read_sourcefile(filename : String; var pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
   fun, S : String;
@@ -92,404 +103,6 @@ begin
   read_sourcefile := pocz;
 end;
 
-procedure swapNumbers(var e1 : Extended; var e2 : Extended);
-var
-	pom : Extended;
-begin
-	pom := e1;
-	e1 := e2;
-	e2 := pom;
-end;
-
-//function lib_template(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
-//var
-//	Found : Boolean;
-//begin
-//	Found := true;
-//	case i of
-//	
-//	end;
-//	lib_template := Found;
-//end;
-
-// MATHEMATICAL FUNCTIONS
-
-function pow(x,y:Extended):Extended;
-var
-        s : Extended;
-        i : integer;
-begin
-        s := 1;
-        for i := 1 to trunc(abs(y)) do s := s * x;
-        if (y < 0) then s := 1 / s;
-        pow := s;
-end;
-
-function pow2(x,y:Extended):Extended;
-var
-        s : Extended;
-begin
-        if (x = 0) and (y <> 0) then s := 0
-        else if (x = 0) and (y = 0) then s := NaN
-        else s := exp(y*ln(x));
-        pow2 := s;
-end;
-
-function fact(x:Extended):Extended;
-var
-        s : Extended;
-        i : integer;
-begin
-     s := 1;
-     for i := 1 to trunc(abs(x)) do s := s * i;
-     fact := s;
-end;
-
-function isPrime(x : LongInt) : Boolean;
-var
-    i : LongInt;
-    s : Boolean;
-begin
-    case x of
-        0 : isPrime := False;
-        1 : isPrime := False;
-        else begin
-            s := True;
-            for i := 2 to trunc(sqrt(x)) do
-            begin
-                if (x mod i = 0) then 
-                begin
-                    s := False;
-                    break;
-                end;
-            end;
-            isPrime := s;
-        end;
-    end;
-end;
-
-//function newton_int(n, k : Extended) : Extended;
-//begin
-//     //newton (n, 0) = 1;
-//     //newton (n, n) = 1;
-//     //newton (n, k) = newton (n-1, k-1) + newton (n-1, k);
-//     //writeln('Counting (',trunc(n),',',trunc(k),')');
-//     if (k > n/2) then newton_int := newton_int(n, n-k);
-//     if (k = 0.0) or (k = n) then newton_int := 1.0
-//     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
-//end;
-
-function newton_int(n, k : Extended) : Extended;
-begin
-    if(k > n) then newton_int := 1.0/0.0
-    else if(k = 0) then 
-        newton_int := 1
-    else if (k > n/2) then
-        newton_int := newton_int(n,n-k)
-    else 
-        newton_int := n * newton_int(n-1,k-1) / k;
-end;
-
-function newton_real(n, k : Extended) : Extended;
-var s, j : Extended;
-begin
-	s := 1;
-	if (n < 0) then
-		newton_real := pow(-1.0, k) * newton_real(k-n-1, k)
-	else begin
-		j := 1.0;
-		while (j <= k) do
-		begin
-			s := s * (n-k+j)/j;
-			j := j + 1;
-		end;
-    	newton_real := s;
-  	end;
-end;
-
-function gcd(a, b : Extended) : Extended;
-begin
-	while (a <> b) do
-	begin
-        if (a > b) then a := a - b
-        else b := b - a;
-    end;
-	gcd := a;
-end;
-
-function lcm(a, b : Extended) : Extended;
-begin
-	lcm := (a*b)/gcd(a, b);
-end;
-
-//function fib(n: Extended) : Extended;
-//begin
-//     if n = 0.0 then fib := 0.0
-//     else if n = 1.0 then fib := 1.0
-//     else fib := fib(n-1.0) + fib(n-2.0);
-//end;
-
-function fib(n: Extended) : Extended;
-var
-    a, b : Extended;
-    i    : LongInt;
-begin
-    if n = 0.0 then fib := 0.0
-    else if n = 1.0 then fib := 1.0
-    else begin
-        a := 0.0;
-        b := 1.0;
-        for i := 2 to trunc(n) do
-        begin
-            a := a + b;
-            swapNumbers(a, b);
-        end;
-        fib := b;
-    end;
-end;
-
-function fgamma(x : Extended) : Extended;
-var
-	limit, n : Integer;
-	s, s1    : Extended;
-	epsilon  : Extended;
-begin
-	if (x = trunc(x)) then fgamma := fact(x-1) 
-	else begin
-		if (x > 100) then limit := trunc(100000*x)+1;
-		limit := trunc(1000000*x)+1;
-		n := 1;
-		s := 1.0;
-		epsilon := 50.0;
-		while (n < limit) and (epsilon > 0.0000001) do
-		//while (epsilon > 0.0000001) do
-		begin
-            //checkSIGINT();
-			s1 := s;
-			s := s * ((pow2(1+1/n, x))/(1+x/n));
-			//writeln(s, #9, epsilon);
-			epsilon := abs(s-s1);
-			n := n + 1;
-		end;
-		fgamma := s/x;
-
-		//s := exp(-EM*x)/x;
-		//for n := 1 to 1000000*trunc(x)+1 do 
-		//begin
-		//	s1 := s;
-		//	s := s * (1/(1 + x/n) * exp(x/n));
-		//	if (abs(s1-s) < 0.000001) then break;
-		//end;
-		//fgamma := s;
-	end;
-end;
-
-function dstdnorm(x : Extended) : Extended;
-var
-	sum    : Extended;
-	//sum1   : Extended;
-	t, eps : Extended;
-	limit  : Extended;
-begin
-    //checkSIGINT();
-	eps := 0.000001;
-	limit := 5;
-	if (x < -limit) then 
-	begin 
-		dstdnorm := 0.00000000001 
-	end
-	else if (x > limit) then 
-	begin 
-		dstdnorm := 0.99999999999 
-	end else if (x = 0) then
-	begin
-		dstdnorm := 0.5;
-	end
-	else if (x = -1) then
-	begin
-		dstdnorm := 0.158655253931457;
-	end
-	else if (x = 1) then
-	begin
-		dstdnorm := 0.841344746068543;
-	end else if (x <= -1) then
-	begin
-		eps := 0.0001;
-		sum := 0;
-		t := x;
-		//sum1 := 50;
-		while (t >= -limit) do
-		//while (t >= -limit) and (abs(sum-sum1) > eps) do
-		begin
-			//sum1 := sum;
-			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
-			t := t - eps;
-		end; 
-		dstdnorm := sum/sqrt(2*PI)*(2/3);
-	end else if (x < 0) then
-	begin
-		sum := 0;
-		t := x;
-		while (t <= 0) do
-		begin
-			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
-			t := t + eps;
-		end; 
-		dstdnorm := 0.5 - sum/sqrt(2*PI)*(2/3);
-	end else if (x <= 1) then begin
-		sum := 0;
-		t := x;
-		while (t > 0) do
-		begin
-			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
-			t := t - eps;
-		end; 
-		dstdnorm := 0.5 + sum/sqrt(2*PI)*(2/3);
-	end else begin
-		eps := 0.0001;
-		sum := 0;
-		t := x;
-		while (t <= limit) do
-		//while (t <= limit) and (abs(sum-sum1) > eps) do
-		begin
-			//sum1 := sum;
-			sum := sum + eps*((exp(-(t*t/2)))+(exp(-((t-eps)*(t-eps)/2)))/2);
-			t := t + eps;
-		end; 
-		dstdnorm := 1 - sum/sqrt(2*PI)*(2/3);
-	end;
-end;
-
-// 0.841344746068543
-// 0.158655253931457
-
-function dnorm(x, mu, si : Extended) : Extended;
-begin
-	dnorm := dstdnorm((x-mu)/si);
-end;
-
-function fnorm(x, mu, si : Extended) : Extended;
-begin
-    fnorm := 1/(si*sqrt(2*PI))*exp(-0.5*sqr((x-mu)/si));
-end;
-
-//function rnorm(mean, sd: Extended) : Extended;
-//var
-//    u1, u2: Extended;
-//begin
-//    u1 := random;
-//    u2 := random;
-//    rnorm := mean * abs(1 + sqrt(-2 * (ln(u1))) * cos(2 * pi * u2) * sd);
-//end;
-
-function fbinom(n : LongInt; k : LongInt; p : Extended) : Extended;
-begin
-    fbinom := newton_int(n, k)*pow(p, k)*pow(1-p, n-k);
-end;
-
-function dbinom(n, k : LongInt; p : Extended) : Extended;
-var
-    i : LongInt;
-    s : Extended;
-begin
-    s := 0;
-    //if (k <= n/2) then 
-    //begin
-        for i := 0 to k do
-            s += fbinom(n, i, p);
-        dbinom := s; 
-    //end else begin
-    //    for i := n downto n-k+1 do
-    //        s += fbinom(n, i, p);
-    //    dbinom := s; 
-    //end;
-end; 
-
-function rbinom(n : LongInt; p : Extended) : Extended;
-var
-    i, res : LongInt;
-begin
-    res := 0;
-    for i := 1 to n do
-        if (random <= p) then Inc(res);
-    rbinom := res;
-end;
-
-function fgeom(k : LongInt; p : Extended) : Extended;
-begin
-    fgeom := pow(1-p, k-1)*p;
-end;
-
-function dgeom(k : LongInt; p : Extended) : Extended;
-begin
-    dgeom := 1 - pow(1-p, k);
-end;
-
-function rgeom(p : Extended) : Extended;
-var
-    x      : Extended;
-    i, res : LongInt;
-begin
-    res := 1;
-    if (p <= 0) 
-        then rgeom := Infinity 
-        else begin
-            while (random >= p) do 
-                Inc(res);
-            rgeom := res;
-        end;
-end;
-
-function fexp(x : Extended; lambda : Extended) : Extended;
-begin
-    fexp := lambda * exp(-x*lambda);
-end;
-
-function dexp(x : Extended; lambda : Extended) : Extended;
-begin
-    dexp := 1 - exp(-x*lambda);
-end;
-
-function rexp(lambda : Extended) : Extended;
-begin
-    rexp := -ln(random)/lambda;
-end;
-
-function fpoisson(x, lambda : Extended): Extended;
-begin
-    fpoisson := exp(-lambda)*pow(lambda, x)/fact(x);
-end;
-
-function dpoisson(x, lambda : Extended): Extended;
-var 
-    s : Extended;
-    i : LongInt;
-begin
-    s := 0;
-    for i := 0 to trunc(x) do
-        s += fpoisson(i, lambda);
-    dpoisson := s; 
-end;
-
-function rpoisson(mean: Extended): Extended;
-{ Generator for Poisson distribution (Donald Knuth's algorithm) }
-const
-  RESOLUTION = 1000;
-var
-  k    : Extended;
-  b, l : Extended;
-begin
-  //assert(mean > 0, 'mean < 1');
-  k := 0;
-  b := 1;
-  l := exp(-mean);
-  while b > l do
-  begin
-    k := k + 1;
-    b := b * random(RESOLUTION) / RESOLUTION;
-  end;
-  rpoisson := k - 1;
-end;
 
 // SORTS
 
@@ -1083,7 +696,7 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            if (y = trunc(y)) then begin
+            if (isInteger(y)) then begin
             	z := pow(x,y);
             end else begin
             	z := pow2(x,y);
@@ -1132,12 +745,24 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        //'mod' : begin
+        //    if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+        //    y := stack_pop(pocz[sets.StackPointer]).Num;
+        //    if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+        //    x := stack_pop(pocz[sets.StackPointer]).Num;
+        //    z := trunc(x) mod trunc(y);
+        //    if not (sets.Autoclear) then begin
+        //    	stack_push(pocz[sets.StackPointer], buildNumber(x));
+        //    	stack_push(pocz[sets.StackPointer], buildNumber(y));
+        //    end;
+        //    stack_push(pocz[sets.StackPointer], buildNumber(z));
+        //end;
         'mod' : begin
-            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := trunc(x) mod trunc(y);
+            z := fmod(x,y);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	stack_push(pocz[sets.StackPointer], buildNumber(y));
@@ -1145,11 +770,13 @@ begin
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'div' : begin
-            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            //if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := trunc(x) div trunc(y);
+            //z := trunc(x) div trunc(y);
+            z := fdiv(x,y);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	stack_push(pocz[sets.StackPointer], buildNumber(y));
@@ -1217,7 +844,7 @@ begin
 		'trunc' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := trunc(y);
+            z := ftrunc(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -2147,23 +1774,35 @@ begin
         'Math.floor' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-			if (y = trunc(y)) then z := trunc(y)
-			else if (y < 0) then z := trunc(y)-1 else z := trunc(y);
+            //z := ffloor(x);
+			//if (y = trunc(y)) then z := trunc(y)
+			//else if (y < 0) then z := trunc(y)-1 else z := trunc(y);
+            if (y = ftrunc(y)) 
+                then z := ftrunc(y)
+			    else if (y < 0) 
+                    then z := ftrunc(y)-1 
+                    else z := ftrunc(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'Math.ceiling' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            if (y = trunc(y)) then z := trunc(y)
-			else if (y < 0) then z := trunc(y) else z := trunc(y)+1;
+            //z := fceiling(x);
+            //if (y = trunc(y)) then z := trunc(y)
+			//else if (y < 0) then z := trunc(y) else z := trunc(y)+1;
+            if (y = ftrunc(y)) 
+                then z := ftrunc(y)
+			    else if (y < 0) 
+                    then z := ftrunc(y) 
+                    else z := ftrunc(y)+1;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'Math.round' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := round(y);
+            z := fround(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -2212,13 +1851,14 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) = y));
+            stack_push(pocz[sets.StackPointer], buildBoolean(isInteger(y)));
         end;
         'Math.isNatural' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildBoolean((trunc(y) = y) and (y >= 0)));
+            stack_push(pocz[sets.StackPointer], buildBoolean((isInteger(y)) and (y >= 0)));
+            //stack_push(pocz[sets.StackPointer], buildBoolean((trunc(y) = y) and (y >= 0)));
         end;
 
 
