@@ -1,0 +1,13 @@
+@use(Math)
+@use(Array)
+
+[ 10 1 50 seq ] fun{ 10 / } map -> T
+"Array: " print 
+T println
+
+"\nx\tgamma(x)" println
+for ( item : T ) {
+	item print
+	"\t" print	
+	item gamma println
+}

@@ -1,11 +1,32 @@
 @use(Math)
 
 function {
-	abs 10 log trunc ++
+	abs log10 trunc ++
 } -> intlen
 
-2137 intlen
-123456 intlen
-2 31 ^ -- intlen
-2 63 ^ -- intlen
-2 127 ^ -- intlen
+2137 intlen println
+123456 intlen println
+newln
+2 0 ^ -- intlen println
+2 1 ^ -- intlen println
+2 3 ^ -- intlen println
+2 7 ^ -- intlen println
+2 15 ^ -- intlen println
+2 31 ^ -- intlen println
+2 63 ^ -- intlen println
+2 127 ^ -- intlen println
+2 255 ^ -- intlen println
+2 511 ^ -- intlen println
+2 1023 ^ -- intlen println
+newln
+2 2 0 ^ -- ^ -- intlen println
+2 2 1 ^ -- ^ -- intlen println
+2 2 2 ^ -- ^ -- intlen println
+2 2 3 ^ -- ^ -- intlen println
+2 2 4 ^ -- ^ -- intlen println
+2 2 5 ^ -- ^ -- intlen println
+2 2 6 ^ -- ^ -- intlen println
+2 2 7 ^ -- ^ -- intlen println
+2 2 8 ^ -- ^ -- intlen println
+2 2 9 ^ -- ^ -- intlen println
+2 2 10 ^ -- ^ -- intlen println

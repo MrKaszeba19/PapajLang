@@ -1903,10 +1903,17 @@ begin
         end;
 
 
-		'Math.Gamma' : begin
+		'Math.gamma' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             z := fgamma(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.gammaln' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := LogGamma(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;

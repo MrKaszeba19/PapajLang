@@ -28,6 +28,7 @@ function gcd(a, b : Extended) : Extended;
 function lcm(a, b : Extended) : Extended;
 function fib(n: Extended) : Extended;
 
+function LogGamma(x : Extended) : Extended;
 function fgamma(x : Extended) : Extended;
 function dstdnorm(x : Extended) : Extended;
 function dnorm(x, mu, si : Extended) : Extended;
@@ -242,16 +243,60 @@ begin
     end;
 end;
 
+function LogGamma(x : Extended) : Extended;
+{ Log of Gamma(x), exponentiate this to get Gamma(x), x! =
+Gamma(x+1),
+  very accurate approximation: 1+epsilon, abs(epsilon) < 2.1E-10
+  Based on Numerical Recipes, by Press, Flannery, Teukolsky,
+  and Vetterling; first edition, page 157 and 704; but greatly
+cleaned up, by Jud McCranie }
+const stp =   2.50662827465;
+      c1  =  76.18009173;
+      c2  = -86.50532033;
+      c3  =  24.01409822;
+      c4  =  -1.231739516;
+      c5  =   1.20858003E-3;
+      c6  =  -5.36382E-6;
+var ser : float;
+begin { --- log gamma --- }
+    ser := 1.0 + c1 / x + c2 / (x + 1.0) + c3 / (x + 2.0) +
+             c4 / (x + 3.0) + c5 / (x + 4.0) + c6 / (x + 5.0);
+    LogGamma := (x - 0.5) * ln( x + 4.5) - x - 4.5 + ln( stp * ser);
+end; { --- log gamma --- }
+
 function fgamma(x : Extended) : Extended;
+var
+	limit, n : Integer;
+begin
+	if (isInteger(x)) then Result := fact(x-1) 
+    else if (x = 0.5) then
+    begin
+        Result := sqrt(PI);
+    end else if (x > 0) and (fmod(x,1) = 0.5) then
+    begin
+        Result := (x-1)*fgamma(x-1);
+    end else begin
+		Result := exp(LogGamma(x));
+	end;
+end;
+
+function fgamma2(x : Extended) : Extended;
 var
 	limit, n : Integer;
 	s, s1    : Extended;
 	epsilon  : Extended;
 begin
 	if (isInteger(x)) then Result := fact(x-1) 
-	else begin
-		if (x > 100) then limit := trunc(100000*x)+1;
-		limit := trunc(1000000*x)+1;
+    else if (x = 0.5) then
+    begin
+        Result := sqrt(PI);
+    end else if (x > 0) and (fmod(x,1) = 0.5) then
+    begin
+        Result := (x-1)*fgamma(x-1);
+    end else begin
+		if (x > 100) 
+            then limit := trunc(100000*x)+1
+		    else limit := trunc(1000000*x)+1;
 		n := 1;
 		s := 1.0;
 		epsilon := 50.0;
