@@ -6,26 +6,28 @@
 
 $T println
 $T length println
-//$T 4 left println
-//$T 3 right println
-//$T 4 cutLeft println
-//$T 3 cutRight println
-//$T 4 3 cutBothSides println
-//$T 4 16 between println
+$T 4 left println
+$T 3 right println
+$T 4 cutLeft println
+$T 3 cutRight println
+$T 4 3 cutBothSides println
+$T 4 16 between println
 $T 4 13 substring println
 $T 6 split swap 2 times println
+$T 6 split join println
 
 newln
 
 $U println
 $U length println
-//$U 4 left println
-//$U 3 right println
-//$U 4 cutLeft println
-//$U 3 cutRight println
-//$U 4 3 cutBothSides println
-//$U 4 16 between println
+$U 4 left println
+$U 3 right println
+$U 4 cutLeft println
+$U 3 cutRight println
+$U 4 3 cutBothSides println
+$U 4 16 between println
 $U 4 13 subarray println
 $U 6 split swap 2 times println
+$U 6 split join println
 
 
