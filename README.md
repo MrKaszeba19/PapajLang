@@ -172,7 +172,7 @@ rev | reverse the top N elements of the stack
 _to be expanded to arrays_
 
 **Examples:**
-- `5 times 2 sum` sums five 2's
+- `5 times 2 all sum` sums five 2's
 - `5 times scan all sum` sums five numbers scanned by an input
 - `2 3 4 5 6 2 avg` brings a result of 5.5, as avg(5,6) = 5.5. The bottom values stay on the stack and now the stack looks like `2 3 4 5.5`.
 - `2 3 4 5 6 all avg` brings a result of 4, as avg(2,3,4,5,6) = 4.
