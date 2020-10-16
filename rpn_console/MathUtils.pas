@@ -29,7 +29,7 @@ function lcm(a, b : Extended) : Extended;
 function fib(n: Extended) : Extended;
 
 function LogGamma(x : Extended) : Extended;
-function fgamma(x : Extended) : Extended;
+function vgamma(x : Extended) : Extended;
 function dstdnorm(x : Extended) : Extended;
 function dnorm(x, mu, si : Extended) : Extended;
 function fnorm(x, mu, si : Extended) : Extended;
@@ -45,6 +45,7 @@ function rexp(lambda : Extended) : Extended;
 function fpoisson(x, lambda : Extended): Extended;
 function dpoisson(x, lambda : Extended): Extended;
 function rpoisson(mean: Extended): Extended;
+function fgamma(x, alpha, beta : Extended) : Extended;
 
 implementation
 
@@ -264,7 +265,7 @@ begin { --- log gamma --- }
     LogGamma := (x - 0.5) * ln( x + 4.5) - x - 4.5 + ln( stp * ser);
 end; { --- log gamma --- }
 
-function fgamma(x : Extended) : Extended;
+function vgamma(x : Extended) : Extended;
 var
 	limit, n : Integer;
 begin
@@ -274,7 +275,7 @@ begin
         Result := sqrt(PI);
     end else if (x > 0) and (fmod(x,1) = 0.5) then
     begin
-        Result := (x-1)*fgamma(x-1);
+        Result := (x-1)*vgamma(x-1);
     end else begin
 		Result := exp(LogGamma(x));
 	end;
@@ -292,7 +293,7 @@ begin
         Result := sqrt(PI);
     end else if (x > 0) and (fmod(x,1) = 0.5) then
     begin
-        Result := (x-1)*fgamma(x-1);
+        Result := (x-1)*fgamma2(x-1);
     end else begin
 		if (x > 100) 
             then limit := trunc(100000*x)+1
@@ -528,6 +529,11 @@ begin
         b := b * random(RESOLUTION) / RESOLUTION;
     end;
     Result := k - 1;
+end;
+
+function fgamma(x, alpha, beta : Extended) : Extended;
+begin
+    Result := (pow2(beta, alpha)*pow(x, alpha-1)*exp(-beta*x))/vgamma(alpha);
 end;
 
 end.
