@@ -30,6 +30,7 @@ function fib(n: Extended) : Extended;
 
 function LogGamma(x : Extended) : Extended;
 function vgamma(x : Extended) : Extended;
+function vlowergamma(s, x : Extended) : Extended;
 function dstdnorm(x : Extended) : Extended;
 function dnorm(x, mu, si : Extended) : Extended;
 function fnorm(x, mu, si : Extended) : Extended;
@@ -46,6 +47,7 @@ function fpoisson(x, lambda : Extended): Extended;
 function dpoisson(x, lambda : Extended): Extended;
 function rpoisson(mean: Extended): Extended;
 function fgamma(x, alpha, beta : Extended) : Extended;
+function dgamma(x, alpha, beta : Extended) : Extended;
 
 implementation
 
@@ -279,6 +281,23 @@ begin
     end else begin
 		Result := exp(LogGamma(x));
 	end;
+end;
+
+function vlowergamma(s, x : Extended) : Extended;
+var
+    t, sum  : Extended;
+	epsilon : Extended;
+begin
+	epsilon := 0.0001*trunc(x+1);
+    sum := 0;
+    t := 0;
+    while (t <= x) do
+    begin
+        sum := sum + epsilon*(pow2(t, s-1)*exp(-t));
+        //sum := sum + (pow2(t, s-1)*exp(-t));
+        t := t + epsilon;
+    end;
+    Result := sum; 
 end;
 
 function fgamma2(x : Extended) : Extended;
@@ -534,6 +553,11 @@ end;
 function fgamma(x, alpha, beta : Extended) : Extended;
 begin
     Result := (pow2(beta, alpha)*pow(x, alpha-1)*exp(-beta*x))/vgamma(alpha);
+end;
+
+function dgamma(x, alpha, beta : Extended) : Extended;
+begin
+    Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
 end;
 
 end.

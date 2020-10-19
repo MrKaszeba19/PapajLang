@@ -2203,6 +2203,20 @@ begin
             stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
 
+        'Math.distGamma' : begin
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := dgamma(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+
 		else begin
             Found := false;
         end;
