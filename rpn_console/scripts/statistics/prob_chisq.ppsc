@@ -1,0 +1,23 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+
+"Podaj ilość testów:          " print
+scan toNumber trunc -> N 
+
+"Podaj liczbę stopni swobody: " print
+scan toNumber trunc -> k
+
+
+[ $N $k genChiSq ] -> sample 
+$sample reduceAvg -> m1
+$sample reduceStddev -> s1
+
+
+"Sample mean:                     " $m1 toString concat println
+"Theoretical mean:                " $k toString concat println
+"Sample standard deviation:       " $s1 toString concat println
+"Theoretical standard deviation:  " $k 2 * sqrt toString concat println
+
+//$sample println

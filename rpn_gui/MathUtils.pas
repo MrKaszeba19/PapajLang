@@ -50,6 +50,12 @@ function fgamma(x, alpha, beta : Extended) : Extended;
 function dgamma(x, alpha, beta : Extended) : Extended;
 function rgamma1(a, b : Extended) : Extended;
 function rgengamma(a, b, c: Extended): Extended;
+function fchisq(x : Extended; v : LongInt) : Extended;
+function dchisq(x : Extended; v : LongInt) : Extended;
+function ferlang(x, k, l : Extended) : Extended;
+function derlang(x, k, l : Extended) : Extended;
+function rerlang(k, l : Extended) : Extended;
+
 
 implementation
 
@@ -273,6 +279,7 @@ function vgamma(x : Extended) : Extended;
 var
 	limit, n : Integer;
 begin
+    //writeln('x=',x:2:5);
 	if (isInteger(x)) then Result := fact(x-1) 
     else if (x = 0.5) then
     begin
@@ -280,7 +287,8 @@ begin
     end else if (x > 0) and (fmod(x,1) = 0.5) then
     begin
         Result := (x-1)*vgamma(x-1);
-    end else begin
+    end 
+    else begin
 		Result := exp(LogGamma(x));
 	end;
 end;
@@ -290,16 +298,32 @@ var
     t, sum  : Extended;
 	epsilon : Extended;
 begin
-	epsilon := 0.0001*trunc(x+1);
-    sum := 0;
-    t := 0;
-    while (t <= x) do
+    if (s = 1) then
     begin
-        sum := sum + epsilon*(pow2(t, s-1)*exp(-t));
-        //sum := sum + (pow2(t, s-1)*exp(-t));
-        t := t + epsilon;
+        //writeln('chuj3');
+        //writeln('s=',s:2:5,' x=',x:2:5);
+        Result := 1.0 - exp(-x);
+    end else if (x = 0) then begin
+        //writeln('chuj2');
+        Result := 0;
+    end else begin
+        //writeln('chuj');
+	    //epsilon := 0.0001*trunc(x+1);
+        epsilon := 0.0001;
+        sum := 0;
+        //writeln('s=',s:2:5,' x=',x:2:5);
+        t := 0;
+        while (t <= x) do
+        begin
+            //writeln('s=',s:2:5,' x=',t:2:5);
+            //writeln(pow2(t, s-1));
+            sum := sum + epsilon*(pow2(t, s-1)*exp(-t));
+            //sum := sum + (pow2(t, s-1)*exp(-t));
+            t := t + epsilon;
+            Result := sum;
+        end;
     end;
-    Result := sum; 
+     
 end;
 
 function fgamma2(x : Extended) : Extended;
@@ -554,12 +578,22 @@ end;
 
 function fgamma(x, alpha, beta : Extended) : Extended;
 begin
-    Result := (pow2(beta, alpha)*pow(x, alpha-1)*exp(-beta*x))/vgamma(alpha);
+    if alpha = 1 
+        then Result := fexp(x, beta)
+        else if isInteger(alpha) 
+            then Result := ferlang(x, alpha, beta)
+            else Result := (pow2(beta, alpha)*pow2(x, alpha-1)*exp(-beta*x))/vgamma(alpha);
 end;
 
 function dgamma(x, alpha, beta : Extended) : Extended;
 begin
-    Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
+    //writeln('VL: ', vlowergamma(alpha, beta*x):2:5);
+    //writeln('VG: ', vgamma(alpha):2:5);
+    if x = 0.0 
+        then Result := 0.0
+        else if isInteger(alpha) 
+            then Result := derlang(x, alpha, beta)
+            else Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
 end;
 
 function rgamma1(a, b : Extended) : Extended;
@@ -705,6 +739,64 @@ begin
         until found;
     end;
 end;
+
+function fchisq(x : Extended; v : LongInt) : Extended;
+begin
+    //Result := (pow2(x, v/2.0-1.0)*exp(-x/2))/(pow2(2, v/2)*vgamma(v/2.0));
+    case v of
+        2 : Result := fexp(x, 1/2);
+        else Result := fgamma(x, v/2, 0.5);
+    end;
+end;
+
+function dchisq(x : Extended; v : LongInt) : Extended;
+begin
+    //Result := vlowergamma(v/2.0, x/2.0)/vgamma(v/2.0);
+    case v of
+        2 : Result := dexp(x, 1/2);
+        else Result := dgamma(x, v/2, 0.5);
+    end;
+end;
+
+function ferlang(x, k, l : Extended) : Extended;
+begin
+    Result := (pow(l, k)*pow(x, k-1)*exp(-l*x))/fact(k-1); 
+end;
+
+function derlang(x, k, l : Extended) : Extended;
+var
+    i : LongInt;
+    s : Extended;
+begin
+    s := 0;
+    for i := 0 to trunc(k)-1 
+        do s := s + (exp(-l*x)*pow(l*x, i)/fact(i));
+    Result := 1 - s;
+end;
+
+function rerlang(k, l : Extended) : Extended;
+const
+    RESOLUTION = 1000;
+var
+    i          : Integer;
+    unif, prod : Extended;
+begin
+    if (l <= 0) or (k < 1) then
+        Result := NaN
+    else
+    begin
+        prod := 1;
+        for i := 1 to trunc(k) do
+        begin
+            repeat
+                unif := random(RESOLUTION) / RESOLUTION;
+            until unif <> 0;
+            prod := prod * unif;
+        end;
+        Result := -1.0/l * ln(prod);
+    end;
+end;
+
 
 end.
 

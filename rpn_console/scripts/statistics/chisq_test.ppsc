@@ -1,10 +1,10 @@
 @use(Math)
 @use(Array)
 
-1.0 -> alpha
-2.0 -> beta
+"Type degrees of freedom: " print
+scan toNumber trunc -> v
 
-[ 0 1 100 seq ] fun{ 10 / } map -> T
+[ 0 1 200 seq ] fun{ 10 / } map -> T
 
 "Array of X: " print 
 @real
@@ -16,7 +16,7 @@ for ( item : T ) {
 	item print
 	@milli
 	"\t" print	
-	item alpha beta funcGamma print
+	item v funcChiSq print
 	"\t" print
-	item alpha beta distGamma println
+	item v distChiSq println
 }

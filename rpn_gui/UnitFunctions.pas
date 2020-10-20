@@ -1562,6 +1562,13 @@ begin
         end;
 
 		// unary
+        'Math.sqr' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := y*y;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
 		'Math.exp' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -2220,7 +2227,8 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
 			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            z := rgamma1(x, y);
+            //z := rgamma1(x, y);
+            z := rgengamma(0, 1/y, x);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
@@ -2236,8 +2244,60 @@ begin
             begin
                 //checkSIGINT();
                 //w := rgengamma(1/z, y, 1);
-                w := rgamma1(y, z);
+                //w := rgamma1(y, z);
+                w := rgengamma(0, 1/z, y);
                 //w := rgengamma(z, y, 1);
+                // do poprawki
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.funcChiSq' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            //w := fgamma(x, y/2, 0.5);
+            w := fchisq(x, trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.distChiSq' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            //w := dgamma(x, y/2, 0.5);
+            w := dchisq(x, trunc(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomChiSq' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            //z := rgamma1(x/2, 0.5);
+            z := rgengamma(0, 2, x/2);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genChiSq' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                //checkSIGINT();
+                //w := rgengamma(1/z, y, 1);
+                //w := rgamma1(y/2, 0.5);
+                w := rgengamma(0, 2, y/2);
                 // do poprawki
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
