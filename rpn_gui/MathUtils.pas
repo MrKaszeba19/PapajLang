@@ -48,6 +48,8 @@ function dpoisson(x, lambda : Extended): Extended;
 function rpoisson(mean: Extended): Extended;
 function fgamma(x, alpha, beta : Extended) : Extended;
 function dgamma(x, alpha, beta : Extended) : Extended;
+function rgamma1(a, b : Extended) : Extended;
+function rgengamma(a, b, c: Extended): Extended;
 
 implementation
 
@@ -558,6 +560,150 @@ end;
 function dgamma(x, alpha, beta : Extended) : Extended;
 begin
     Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
+end;
+
+function rgamma1(a, b : Extended) : Extended;
+var
+    d, c    : Extended;
+    Z, V, U : Extended;
+    flag    : Boolean;
+begin
+    if (a >= 1) then
+    begin
+        d := a - 1.0/3; 
+        c := 1.0/sqrt(9*d); 
+        flag := False;
+        repeat
+            Z := randg(0, 1);
+            V := pow((1+c*Z), 3); 
+            if Z > -1.0/c then
+            begin
+                U := random();
+                flag := ln(U) < (0.5*Z*Z + d - d*V + d*ln(V));
+            end;
+        until True;
+        Result := d*V/b;
+    end else begin
+        c := rgamma1(a+1, b);
+        c := c * pow2(random(), (1/a));
+        Result := c;
+    end;
+end;
+
+
+function rgamma2(a, b : Extended) : Extended;
+var
+    d, c    : Extended;
+    Z, V, U : Extended;
+    flag    : Boolean;
+begin
+    if (a > 1) then
+    begin
+        d := a - 1.0/3; 
+        c := 1.0/sqrt(9*d); 
+        flag := True;
+        while flag do
+        begin
+            Z := randg(0,1);
+            if Z > -1/c then
+            begin
+                V := pow((1+c*Z), 3); 
+                U := random;
+                flag := ln(U) > (0.5*Z*Z + d - d*V + d*ln(V));
+            end;
+        end;
+        Result := d*V/b;
+    end else begin
+        c := rgamma2(a+1, b);
+        c := c * pow2(random(), (1/a));
+        Result := c;
+    end;
+end;
+
+function randomExp(a, rate: Extended): Extended;
+const
+  RESOLUTION = 1000;
+var
+  unif: Extended;
+begin
+  if rate = 0 then
+    randomExp := NaN
+  else
+  begin
+    repeat
+      unif := random(RESOLUTION) / RESOLUTION;
+    until unif <> 0;
+    randomExp := a - rate * ln(unif);
+  end;
+end;
+
+function rgengamma(a, b, c: Extended): Extended;
+const
+    RESOLUTION = 1000;
+    T = 4.5;
+    D = 1 + ln(T);
+var
+    unif: Extended;
+    A2, B2, C2, Q, p, y: Extended;
+    p1, p2, v, w, z: Extended;
+    found: boolean;
+begin
+    A2 := 1 / sqrt(2 * c - 1);
+    B2 := c - ln(4);
+    Q := c + 1 / A2;
+    C2 := 1 + c / exp(1);
+    found := False;
+    if c < 1 then
+    begin
+        repeat
+            repeat
+                unif := random(RESOLUTION) / RESOLUTION;
+            until unif > 0;
+            p := C2 * unif;
+            if p > 1 then
+            begin
+                repeat
+                    unif := random(RESOLUTION) / RESOLUTION;
+                until unif > 0;
+                y := -ln((C2 - p) / c);
+                if unif <= power(y, c - 1) then
+                begin
+                    Result := a + b * y;
+                    found := True;
+                end;
+            end else begin
+                y := power(p, 1 / c);
+                if unif <= exp(-y) then
+                begin
+                    Result := a + b * y;
+                    found := True;
+                end;
+            end;
+        until found;
+    end
+    else if c = 1 then
+      { Gamma distribution becomes exponential distribution, if c = 1 }
+    begin
+        Result := randomExp(a, b);
+    end else begin
+        repeat
+            repeat
+                p1 := random(RESOLUTION) / RESOLUTION;
+            until p1 > 0;
+            repeat
+                p2 := random(RESOLUTION) / RESOLUTION;
+            until p2 > 0;
+                v := A2 * ln(p1 / (1 - p1));
+                y := c * exp(v);
+                z := p1 * p1 * p2;
+                w := B2 + Q * v - y;
+            if (w + D - T * z >= 0) or (w >= ln(z)) then
+            begin
+                Result := a + b * y;
+                found := True;
+            end;
+        until found;
+    end;
 end;
 
 end.

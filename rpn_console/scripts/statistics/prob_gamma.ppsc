@@ -1,0 +1,26 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+
+"Podaj ilość testów: " print
+scan toNumber trunc -> N 
+
+"Podaj wartość alpha: " print
+scan toNumber -> alpha
+
+"Podaj wartość beta: " print
+scan toNumber -> beta
+
+
+[ $N $alpha $beta genGamma ] -> sample 
+$sample reduceAvg -> m1
+$sample reduceStddev -> s1
+
+
+"Sample mean:                     " $m1 toString concat println
+"Theoretical mean:                " $alpha $beta / toString concat println
+"Sample standard deviation:       " $s1 toString concat println
+"Theoretical standard deviation:  " $alpha $beta 2 ^ / sqrt toString concat println
+
+//$sample println
