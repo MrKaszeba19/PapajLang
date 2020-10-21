@@ -308,8 +308,8 @@ begin
         Result := 0;
     end else begin
         //writeln('chuj');
-	    //epsilon := 0.0001*trunc(x+1);
-        epsilon := 0.0001;
+	    epsilon := 0.0001*trunc(x+1);
+        //epsilon := 0.0001;
         sum := 0;
         //writeln('s=',s:2:5,' x=',x:2:5);
         t := 0;

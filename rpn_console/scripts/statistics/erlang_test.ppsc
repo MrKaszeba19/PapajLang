@@ -1,7 +1,7 @@
 @use(Math)
 @use(Array)
 
-9.0 -> alpha
+9   -> alpha
 2.0 -> beta
 
 [ 0 1 100 seq ] fun{ 10 / } map -> T
@@ -16,7 +16,7 @@ for ( item : T ) {
 	item print
 	@milli
 	"\t" print	
-	item alpha beta funcGamma print
+	item alpha beta funcErlang print
 	"\t" print
-	item alpha beta distGamma println
+	item alpha beta distErlang println
 }
