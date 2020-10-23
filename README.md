@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-October 19, 2020  
+October 24, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -101,8 +101,8 @@ raiseException | same as above, but it raises exception too
 | root    | root                    |
 | div     | integer division (`-5 3 div` returns `-1`) |
 | mod     | modulo (`-5 3 mod` returns `-2`)           |
-| cdiv    | integer division (`-5 3 div` returns `-2`) _removed so far_ |
-| cmod    | modulo (`-5 3 div` returns `1`) _removed so far_ |
+| cdiv    | integer division (`-5 3 div` returns `-2`) |
+| cmod    | modulo (`-5 3 div` returns `1`) |
 
 - number1 function
 
