@@ -65,7 +65,7 @@ function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt)
 
 implementation
 
-uses StrUtils;
+uses StrUtils, MathUtils;
 
 // helpful ones
 
@@ -458,7 +458,7 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
         assertIntegerLocated := true;
-    end else if (val.Num <> trunc(val.Num)) then 
+    end else if (val.Num <> ftrunc(val.Num)) then 
     begin
         stack_push(stack, raiseException('EConstraint:CInteger: an integer expected, got a real number at "'+operand+'".'));
         assertIntegerLocated := true;
@@ -471,7 +471,7 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));  
         assertNaturalLocated := true;
-    end else if (val.Num < 0) or (val.Num <> trunc(val.Num)) then 
+    end else if (val.Num < 0) or (val.Num <> ftrunc(val.Num)) then 
     begin
         stack_push(stack, raiseException('EConstraint:CNonNegativeInteger: a positive integer or zero expected at "'+operand+'".'));
         assertNaturalLocated := true;

@@ -1,0 +1,19 @@
+@use(Array)
+
+[ -10 1 10 seq ] -> T
+
+// ========= TEST 1
+
+function { 3 div } -> f
+function { 3 mod } -> g
+
+$T $f map println
+$T $g map println
+
+// ========= TEST 2
+
+function { 3 cdiv } -> f
+function { 3 cmod } -> g
+
+$T $f map println
+$T $g map println

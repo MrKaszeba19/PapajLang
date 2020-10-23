@@ -680,7 +680,8 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            if (y = trunc(y)) then begin
+            //if (y = ftrunc(y)) then begin
+            if (isInteger(y)) then begin
             	z := pow(x,y);
             end else begin
                 z := pow2(x,y);
@@ -788,10 +789,10 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            if trunc(x/y) < 0 then begin
-            	z := trunc(x/y)-1;
+            if x < 0 then begin
+            	z := ffloor(x/y);
             end else begin
-            	z := trunc(x/y);
+            	z := ffloor(x/y);
             end;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
@@ -1822,28 +1823,35 @@ begin
         'Math.floor' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            //z := ffloor(x);
+            z := ffloor(y);
 			//if (y = trunc(y)) then z := trunc(y)
 			//else if (y < 0) then z := trunc(y)-1 else z := trunc(y);
-            if (y = ftrunc(y)) 
-                then z := ftrunc(y)
-			    else if (y < 0) 
-                    then z := ftrunc(y)-1 
-                    else z := ftrunc(y);
+            //if (y = ftrunc(y)) 
+            //    then z := ftrunc(y)
+			//    else if (y < 0) 
+            //        then z := ftrunc(y)-1 
+            //        else z := ftrunc(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'Math.ceiling' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            //z := fceiling(x);
+            z := fceiling(y);
             //if (y = trunc(y)) then z := trunc(y)
 			//else if (y < 0) then z := trunc(y) else z := trunc(y)+1;
-            if (y = ftrunc(y)) 
-                then z := ftrunc(y)
-			    else if (y < 0) 
-                    then z := ftrunc(y) 
-                    else z := ftrunc(y)+1;
+            //if (y = ftrunc(y)) 
+            //    then z := ftrunc(y)
+			//    else if (y < 0) 
+            //        then z := ftrunc(y) 
+            //        else z := ftrunc(y)+1;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.trunc' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ftrunc(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -1881,19 +1889,21 @@ begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildBoolean(isPrime(trunc(y))));
+            stack_push(pocz[sets.StackPointer], buildBoolean(isPrime(y)));
         end;
 		'Math.isEven' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) mod 2 = 0));
+            //stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) mod 2 = 0));
+            stack_push(pocz[sets.StackPointer], buildBoolean(fmod(y, 2) = 0));
         end;
 		'Math.isOdd' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) mod 2 = 1));
+            //stack_push(pocz[sets.StackPointer], buildBoolean(trunc(y) mod 2 = 1));
+            stack_push(pocz[sets.StackPointer], buildBoolean(fmod(y, 2) = 1));
         end;
 		'Math.isInteger' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;

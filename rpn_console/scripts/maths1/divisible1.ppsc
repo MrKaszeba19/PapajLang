@@ -1,0 +1,13 @@
+@use(Array)
+@use(Math)
+
+scan toNumber trunc -> input
+
+[ 1 1 $input seq ] -> T
+
+function {
+	>n
+	3 $n ^ 2 + isPrime
+} -> f
+
+$T $f map println

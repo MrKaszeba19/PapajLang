@@ -19,7 +19,7 @@ function fround(x : Extended) : Extended;
 function ffloor(x : Extended) : Extended;
 function fceiling(x : Extended) : Extended;
 
-function isPrime(x : LongInt) : Boolean;
+function isPrime(x : Extended) : Boolean;
 function isInteger(x : Extended) : Boolean;
 
 function newton_int(n, k : Extended) : Extended;
@@ -78,7 +78,11 @@ var
     i : integer;
 begin
     s := 1;
-    for i := 1 to trunc(abs(y)) do s := s * x;
+    i := 1;
+    while i <= abs(y) do begin
+        s := s * x;
+        i := i + 1;
+    end;
     if (y < 0) then s := 1 / s;
     Result := s;
 end;
@@ -109,62 +113,83 @@ var
     i : integer;
 begin
     s := 1;
-    for i := 1 to trunc(abs(x)) do s := s * i;
+    i := 1; 
+    while i <= abs(x) do begin
+        s := s * i;
+        i := i + 1;
+    end;
     Result := s;
 end;
 
 function ftrunc(x : Extended) : Extended;
 begin
-    Result := fdiv(x,1);
+    //{$IFDEF cpu32} writeln( 'cpu32' ); 
+    if x <= High(LongInt) 
+        then Result := trunc(x)
+        else Result := fdiv(x,1);
+    //{$ENDIF}
 end;
 
 function fround(x : Extended) : Extended;
 begin
-    if (x < 0) 
-        then Result := fdiv(x-0.5,1)
-        else Result := fdiv(x+0.5,1);
+    if abs(x) <= High(LongInt)
+        then 
+            //Result := Trunc(x+0.5)
+            if (x <= 0) 
+                then Result := Trunc(x-0.5)
+                else Result := Trunc(x+0.5)
+        else 
+            if (x <= 0) 
+                then Result := fdiv(x-0.5,1)
+                else Result := fdiv(x+0.5,1);
 end;
 
 function ffloor(x : Extended) : Extended;
 begin
-    if (isInteger(x)) 
-        then Result := fdiv(x,1)
-	    else if (x < 0) 
-            then Result := fdiv(x,1)-1 
-            else Result := fdiv(x,1);
+    if abs(x) <= High(LongInt)
+        then Result := Floor(x)
+        else if (isInteger(x)) 
+            then Result := fdiv(x,1)
+	        else if (x < 0) 
+                then Result := fdiv(x,1)-1 
+                else Result := fdiv(x,1);
 end;
 function fceiling(x : Extended) : Extended;
 begin
-    if (isInteger(x)) 
-        then Result := fdiv(x,1)
-	    else if (x < 0) 
-            then Result := fdiv(x,1) 
-            else Result := fdiv(x,1)+1;
+    if abs(x) <= High(LongInt)
+        then Result := Ceil(x)
+        else if (isInteger(x)) 
+            then Result := fdiv(x,1)
+	        else if (x < 0) 
+                then Result := fdiv(x,1) 
+                else Result := fdiv(x,1)+1;
 end;
 
 // ======== booleans
 
-function isPrime(x : LongInt) : Boolean;
+function isPrime(x : Extended) : Boolean;
 var
     i : LongInt;
     s : Boolean;
 begin
-    case x of
-        0 : Result := False;
-        1 : Result := False;
+    if x <= 1 
+        then Result := False
         else begin
             s := True;
-            for i := 2 to trunc(sqrt(x)) do
+            i := 2;
+            while i <= sqrt(x) do
             begin
-                if (x mod i = 0) then 
+                //writeln('i=', i);
+                if (fmod(x, i) = 0) then 
                 begin
+                    //writeln('nope');
                     s := False;
                     break;
                 end;
+                i := i + 1;
             end;
             Result := s;
         end;
-    end;
 end;
 
 function isInteger(x : Extended) : Boolean;
