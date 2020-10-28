@@ -72,7 +72,7 @@ end;
 procedure TextColor(x : ShortInt);
 begin
     case x of 
-        -1 : write(#27+'[39m');   // color reset
+        -1 : write(#27+'[0;39m');   // color reset
         0  : write(#27+'[0;30m'); // black
         1  : write(#27+'[0;34m'); // dark blue
         2  : write(#27+'[0;32m'); // dark green
@@ -128,7 +128,7 @@ end;
 procedure TextColorANSI(x : ShortInt);
 begin
     case x of 
-        -1 : write(#27+'[39m');   // color reset
+        -1 : write(#27+'[0;39m'); // color reset
         0  : write(#27+'[0;30m'); // black
         1  : write(#27+'[0;31m'); // dark red
         2  : write(#27+'[0;32m'); // dark green

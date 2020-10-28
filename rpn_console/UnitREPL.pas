@@ -108,7 +108,7 @@ begin
     th.ColorWarn    := -1;
     th.ColorRzulta1 := -1;
     th.ColorRzulta2 := -1;
-    th.ColorReset   := 7;
+    th.ColorReset   := -1;
 end;
 
 procedure normalTheme(var th : REPLTheme);
@@ -121,7 +121,7 @@ begin
     th.ColorWarn    := 15;
     th.ColorRzulta1 := 14;
     th.ColorRzulta2 := 15;
-    th.ColorReset   := 7;
+    th.ColorReset   := -1;
 end;
 
 procedure blueTheme(var th : REPLTheme);
@@ -134,7 +134,7 @@ begin
     th.ColorWarn    := 15;
     th.ColorRzulta1 := 14;
     th.ColorRzulta2 := 15;
-    th.ColorReset   := 7;
+    th.ColorReset   := -1;
 end;
 {$ENDIF}
 
