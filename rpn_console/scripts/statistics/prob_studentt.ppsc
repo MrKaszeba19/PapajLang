@@ -1,0 +1,28 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+@infmode
+
+"Podaj ilość testów:          " print
+scan toNumber trunc -> N 
+
+"Podaj liczbę stopni swobody: " print
+scan toNumber -> k
+
+
+[ $N $k genT ] -> sample 
+$sample reduceAvg -> m1
+$sample reduceStddev -> s1
+
+
+"Sample mean:                     " $m1 toString concat println
+"Theoretical mean:                " 0 toString concat println
+"Sample standard deviation:       " $s1 toString concat println
+if ( $k INF = ) {
+	"Theoretical standard deviation:  " 1 toString concat println
+} else {
+	"Theoretical standard deviation:  " $k $k 2 - / toString concat println
+}
+
+//$sample println

@@ -1,0 +1,18 @@
+@use(Math)
+@use(Array)
+
+"Type number of games played: " print
+scan toNumber trunc -> numberOfGames
+"Type your average of points: " print
+scan toNumber trunc -1 ^ -> pfail
+
+[ numberOfGames $pfail genGeom ] -> T
+
+//$T println
+
+"Mean:               " print $T reduceMean println
+"Standard deviation: " print $T reduceStddev println
+"Median:             " print $T reduceMedian println
+"Min:                " print $T reduceMin println
+"Max:                " print $T reduceMax println
+

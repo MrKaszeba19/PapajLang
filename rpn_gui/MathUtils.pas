@@ -52,10 +52,17 @@ function rgamma1(a, b : Extended) : Extended;
 function rgengamma(a, b, c: Extended): Extended;
 function fchisq(x : Extended; v : LongInt) : Extended;
 function dchisq(x : Extended; v : LongInt) : Extended;
+function rchisq(df : Extended) : Extended;
 function ferlang(x, k, l : Extended) : Extended;
 function derlang(x, k, l : Extended) : Extended;
 function rerlang(k, l : Extended) : Extended;
-
+function vbeta(x, y : Extended) : Extended;
+function vinbeta(x, a, b : Extended) : Extended;
+function vrinbeta(x, a, b : Extended) : Extended;
+function fstudentt(x, nu : Extended) : Extended;
+function dstudentt(x, nu : Extended) : Extended;
+function rstudentt(df: Extended) : Extended;
+function rfischerf(v, w: Extended) : Extended;
 
 implementation
 
@@ -402,15 +409,15 @@ var
 	limit  : Extended;
 begin
     //checkSIGINT();
-	eps := 0.000001;
-	limit := 5;
+	eps := 0.00001;
+	limit := 10;
 	if (x < -limit) then 
 	begin 
-		Result := 0.00000000001 
+		Result := 0.0000000000000001 
 	end
 	else if (x > limit) then 
 	begin 
-		Result := 0.99999999999 
+		Result := 0.9999999999999999 
 	end else if (x = 0) then
 	begin
 		Result := 0.5;
@@ -783,6 +790,23 @@ begin
     end;
 end;
 
+function rchisq(df : Extended) : Extended;
+begin
+    if df < 1 
+        then Result := NaN
+        else if ftrunc(df) = 1 
+            then Result := rgamma1(df/2, 0.5)
+            else Result := rgengamma(0, 2, df/2);
+end;
+
+//function rchisq(df: Extended) : Extended;
+//begin
+//    if df < 1 then 
+//        Result := NaN
+//    else
+//        Result := rgengamma(0, 2, 0.5 * df);
+//end;
+
 function ferlang(x, k, l : Extended) : Extended;
 begin
     Result := (pow(l, k)*pow(x, k-1)*exp(-l*x))/fact(k-1); 
@@ -820,6 +844,134 @@ begin
         end;
         Result := -1.0/l * ln(prod);
     end;
+end;
+
+function vbeta(x, y : Extended) : Extended;
+var
+    eps  : Extended;
+    t, s : Extended;
+begin
+    if (isInteger(x)) and (isInteger(y)) then
+    begin
+        Result := ((x+y)/(x*y))*(1/(newton_int(x+y, x)))
+    end else begin
+        eps := 0.0001;
+        s := 0;
+        t := 0;
+        while (t < 1) do
+        begin
+            s := s + (pow2(t, x-1) * pow2(1-t, y-1));
+            t := t + eps;
+        end;
+        Result := s;
+    end;
+end;
+
+function vinbeta(x, a, b : Extended) : Extended;
+var
+    eps  : Extended;
+    t, s : Extended;
+begin
+    eps := 0.0001;
+    s := 0;
+    t := 0;
+    while (t < x) do
+    begin
+        s := s + (pow2(t, a-1) * pow2(1-t, b-1));
+        t := t + eps;
+    end;
+    Result := s;
+end;
+
+function vrinbeta(x, a, b : Extended) : Extended;
+begin
+    //writeln(x:2:6);
+    //writeln(vinbeta(x, a, b):2:8, #9, vbeta(a, b):2:8);
+    //writeln(vinbeta(x, a, b)/vbeta(a, b):2:8);
+         if (x = 0)   then Result := 0
+    else if (x = 1)   then Result := 1
+    else if (b = 1)   then Result := pow2(x, a)
+    else if (a = 1)   then Result := 1 - pow2(1-x, b)
+    else if (x > 0.5) then Result := 1 - vrinbeta(1.0-x, b, a)
+    else Result := vinbeta(x, a, b)/vbeta(a, b);
+end;
+
+function gammat(nu : Extended) : Extended;
+var
+    s : Extended;
+begin
+    if (fmod(nu, 2) = 0) 
+        then s := 1/(2*sqrt(nu))
+        else s := 1/(PI*sqrt(nu));
+    nu := nu - 1;
+    while (nu >= 2) do
+    begin
+        s := s * nu/(nu-1);
+        nu := nu - 2;
+    end;
+    Result := s;
+end;
+
+function fstudentt(x, nu : Extended) : Extended;
+begin
+    if nu = Infinity then Result := fnorm(x, 0, 1)
+    else if isInteger(nu) then
+    begin
+             if nu = 1 then Result := 1/(PI*(x*x+1))
+        else if nu = 2 then Result := 1/(2*sqrt(2)*sqrt(pow(x*x/2+1, 3)))
+        else if nu = 3 then Result := 2/(PI*sqrt(3)*pow(x*x/3+1, 2))
+        else if nu = 4 then Result := 3/(8*sqrt(pow(x*x/4+1, 5)))
+        else if nu = 5 then Result := 8/(3*PI*sqrt(5)*pow(x*x/5+1, 3))
+        else if nu > 0 then 
+        begin
+             if (nu > 1) 
+                then Result := gammat(nu)/sqrt(pow(x*x/nu+1, nu+1))
+                else Result := 1/(sqrt(nu)*vbeta(0.5, nu/2))/sqrt(pow(x*x/nu+1, nu+1));
+        end 
+        else Result := NaN;
+    end
+    else if nu > 0 then Result := 1/(sqrt(nu)*vbeta(0.5, nu/2))*pow2(x*x/nu+1, -(nu+1)/2)
+    else Result := NaN;
+end;
+
+function dstudentt(x, nu : Extended) : Extended;
+begin
+    //writeln(nu/(x*x+nu):2:5);
+         if nu = Infinity then Result := dstdnorm(x)
+    else if nu = 1 then Result := 0.5 + arctan(x)/PI
+    else if nu = 2 then Result := 0.5 + x/(2*sqrt(2*(x*x*0.5+1)))
+    else if nu = 3 then Result := 0.5 + (x/(sqrt(3)*(x*x/3+1)) + arctan(x/sqrt(3)))/PI
+    else if nu = 4 then Result := 0.5 + 3/8*(x/sqrt(x*x/4+1))*(1-1/12*((x*x)/(x*x/4+1)))
+    else if nu = 5 then Result := 0.5 + (x/(sqrt(5)*(x*x/5+1)) * (1 + (2/(3*(x*x/5+1)))) + arctan(x/sqrt(5)))/PI
+    else if nu > 0 then begin
+        if x < 0 then
+        begin
+            Result := 1 - dstudentt(-x, nu);
+        end else begin
+            Result := 1 - 0.5*vrinbeta(nu/(x*x+nu), nu/2, 0.5);
+        end;
+    end else Result := NaN;
+end;
+
+function rstudentt(df: Extended) : Extended;
+begin
+    if df = Infinity then
+        Result := randg(0, 1)
+    else if df < 1 then 
+        Result := NaN
+    else if df = 1 then
+        Result := randg(0, 1) / sqrt(rchisq(1))
+    else begin
+        Result := randg(0, 1) / sqrt(rchisq(df) / df);
+    end;
+end;
+
+function rfischerf(v, w: Extended) : Extended;
+begin
+    if (v < 1) or (w < 1) then
+        Result := NaN
+    else
+        Result := rchisq(v) / v / (rchisq(w) / w);
 end;
 
 

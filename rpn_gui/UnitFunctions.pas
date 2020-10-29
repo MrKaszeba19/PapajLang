@@ -2269,8 +2269,8 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
 			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            //w := fgamma(x, y/2, 0.5);
-            w := fchisq(x, trunc(y));
+            w := fgamma(x, y/2, 0.5);
+            //w := fchisq(x, trunc(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
@@ -2281,8 +2281,8 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
 			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            //w := dgamma(x, y/2, 0.5);
-            w := dchisq(x, trunc(y));
+            w := dgamma(x, y/2, 0.5);
+            //w := dchisq(x, trunc(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
@@ -2291,8 +2291,10 @@ begin
         'Math.randomChiSq' : begin
 			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            //z := rgamma1(x/2, 0.5);
-            z := rgengamma(0, 2, x/2);
+            //if ftrunc(x) = 1 
+            //    then z := rgamma1(x/2, 0.5)
+            //    else z := rgengamma(0, 2, x/2);
+            z := rchisq(x);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
@@ -2306,8 +2308,10 @@ begin
             begin
                 //checkSIGINT();
                 //w := rgengamma(1/z, y, 1);
-                //w := rgamma1(y/2, 0.5);
-                w := rgengamma(0, 2, y/2);
+                //if ftrunc(y) = 1 
+                //    then w := rgamma1(y/2, 0.5)
+                //    else w := rgengamma(0, 2, y/2);
+                w := rchisq(y);
                 // do poprawki
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
@@ -2369,6 +2373,53 @@ begin
                 w := rerlang(y, z);
                 //w := rgengamma(z, y, 1);
                 // do poprawki
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+
+        'Math.funcT' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            //w := fgamma(x, y/2, 0.5);
+            w := fstudentt(x, y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.distT' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            //w := dgamma(x, y/2, 0.5);
+            w := dstudentt(x, y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomT' : begin
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := rstudentt(x);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genT' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := rstudentt(y);
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));

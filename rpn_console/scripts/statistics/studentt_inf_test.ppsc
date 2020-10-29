@@ -1,0 +1,21 @@
+@use(Math)
+@use(Array)
+
++INF -> v
+
+[ -100 1 100 seq ] fun{ 10 / } map -> T
+
+"Array of X: " print 
+@real
+T println
+
+"\nx\tf(x)\tF(x)" println
+for ( item : T ) {
+	//@real
+	item print
+	//@milli
+	"\t" print	
+	item v funcT print
+	"\t" print
+	item v distT println
+}
