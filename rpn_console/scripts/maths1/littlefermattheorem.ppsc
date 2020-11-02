@@ -1,0 +1,19 @@
+@use(Array)
+
+function {
+	>n >a >item
+	$a $item ^ $n mod
+} -> f
+
+"Type a prime p: " print
+scan toNumber trunc -> p
+
+"Type a number a (less than p): " print
+scan toNumber trunc $p mod -> a
+
+[ 1 1 $p seq ] -> T
+$T fun{ >x 
+	$x $a $p f } map -> U
+
+$T println
+$U println

@@ -1,0 +1,24 @@
+@use(String)
+@use(Array)
+
+"abcdefghi" -> T
+[ 1 1 9 seq ] -> U
+
+$T println
+$T crush 
+all -- times bind println
+$T 2 crushBy 
+all -- times bind println
+$T println
+
+newln
+
+$U println
+$U crush
+all times { qshift toString }
+all -- times bind println
+$U 2 crushBy
+all times { qshift toString }
+all -- times bind println
+$U println
+

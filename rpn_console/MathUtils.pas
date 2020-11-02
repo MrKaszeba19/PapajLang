@@ -183,17 +183,26 @@ begin
         then Result := False
         else begin
             s := True;
-            i := 2;
-            while i <= sqrt(x) do
+            if (x <> 5) and (x <> 11) and (x >= 4) then
             begin
-                //writeln('i=', i);
-                if (fmod(x, i) = 0) then 
+                if (fmod(x, 2) = 0) then 
                 begin
-                    //writeln('nope');
                     s := False;
-                    break;
+                end else if (fmod(x, 5) = 0) then 
+                begin
+                    s := False;
+                end else begin
+                    i := 3;
+                    while i <= sqrt(x) do
+                    begin
+                        if (fmod(x, i) = 0) or (fmod(x, i+4) = 0) or (fmod(x, i+6) = 0) or (fmod(x, i+8) = 0) then 
+                        begin
+                            s := False;
+                            break;
+                        end;
+                        i := i + 10;
+                    end;
                 end;
-                i := i + 1;
             end;
             Result := s;
         end;

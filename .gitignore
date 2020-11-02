@@ -1,7 +1,9 @@
 *.bak
 */lib
 *.o
+*.or
 *.ppu
+*.s
 *.exe
 plans.md
 trash/

@@ -1,0 +1,22 @@
+@use(Array)
+
+1 1 20 seq all toArray -> tab
+
+"Array:  " print $tab println
+"Length: " print $tab length println
+
+"\nInsertAt TEST" println
+15 1 7 seq size times {
+	$tab qshift 10 random insertAt rem
+}
+
+"Array:  " print $tab println
+"Length: " print $tab length println
+
+"\nSetAt TEST" println
+15 1 7 seq size times {
+	$tab qshift 10 random setAt -> tab
+}
+
+"Array:  " print $tab println
+"Length: " print $tab length println
