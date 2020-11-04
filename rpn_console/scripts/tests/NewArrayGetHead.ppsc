@@ -1,0 +1,28 @@
+@use(Array)
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 getHead -> T2
+
+	"TEST: getHead" println
+	"– function that pops and returns the array's first element" println
+	"  preserving the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f1
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 getHead! -> T2
+
+	"TEST: getHead! " println
+	"– function that pops and returns the array's first element" println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f2
+
+f1 f2
+

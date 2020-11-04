@@ -1,0 +1,39 @@
+@use(Array)
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 popAt -> T2
+
+	"TEST: popAt" println
+	"– function that returns an array with popped entity from its Nth position," println
+	"  preserving the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f1
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 popAt! -> T2
+
+	"TEST: popAt! " println
+	"– function that returns an array with popped entity from its Nth position," println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f2
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 popAt!!
+
+	"TEST: popAt!!" println
+	"– procedure that pops an entity from the array's Nth position, " println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	newln
+} -> f3
+
+
+f1 f2 f3

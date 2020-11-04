@@ -6,7 +6,7 @@ scan toNumber -> n
 1 -> i
 n times {
 	"Push the " i toString ". element: " 2 times concat print
-	T scan toNumber push rem
+	T scan toNumber push!!
 	i ++ -> i
 }
 T sortNumbers println

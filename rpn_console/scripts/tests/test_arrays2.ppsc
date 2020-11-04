@@ -11,11 +11,11 @@ newln "Stan początkowy" println
 @@call
 
 newln "Dodajemy" println
-$tab 20 push rem
+$tab 20 push!! 
 @@call
 
 newln "Zdejmujemy" println
-3 times { $tab shift println }
+3 times { $tab getHead! println }
 
 newln "Stan końcowy" println
 @@call

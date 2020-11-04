@@ -10,7 +10,7 @@ do {
 [] -> T
 for ( 0 -> i ; i n < ; i ++ -> i ) {
 	"Enter array value: " print
-	$T scan toNumber push rem
+	$T scan toNumber push!!
 	
 }
 

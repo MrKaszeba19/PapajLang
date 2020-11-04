@@ -1,0 +1,24 @@
+@use(Math)
+@use(Array)
+
+do {
+	clear	
+	"Enter the size of a vector: " print
+	scan toNumber -> n
+} until ( $n isNatural )
+
+[] -> T
+for ( 0 -> i ; i n < ; i ++ -> i ) {
+	"Enter the value of the " print 
+	$i ++ print 
+	". coordinate: " print
+	$T scan toNumber push!!
+}
+
+$T fun{ sqr } map reduceSum sqrt -> modul
+
+"Vector: " print $T println
+"Module: " print $modul println
+
+
+

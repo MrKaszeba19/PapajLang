@@ -1,0 +1,40 @@
+@use(Array)
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 rand pushAt -> T2
+
+	"TEST: pushAt" println
+	"– function that returns an array with pushed entity on its Nth position," println
+	"  preserving the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f1
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 rand pushAt! -> T2
+
+	"TEST: pushAt! " println
+	"– function that returns an array with pushed entity on its Nth position," println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f2
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 8 rand pushAt!!
+
+	"TEST: pushAt!!" println
+	"– procedure that pushes an entity to the array's Nth position, " println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	newln
+} -> f3
+
+
+f1 f2 f3
+

@@ -1,0 +1,40 @@
+@use(Array)
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 10 rand setAt -> T2
+
+	"TEST: setAt" println
+	"– function that returns an array with inserted entity," println
+	"  preserving the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f1
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 10 rand setAt! -> T2
+
+	"TEST: setAt! " println
+	"– function that returns an array with inserted entity," println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	"T2: " print $T2 println
+	newln
+} -> f2
+
+function {
+	[ 1 1 20 seq ] -> T1
+	$T1 10 rand setAt!!
+
+	"TEST: setAt!!" println
+	"– procedure that inserts an entity to an array, " println
+	"  overwriting the previous state" println
+	"T1: " print $T1 println
+	newln
+} -> f3
+
+
+f1 f2 f3
+

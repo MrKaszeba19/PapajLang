@@ -7,15 +7,15 @@
 "Array:  " print $tab println
 "Length: " print $tab length println
 
-$tab 10 1488 pushAt rem 
-$tab 12 2137 pushAt rem
+$tab 10 1488 pushAt!!  
+$tab 12 2137 pushAt!! 
 
 "Stage 2" println
 "Array:  " print $tab println
 "Length: " print $tab length println
 
 $tab 14 getAt println
-$tab 14 popAt println
+$tab 14 getAt! println
 
 "Stage 3" println
 "Array:  " print $tab println

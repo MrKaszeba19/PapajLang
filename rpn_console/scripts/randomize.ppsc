@@ -9,7 +9,7 @@ all toArray >tab
 
 0 >i
 $tab length times {
-	$tab $i 50 rand 25 - setAt
+	$tab $i 50 random 25 - setAt!!
 	$i ++ >i
 }
 

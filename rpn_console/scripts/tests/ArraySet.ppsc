@@ -5,14 +5,6 @@
 "Array:  " print $tab println
 "Length: " print $tab length println
 
-"\nInsertAt TEST" println
-15 1 7 seq size times {
-	$tab qshift 10 random insertAt rem
-}
-
-"Array:  " print $tab println
-"Length: " print $tab length println
-
 "\nSetAt TEST" println
 15 1 7 seq size times {
 	$tab qshift 10 random setAt -> tab
@@ -20,3 +12,21 @@
 
 "Array:  " print $tab println
 "Length: " print $tab length println
+
+"\nSetAt Overwrite TEST" println
+15 1 7 seq size times {
+	$tab qshift 10 random setAt! rem
+}
+
+"Array:  " print $tab println
+"Length: " print $tab length println
+
+"\nSetAt Overwrite Procedure TEST" println
+15 1 7 seq size times {
+	$tab qshift 10 random setAt!!
+}
+
+"Array:  " print $tab println
+"Length: " print $tab length println
+
+
