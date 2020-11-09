@@ -1,0 +1,9 @@
+@use(Console)
+
+20 times {
+	15 textColor
+	"Kocham Cię, Zala! " print
+	12 textColor
+	"<3" println
+}
+-1 textColor

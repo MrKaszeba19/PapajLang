@@ -1,0 +1,21 @@
+@use(Math)
+@use(Array)
+
+function {
+	-- ! ++
+} -> f
+
+[ 2 1 25 seq ] -> T
+
+$T $f map -> U 
+$U println
+
+for ( item : T ) {
+	item print
+	"\t" print	
+	if ( $U item 2 - getAt item mod 0 = ) {
+		TRUE println
+	} else {
+		FALSE println
+	}
+}
