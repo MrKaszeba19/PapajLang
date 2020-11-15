@@ -6,19 +6,9 @@ unit UnitEntity;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DateUtils;
 
 const
-	TNIL = 0;
-	TNUM = 1;
-	TSTR = 2;
-	TEXP = 3;
-    TFIL = 4;
-	TVEC = 5;
-	TBOO = 6;
-	TOBJ = 7;
-	TFUN = 8;
-	TEXC = 9;
     MCLIKE = 1;
     MPASCL = 0;
 	SHELL_BASH = '/bin/bash';
@@ -29,6 +19,20 @@ const
 	PI = 3.1415926535897932384626433832795;
 	EU = 2.7182818284590452353602874713526;
 	FI = 1.6180339887498948482045868343656;
+
+type TEntityType = (
+    TNIL,   // null
+	TNUM,   // number
+	TSTR,   // string
+	TEXP,   // logicalexpression
+    TFIL,   // file
+	TVEC,   // array
+	TBOO,   // boolean
+	TOBJ,   // object
+	TFUN,   // function
+	TEXC,   // exception
+    TDAT    // datetime
+);
 
 type TPackages = record
 	UseAnything : Boolean;
@@ -62,7 +66,8 @@ end;
 // KeepWorking: 2 - do, 1 - continue, 0 - break
 
 type Entity = record
-	EntityType : Integer;
+	EntityType : TEntityType;
+    //EntityType : Integer;
 	Num        : Extended;
     Num2       : Extended;
 	Str        : String;
@@ -83,7 +88,7 @@ function default_settings() : TSettings;
 procedure raiserror(Const msg : string);  
 //procedure checkSIGINT();
 
-function getEntityTypeName(const x : Integer) : String;
+function getEntityTypeName(const x : TEntityType) : String;
 function getEntitySpec(x : Entity) : String;
 function printEntityValue(x : Entity; mask : String) : String;
 
@@ -97,6 +102,7 @@ function buildFunction(val : String) : Entity;
 function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
+function buildDateTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
 
 implementation
@@ -167,7 +173,7 @@ begin
 end;
 *}
 
-function getEntityTypeName(const x : Integer) : String;
+function getEntityTypeName(const x : TEntityType) : String;
 begin
     case x of
         TNIL : getEntityTypeName := 'Null';
@@ -180,6 +186,7 @@ begin
         TEXC : getEntityTypeName := 'Exception';
         TEXP : getEntityTypeName := 'LogicalExpression';
         TFIL : getEntityTypeName := 'File';
+        TDAT : getEntityTypeName := 'DateTime';
         else getEntityTypeName := 'Unknown';
     end;
 end;
@@ -196,6 +203,7 @@ begin
         TFUN : getEntitySpec := '<Function>';
         TEXP : getEntitySpec := '<LogicalExpression>';
         TFIL : getEntitySpec := '<File>';
+        TDAT : getEntitySpec := '"' + x.Str + '" : <DateTime>';
         else getEntitySpec := '<Unknown>';
     end;
 end;
@@ -215,6 +223,7 @@ begin
     else if (x.EntityType = TEXC) then z := '<Exception>' 
     else if (x.EntityType = TFIL) then z := '<File>' 
     else if (x.EntityType = TEXP) then z := '<LogicalExpression>'
+    else if (x.EntityType = TDAT) then z := x.Str
     else z := '<Unknown>'; 
     printEntityValue := z;
 end;
@@ -349,6 +358,17 @@ begin
     pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildNull := pom;
+end;
+
+function buildDateTime(val : TDateTime) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TDAT;
+	pom.Str := DateTimeToStr(val);
+	pom.Num := DateTimeToUnix(val);
+    pom.Num2 := 0;
+	Result := pom;
 end;
 
 end.

@@ -45,9 +45,9 @@ procedure stack_justpopFront(var pocz : TStack; index : LongInt);
 procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
 function stack_getFront(pocz : TStack; index : LongInt) : Entity;
 
-function assertEntity(var stack : TStack; val : Entity; const wtype : Integer) : Boolean;
-function assertEntityLocated(var stack : TStack; val : Entity; const wtype : Integer; operand : String) : Boolean;
-function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
+function assertEntity(var stack : TStack; val : Entity; const wtype : TEntityType) : Boolean;
+function assertEntityLocated(var stack : TStack; val : Entity; const wtype : TEntityType; operand : String) : Boolean;
+function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : TEntityType; const wtype2 : TEntityType; operand : String) : Boolean;
 function assertNotNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertIntegerLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
@@ -152,6 +152,7 @@ begin
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TNIL) then z := z + i.Str + ' ';
         if (i.EntityType = TBOO) then z := z + i.Str + ' ';
+        if (i.EntityType = TDAT) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TVEC) then z := z + '<Array> ';
         if (i.EntityType = TOBJ) then z := z + '<Object> ';
         if (i.EntityType = TFUN) then z := z + '<Function> '; 
@@ -176,6 +177,7 @@ begin
         if (i.EntityType = TSTR) then z := z + '"' + PadLeft(i.Str, col) + '" ';
         if (i.EntityType = TNIL) then z := z + PadLeft(i.Str, col) + ' ';
         if (i.EntityType = TBOO) then z := z + PadLeft(i.Str, col) + ' ';
+        if (i.EntityType = TDAT) then z := z + '"' + PadLeft(i.Str, col) + '" ';
     end;
     z := LeftStr(z, Length(z)-1);
     stack_showBeautiful := z;
@@ -188,6 +190,7 @@ begin
     z := '';
     if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num);
     if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
+    if (x.EntityType = TDAT) then z := '"' + x.Str + '"';
     if (x.EntityType = TNIL) then z := x.Str;
     if (x.EntityType = TBOO) then z := x.Str;
     if (x.EntityType = TVEC) then z := stack_showArrayPS(db[trunc(x.Num)], db, mask);
@@ -412,7 +415,7 @@ end;
 
 // ====== assertions
 
-function assertEntity(var stack : TStack; val : Entity; const wtype : Integer) : Boolean;
+function assertEntity(var stack : TStack; val : Entity; const wtype : TEntityType) : Boolean;
 begin
     if (val.EntityType <> wtype) then
     begin 
@@ -421,7 +424,7 @@ begin
     end else assertEntity := false;
 end;
 
-function assertEntityLocated(var stack : TStack; val : Entity; const wtype : Integer; operand : String) : Boolean;
+function assertEntityLocated(var stack : TStack; val : Entity; const wtype : TEntityType; operand : String) : Boolean;
 begin
     if (val.EntityType <> wtype) then 
     begin
@@ -430,7 +433,7 @@ begin
     end else assertEntityLocated := false;
 end;
 
-function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : Integer; const wtype2 : Integer; operand : String) : Boolean;
+function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : TEntityType; const wtype2 : TEntityType; operand : String) : Boolean;
 begin
     if (val.EntityType <> wtype1) and (val.EntityType <> wtype2) then 
     begin

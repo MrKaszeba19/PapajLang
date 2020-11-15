@@ -247,6 +247,7 @@ var
     Im     : Extended;
     Code   : Longint;
     StrEcx : String;
+    //dt     : TDateTime;
 begin
     Steps := 1;
 
@@ -289,10 +290,14 @@ begin
 			if not lib_arrays(i, pocz, Steps, sets, vardb) then
             if not lib_files(i, pocz, Steps, sets, vardb) then		
     	    if not lib_exceptions(i, pocz, Steps, sets, vardb) then
+            if not lib_datetime(i, pocz, Steps, sets, vardb) then
     	    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     		begin
 				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 			end else begin
+                //if TryStrToDateTime(i, dt) 
+                    //then stack_push(pocz[sets.StackPointer], buildDateTime(StrToDateTime(i)))
+                    //else 
                 if (vardb.isVarAssigned(i)) 
                     then runFromString(i, pocz, Steps, sets, vardb)
                     else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));

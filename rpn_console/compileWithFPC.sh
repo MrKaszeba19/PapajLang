@@ -42,6 +42,7 @@ fi
 units=(
     MathUtils.pas
     ConsoleUtils.pas
+    DTUtils.pas
     UnitEntity.pas
     UnitStack.pas
     UnitVariables.pas

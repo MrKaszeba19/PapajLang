@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-November 9, 2020  
+November 15, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -279,7 +279,8 @@ _**(Capitalized type names from 0.4.2 onwards)**_
 - `Null`
 - `Function`, e.g. `fun{ -1 * }`
 - `Exception`, e.g. `EXC` (as of now just basic ones, _to be improved_)
-- `Array`, e.g. `[]`
+- `Array`, e.g. `[]`, `[ 2 1 3 7 ]`
+- `DateTime`
 
 **Planned for the future**
 - `Object`

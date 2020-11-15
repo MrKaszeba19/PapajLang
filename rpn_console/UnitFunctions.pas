@@ -31,6 +31,7 @@ function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Int
 function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_arrays(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_files(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_datetime(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 
 function string_toC(dupa : String) : String;
 
@@ -4673,6 +4674,47 @@ begin
         end;
 	end;
 	lib_files := Found;
+end;
+
+function lib_datetime(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+	Found  : Boolean;
+    StrEax : String; 
+    IntEax : LongInt;
+begin
+	Found := true;
+	case i of
+        'toDateTime' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TNUM) then
+            begin
+                IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+        	    stack_push(pocz[sets.StackPointer], buildDateTime(UnixToDateTime(IntEax)));
+            end else begin
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+        	    stack_push(pocz[sets.StackPointer], buildDateTime(StrToDateTime(StrEax)));
+            end;
+        end; 
+        'toTimestamp' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            stack_push(pocz[sets.StackPointer], buildNumber(stack_pop(pocz[sets.StackPointer]).Num));
+        end; 
+        'now' : begin
+            stack_push(pocz[sets.StackPointer], buildDateTime(Now));
+        end; 
+        'today' : begin
+            stack_push(pocz[sets.StackPointer], buildDateTime(Today));
+        end; 
+        'yesterday' : begin
+            stack_push(pocz[sets.StackPointer], buildDateTime(Yesterday));
+        end; 
+        'tomorrow' : begin
+            stack_push(pocz[sets.StackPointer], buildDateTime(Tomorrow));
+        end; 
+        else begin
+            Found := false;
+        end;
+	end;
+	Result := Found;
 end;
 
 end.
