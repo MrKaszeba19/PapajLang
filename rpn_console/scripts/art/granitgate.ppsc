@@ -1,0 +1,17 @@
+@use(Math)
+@use(Array)
+
+-1729 -> a
+-2113 -> b
+
+a b - abs -> len
+len 6 / -> span
+
+"Bridge length:  " print 
+$len println
+"Segment length: " print
+$span println
+
+"Segments:       " print
+[ 1 $span $len ++ seq ] fun{ $b + -- } map println
+
