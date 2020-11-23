@@ -1,0 +1,18 @@
+@use(Math)
+@use(Array)
+
+"Enter 2 coords of the bridge ends: " print
+scan toNumber trunc -> a
+scan toNumber trunc -> b
+
+a b - abs -> len
+len 6 / -> span
+
+"Bridge length:  " print 
+$len println
+"Segment length: " print
+$span println
+
+"Segments:       " print
+[ 1 $span $len ++ seq ] fun{ $b + -- } map println
+
