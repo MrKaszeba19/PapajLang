@@ -1,8 +1,9 @@
 @use(Math)
 @use(Array)
 
-"Enter 2 coords of the bridge ends: " print
+"Enter coord of the bridge start: " print
 scan toNumber trunc -> a
+"Enter coord of the bridge end:   " print
 scan toNumber trunc -> b
 
 a b - abs -> len
