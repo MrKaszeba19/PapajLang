@@ -3,7 +3,7 @@
 and interpreter of **PapajScript**  
 Version 0.5.0.3 (Yod), Gen3 build  
 Released on August 14, 2020  
-Latest update on October 13, 2020  
+Latest update on December 1, 2020  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
