@@ -1130,11 +1130,7 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             x := stack_pop(pocz[sets.StackPointer]).Num;
-            if trunc(x/y) < 0 then begin
-            	z := trunc(x/y)-1;
-            end else begin
-            	z := trunc(x/y);
-            end;
+            z := floor(x/y);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildNumber(x));
             	stack_push(pocz[sets.StackPointer], buildNumber(y));
