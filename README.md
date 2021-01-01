@@ -471,5 +471,5 @@ Version | Version Name | Date of Release | Improvements
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
-0.5.1 | Khaf | soon | Array mapping and reducing, dataframes, more packages, file management, objects and more
+0.5.1 | Khaf | soon (2021) | Array mapping and reducing, dataframes, more packages, file management, objects and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
