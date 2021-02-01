@@ -8,7 +8,7 @@ uses
   Classes, SysUtils;
 
 const
-    DATE_USA_DT = 'mm/dd/yyyy hh:mm:ss am/pm';
+    DATE_USA_DT = 'mm/dd/yyyy hh:nn:ss am/pm';
     DATE_USA_D = 'mm/dd/yyyy';
     DATE_USA_T = 'hh:nn:ss am/pm';
     DATE_USA_TP = 'hh:nn:ss:zzz am/pm';
@@ -29,7 +29,40 @@ const
     DATE_UN_TP = 'hh:nn:ss:zzz';
     DATE_UN_DTP = 'yyyy-mm-dd hh:nn:ss:zzz';
 
+function StringYMDToDateTime(input : String) : TDateTime;
+
+function FormatYMD(input : TDateTime) : String;
+
 implementation
+
+function StringYMDToDateTime(input : String) : TDateTime;
+var
+    FS: TFormatSettings;
+begin
+    FS := DefaultFormatSettings;
+    //FS.DateSeparator := '/';
+    //FS.ShortDateFormat := 'yyyy/mm/dd';
+    //FS.ShortTimeFormat := 'hh:mm:ss';
+    FS.DateSeparator := '-';
+    FS.ShortDateFormat := DATE_UN_D;
+    FS.ShortTimeFormat := DATE_UN_T;
+    Result := StrToDateTime(input, FS);
+end;
+
+function FormatYMD(input : TDateTime) : String;
+var
+    FS: TFormatSettings;
+begin
+    FS := DefaultFormatSettings;
+    //FS.DateSeparator := '/';
+    //FS.ShortDateFormat := 'yyyy/mm/dd';
+    //FS.ShortTimeFormat := 'hh:mm:ss';
+    FS.DateSeparator := '-';
+    FS.ShortDateFormat := DATE_UN_D;
+    FS.ShortTimeFormat := DATE_UN_T;
+    Result := DateTimeToStr(input, FS);
+end;
+
 
 end.
 

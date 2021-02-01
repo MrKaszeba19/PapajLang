@@ -37,7 +37,7 @@ function string_toC(dupa : String) : String;
 
 implementation
 
-uses Unit5, MathUtils, Math,
+uses Unit5, MathUtils, Math, DTUtils,
     {$IFDEF MSWINDOWS}
 		ShellApi, crt,
     {$ELSE}
@@ -4691,7 +4691,8 @@ begin
         	    stack_push(pocz[sets.StackPointer], buildDateTime(UnixToDateTime(IntEax)));
             end else begin
                 StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-        	    stack_push(pocz[sets.StackPointer], buildDateTime(StrToDateTime(StrEax)));
+                stack_push(pocz[sets.StackPointer], buildDateTime(StringYMDToDateTime(StrEax)));
+                //stack_push(pocz[sets.StackPointer], buildDateTime(VarToDateTime(StrEax)));
             end;
         end; 
         'toTimestamp' : begin
@@ -4715,6 +4716,7 @@ begin
         end;
 	end;
 	Result := Found;
+    // dateadd dateformat datediff
 end;
 
 end.

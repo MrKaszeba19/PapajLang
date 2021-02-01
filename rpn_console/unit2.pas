@@ -5,7 +5,7 @@ unit Unit2;
 interface
 
 uses
-  Classes, Process, SysUtils;
+    Classes, Process, SysUtils;
 
 function PS_parseString(input : string) : String;
 

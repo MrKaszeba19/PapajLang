@@ -6,7 +6,7 @@ unit UnitEntity;
 interface
 
 uses
-  Classes, SysUtils, DateUtils;
+  Classes, SysUtils, DateUtils, DTUtils;
 
 const
     MCLIKE = 1;
@@ -365,7 +365,7 @@ var
 	pom : Entity;
 begin
 	pom.EntityType := TDAT;
-	pom.Str := DateTimeToStr(val);
+	pom.Str := FormatYMD(val);
 	pom.Num := DateTimeToUnix(val);
     pom.Num2 := 0;
 	Result := pom;

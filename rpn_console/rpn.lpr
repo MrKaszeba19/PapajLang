@@ -26,11 +26,28 @@ begin
 end;
 {$ENDIF}
 
+const RPN_version = 'X.X.X';
+const RPN_codename = 'Leviathan';
+const RPN_generation = 3;
+const RPN_isStable = False;
+const RPN_date = {$I %DATE%};
+const RPN_target = {$I %FPCTARGET%};
+
+function convertToMDY(date : String) : String;
+begin
+    Result := Copy(date, 6, 2)+'/'+Copy(date, 9, 2)+'/'+Copy(date, 1, 4);
+end;
+
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
-    writeln('Version X.X.X (Leviathan). May be more unstable than usual. 3:)');
-    writeln('Paul Lipkowski & his fiancee Rozalia. November 17, 2020.');
+    write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_target+'.');
+    if (RPN_isStable)
+        then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
+        else writeln(' May be more unstable than usual. 3:)');
+    writeln('by Paul Lipkowski & his fiancee Rozalia. ');
+    //writeln('Released on '+RPN_date+'.');
+    writeln('Released on '+convertToMDY(RPN_date)+'.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
