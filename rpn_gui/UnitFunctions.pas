@@ -4696,8 +4696,15 @@ begin
             end;
         end; 
         'toTimestamp' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
-            stack_push(pocz[sets.StackPointer], buildNumber(stack_pop(pocz[sets.StackPointer]).Num));
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, TSTR, i)) then Exit;  
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TNUM) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(stack_pop(pocz[sets.StackPointer]).Num));
+            end else if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(DateTimeToUnix(StringYMDToDateTime(stack_pop(pocz[sets.StackPointer]).Str))));
+            end;
         end; 
         'now' : begin
             stack_push(pocz[sets.StackPointer], buildDateTime(Now));
@@ -4711,12 +4718,25 @@ begin
         'tomorrow' : begin
             stack_push(pocz[sets.StackPointer], buildDateTime(Tomorrow));
         end; 
+        'getDate' : begin
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            stack_push(pocz[sets.StackPointer], buildDateTime(DateOf(StringYMDToDateTime(StrEax))));
+        end;
+        'getTime' : begin
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            stack_push(pocz[sets.StackPointer], buildDateTime(TimeOf(StringYMDToDateTime(StrEax))));
+        end;
         else begin
             Found := false;
         end;
 	end;
 	Result := Found;
     // dateadd dateformat datediff
+    // get/set day, month, year, hour, minute, second, millisecond
 end;
 
 end.
