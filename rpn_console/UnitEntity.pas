@@ -31,7 +31,9 @@ type TEntityType = (
 	TOBJ,   // object
 	TFUN,   // function
 	TEXC,   // exception
-    TDAT    // datetime
+    TDAT,   // datetime
+    TDAY,   // date
+    TTIM,   // time
 );
 
 type TPackages = record

@@ -8,12 +8,16 @@ scan toNumber trunc -> b
 
 a b - abs -> len
 len 6 / -> span
+len 12 / -> spanh
 
 "Bridge length:  " print 
 $len println
 "Segment length: " print
 $span println
+"Segment height: " print
+$spanh println
 
 "Segments:       " print
-[ 1 $span $len ++ seq ] fun{ $b + -- } map println
+[ $a $span $b seq ] println
+//[ 1 $span $len ++ seq ] fun{ $b + -- } map println
 
