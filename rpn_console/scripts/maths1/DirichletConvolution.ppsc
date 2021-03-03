@@ -1,0 +1,14 @@
+function { 2 ^ } -> f
+function { Math.sin } -> g
+
+function {
+	>k >g >f
+	0 -> sum
+	[ 1 1 $k seq ] ( $k swap mod 0 = ) Array.filter -> divisors
+	for ( $i : $divisors ) {
+		$i f $k $i div g * $sum + -> sum
+	}
+	$sum
+} -> DirichletConvolve
+
+$f $g 4 DirichletConvolve

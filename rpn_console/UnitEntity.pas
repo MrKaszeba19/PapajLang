@@ -33,7 +33,7 @@ type TEntityType = (
 	TEXC,   // exception
     TDAT,   // datetime
     TDAY,   // date
-    TTIM,   // time
+    TTIM   // time
 );
 
 type TPackages = record
@@ -105,6 +105,8 @@ function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
 function buildDateTime(val : TDateTime) : Entity;
+function buildDate(val : TDateTime) : Entity;
+function buildTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
 
 implementation
@@ -367,6 +369,28 @@ var
 	pom : Entity;
 begin
 	pom.EntityType := TDAT;
+	pom.Str := FormatYMD(val);
+	pom.Num := DateTimeToUnix(val);
+    pom.Num2 := 0;
+	Result := pom;
+end;
+
+function buildDate(val : TDateTime) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TDAY;
+	pom.Str := FormatYMD(val);
+	pom.Num := DateTimeToUnix(DateOf(val));
+    pom.Num2 := 0;
+	Result := pom;
+end;
+
+function buildTime(val : TDateTime) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TTIM;
 	pom.Str := FormatYMD(val);
 	pom.Num := DateTimeToUnix(val);
     pom.Num2 := 0;

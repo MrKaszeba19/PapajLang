@@ -60,6 +60,7 @@ begin
     FS.DateSeparator := '-';
     FS.ShortDateFormat := DATE_UN_D;
     FS.ShortTimeFormat := DATE_UN_T;
+    //writeln('chj', DateTimeToStr(input, FS));
     Result := DateTimeToStr(input, FS);
 end;
 
