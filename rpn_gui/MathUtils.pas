@@ -193,7 +193,8 @@ begin
                     s := False;
                 end else begin
                     i := 3;
-                    while i <= sqrt(x) do
+                    //while i <= sqrt(x) do
+                    while i*i <= x do
                     begin
                         if (fmod(x, i) = 0) or (fmod(x, i+4) = 0) or (fmod(x, i+6) = 0) or (fmod(x, i+8) = 0) then 
                         begin
