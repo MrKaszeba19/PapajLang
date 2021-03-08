@@ -1020,7 +1020,7 @@ begin
             if (IntEax = 0) then begin
              	stack_push(pocz[sets.StackPointer], buildNumber(ExtEax));
             end else begin
-            	if (sets.StrictType) and (EntEax.EntityType <> TBOO) 
+            	if (sets.StrictType) and (EntEax.EntityType <> TBOO) and (EntEax.EntityType <> TDAT) 
                     then stack_push(pocz[sets.StackPointer], buildException('EType:CNonNumeric: Got a non-numeric entity at "toNumber".'))
             	    else stack_push(pocz[sets.StackPointer], buildNumber(EntEax.Num));
             end;
@@ -4827,13 +4827,22 @@ begin
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             stack_push(pocz[sets.StackPointer], buildBoolean(IsPM(StringYMDToDateTime(StrEax))));
         end;
+        'setDay' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
+            //if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            stack_push(pocz[sets.StackPointer], buildDateTime(RecodeDay(StringYMDToDateTime(StrEax), IntEax)));
+        end;
         else begin
             Found := false;
         end;
 	end;
 	Result := Found;
-    // dateadd, datepart, dateformat datediff, datecompare, datespan
+    // dateset, dateadd, datepart, dateformat datediff, datecompare, datespan
     // get/set day, month, year, hour, minute, second, millisecond
+    // change to number-based
 end;
 
 end.
