@@ -278,6 +278,7 @@ begin
 			if (not sets.Packages.UseString) or ((sets.Packages.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
             if (not sets.Packages.UseArray) or ((sets.Packages.UseArray) and (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb))) then
             if (not sets.Packages.UseConsole) or ((sets.Packages.UseConsole) and (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb))) then
+            if (not sets.Packages.UseDate) or ((sets.Packages.UseDate) and (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb))) then
 
     	    if not lib_directives(i, pocz, Steps, sets, vardb) then
     	    if not lib_constants(i, pocz, Steps, sets, vardb) then

@@ -1,2 +1,3 @@
+@use(Date)
 now truncDate println
 today println

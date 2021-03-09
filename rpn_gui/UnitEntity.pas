@@ -42,6 +42,7 @@ type TPackages = record
 	UseString   : Boolean;
     UseArray    : Boolean;
     UseConsole  : Boolean;
+    UseDate     : Boolean;
 end;
 
 type TSettings = record
@@ -105,6 +106,7 @@ function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
 function buildDateTime(val : TDateTime) : Entity;
+function buildDateTime(val : Extended) : Entity;
 function buildDate(val : TDateTime) : Entity;
 function buildTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
@@ -120,7 +122,7 @@ uses ConsoleUtils;
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
-	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole;
+	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate;
 end;
 
 function default_packages() : TPackages;
@@ -131,6 +133,7 @@ begin
 	pom.UseAnything := false;
     pom.UseArray := false;
     pom.UseConsole := false;
+    pom.UseDate := false;
 	default_packages := pom;
 end;
 
@@ -370,7 +373,18 @@ var
 begin
 	pom.EntityType := TDAT;
 	pom.Str := FormatYMD(val);
-	pom.Num := DateTimeToUnix(val);
+	pom.Num := DateTimeToTimestamp(val);
+    pom.Num2 := 0;
+	Result := pom;
+end;
+
+function buildDateTime(val : Extended) : Entity;
+var
+	pom : Entity;
+begin
+	pom.EntityType := TDAT;
+	pom.Str := FormatYMD(TimestampToDateTime(val));
+	pom.Num := val;
     pom.Num2 := 0;
 	Result := pom;
 end;

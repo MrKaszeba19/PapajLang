@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-March 8, 2021  
+March 9, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -416,6 +416,7 @@ Operand | Purpose
 - `Math` with mathematical functions
 - `Array` with array functions 
 - `Console` with console utils
+- `Date` with datetime utils
 - `File` with file I/O functions (*coming soon*) 
 - `System` with system functions (*coming soon*)
 

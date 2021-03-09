@@ -1,0 +1,18 @@
+@use(Date)
+@milli
+
+"test 1" println
+now -> $s
+$s println
+$s toTimestamp println
+$s 3 addMinute println
+
+newln
+
+"test 2" println
+today -> $d
+$d println
+$d 21 setHour 37 setMinute -> $d
+$d println
+$d 13 addHour -5 addMinute 9 addSecond -> $d
+$d println
