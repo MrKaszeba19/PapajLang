@@ -83,14 +83,9 @@ end;
 
 function TimestampToDateTime(input : Real) : TDateTime;
 begin
-    if (input = int(input)) then
-    begin
-        Result := UnixToDateTime(trunc(input));
-    end else begin
-        if (input < 0)
-            then Result := IncMillisecond(UnixToDateTime(trunc(input)), -trunc(frac(input)*1000))
-            else Result := IncMillisecond(UnixToDateTime(trunc(input)), trunc(frac(input)*1000));
-    end; 
+    if (input = int(input)) 
+        then Result := UnixToDateTime(trunc(input))
+        else Result := IncMillisecond(UnixToDateTime(trunc(input)), trunc(frac(input)*1000));
 end;
 
 
