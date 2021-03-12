@@ -1,0 +1,12 @@
+@use(Date)
+
+"1996-06-30 20:00:00" toDateTime -> $a
+"1997-08-12 01:55:00" toDateTime -> $b
+now -> $t
+
+$t $a spanYear -> a1
+$t $b spanYear -> a2
+
+$a1 println
+$a2 println
+$a1 $a2 - println

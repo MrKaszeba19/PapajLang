@@ -1,0 +1,16 @@
+@use(Date)
+
+now -> t
+unixEpoch -> s
+
+$s println
+$t println
+
+$t $s diffYear println
+$t $s diffMonth println
+$t $s diffDay println
+$t $s diffHour println
+$t $s diffMinute println
+$t $s diffSecond println
+@milli
+$t toTimestamp println

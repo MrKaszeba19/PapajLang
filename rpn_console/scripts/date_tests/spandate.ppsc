@@ -1,0 +1,16 @@
+@use(Date)
+@milli
+
+now -> t
+unixEpoch -> s
+
+$s println
+$t println
+
+$t $s spanYear println
+$t $s spanMonth println
+$t $s spanDay println
+$t $s spanHour println
+$t $s spanMinute println
+$t $s spanSecond println
+$t toTimestamp println

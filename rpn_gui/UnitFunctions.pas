@@ -4711,11 +4711,11 @@ end;
 
 function lib_datetime(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found  : Boolean;
-    StrEax : String; 
-    IntEax : LongInt;
-    ExtEax : Extended;
-    DatEax : TDateTime;
+	Found          : Boolean;
+    StrEax         : String; 
+    IntEax         : LongInt;
+    ExtEax, ExtEbx : Extended;
+    DatEax, DatEbx : TDateTime;
 begin
 	Found := true;
 	case i of
@@ -4753,6 +4753,10 @@ begin
         end; 
         'Date.tomorrow' : begin
             stack_push(pocz[sets.StackPointer], buildDateTime(Tomorrow));
+        end; 
+        'Date.unixEpoch' : begin
+            ExtEax := 0;
+            stack_push(pocz[sets.StackPointer], buildDateTime(ExtEax));
         end; 
         'Date.truncDate' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
@@ -4978,14 +4982,138 @@ begin
             DatEax := TimestampToDateTime(ExtEax);
             stack_push(pocz[sets.StackPointer], buildDateTime(IncMillisecond(DatEax, IntEax)));
         end;
+        'Date.diffYear' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(YearsBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffMonth' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MonthsBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffDay' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(DaysBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffHour' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(HoursBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffMinute' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MinutesBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffSecond' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(SecondsBetween(DatEax, DatEbx)));
+        end;
+        'Date.diffMillisecond' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MillisecondsBetween(DatEax, DatEbx)));
+        end;
+        'Date.spanYear' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(YearSpan(DatEax, DatEbx)));
+        end;
+        'Date.spanMonth' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MonthSpan(DatEax, DatEbx)));
+        end;
+        'Date.spanDay' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(DaySpan(DatEax, DatEbx)));
+        end;
+        'Date.spanHour' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(HourSpan(DatEax, DatEbx)));
+        end;
+        'Date.spanMinute' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MinuteSpan(DatEax, DatEbx)));
+        end;
+        'Date.spanSecond' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(SecondSpan(DatEax, DatEbx)));
+        end;
+        'Date.spanMillisecond' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            stack_push(pocz[sets.StackPointer], buildNumber(MillisecondSpan(DatEax, DatEbx)));
+        end;
         else begin
             Found := false;
         end;
 	end;
 	Result := Found;
-    // dateset, dateadd, datepart, dateformat datediff, datecompare, datespan
-    // get/set day, month, year, hour, minute, second, millisecond
-    // change to number-based
+    // dateformat, datecompare
 end;
 
 end.
