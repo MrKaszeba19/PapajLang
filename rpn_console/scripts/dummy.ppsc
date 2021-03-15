@@ -1,0 +1,5 @@
+3 2 + times {
+  "Hello world!" println 
+}
+10 times rand
+all sum

@@ -2,8 +2,8 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-March 14, 2021 – Happy PI Number Day! ^_^  
-by Paul Lipkowski (RooiGevaar19) & his fiancée Rozalia (rozirogal) :heart: 
+March 15, 2021
+by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 

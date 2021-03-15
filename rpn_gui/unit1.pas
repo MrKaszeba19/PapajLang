@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynHighlighterAny, SynCompletion, Forms,
-  Controls, Graphics, Dialogs, StdCtrls, Menus, ShellCtrls, UnitEntity;
+  Controls, Graphics, Dialogs, StdCtrls, Menus, ShellCtrls, ComCtrls,
+  UnitEntity;
 
 type
 
@@ -23,22 +24,29 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
+    MenuQuit: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuLoad: TMenuItem;
+    MenuSave: TMenuItem;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
+    procedure OpenOfflineFile();
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure MenuItem3Click(Sender: TObject);
+    procedure MenuQuitClick(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
     procedure MenuItem7Click(Sender: TObject);
+    procedure MenuLoadClick(Sender: TObject);
+    procedure MenuSaveClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -58,6 +66,21 @@ implementation
 uses Unit2, Unit3;
 
 {$R *.lfm}
+
+procedure TForm1.OpenOfflineFile();
+var fn : String;
+begin
+     if OpenDialog1.Execute then
+     begin
+          try
+             fn := OpenDialog1.FileName;
+             SynEdit1.Lines.LoadFromFile(fn);
+             SynEdit1.Modified := false;
+          except
+                ShowMessage('Error when loading a file.');
+          end;
+     end;
+end;
 
 { TForm1 }
 
@@ -155,7 +178,7 @@ begin
      Memo1.Text := '';
 end;
 
-procedure TForm1.MenuItem3Click(Sender: TObject);
+procedure TForm1.MenuQuitClick(Sender: TObject);
 begin
      Close;
 end;
@@ -178,6 +201,31 @@ end;
 procedure TForm1.MenuItem7Click(Sender: TObject);
 begin
      Unit3.set1HBR();
+end;
+
+procedure TForm1.MenuLoadClick(Sender: TObject);
+begin
+     if SynEdit1.Modified then begin
+        if mrOK=MessageDlg('Are you sure you want to exit without saving a file?',mtConfirmation,[mbOK,mbCancel],0) then
+        begin
+             OpenOfflineFile();
+             //SetStyles();
+        end;
+     end else begin
+         OpenOfflineFile();
+         //SetStyles();
+     end;
+end;
+
+procedure TForm1.MenuSaveClick(Sender: TObject);
+begin
+     if SaveDialog1.Execute then begin
+        SynEdit1.Lines.SaveToFile(SaveDialog1.FileName);
+        //SetFileName(SaveDialog1.FileName);
+        SynEdit1.Modified := false;
+     end else begin
+         Abort;
+     end;
 end;
 
 end.

@@ -58,15 +58,16 @@ function FormatYMD(input : TDateTime) : String;
 var
     FS: TFormatSettings;
 begin
-    FS := DefaultFormatSettings;
-    //FS.DateSeparator := '/';
-    //FS.ShortDateFormat := 'yyyy/mm/dd';
-    //FS.ShortTimeFormat := 'hh:mm:ss';
-    FS.DateSeparator := '-';
-    FS.ShortDateFormat := DATE_UN_D;
-    FS.ShortTimeFormat := DATE_UN_TP;
-    //writeln('chj', DateTimeToStr(input, FS));
-    Result := DateTimeToStr(input, FS);
+    //FS := DefaultFormatSettings;
+    ////FS.DateSeparator := '/';
+    ////FS.ShortDateFormat := 'yyyy/mm/dd';
+    ////FS.ShortTimeFormat := 'hh:mm:ss';
+    //FS.DateSeparator := '-';
+    //FS.ShortDateFormat := DATE_UN_D;
+    //FS.ShortTimeFormat := DATE_UN_TP;
+    ////writeln('chj', DateTimeToStr(input, FS));
+    //Result := DateTimeToStr(input, FS);
+    Result := FormatDateTime(DATE_UN_DTP, input);
 end;
 
 function DateTimeToTimestamp(input : TDateTime) : Real;

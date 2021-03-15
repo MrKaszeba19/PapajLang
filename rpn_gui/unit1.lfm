@@ -1,11 +1,11 @@
 object Form1: TForm1
   Left = 950
-  Height = 600
-  Top = 194
+  Height = 589
+  Top = 161
   Width = 802
   BorderStyle = bsSingle
   Caption = 'RPN Calculator'
-  ClientHeight = 580
+  ClientHeight = 565
   ClientWidth = 802
   Constraints.MinHeight = 160
   Constraints.MinWidth = 800
@@ -13,49 +13,54 @@ object Form1: TForm1
   OnCreate = FormCreate
   ParentBiDiMode = False
   Position = poMainFormCenter
-  LCLVersion = '2.0.8.0'
+  LCLVersion = '2.0.6.0'
   object Edit1: TEdit
-    Left = 16
-    Height = 23
-    Top = 40
+    Left = 8
+    Height = 26
+    Top = 29
     Width = 664
+    Anchors = [akTop, akLeft, akRight]
     AutoSelect = False
     TabOrder = 0
     TextHint = 'Type a RPN instruction delimited by spaces, e.g. "2 3 +" or "20 4 / 5 +"'
   end
   object Button1: TButton
-    Left = 688
+    Left = 680
     Height = 25
-    Top = 40
+    Top = 29
     Width = 112
+    Anchors = [akTop, akRight]
     Caption = 'Count it!'
     OnClick = Button1Click
     TabOrder = 1
   end
   object Label1: TLabel
-    Left = 16
-    Height = 15
-    Top = 19
+    Left = 8
+    Height = 16
+    Top = 8
     Width = 660
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'PapajScript command box'
     Constraints.MinWidth = 660
     ParentColor = False
   end
   object Edit2: TEdit
-    Left = 16
-    Height = 23
-    Top = 71
+    Left = 8
+    Height = 26
+    Top = 60
     Width = 664
+    Anchors = [akTop, akLeft, akRight]
     AutoSelect = False
     ReadOnly = True
     TabOrder = 2
     TextHint = 'Result'
   end
   inline SynEdit1: TSynEdit
-    Left = 16
+    Left = 8
     Height = 304
-    Top = 128
+    Top = 117
     Width = 664
+    Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Pitch = fpFixed
@@ -553,19 +558,21 @@ object Form1: TForm1
     end
   end
   object Button2: TButton
-    Left = 688
+    Left = 680
     Height = 25
-    Top = 440
+    Top = 429
     Width = 112
+    Anchors = [akRight, akBottom]
     Caption = 'Run script'
     OnClick = Button2Click
     TabOrder = 4
   end
   object Memo1: TMemo
-    Left = 16
+    Left = 8
     Height = 128
-    Top = 440
+    Top = 429
     Width = 662
+    Anchors = [akLeft, akRight, akBottom]
     Color = 5914170
     Font.CharSet = ANSI_CHARSET
     Font.Color = clCream
@@ -578,25 +585,37 @@ object Form1: TForm1
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 5
+    WantTabs = True
   end
   object Label2: TLabel
-    Left = 16
-    Height = 15
-    Top = 104
+    Left = 8
+    Height = 16
+    Top = 93
     Width = 660
+    Anchors = [akTop, akLeft, akRight]
     Caption = 'PapajScript code'
     Constraints.MinWidth = 660
     ParentColor = False
   end
   object MainMenu1: TMainMenu
-    left = 760
-    top = 352
+    left = 752
+    top = 370
     object MenuItem1: TMenuItem
       Caption = 'Application'
-      object MenuItem3: TMenuItem
+      object MenuLoad: TMenuItem
+        Caption = 'Load script from file'
+        ShortCut = 16463
+        OnClick = MenuLoadClick
+      end
+      object MenuSave: TMenuItem
+        Caption = 'Save script to file'
+        ShortCut = 16467
+        OnClick = MenuSaveClick
+      end
+      object MenuQuit: TMenuItem
         Caption = 'Close'
         ShortCut = 16465
-        OnClick = MenuItem3Click
+        OnClick = MenuQuitClick
       end
     end
     object MenuItem2: TMenuItem
@@ -652,8 +671,8 @@ object Form1: TForm1
     Entity = False
     DollarVariables = True
     ActiveDot = False
-    left = 760
-    top = 320
+    left = 752
+    top = 338
   end
   object SynAutoComplete1: TSynAutoComplete
     AutoCompleteList.Strings = (
@@ -666,7 +685,15 @@ object Form1: TForm1
     ShortCut = 16416
     ExecCommandID = ecSynAutoCompletionExecute
     Editor = SynEdit1
-    left = 760
-    top = 288
+    left = 752
+    top = 306
+  end
+  object OpenDialog1: TOpenDialog
+    left = 752
+    top = 472
+  end
+  object SaveDialog1: TSaveDialog
+    left = 752
+    top = 422
   end
 end

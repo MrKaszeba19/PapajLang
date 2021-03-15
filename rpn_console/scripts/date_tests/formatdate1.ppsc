@@ -1,0 +1,7 @@
+@use(Date)
+
+"mm/dd/yyyy" -> $mdy1
+"mm\"/\"dd\"/\"yyyy" -> $mdy2
+
+now $mdy1 format println
+now $mdy2 format println

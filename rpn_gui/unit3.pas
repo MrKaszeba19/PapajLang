@@ -29,7 +29,7 @@ begin
      Unit1.Form1.Button1.Caption := 'Tæl det!';
      Unit1.Form1.MenuItem1.Caption := 'Applikation';
      Unit1.Form1.MenuItem2.Caption := 'Sprog';
-     Unit1.Form1.MenuItem3.Caption := 'Luk';
+     Unit1.Form1.MenuQuit.Caption := 'Luk';
      Unit1.Form1.Button2.Caption := 'Kør scripten';
      Unit1.Form1.Label2.Caption := 'PapajScript-kode';
      Unit1.Form1.BiDiMode := bdLeftToRight;
@@ -47,7 +47,7 @@ begin
      Unit1.Form1.Button1.Caption := 'Count it!';
      Unit1.Form1.MenuItem1.Caption := 'Application';
      Unit1.Form1.MenuItem2.Caption := 'Language';
-     Unit1.Form1.MenuItem3.Caption := 'Close';
+     Unit1.Form1.MenuQuit.Caption := 'Close';
      Unit1.Form1.Button2.Caption := 'Run script';
      Unit1.Form1.Label2.Caption := 'PapajScript code';
      Unit1.Form1.BiDiMode := bdLeftToRight;
@@ -65,7 +65,7 @@ begin
      Unit1.Form1.Button1.Caption := 'Policz!';
      Unit1.Form1.MenuItem1.Caption := 'Aplikacja';
      Unit1.Form1.MenuItem2.Caption := 'Język';
-     Unit1.Form1.MenuItem3.Caption := 'Zamknij';
+     Unit1.Form1.MenuQuit.Caption := 'Zamknij';
      Unit1.Form1.Button2.Caption := 'Uruchom';
      Unit1.Form1.Label2.Caption := 'Kod PapajScript';
      Unit1.Form1.BiDiMode := bdLeftToRight;
@@ -83,7 +83,7 @@ begin
      Unit1.Form1.Button1.Caption := 'תחשיב!';
      Unit1.Form1.MenuItem1.Caption := 'אפליקציה';
      Unit1.Form1.MenuItem2.Caption := 'שפה';
-     Unit1.Form1.MenuItem3.Caption := 'סגור';
+     Unit1.Form1.MenuQuit.Caption := 'סגור';
      Unit1.Form1.Button2.Caption := 'הפעל';
      Unit1.Form1.Label2.Caption := 'קוד PapajScript';
      Unit1.Form1.BiDiMode := bdRightToLeft;
