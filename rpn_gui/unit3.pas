@@ -32,6 +32,10 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Luk';
      Unit1.Form1.Button2.Caption := 'Kør scripten';
      Unit1.Form1.Label2.Caption := 'PapajScript-kode';
+     Unit1.Form1.MenuLoad.Caption := 'Hent scripten fra en fil';
+     Unit1.Form1.MenuSave.Caption := 'Gem scripten som en fil';
+     Unit1.Form1.OpenDialog1.Title := 'Hent scripten fra en fil';
+     Unit1.Form1.SaveDialog1.Title := 'Gem scripten som en fil';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -50,6 +54,10 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Close';
      Unit1.Form1.Button2.Caption := 'Run script';
      Unit1.Form1.Label2.Caption := 'PapajScript code';
+     Unit1.Form1.MenuLoad.Caption := 'Load script from file';
+     Unit1.Form1.MenuSave.Caption := 'Save script to file';
+     Unit1.Form1.OpenDialog1.Title := 'Load script from file';
+     Unit1.Form1.SaveDialog1.Title := 'Save script to file';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -68,6 +76,10 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Zamknij';
      Unit1.Form1.Button2.Caption := 'Uruchom';
      Unit1.Form1.Label2.Caption := 'Kod PapajScript';
+     Unit1.Form1.MenuLoad.Caption := 'Wczytaj skrypt z pliku';
+     Unit1.Form1.MenuSave.Caption := 'Zapisz skrypt do pliku';
+     Unit1.Form1.OpenDialog1.Title := 'Wczytaj skrypt z pliku';
+     Unit1.Form1.SaveDialog1.Title := 'Zapisz skrypt do pliku';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -86,6 +98,10 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'סגור';
      Unit1.Form1.Button2.Caption := 'הפעל';
      Unit1.Form1.Label2.Caption := 'קוד PapajScript';
+     Unit1.Form1.MenuLoad.Caption := 'העלה מקובץ';
+     Unit1.Form1.MenuSave.Caption := 'שמור לקובץ';
+     Unit1.Form1.OpenDialog1.Title := 'העלה מקובץ';
+     Unit1.Form1.SaveDialog1.Title := 'שמור לקובץ';
      Unit1.Form1.BiDiMode := bdRightToLeft;
      Unit1.Form1.Label1.BiDiMode := bdRightToLeft;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;

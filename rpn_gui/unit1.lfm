@@ -688,10 +688,13 @@ object Form1: TForm1
     top = 306
   end
   object OpenDialog1: TOpenDialog
+    DefaultExt = '.ppsc'
     left = 752
     top = 472
   end
   object SaveDialog1: TSaveDialog
+    DefaultExt = '.ppsc'
+    FileName = 'Unititled.ppsc'
     left = 752
     top = 422
   end
