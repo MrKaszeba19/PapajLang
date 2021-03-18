@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-March 17, 2021
+March 18, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -92,5 +92,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
-0.5.1 | Khaf | soon (March 2021) | Array mapping and reducing and more
+0.5.1 | Khaf | soon (March 2021) | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
+0.5.2 | Lamed | soon | Environment rebuild, more efficiency, better memory management, less bugs, dataframes, file management and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

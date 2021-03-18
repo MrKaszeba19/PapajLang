@@ -1,0 +1,53 @@
+@use(Math)
+@use(Array)
+
+function {
+	>k
+	[ 1 1 $k seq ] ( $k swap mod 0 = ) filter
+} -> divisors
+
+function {
+	>n
+	$n divisors -> $T
+	[] -> $result
+	for ( $i : $T ) {
+		for ( $j : $T ) {
+			$result [ $i $j ] push!!
+		}
+	}
+	$result
+} -> generateX
+
+function {
+	>n
+	$n divisors -> $T
+	[] -> $result
+	for ( $k : $T ) {
+		for ( 1 -> $r ; $r $k <= ; $r ++ -> $r ) {
+			for ( 1 -> $s ; $s $r <= ; $s ++ -> $s ) {
+				if ( $r $s lcm $k = ) {
+					$result [ $r $s ] push!!
+					if ( $r $s != ) {
+						$result [ $s $r ] push!!
+					}
+				}
+			}
+		}
+	}
+	$result
+} -> generateY
+
+function {
+	>n
+	$n generateX -> X
+	$X println
+	$X length println
+	newln
+	$n generateY -> Y
+	$Y println
+	$Y length println
+} -> check
+
+"Podaj liczbę: " print
+scan toNumber check
+
