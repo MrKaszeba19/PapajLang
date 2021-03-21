@@ -1,13 +1,11 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version X.X.X (Leviathan)  
+Version 0.5.1 (Khaf), Gen3 build
 March 21, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
-
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.0**, nickname Yod) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
 
 ## How to use it
 
@@ -76,6 +74,15 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :de: German (Deutsch) - *to be implemented*
 - 🇳🇱 Dutch (Nederlands) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
+- :fr: France (Français) - *to be implemented*
+- :it: Italian (Italiano) - *to be implemented*
+- :morocco: Arabic (العربية) - *to be implemented*
+- :ru: Russian (русский) - *to be implemented*
+- :norway: Norwegian (Norsk bokmål) - *to be implemented*
+- :norway: Norwegian (Norsk nynorsk) - *to be implemented*
+- :sweden: Swedish (Svenska) - *to be implemented*
+- :black_heart::yellow_heart: Kashubian (Kaszëbsczi) - *to be implemented*
+
 
 
 ## Releases history
@@ -92,6 +99,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
-0.5.1 | Khaf | soon (March 2021) | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
+0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | soon | Environment rebuild, more efficiency, better memory management, less bugs, dataframes, file management and more
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
