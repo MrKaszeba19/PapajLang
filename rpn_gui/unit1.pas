@@ -85,28 +85,27 @@ end;
 { TForm1 }
 
 {$IFDEF MSWINDOWS}
-//function GetLocaleInformation(Flag: integer): string;
-//var
-// pcLCA: array[0..20] of char;
-//begin
-// if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
-// begin
-//   pcLCA[0] := #0;
-// end;
-// Result := pcLCA;
-//end;
+function GetLocaleInformation(Flag: integer): string;
+var
+    pcLCA: array[0..20] of char;
+begin
+    if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
+    begin
+        pcLCA[0] := #0;
+    end;
+    Result := pcLCA;
+end;
 
 {$ENDIF}
 
 function GetLocaleLanguage: string;
 begin
- {$IFDEF MSWINDOWS}
-  //Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
-  Result := '';
- {$ELSE}
-  Result := SysUtils.GetEnvironmentVariable('LANG');
- {$ENDIF}
-end;
+    {$IFDEF MSWINDOWS}
+        Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
+    {$ELSE}
+        Result := SysUtils.GetEnvironmentVariable('LANG');
+    {$ENDIF}
+end;   
 
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -156,6 +155,7 @@ begin
           'en.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
           'pl.UTF-8' : language := 'pol';
+          'pl_PL.UTF-8' : language := 'pol';
           'Polish_Poland.1250' : language := 'pol';
           'he_IL.utf8' : language := 'hbr';
           'Hebrew_Israel.1255' : language := 'hbr';
