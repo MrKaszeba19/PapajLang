@@ -30,7 +30,7 @@ const RPN_version = 'X.X.X';
 const RPN_codename = 'Leviathan';
 const RPN_generation = 3;
 const RPN_isStable = False;
-const RPN_date = '{$I %DATE%};
+const RPN_date = '{$I %DATE%}';
 const RPN_target = {$I %FPCTARGET%};
 
 function convertToMDY(date : String) : String;
