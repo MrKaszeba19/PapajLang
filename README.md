@@ -1,7 +1,7 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version 0.5.1 (Khaf), Gen3 build
+Version 0.5.1 (Khaf), Gen3 build  
 March 21, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
