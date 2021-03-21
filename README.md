@@ -1,11 +1,13 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version 0.5.1 (Khaf), Gen3 build
+Version X.X.X (Leviathan)
 March 21, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
+
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.1**, nickname Khaf) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
 
 ## How to use it
 

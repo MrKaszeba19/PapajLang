@@ -26,11 +26,11 @@ begin
 end;
 {$ENDIF}
 
-const RPN_version = '0.5.1';
-const RPN_codename = 'Khaf';
+const RPN_version = 'X.X.X';
+const RPN_codename = 'Leviathan';
 const RPN_generation = 3;
-const RPN_isStable = True;
-const RPN_date = 'March 21, 2021'; //{$I %DATE%};
+const RPN_isStable = False;
+const RPN_date = '{$I %DATE%};
 const RPN_target = {$I %FPCTARGET%};
 
 function convertToMDY(date : String) : String;
@@ -46,8 +46,8 @@ begin
         then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
         else writeln(' May be more unstable than usual. 3:)');
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
-    writeln('Released on '+RPN_date+'.');
-    //writeln('Released on '+convertToMDY(RPN_date)+'.');
+    //writeln('Released on '+RPN_date+'.');
+    writeln('Released on '+convertToMDY(RPN_date)+'.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
