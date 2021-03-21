@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="11"/>
+    <Version Value="10"/>
     <BuildModes Active="Default"/>
     <Units Count="16">
       <Unit0>
@@ -18,8 +18,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <TopLine Value="173"/>
-        <CursorPos X="25" Y="222"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="59"/>
+        <CursorPos X="9" Y="69"/>
         <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -29,6 +30,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
         <EditorIndex Value="1"/>
+        <TopLine Value="19"/>
         <CursorPos X="10" Y="23"/>
         <UsageCount Value="31"/>
         <Loaded Value="True"/>
@@ -37,7 +39,6 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <TopLine Value="86"/>
         <CursorPos X="63" Y="126"/>
@@ -258,9 +259,5 @@
         <Caret Line="216" Column="12" TopLine="163"/>
       </Position30>
     </JumpHistory>
-    <RunParams>
-      <FormatVersion Value="2"/>
-      <Modes Count="0" ActiveMode="default"/>
-    </RunParams>
   </ProjectSession>
 </CONFIG>

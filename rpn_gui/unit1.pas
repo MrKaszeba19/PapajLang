@@ -58,12 +58,17 @@ var
   language : string;
 
 {$IFDEF MSWINDOWS}
-//function GetLocaleInformation(Flag: integer): string;
+function GetLocaleInformation(Flag: integer): string;
 {$ENDIF}
 function GetLocaleLanguage: string;
 
 implementation
+
+{$IFDEF MSWINDOWS}
+uses Unit2, Unit3, Windows;
+{$ELSE}
 uses Unit2, Unit3;
+{$ENDIF}
 
 {$R *.lfm}
 
