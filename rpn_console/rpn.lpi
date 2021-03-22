@@ -42,7 +42,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="10">
+    <Units Count="11">
       <Unit0>
         <Filename Value="rpn.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -83,6 +83,11 @@
         <Filename Value="DTUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="ArrayUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ArrayUtils"/>
+      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

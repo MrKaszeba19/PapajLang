@@ -3,7 +3,7 @@
   <ProjectSession>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="16">
+    <Units Count="17">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -37,7 +37,6 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <TopLine Value="86"/>
         <CursorPos X="63" Y="126"/>
@@ -135,6 +134,14 @@
         <CursorPos X="14"/>
         <UsageCount Value="20"/>
       </Unit15>
+      <Unit16>
+        <Filename Value="ArrayUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="16"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit16>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>

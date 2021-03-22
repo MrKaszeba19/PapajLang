@@ -46,6 +46,7 @@ units=(
     UnitEntity.pas
     UnitStack.pas
     UnitVariables.pas
+    ArrayUtils.pas
     UnitFunctions.pas
     UnitEnvironment.pas
     UnitREPL.pas

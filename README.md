@@ -1,8 +1,8 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version X.X.X (Leviathan)
-March 21, 2021  
+Version X.X.X (Leviathan)  
+March 22, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -79,7 +79,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :fr: France (Français) - *to be implemented*
 - :it: Italian (Italiano) - *to be implemented*
 - :morocco: Arabic (العربية) - *to be implemented*
-- :ru: Russian (русский) - *to be implemented*
+- :ru: Russian (Русский) - *to be implemented*
 - :norway: Norwegian (Norsk bokmål) - *to be implemented*
 - :norway: Norwegian (Norsk nynorsk) - *to be implemented*
 - :sweden: Swedish (Svenska) - *to be implemented*
