@@ -18,8 +18,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <TopLine Value="173"/>
-        <CursorPos X="25" Y="222"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="149"/>
+        <CursorPos X="6" Y="157"/>
         <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -122,25 +123,25 @@
         <UsageCount Value="21"/>
       </Unit13>
       <Unit14>
-        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3254"/>
-        <CursorPos Y="3271"/>
-        <UsageCount Value="10"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="UnitREPL.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="14"/>
-        <UsageCount Value="20"/>
-      </Unit15>
-      <Unit16>
         <Filename Value="ArrayUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="6"/>
         <CursorPos X="16"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3254"/>
+        <CursorPos Y="3271"/>
+        <UsageCount Value="10"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="UnitREPL.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14"/>
+        <UsageCount Value="20"/>
       </Unit16>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">

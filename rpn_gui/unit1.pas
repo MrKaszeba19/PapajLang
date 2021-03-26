@@ -154,17 +154,21 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
      // https://docs.moodle.org/dev/Table_of_locales
-     // showmessage(GetLocaleLanguage);
+     //showmessage(GetLocaleLanguage);
      case (GetLocaleLanguage) of
           'da_DK.UTF-8' : language := 'den';
           'Danish_Denmark.1252' : language := 'den';
+          'Danish' : language := 'den';
           'en.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
+          'English' : language := 'eng';
           'pl.UTF-8' : language := 'pol';
           'pl_PL.UTF-8' : language := 'pol';
           'Polish_Poland.1250' : language := 'pol';
+          'Polish' : language := 'pol';
           'he_IL.utf8' : language := 'hbr';
           'Hebrew_Israel.1255' : language := 'hbr';
+          'Hebrew' : language := 'hbr';
           else language := 'eng';
      end;
      case language of
