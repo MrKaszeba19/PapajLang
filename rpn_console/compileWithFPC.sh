@@ -10,6 +10,7 @@
 #    - s       : Compile and save the compilation files
 #    - S       : Compile, save the compilation files, along with assembler code
 #    - a       : Save assembler code
+#    - O       : Use optimization level 3
 #
 # ======================================================
 # =====================|SCRIPT|=========================
@@ -19,6 +20,7 @@ echo "Starting..."
 # ====== ARGS
 savetemps=0
 assembler=0
+optimize=""
 if [[ ${BASH_ARGV[0]} =~ s ]] ; 
 then
 	echo "Note: Save-temps level 1 activated";
@@ -35,6 +37,12 @@ if [[ ${BASH_ARGV[0]} =~ a ]] ;
 then
 	echo "Note: Assembler file is preserved";
 	assembler=1;
+fi
+
+if [[ ${BASH_ARGV[0]} =~ O ]] ; 
+then
+	echo "Note: Optimized level 3 compilation activated";
+	optimize="-O3";
 fi
 
 # ====== COMPILATION
@@ -60,9 +68,9 @@ echo "Compiling..."
 mv rpn.lpr rpn.pas
 
 if [[ $assembler -lt 1 ]] ; then
-	fpc ${units[*]} rpn.pas -o"rpn" 
+	fpc ${units[*]} rpn.pas -o"rpn" $opt
 else
-	fpc ${units[*]} rpn.pas -o"rpn" -a
+	fpc ${units[*]} rpn.pas -o"rpn" -a $opt
 fi
 
 # ------ If compiled

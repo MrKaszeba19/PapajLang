@@ -1,0 +1,16 @@
+@use(Math)
+@use(Array)
+
+function { 2 ^ } -> f
+function { sin } -> g
+
+function {
+	>k >g >f
+	0 -> sum
+	for ( $i : [ $k genNaturalDivisors ] ) {
+		$i f $k $i div g * $sum + -> sum
+	}
+	$sum
+} -> DirichletConvolve
+
+$f $g scan toNumber DirichletConvolve
