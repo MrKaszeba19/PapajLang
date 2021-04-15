@@ -27,11 +27,14 @@ end;
 {$ENDIF}
 
 const RPN_version = 'X.X.X';
+const RPN_update = 0;
 const RPN_codename = 'Leviathan';
 const RPN_generation = 3;
 const RPN_isStable = False;
-const RPN_date = '{$I %DATE%}';
+const RPN_date = {$I %DATE%};
+const RPN_updated = '';
 const RPN_target = {$I %FPCTARGET%};
+
 
 function convertToMDY(date : String) : String;
 begin
@@ -41,13 +44,19 @@ end;
 procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
-    write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_target+'.');
+    if (RPN_update <= 0) 
+        then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_target+'.')
+        else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_target+'.');
     if (RPN_isStable)
         then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
         else writeln(' May be more unstable than usual. 3:)');
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
-    //writeln('Released on '+RPN_date+'.');
-    writeln('Released on '+convertToMDY(RPN_date)+'.');
+    //if (RPN_updated = '')
+    //    then writeln('Released on '+RPN_date+'.')
+    //    else writeln('Released on '+RPN_date+', updated on '+RPN_updated+'.');
+    if (RPN_updated = '')
+        then writeln('Released on '+convertToMDY(RPN_date)+'.')
+        else writeln('Released on '+convertToMDY(RPN_date)+', updated on '+convertToMDY(RPN_date)+'.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;
