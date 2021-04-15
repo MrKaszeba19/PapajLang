@@ -2396,7 +2396,6 @@ begin
             w := fstudentt(x, y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
             stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
         'Math.distT' : begin
@@ -2408,7 +2407,6 @@ begin
             w := dstudentt(x, y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
             stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
         'Math.randomT' : begin
@@ -2416,7 +2414,6 @@ begin
             x := stack_pop(pocz[sets.StackPointer]).Num;
             z := rstudentt(x);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'Math.genT' : begin
@@ -2431,7 +2428,51 @@ begin
             end;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+
+        'Math.genNaturalDivisors' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            index := 1;
+            while (index*index <= x) do
+            begin
+                if (divides(ftrunc(x), index)) then 
+                begin
+                    stack_push(pocz[sets.StackPointer], buildNumber(index));
+                    if (index*index <> x) then stack_push(pocz[sets.StackPointer], buildNumber(x/index));
+                end;
+                index := index + 1;
+            end;
+        end;
+
+        'Math.genDivisors' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            index := 1;
+            while (index*index <= x) do
+            begin
+                if (divides(ftrunc(x), index)) then 
+                begin
+                    stack_push(pocz[sets.StackPointer], buildNumber(index));
+                    stack_push(pocz[sets.StackPointer], buildNumber(-index));
+                    if (index*index <> x) then begin 
+                        stack_push(pocz[sets.StackPointer], buildNumber(x/index));
+                        stack_push(pocz[sets.StackPointer], buildNumber(-x/index));
+                    end;
+                end;
+                index := index + 1;
+            end;
+        end;
+        'Math.divides' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildBoolean(divides(x, y)));
         end;
 
 		else begin

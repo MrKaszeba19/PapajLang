@@ -21,6 +21,7 @@ function fceiling(x : Extended) : Extended;
 
 function isPrime(x : Extended) : Boolean;
 function isInteger(x : Extended) : Boolean;
+function divides(x, y : Extended) : Boolean;
 
 function newton_int(n, k : Extended) : Extended;
 function newton_real(n, k : Extended) : Extended;
@@ -212,6 +213,11 @@ end;
 function isInteger(x : Extended) : Boolean;
 begin
     Result := (x = int(x));
+end;
+
+function divides(x, y : Extended) : Boolean;
+begin
+    Result := fmod(x,y) = 0
 end;
 
 //function newton_int(n, k : Extended) : Extended;
