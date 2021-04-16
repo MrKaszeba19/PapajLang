@@ -87,7 +87,7 @@ end;
 type TEntities = array of Entity;
 
 function verifyPackages(var L : TPackages) : Boolean;
-function default_settings() : TSettings;
+function default_settings(LoadAll : Boolean = False) : TSettings;
 procedure raiserror(Const msg : string);  
 //procedure checkSIGINT();
 
@@ -125,19 +125,20 @@ begin
 	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate;
 end;
 
-function default_packages() : TPackages;
+function default_packages(LoadAll : Boolean = False) : TPackages;
 var pom : TPackages;
 begin
-	pom.UseMath := false;
-	pom.UseString := false;
-	pom.UseAnything := false;
-    pom.UseArray := false;
-    pom.UseConsole := false;
-    pom.UseDate := false;
-	default_packages := pom;
+	pom.UseMath := LoadAll;
+	pom.UseString := LoadAll;
+	pom.UseAnything := LoadAll;
+    pom.UseArray := LoadAll;
+    pom.UseConsole := LoadAll;
+    pom.UseDate := LoadAll;
+	Result := pom;
 end;
 
-function default_settings() : TSettings;
+
+function default_settings(LoadAll : Boolean = False) : TSettings;
 var pom : TSettings;
 begin
   pom.Prevent := false;
@@ -148,7 +149,7 @@ begin
   pom.CaseSensitive := true;
   pom.StackPointer := 0;
   pom.KeepWorking := 2;
-  pom.Packages := default_packages();
+  pom.Packages := default_packages(LoadAll);
   pom.InfMode := false;
   pom.StringStart := 0;
   pom.StringMode := MCLIKE;

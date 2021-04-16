@@ -14,11 +14,11 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 ### Console application
 - Execute a command **rpn do** with a quoted PS expression (e.g. `rpn do "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- If you need help, you can type `rpn help`.
-- If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. If you want to include some input parameters that would be laid on the stack when script begins, 
-then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. 
-All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack.
+- If you need help, you can type `rpn help`, `rpn -h` or `rpn --help`.
+- If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. 
+- If you want to include some input parameters that would be laid on the stack when script begins, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack. (**_Runtime params are out of use as of now_**) 
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
+- If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
 
 ### GUI Application
 - Open an app executable.
@@ -38,6 +38,9 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
     * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
     then you may compile the project using `compileWithFPC.sh` (for Console app only)
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
+- (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
+    * modify your $PATH
+    * run `installBash.sh` to add `rpn` executable to your $PATH automatically
 
 ## PapajScript:
 

@@ -43,7 +43,7 @@ procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets
 function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
-function buildNewEnvironment() : PSEnvironment;
+function buildNewEnvironment(LoadAll : Boolean = False) : PSEnvironment;
 procedure disposeEnvironment(var env : PSEnvironment);
 
 implementation
@@ -281,18 +281,6 @@ begin
                 if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
                 if not lib_exceptions(i, pocz, Steps, sets, vardb) then
 
-                //if (not sets.Packages.UseMath) or (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) then
-			    //if (not sets.Packages.UseString) or (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) then
-                //if (not sets.Packages.UseArray) or (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb)) then
-                //if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) then
-                //if (not sets.Packages.UseDate) or (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) then
-    	        //
-                //if (not sets.Packages.UseMath) or (not lib_math(i, pocz, Steps, sets, vardb)) then
-			    //if (not sets.Packages.UseString) or (not lib_strings(i, pocz, Steps, sets, vardb)) then
-			    //if (not sets.Packages.UseArray) or (not lib_arrays(i, pocz, Steps, sets, vardb)) then
-    	        //if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(i, pocz, Steps, sets, vardb)) then
-                //if (not sets.Packages.UseDate) or (not lib_datetime(i, pocz, Steps, sets, vardb)) then
-
                 if (not sets.Packages.UseMath) or (
                     (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) 
                     and (not lib_math(i, pocz, Steps, sets, vardb)) 
@@ -328,79 +316,6 @@ begin
         end;
     end;
     checkExceptions(pocz, sets);
-end;
-
-procedure evaluate2(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
-var
-    Im     : Extended;
-    Code   : Longint;
-    StrEcx : String;
-    //dt     : TDateTime;
-begin
-    Steps := 1;
-
-    //checkSIGINT();
-
-    StrEcx := i.Substring(1, i.Length - 2);
-    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    begin
-		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-	end;
-	
-	if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
-	begin
-		if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    	begin
-			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		end else begin
-            // check
-            if sets.stringmode = MCLIKE then StrEcx := string_toC(StrEcx);
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
-	end else begin
-    	if not (sets.CaseSensitive) then i := LowerCase(i);
-    	Val (i,Im,Code);
-    	If Code<>0 then
-    	begin
-			if (not sets.Packages.UseMath) or ((sets.Packages.UseMath) and (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb))) then
-			if (not sets.Packages.UseString) or ((sets.Packages.UseString) and (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb))) then
-            if (not sets.Packages.UseArray) or ((sets.Packages.UseArray) and (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb))) then
-            if (not sets.Packages.UseConsole) or ((sets.Packages.UseConsole) and (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb))) then
-            if (not sets.Packages.UseDate) or ((sets.Packages.UseDate) and (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb))) then
-
-    	    if not lib_directives(i, pocz, Steps, sets, vardb) then
-    	    if not lib_constants(i, pocz, Steps, sets, vardb) then
-    	    if not lib_logics(i, pocz, Steps, sets, vardb) then
-    	    if not lib_variables(i, pocz, Steps, sets, vardb) then
-    	    if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
-			if not lib_math(i, pocz, Steps, sets, vardb) then
-			if not lib_strings(i, pocz, Steps, sets, vardb) then
-    	    if not lib_consolemanipulators(i, pocz, Steps, sets, vardb) then
-			if not lib_arrays(i, pocz, Steps, sets, vardb) then
-            if not lib_files(i, pocz, Steps, sets, vardb) then		
-    	    if not lib_exceptions(i, pocz, Steps, sets, vardb) then
-            if not lib_datetime(i, pocz, Steps, sets, vardb) then
-    	    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    		begin
-				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-			end else begin
-                //if TryStrToDateTime(i, dt) 
-                    //then stack_push(pocz[sets.StackPointer], buildDateTime(StrToDateTime(i)))
-                    //else 
-                if (vardb.isVarAssigned(i)) 
-                    then runFromString(i, pocz, Steps, sets, vardb)
-                    else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
-            end;
-    	end else begin
-    	    stack_push(pocz[sets.StackPointer], buildNumber(Im));
-    	end;
-
-		if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    	begin
-			raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		end;
-
-	end;
 end;
 
 function commentcut(input : String) : String;
@@ -919,13 +834,13 @@ begin
   	parseOpen := pocz;
 end;
 
-function buildNewEnvironment() : PSEnvironment;
+function buildNewEnvironment(LoadAll : Boolean = False) : PSEnvironment;
 var
 	env : PSEnvironment;
 begin
 	SetLength(env.Stack, 1);
 	env.Stack[0] := stack_null();
-	env.Settings := default_settings();
+	env.Settings := default_settings(LoadAll);
     env.Variables.Create;
     env.AutoReset := False;
     buildNewEnvironment := env;

@@ -40,7 +40,7 @@ else
 			echo "Done!"; 
 			echo "Setting up \$PATH..."
 		fi
-		if grep -Fxq "export \$PATH=$HOME/bin/rpn:\$PATH" $HOME/.bashrc ;
+		if grep -Fxq "export PATH=$HOME/bin/rpn:\$PATH" $HOME/.bashrc ;
 		then
 			if [ $verbose -eq 1 ] ; then 
 				echo "It looks like you've already installed RPN Calculator on $HOME/bin."

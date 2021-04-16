@@ -7,7 +7,7 @@ interface
 uses
     Classes, Process, SysUtils;
 
-function PS_parseString(input : string) : String;
+function PS_parseString(input : string; LoadAll : Boolean = false) : String;
 
 implementation
 
@@ -20,7 +20,7 @@ begin
   get_caller_frame(get_frame);  
 end; 
 
-function PS_parseString(input : string) : String;
+function PS_parseString(input : string; LoadAll : Boolean = false) : String;
 var
     res : String;
     env : PSEnvironment;
@@ -35,7 +35,7 @@ begin
     begin
         raiserror('ESyntax:CLevels: Wrong amount of braces and/or parentheses.');
     end else begin
-        env := buildNewEnvironment();
+        env := buildNewEnvironment(LoadAll);
         env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
         res := stack_show(env.Stack[0], env.Settings.Mask);
         disposeEnvironment(env);

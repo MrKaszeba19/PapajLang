@@ -9,13 +9,19 @@ program rpn;
 //{$R project.rc} 
 //{$ENDIF}
 
-
-uses Unit2, UnitREPL, //UnitEnvironment, 
-//StrUtils, 
-{$IFDEF UNIX}
-BaseUnix,
-{$ENDIF}
-SysUtils;
+uses
+    {$IFDEF UNIX}{$IFDEF UseCThreads}
+    cthreads,
+    {$ENDIF}{$ENDIF}
+    {$IFDEF MSWINDOWS}
+    windows,
+    {$ENDIF}
+    Classes, CustApp,
+    Unit2, UnitREPL,
+    {$IFDEF UNIX}
+    BaseUnix,
+    {$ENDIF}
+    SysUtils;
 
 {$IFDEF UNIX}
 procedure HandleSigInt(aSignal: LongInt); cdecl;
@@ -34,6 +40,16 @@ const RPN_isStable = False;
 const RPN_date = {$I %DATE%};
 const RPN_updated = '';
 const RPN_target = {$I %FPCTARGET%};
+
+type
+    RPNC = class(TCustomApplication)
+    protected
+        procedure DoRun; override;
+    public
+        constructor Create(TheOwner: TComponent); override;
+        destructor Destroy; override;
+        procedure WriteHelp; virtual;
+end;
 
 
 function convertToMDY(date : String) : String;
@@ -275,29 +291,25 @@ begin
 end;
 
 
-function read_file(filename : String) : String;
+function read_file(filename : String; LoadAll : Boolean = False) : String;
 var
     fun, S : String;
     fp     : Text;
 begin
     fun := '';
     assignfile(fp, filename);
-        reset(fp);
-        while not eof(fp) do
-        begin
-            readln(fp, S);
-            //if (S <> '') then S := cutCommentMultiline(S);
-            //S := DelChars(S, #13);
-            //S := DelChars(S, #10);
-            S := trim(S);
-            fun := fun + #10 + S;
-        end;
-        closefile(fp);
-        //writeln(fun);
-    read_file := PS_parseString(fun);
+    reset(fp);
+    while not eof(fp) do
+    begin
+        readln(fp, S);
+        S := trim(S);
+        fun := fun + #10 + S;
+    end;
+    closefile(fp);
+    read_file := PS_parseString(fun, LoadAll);
 end;
 
-function read_file_params(filename, params : String) : String;
+function read_file_params(filename, params : String; LoadAll : Boolean = False) : String;
 var
     fun, S : String;
     fp     : Text;
@@ -312,17 +324,16 @@ begin
             fun := fun + #10 + S;
         end;
         closefile(fp);
-    read_file_params := PS_parseString(params+fun);
+    read_file_params := PS_parseString(params+fun, LoadAll);
 end;
 
 // main
 
+procedure RPNC.DoRun;
 var
-   x, y : String;
-   i    : Integer;
-
-{$R *.res}
-
+    x, y    : String;
+    i       : Integer;
+    LoadAll : Boolean;
 begin
     {$IFDEF UNIX}
     if FpSignal(SigInt, @HandleSigInt) = signalhandler(SIG_ERR) then begin
@@ -331,50 +342,37 @@ begin
     end;
     {$ENDIF}
     randomize();
-	case ParamCount of
-		0 : begin
-			show_version();
-     		writeln('No arguments provided - run ''rpn help''');
-		end;
-		1 : begin
-			case ParamStr(1) of
-     			'help' : begin
-     				show_version();
-     				show_help();
-     			end;
-                'repl' : begin
-                    show_version();
-                    PS_runREPL();
+
+    if ParamCount = 0 then
+    begin
+        show_version();
+     	writeln('No arguments provided - run ''rpn help'' or ''rpn -h'' or ''rpn --help''');
+    end else begin
+        case ParamStr(1) of
+            'do' : begin
+                if HasOption('L', 'load-all') then begin
+                    LoadAll := True;
                 end;
-     			'expression' : begin
-     				show_version();
-     				show_expressions();
-     			end;
-     			'functions' : begin
-     				show_version();
-     				show_operands();
-     			end;
-                'packages' : begin
-     				show_version();
-     				show_packages();
-     			end
-     			else begin
-     				try
-                        x := read_file(ParamStr(1));
-        				if (x <> '') then writeln(x);
-              		except
-              			On E : Exception do
-                 		begin
-                      		writeln(StdErr, E.ToString);
-                 		end;
-              		end;
-     			end;
+                try
+                    x := PS_parseString(ParamStr(2), LoadAll);
+                    if (x <> '') then writeln(x);
+                except
+                    On E : Exception do
+                    begin
+                        writeln(StdErr, E.ToString);
+                    end;
+                end;
+            end;
+     		'expression' : begin
+     			show_version();
+     			show_expressions();
      		end;
-		end;
-        2 : begin
-            case ParamStr(1) of
-                'functions' : begin
-                    show_version();
+     		'functions' : begin
+     			show_version();
+                if ParamCount = 1 then
+                begin
+                    show_operands();
+                end else begin
                     case ParamStr(2) of
                         '1' : show_operands1();
                         '2' : show_operands2();
@@ -396,8 +394,17 @@ begin
                         end;
                     end;
                 end;
-                'packages' : begin
-                    show_version();
+     		end;
+            'help' : begin
+     			show_version();
+     			show_help();
+     		end;
+            'packages' : begin
+     			show_version();
+                if ParamCount = 1 then
+                begin
+                    show_packages();
+                end else begin
                     case ParamStr(2) of
                         '1' : show_packages1();
                         '2' : show_packages2();
@@ -411,70 +418,79 @@ begin
                         end;
                     end;
                 end;
-                'do' : begin
-                    try
-                        x := PS_parseString(ParamStr(2));
-                        if (x <> '') then writeln(x);
-                    except
-                        On E : Exception do
-                        begin
-                            writeln(StdErr, E.ToString);
-                        end;
-                    end;
+     		end;
+            'repl' : begin
+                LoadAll := False;
+                if HasOption('L', 'load-all') then begin
+                    writeln('chuj');
+                    LoadAll := True;
                 end;
-                'run' : begin
-                    try
-                        x := read_file(ParamStr(2));
-                        if (x <> '') then writeln(x);
-                    except
-                        On E : Exception do
-                        begin
-                            writeln(StdErr, E.ToString);
-                        end;
-                    end;
-                end;
+                show_version();
+                PS_runREPL(LoadAll);
             end;
-        end
-		else begin
-			case ParamStr(1) of
-                'functions' : begin
-                    show_version();
-                    case ParamStr(2) of
-                        '1' : show_operands1();
-                        '2' : show_operands2();
-                        '3' : show_operands3();
-                        '4' : show_operands4();
-                        '5' : show_operands5();
-                        '6' : show_operands6();
-                        '7' : show_operands7();
-                        '8' : show_operands8();
-                        'all': begin 
-                            show_operands1(); writeln();
-                            show_operands2(); writeln();
-                            show_operands3(); writeln();
-                            show_operands4(); writeln();
-                            show_operands5(); writeln();
-                            show_operands6(); writeln();
-                            show_operands7(); writeln();
-                            show_operands8();
-                        end;
+            'run' : begin
+                LoadAll := False;
+                if HasOption('L', 'load-all') then begin
+                    LoadAll := True;
+                end;
+                try
+                    x := read_file(ParamStr(2), LoadAll);
+                    if (x <> '') then writeln(x);
+                except
+                    On E : Exception do
+                    begin
+                        writeln(StdErr, E.ToString);
                     end;
                 end;
-                'run' : begin
-                    try
-                        y := '';
-                        for i := 3 to ParamCount do y := y + ParamStr(i) + ' ';
-                        x := read_file_params(ParamStr(2), y);
-                        if (x <> '') then writeln(x);
-                    except
-                        On E : Exception do
-                        begin
-                            writeln(StdErr, E.ToString);
-                        end;
-                    end;
+            end
+     		else begin
+                LoadAll := False;
+                if HasOption('L', 'load-all') then begin
+                    LoadAll := True;
                 end;
-            end;
-		end;
-	end;
-	
+     			try
+                    x := read_file(ParamStr(1), LoadAll);
+        			if (x <> '') then writeln(x);
+            	except
+            		On E : Exception do
+             		begin
+                  		writeln(StdErr, E.ToString);
+             		end;
+            	end;
+     		end;
+        end;
+    end;
+    Terminate;
+end;
+
+constructor RPNC.Create(TheOwner: TComponent);
+begin
+    inherited Create(TheOwner);
+    StopOnException:=True;
+end;
+
+destructor RPNC.Destroy;
+begin
+    inherited Destroy;
+end;
+
+procedure RPNC.WriteHelp;
+begin
+    show_version();
+    show_help();
+end;
+
+var App : RPNC;
+
+{$R *.res}
+
+begin
+    App := RPNC.Create(nil);
+    App.Title := 'RPN Calculator - PapajScript Interpreter';
+    App.Run;
+    App.Free;
+    //{$IFDEF MSWINDOWS}
+    //Sleep(500);
+    //{$ENDIF}
+    //readln();
 end.

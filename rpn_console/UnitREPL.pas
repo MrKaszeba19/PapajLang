@@ -19,7 +19,7 @@ type REPLTheme = record
     ColorReset   : ShortInt;
 end;
 
-procedure PS_runREPL();
+procedure PS_runREPL(LoadAll : Boolean = False);
 
 implementation
 
@@ -138,7 +138,7 @@ begin
 end;
 {$ENDIF}
 
-procedure PS_runREPL();
+procedure PS_runREPL(LoadAll : Boolean = False);
 var
     env     : PSEnvironment;
     command : String;
@@ -156,7 +156,7 @@ var
 begin
     normalTheme(th);
     maxdisp := 50;
-    env := buildNewEnvironment();
+    env := buildNewEnvironment(LoadAll);
     SetLength(history, 0);
     writeln('REPL for PapajScript');
     writeln();
