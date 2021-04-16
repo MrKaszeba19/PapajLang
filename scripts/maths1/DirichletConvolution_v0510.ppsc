@@ -11,4 +11,5 @@ function {
 	$sum
 } -> DirichletConvolve
 
-$f $g 4 DirichletConvolve
+scan toNumber -> $n
+$f $g $n DirichletConvolve

@@ -1,0 +1,14 @@
+function { 2 ^ } -> f
+function { Math.sin } -> g
+
+function {
+	>k >g >f
+	0 -> sum
+	for ( $i : [ $k Math.genNaturalDivisors ] ) {
+		$i f $k $i div g * $sum + -> sum
+	}
+	$sum
+} -> DirichletConvolve
+
+scan toNumber -> $n
+$f $g $n DirichletConvolve

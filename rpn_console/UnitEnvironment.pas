@@ -242,7 +242,95 @@ begin
   read_source := parseScoped(trim(fun), env.Stack, env.Settings, env.Variables); 
 end;
 
+procedure checkExceptions(var pocz : StackDB; var sets : TSettings);
+begin
+    if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    begin
+		raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+	end;
+end;
+
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
+var
+    Im     : Extended;
+    Code   : Longint;
+    StrEcx : String;
+begin
+    Steps := 1;
+
+    checkExceptions(pocz, sets);
+    if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
+	begin
+		//checkExceptions(pocz, sets);
+        StrEcx := i.Substring(1, i.Length - 2);
+        if sets.stringmode = MCLIKE then StrEcx := string_toC(StrEcx);
+        stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+	end else begin
+        if not (sets.CaseSensitive) then i := LowerCase(i);
+    	Val(i, Im, Code);
+        if Code <> 0 then
+        begin
+            if (vardb.isVarAssigned(i)) then
+            begin
+                runFromString(i, pocz, Steps, sets, vardb)
+            end else begin
+                if not lib_directives(i, pocz, Steps, sets, vardb) then
+    	        if not lib_constants(i, pocz, Steps, sets, vardb) then
+    	        if not lib_logics(i, pocz, Steps, sets, vardb) then
+    	        if not lib_variables(i, pocz, Steps, sets, vardb) then
+                if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
+                if not lib_exceptions(i, pocz, Steps, sets, vardb) then
+
+                //if (not sets.Packages.UseMath) or (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) then
+			    //if (not sets.Packages.UseString) or (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) then
+                //if (not sets.Packages.UseArray) or (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb)) then
+                //if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) then
+                //if (not sets.Packages.UseDate) or (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) then
+    	        //
+                //if (not sets.Packages.UseMath) or (not lib_math(i, pocz, Steps, sets, vardb)) then
+			    //if (not sets.Packages.UseString) or (not lib_strings(i, pocz, Steps, sets, vardb)) then
+			    //if (not sets.Packages.UseArray) or (not lib_arrays(i, pocz, Steps, sets, vardb)) then
+    	        //if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(i, pocz, Steps, sets, vardb)) then
+                //if (not sets.Packages.UseDate) or (not lib_datetime(i, pocz, Steps, sets, vardb)) then
+
+                if (not sets.Packages.UseMath) or (
+                    (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) 
+                    and (not lib_math(i, pocz, Steps, sets, vardb)) 
+                ) then
+			    if (not sets.Packages.UseString) or (
+                    (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) 
+                    and (not lib_strings(i, pocz, Steps, sets, vardb)) 
+                ) then
+                if (not sets.Packages.UseArray) or (
+                    (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb))
+                    and (not lib_arrays(i, pocz, Steps, sets, vardb)) 
+                ) then
+                if (not sets.Packages.UseConsole) or (
+                    (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) 
+                    and (not lib_consolemanipulators(i, pocz, Steps, sets, vardb))
+                ) then
+                if (not sets.Packages.UseDate) or (
+                    (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) 
+                    and (not lib_datetime(i, pocz, Steps, sets, vardb))
+                ) then
+
+                if not lib_files(i, pocz, Steps, sets, vardb) then		
+    	        
+    	        if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    		    begin
+			    	raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+			    end else begin
+                    stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+                end;
+            end;
+        end else begin
+            stack_push(pocz[sets.StackPointer], buildNumber(Im));
+        end;
+    end;
+    checkExceptions(pocz, sets);
+end;
+
+procedure evaluate2(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 var
     Im     : Extended;
     Code   : Longint;

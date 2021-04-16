@@ -1,3 +1,5 @@
+@use(Array)
+
 "Enter a number: " print
 scan toNumber >n
 

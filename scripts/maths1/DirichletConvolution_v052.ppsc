@@ -1,5 +1,4 @@
 @use(Math)
-@use(Array)
 
 function { 2 ^ } -> f
 function { sin } -> g
@@ -13,4 +12,5 @@ function {
 	$sum
 } -> DirichletConvolve
 
-$f $g scan toNumber DirichletConvolve
+scan toNumber -> $n
+$f $g $n DirichletConvolve

@@ -1,1 +1,2 @@
+@use(Math)
 qshift toNumber Math.isPrime

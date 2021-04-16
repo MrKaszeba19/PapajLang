@@ -1,4 +1,7 @@
 @silent
+@use(Array)
+@use(String)
+
 10 times { 20 rand } 
 all toArray >tab
 

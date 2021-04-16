@@ -1,3 +1,6 @@
+@use(Array)
+@use(Math)
+
 @money
 [ 10 Math.genNormStd ] -> T
 $T ( 0 >= ) Array.filter -> U 

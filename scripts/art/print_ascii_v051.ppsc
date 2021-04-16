@@ -1,0 +1,5 @@
+for ( 0 >i ; i 127 <= ; i ++ >i ) {
+	i print
+	"\t" print
+	i makeChar println
+}

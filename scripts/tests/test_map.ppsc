@@ -1,3 +1,5 @@
+@use(Array)
+
 [ 1 1 10 seq ] -> T
 
 function {
@@ -9,7 +11,7 @@ function {
 function {
 	function {
 		>x 
-		if (  [ 3 4 5 6 ] $x Array.belongs ) TRUE else FALSE
+		if (  [ 3 4 5 6 ] $x belongs ) TRUE else FALSE
 	} -> f
 	$T $f Array.map -> U
 	$U

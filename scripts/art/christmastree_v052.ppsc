@@ -1,0 +1,33 @@
+@use(String)
+
+"Enter tree size: " print
+scan toNumber -> n
+
+" " -> blank
+"*" -> leaf
+"|" -> log
+
+
+function {
+	n -> start
+	for ( 1 -> i ; i n <= ; i ++ -> i ) {
+		start -- times { blank print }
+		2 i * -- times { leaf print }
+		newln
+		start -- >start
+	}
+} -> drawLeaves
+
+function {
+	2 times {
+		n -- times { blank print }
+		$log print
+		newln
+	}
+} -> drawTrunk
+
+drawLeaves
+drawTrunk
+
+"Merry Christmas!" 2 n * pad println
+
