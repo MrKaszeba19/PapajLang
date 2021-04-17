@@ -6,7 +6,7 @@ function { sin } -> g
 function {
 	>k >g >f
 	0 -> sum
-	for ( $i : [ $k genNaturalDivisors ] ) {
+	for ( const $i : [ $k genNaturalDivisors ] ) {
 		$i f $k $i div g * $sum + -> sum
 	}
 	$sum

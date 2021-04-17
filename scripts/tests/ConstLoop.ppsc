@@ -1,0 +1,35 @@
+[ 1 1 20 seq ] -> $T
+
+$T println
+
+for ( const $i : $T ) {
+	$i ++ >i
+	$i print
+	" " print
+}
+newln
+
+
+$T println
+
+for ( $i : $T ) {
+	$i ++ >i
+	$i print
+	" " print
+}
+newln
+
+$T println
+
+for ( const $i : $T ) {
+	$i ++ >i
+	$i print
+	" " print
+}
+newln
+
+
+$T println
+
+
+

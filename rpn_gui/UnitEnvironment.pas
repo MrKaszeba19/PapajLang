@@ -119,7 +119,7 @@ var
     input, tname    : String;
     cnt             : LongInt;
     env             : PSEnvironment;
-    is_set          : Boolean;
+    is_set, alter   : Boolean;
 begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
     begin
@@ -137,6 +137,12 @@ begin
         L := StrCond.Split(':');
         L[0] := trim(L[0]);
         L[1] := trim(L[1]);
+        alter := True;
+        if (LeftStr(L[0], 6) = 'const ') then
+        begin
+            alter := False;
+            L[0] := RightStr(L[0], Length(L[0])-6);
+        end;
         if (L[0][1] = '$') then L[0] := RightStr(L[0], Length(L[0])-1);
         if (L[1][1] = '$') then L[1] := RightStr(L[1], Length(L[1])-1);
         // check if RHS is either variable or not
@@ -165,7 +171,7 @@ begin
                 begin
                     vardb.setLocalVariable(L[0], pocz[location].Values[index]);
                     pocz := parseOpen(StrInst, pocz, sets, vardb);
-                    pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
+                    if alter then pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
                 end;
             end;
             if is_set then 
