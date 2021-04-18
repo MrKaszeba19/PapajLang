@@ -74,6 +74,7 @@ type Entity = record
 	Num        : Extended;
     Num2       : Extended;
 	Str        : String;
+    Str2       : String;
 end;
 
 //type Entity = ^TStos;
@@ -87,7 +88,7 @@ end;
 type TEntities = array of Entity;
 
 function verifyPackages(var L : TPackages) : Boolean;
-function default_settings() : TSettings;
+function default_settings(LoadAll : Boolean = False) : TSettings;
 procedure raiserror(Const msg : string);  
 //procedure checkSIGINT();
 
@@ -101,7 +102,7 @@ function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
-function buildFunction(val : String) : Entity;
+function buildFunction(val : String; args : String = '') : Entity;
 function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
@@ -125,19 +126,20 @@ begin
 	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate;
 end;
 
-function default_packages() : TPackages;
+function default_packages(LoadAll : Boolean = False) : TPackages;
 var pom : TPackages;
 begin
-	pom.UseMath := false;
-	pom.UseString := false;
-	pom.UseAnything := false;
-    pom.UseArray := false;
-    pom.UseConsole := false;
-    pom.UseDate := false;
-	default_packages := pom;
+	pom.UseMath := LoadAll;
+	pom.UseString := LoadAll;
+	pom.UseAnything := LoadAll;
+    pom.UseArray := LoadAll;
+    pom.UseConsole := LoadAll;
+    pom.UseDate := LoadAll;
+	Result := pom;
 end;
 
-function default_settings() : TSettings;
+
+function default_settings(LoadAll : Boolean = False) : TSettings;
 var pom : TSettings;
 begin
   pom.Prevent := false;
@@ -148,7 +150,7 @@ begin
   pom.CaseSensitive := true;
   pom.StackPointer := 0;
   pom.KeepWorking := 2;
-  pom.Packages := default_packages();
+  pom.Packages := default_packages(LoadAll);
   pom.InfMode := false;
   pom.StringStart := 0;
   pom.StringMode := MCLIKE;
@@ -304,13 +306,14 @@ begin
 	buildBoolean := pom;
 end;
 
-function buildFunction(val : String) : Entity;
+function buildFunction(val : String; args : String = '') : Entity;
 var
 	pom : Entity;
 begin
 	//pom := New(Entity);
 	pom.EntityType := TFUN;
 	pom.Str := val;
+    pom.Str2 := args;
 	pom.Num := Length(val);
     pom.Num2 := 0;
 	//pom.EArray := nil;

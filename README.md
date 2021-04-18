@@ -1,9 +1,9 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version 0.5.1.1 (Khaf), Gen3 build  
+Version 0.5.1.2 (Khaf), Gen3 build  
 Released on March 21, 2021  
-Latest updated on April 15, 2021 
+Latest updated on April 18, 2021 
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -37,6 +37,9 @@ All these params are treated as PS expressions. For example `rpn run script.ppsc
     * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
     then you may compile the project using `compileWithFPC.sh` (for Console app only)
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
+- (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
+    * modify your $PATH
+    * run `installBash.sh` to add `rpn` executable to your $PATH automatically
 
 ## PapajScript:
 

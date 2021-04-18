@@ -27,12 +27,12 @@ end;
 {$ENDIF}
 
 const RPN_version = '0.5.1';
-const RPN_update = 1;
+const RPN_update = 2;
 const RPN_codename = 'Khaf';
 const RPN_generation = 3;
 const RPN_isStable = True;
 const RPN_date = 'March 21, 2021'; //{$I %DATE%};
-const RPN_updated = 'April 15, 2021';
+const RPN_updated = 'April 18, 2021';
 const RPN_target = {$I %FPCTARGET%};
 
 function convertToMDY(date : String) : String;
