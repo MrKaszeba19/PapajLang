@@ -3,7 +3,7 @@
 and interpreter of **PapajScript**  
 Version 0.5.1.2 (Khaf), Gen3 build  
 Released on March 21, 2021  
-Latest updated on April 18, 2021 
+Latest updated on April 18, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
