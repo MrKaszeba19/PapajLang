@@ -5,7 +5,8 @@ function {
 	>date
 	if ( date "a" occurs 1 >= ) {
 		FALSE
-	} elif ( date "/" occurs 2 =
+	} 
+	elif ( date "/" occurs 2 =
                  date "//" occurs 0 =
                  and ) {
 		date "/" splitBy 
@@ -19,7 +20,7 @@ function {
 		     or or )
 			FALSE else TRUE
 	}  
-	else FALSE 
+	else FALSE
 } >isValidString
 
 function {
@@ -30,7 +31,7 @@ function {
 	d toNumber -> d
 	y toNumber -> y
 	if ( m 0 < d 0 < y 0 < or or ) 
-		FALSE 
+		{ FALSE }
 	elif (
 		m 1 = d 31 <= and
 		m 2 = y 4 mod 0 = and y 400 mod 0 = and d 29 <= and

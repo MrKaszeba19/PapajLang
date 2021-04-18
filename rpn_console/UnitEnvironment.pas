@@ -572,6 +572,9 @@ begin
 		end else if  (L[index] = 'else:') or (L[index] = 'unless:') then begin
 			if (cond = 0) then permit := False
 			else permit := True;
+        end else if (L[index] = 'else') and (L[index] = 'if') then begin
+			mode := MELIF;
+            index := index + 1;
         end else if (L[index] = 'else') then begin
 			if (OldCond = 0) then permit := False
 			else permit := True;
@@ -688,6 +691,7 @@ begin
                     end else begin
                         mode := MNORM;
                     end;
+                    permit := True;
                 end;
                 index := cursor - 1;
             end else if L[index] = '[' then begin
@@ -838,7 +842,7 @@ begin
                 //    end;
                 //    mode := MNORM;
                 end else begin
-                    if mode = MNORM then permit := True;
+                    //if mode = MNORM then permit := True;
                     if (permit) then
                     begin
 	    			    if Steps = -1 then begin
