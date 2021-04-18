@@ -499,6 +499,7 @@ begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
 end;
 
+
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
 	//L      : TStrings;
@@ -654,6 +655,8 @@ begin
                             for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
                         end else if Steps = 0 then Steps := 1;;
                         OldCond := 0;
+                    end else begin
+                        mode := MNORM;
                     end;
                 end;
                 index := cursor - 1;
@@ -677,28 +680,6 @@ begin
                         for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
 	    		permit := True;
 	    		index := cursor - 1;
-            //end else if L[index] = 'else{' then begin
-	    	//	nestlv := 1;
-	    	//	nesttx := '';
-	    	//	cursor := index + 1;
-			//	while (nestlv > 0) and (cursor < Length(L)) do begin
-            //        nestlv := nestlv + checkLevel(L[cursor]);
-			//		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    	//		Inc(cursor);
-	    	//	end;
-            //    if (cond = 0) or (OldCond <> 0) then permit := False else permit := True;
-	    	//	if (permit) then
-            //    begin
-	    	//	    if Steps = -1 then begin
-	    	//	    	repeat
-	    	//	    		pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
-	    	//	    	until EOF;
-	    	//	    	stack_pop(pocz[sets.StackPointer]);
-	    	//	    end else for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-            //    end;
-            //    mode := MNORM;
-            //    permit := True;
-	    	//	index := cursor - 1;
             end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
                 nestlv := 1;
                 nesttx := '';
@@ -756,11 +737,16 @@ begin
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MELIF then begin
-                    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := True
-			        else permit := False;
-                    mode := MNORM;
+                    if (OldCond = 1) then
+                    begin
+                        pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    		        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if (cond = 0) then permit := True
+			            else permit := False;
+                        mode := MNORM;
+                    end else begin
+                        permit := False;
+                    end;
                 end else if mode = MWHILE then begin
                     StrCond := trimLeft(nesttx);
                     permit := True;
@@ -799,11 +785,14 @@ begin
 			        else permit := False;
                     mode := MNORM;
                 end else if mode = MELIF then begin
-                    evaluate(L[index], pocz, Steps, sets, vardb);
-	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if (cond = 0) then permit := True
-			        else permit := False;
-                    mode := MNORM;
+                    if (OldCond = 1) then
+                    begin
+                        evaluate(L[index], pocz, Steps, sets, vardb);
+	    		        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if (cond = 0) then permit := True
+			            else permit := False;
+                        mode := MNORM;
+                    end;
                 //end else if mode = MDO then begin
                 //    StrInst := trimLeft(L[index]);
                 //end else if mode = MDOWHILE then begin
@@ -817,6 +806,7 @@ begin
                 //    end;
                 //    mode := MNORM;
                 end else begin
+                    if mode = MNORM then permit := True;
                     if (permit) then
                     begin
 	    			    if Steps = -1 then begin
@@ -827,6 +817,8 @@ begin
 	    			    end else if Steps > 0 then
                             for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
                         OldCond := 0;
+                    end else begin
+                        mode := MNORM;
                     end;
 	    		    permit := True; 
                 end;
@@ -837,7 +829,7 @@ begin
 	sets.KeepWorking := 2;
 	//z := '';
 	//L.Free;
-  	parseOpen := pocz;
+  	Result := pocz;
 end;
 
 function buildNewEnvironment(LoadAll : Boolean = False) : PSEnvironment;

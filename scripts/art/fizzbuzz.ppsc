@@ -1,0 +1,19 @@
+@use(Math)
+@use(Array)
+@use(String)
+
+function {
+	>T
+	for ( $item : $T ) {
+		if ( $item 15 divides ) {
+			"FizzBuzz" -> $item
+		} elif ( $item 3 divides ) {
+			"Fizz" -> $item
+		} elif ( $item 5 divides ) {
+			"Buzz" -> $item
+		} 
+	}
+	$T
+} -> FizzBuzz
+
+[ 1 1 500 seq ] FizzBuzz println
