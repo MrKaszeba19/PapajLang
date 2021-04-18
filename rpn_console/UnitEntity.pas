@@ -74,6 +74,7 @@ type Entity = record
 	Num        : Extended;
     Num2       : Extended;
 	Str        : String;
+    Str2       : String;
 end;
 
 //type Entity = ^TStos;
@@ -101,7 +102,7 @@ function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
-function buildFunction(val : String) : Entity;
+function buildFunction(val : String; args : String = '') : Entity;
 function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
@@ -305,13 +306,14 @@ begin
 	buildBoolean := pom;
 end;
 
-function buildFunction(val : String) : Entity;
+function buildFunction(val : String; args : String = '') : Entity;
 var
 	pom : Entity;
 begin
 	//pom := New(Entity);
 	pom.EntityType := TFUN;
 	pom.Str := val;
+    pom.Str2 := args;
 	pom.Num := Length(val);
     pom.Num2 := 0;
 	//pom.EArray := nil;

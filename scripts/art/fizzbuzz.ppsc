@@ -2,8 +2,7 @@
 @use(Array)
 @use(String)
 
-function {
-	>T
+function ( T ) {
 	for ( $item : $T ) {
 		if ( $item 15 divides ) {
 			"FizzBuzz" -> $item

@@ -31,7 +31,8 @@ end;
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
 procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
 
-procedure doFunction(Str : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+//procedure doFunction(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
+procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
 procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 
 function commentcut(input : String) : String;
@@ -70,16 +71,45 @@ begin
     else checkLevel := 0;
 end;
 
-// LOOPS
+// FUNCTION
 
-procedure doFunction(Str : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure wrapArgs(args : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
+var
+    L : TStringArray;
+    i : LongInt;
+begin
+    L := args.Split(' ');
+    for i := Length(L)-1 downto 0 do
+    begin
+        if (L[i][1] = '$') then L[i] := RightStr(L[i], Length(L[i])-1);
+        if isValidForVariables(L[i])
+            then vardb.setLocalVariable(L[i], stack_pop(pocz[sets.StackPointer]))
+            else raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[i]+'"');
+
+    end;
+end;
+
+procedure doFunction2(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
 var
     i : ShortInt;
 begin
     vardb.addLayer();
-    pocz := parseOpen(Str, pocz, sets, vardb);
+    if (Args <> '') then wrapArgs(Args, pocz, sets, vardb);
+    pocz := parseOpen(Body, pocz, sets, vardb);
     vardb.removeLayer();
 end;
+
+procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+var
+    i : ShortInt;
+begin
+    vardb.addLayer();
+    if (f.Str2 <> '') then wrapArgs(f.Str2, pocz, sets, vardb);
+    pocz := parseOpen(f.Str, pocz, sets, vardb);
+    vardb.removeLayer();
+end;
+
+// LOOPS
 
 procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 begin
@@ -197,7 +227,7 @@ begin
     EntEax := vardb.getVariable(guess);
     if (EntEax.EntityType = TFUN) then
     begin
-        doFunction(EntEax.Str, pocz, sets, vardb);
+        doFunction(EntEax, pocz, sets, vardb);
     end else begin
         stack_push(pocz[sets.StackPointer], EntEax);
     end;
@@ -556,6 +586,7 @@ begin
 			if (OldCond = 0) then permit := False
 			else permit := True;
         end else if (L[index] = 'function') or (L[index] = 'fun') then begin
+            StrCond := '';
 			mode := MFUN;
         end else if (L[index] = 'elif') then begin
 			mode := MELIF;
@@ -624,14 +655,23 @@ begin
 	    			Inc(cursor);
 	    		end;
                 if mode = MFUN then begin
+                    //if (StrCond <> '') then nesttx := wrapArgs(nesttx, StrCond);
+                    //if (permit) then
+                    //    if Steps = -1 then begin
+                    //        repeat
+                    //            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                    //        until EOF;
+                    //        stack_pop(pocz[sets.StackPointer]);
+                    //    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                     if (permit) then
                         if Steps = -1 then begin
                             repeat
-                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
+                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx), StrCond)); 
                             until EOF;
                             stack_pop(pocz[sets.StackPointer]);
-                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
+                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx), StrCond));
                     mode := MNORM;
+                    StrCond := '';
                 end else if mode = MWHILE then begin
                     StrInst := trimLeft(nesttx);
                     doWhile(StrCond, StrInst, pocz, sets, vardb);
@@ -681,6 +721,7 @@ begin
 	    		permit := True;
 	    		index := cursor - 1;
             end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
+                StrCond := '';
                 nestlv := 1;
                 nesttx := '';
                 cursor := index + 1;
@@ -701,6 +742,7 @@ begin
                         for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
                     end else if Steps = 0 then Steps := 1;
                 mode := MNORM;
+                StrCond := '';
                 permit := True;
                 index := cursor - 1;
             //end else if (L[index] = 'if(') then begin
@@ -761,8 +803,8 @@ begin
                     StrCond := trimLeft(nesttx);
                     doDoUntil(StrCond, StrInst, pocz, sets, vardb);
                     mode := MNORM;
-                end else if mode = MWHILE then begin
-                    mode := MNORM;
+                end else if mode = MFUN then begin
+                    StrCond := trimLeft(nesttx);
                 end else begin
                     //stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
                     stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(nesttx)));
