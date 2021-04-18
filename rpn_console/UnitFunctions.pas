@@ -416,6 +416,12 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'frac' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(ffrac(z)));
+        end;
 		'sqrt' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1140,6 +1146,20 @@ begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             z := y*y;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.cub' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := y*y*y;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.inv' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/y;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -2040,6 +2060,60 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildBoolean(divides(x, y)));
         end;
+        'Math.countNaturalDivisors' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_tau(x)));
+        end;
+        'Math.sumNaturalDivisors' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_sigma(x)));
+        end;
+        'Math.fTau' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_tau(x)));
+        end;
+        'Math.fSigma' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_sigma(x)));
+        end;
+        'Math.fMobius' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_mobius(x)));
+        end;
+        'Math.fMu' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_mobius(x)));
+        end;
+        'Math.fEuler' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_euler(x)));
+        end;
+        'Math.fPhi' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_euler(x)));
+        end;
+        'Math.fPi' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_pi(x)));
+        end;
 
 		else begin
             Found := false;
@@ -2644,6 +2718,10 @@ var
 	StrEax : String;
 begin
 	Found := true;
+    if (i[1] <> '@') then begin
+        Found := false;
+        Exit;
+    end;
 	case i of
         '@silent' : begin
            sets.Prevent := true;

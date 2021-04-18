@@ -1,0 +1,12 @@
+@use(Math)
+
+"Insert an integer: " print
+scan toNumber trunc -> $n
+
+$n fTau 
+$n fSigma
+$n fMobius
+$n fMu
+$n fEuler
+$n fPhi
+$n fPi

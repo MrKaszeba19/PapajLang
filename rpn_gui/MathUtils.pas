@@ -15,6 +15,7 @@ function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
 
 function ftrunc(x : Extended) : Extended;
+function ffrac(x : Extended) : Extended;
 function fround(x : Extended) : Extended;
 function ffloor(x : Extended) : Extended;
 function fceiling(x : Extended) : Extended;
@@ -64,6 +65,12 @@ function fstudentt(x, nu : Extended) : Extended;
 function dstudentt(x, nu : Extended) : Extended;
 function rstudentt(df: Extended) : Extended;
 function rfischerf(v, w: Extended) : Extended;
+
+function num_tau(n : Extended) : Extended;
+function num_sigma(n : Extended) : Extended;
+function num_mobius(n : Extended) : Extended;
+function num_euler(n : Extended) : Extended;
+function num_pi(n : Extended) : Extended;
 
 implementation
 
@@ -135,6 +142,15 @@ begin
     if x <= High(LongInt) 
         then Result := trunc(x)
         else Result := fdiv(x,1);
+    //{$ENDIF}
+end;
+
+function ffrac(x : Extended) : Extended;
+begin
+    //{$IFDEF cpu32} writeln( 'cpu32' ); 
+    if x <= High(LongInt) 
+        then Result := frac(x)
+        else Result := fmod(x,1);
     //{$ENDIF}
 end;
 
@@ -301,6 +317,8 @@ begin
         Result := b;
     end;
 end;
+
+// ====== STATISTICS
 
 function LogGamma(x : Extended) : Extended;
 { Log of Gamma(x), exponentiate this to get Gamma(x), x! =
@@ -988,6 +1006,107 @@ begin
         Result := NaN
     else
         Result := rchisq(v) / v / (rchisq(w) / w);
+end;
+
+// ====== NUMBER THEORY
+
+function num_tau(n : Extended) : Extended;
+var
+    s, i : Extended;
+begin
+    s := 0;
+    i := 1;
+    while (i*i <= n) do
+    begin
+        if divides(n, i) then
+        begin
+            s := s + 1;
+            if (i*i <> n) then s := s + 1;
+        end; 
+        i := i + 1;
+    end;
+    Result := s;
+end;
+
+function num_sigma(n : Extended) : Extended;
+var
+    s, i : Extended;
+begin
+    s := 0;
+    i := 1;
+    while (i*i <= n) do
+    begin
+        if divides(n, i) then
+        begin
+            s := s + i;
+            if (i*i <> n) then s := s + fdiv(n, i);
+        end; 
+        i := i + 1;
+    end;
+    Result := s;
+end;
+
+function num_mobius(n : Extended) : Extended;
+var
+    i, p : Extended;
+begin
+    if (n = 1) then Result := 1
+    else begin
+        p := 0;
+        i := 1;
+        Result := 1;
+        while (i*i < n) do
+        begin
+            if divides(n, i) and (isPrime(i)) then
+            begin
+                if divides(n, i*i) then
+                begin
+                    Result := 0;
+                    break;
+                end else p := p + 1;
+            end;
+            i := i + 1;
+        end;
+        if (Result = 1) then
+        begin
+            if (fmod(p, 2) = 0)
+                then Result := 1
+                else Result := -1;
+        end;
+    end
+end;
+
+function num_euler(n : Extended) : Extended;
+var
+    p : LongInt;
+begin
+    Result := n;
+    p := 2;
+    while (p * p <= n) do
+    begin
+        if (fmod(n,p) = 0) then
+        begin
+            while (fmod(n,p) = 0) do n := n / p;
+            Result := Result * (1.0 - (1.0 / p));
+        end;
+        p := p + 1;
+    end;
+    if (n > 1) then Result := ftrunc(Result - (1.0 - (1.0 / n)));
+end;
+
+
+function num_pi(n : Extended) : Extended;
+var
+    s, i : Extended;
+begin
+    s := 0;
+    i := 1;
+    while (i <= n) do
+    begin
+        if (isPrime(i)) then s := s + 1;
+        i := i + 1;
+    end;
+    Result := s;
 end;
 
 

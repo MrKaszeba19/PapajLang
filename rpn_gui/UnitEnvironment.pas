@@ -89,16 +89,6 @@ begin
     end;
 end;
 
-procedure doFunction2(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
-var
-    i : ShortInt;
-begin
-    vardb.addLayer();
-    if (Args <> '') then wrapArgs(Args, pocz, sets, vardb);
-    pocz := parseOpen(Body, pocz, sets, vardb);
-    vardb.removeLayer();
-end;
-
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
 var
     i : ShortInt;
