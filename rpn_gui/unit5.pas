@@ -23,10 +23,19 @@ implementation
 uses Unit4, Unit1;
 
 function scan_value() : Entity;
+var
+    x : String;
+    dummyNumber:Extended; 
+    posError:integer; 
 begin
      arax := '';
      Form2.ShowModal;
-     scan_value := buildNumber(StrToFloat(arax));
+     val(arax, dummyNumber, posError); 
+     if (posError = 0) then begin
+ 		scan_value := buildNumber(dummyNumber);
+ 	end else begin
+ 		scan_value := buildString(arax);
+ 	end;
 end;
 
 function scan_number() : Entity;
