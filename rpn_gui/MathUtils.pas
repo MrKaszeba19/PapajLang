@@ -1091,7 +1091,7 @@ begin
         end;
         p := p + 1;
     end;
-    if (n > 1) then Result := ftrunc(Result - (1.0 - (1.0 / n)));
+    if (n > 1) then Result := fround(Result - (1.0 - (1.0 / n)));
 end;
 
 
