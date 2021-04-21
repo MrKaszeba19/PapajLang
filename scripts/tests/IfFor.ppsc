@@ -1,0 +1,13 @@
+// test for conditionals for for-loops without using brackets
+@use(Math)
+
+scan toNumber -> $x
+
+if ( $x isEven )
+	for ( 1 -> $i ; $i $x <= ; $i ++ -> $i ) {
+		$i println
+	}
+else
+	for ( $x -> $i ; $i 1 >= ; $i -- -> $i ) {
+		$i println
+	}

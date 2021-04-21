@@ -242,8 +242,6 @@ begin
         pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
     end; 
     disposeEnvironment(env);
-    //pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray', pocz, sets, vardb);
-    //wrapArrayFromString := stack_pop(pocz[sets.StackPointer]);
     wrapArrayFromString := ArrEcx;
 end;
 
@@ -287,7 +285,6 @@ begin
     checkExceptions(pocz, sets);
     if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
 	begin
-		//checkExceptions(pocz, sets);
         StrEcx := i.Substring(1, i.Length - 2);
         if sets.stringmode = MCLIKE then StrEcx := string_toC(StrEcx);
         stack_push(pocz[sets.StackPointer], buildString(StrEcx));
@@ -519,42 +516,44 @@ begin
 	parseScoped := parseOpen(input, pocz, sets, vardb);
 end;
 
-
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
-	//L      : TStrings;
-	L      : TStringArray;
-	i      : String;
-	index  : LongInt;
-	z      : String;
-	step   : Integer;
-	cursor : LongInt;
-	nestlv : ShortInt;
-	nesttx : String;
-    permit : Boolean;
-	cond   : ShortInt;
-    mode   : ShortInt;
+    L                : TStringArray;
+	i                : String;
+	index            : LongInt;
+	z                : String;
+	step             : Integer;
+	cursor           : LongInt;
+	nestlv           : ShortInt;
+	nesttx           : String;
+    permit           : Boolean;
+	cond             : ShortInt;
+    mode             : ShortInt;
     StrCond, StrInst : String;
-    OldCond : ShortInt;
-begin
-	//L := TStringlist.Create;
-	//L.Delimiter := ' ';
-	//L.QuoteChar := '"';
-	//L.StrictDelimiter := false;
-	//L.DelimitedText := input;
+    OldCond          : ShortInt;
+    ExecStr          : String;
+    BracesStr        : String;
+    BracketsStr      : String;
+    ParenthStr       : String;
+    InstructionBuilt : Boolean;
 
-	//L := input.Split([' ', #9, #13, #10], '"');
+begin
     L := input.Split([' ', #9, #13, #10]);
 
   	Steps := 1;
   	cond := -1;
   	permit := True;
     mode := MNORM;
+
+    ExecStr := '';
+    BracesStr := '';
+    ParenthStr := '';
+    BracketsStr := '';
+    InstructionBuilt := False;
+
   	index := 0;
-  	//while (index < L.Count) and (sets.KeepWorking > 0) do
 	while (input <> '') and (input <> #10) and (index < Length(L)) and (sets.KeepWorking > 0) do
 	begin
-		//writeln(L.Text);
 		if (sets.KeepWorking = 1) or (L[index] = '') then
 		begin
 			Inc(index);
@@ -562,305 +561,303 @@ begin
 			continue;
 		end;
 
-		if L[index] = '?' then begin
-			cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-        end else if (L[index] = 'if') then begin
-			mode := MIF;
-		end else if (L[index] = 'if:') then begin
-			if cond = 0 then permit := True
-			else permit := False;
-		end else if  (L[index] = 'else:') or (L[index] = 'unless:') then begin
-			if (cond = 0) then permit := False
-			else permit := True;
-        end else if (L[index] = 'else') and (L[index] = 'if') then begin
-			mode := MELIF;
-            index := index + 1;
-        end else if (L[index] = 'else') then begin
-			if (OldCond = 0) then permit := False
-			else permit := True;
-        end else if (L[index] = 'function') or (L[index] = 'fun') then begin
-            StrCond := '';
-			mode := MFUN;
-        end else if (L[index] = 'elif') then begin
-			mode := MELIF;
-        end else if (L[index] = 'do') then begin
-            mode := MDO;
-        end else if (L[index] = 'while') then begin
-            if mode = MDO then mode := MDOWHILE else mode := MWHILE;
-        end else if (L[index] = 'until') then begin
-            mode := MDOUNTIL;
-        end else if (L[index] = 'for') then begin
-            mode := MFOR;
-        end else if (L[index] = '->') then begin
-            if (L[index+1][1] = '$') then L[index+1] := RightStr(L[index+1], Length(L[index+1])-1);
-            if isValidForVariables(L[index+1]) then
-            begin
-                if LeftStr(L[index+1], 7) = 'global.' 
-                    then vardb.setGlobalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]))
-                    else
-                        //vardb.setVariable(StrEax, EntEax);
-                        vardb.setLocalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]));        
-            end else begin
-                raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[index+1]+'"');
+        case L[index] of
+            'if' : mode := MIF;
+            'elif' : mode := MELIF;
+            'else' : begin
+			    if (OldCond = 0) then permit := False
+			    else permit := True;
             end;
-            index := index + 1;
-		end else begin
-			//if L[index] = 'break' then break
-			//else if L[index] = 'continue' then begin 
-			//	Inc(index);
-			//	continue;
-			//end else
-            if (L[index] = '\"') then
-            begin
-                if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    	            begin
-			        raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		        end else stack_push(pocz[sets.StackPointer], buildString('"'));
-            end else if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
-                nesttx := L[index];
-	    		cursor := index + 1;
-				repeat
-					nesttx := nesttx + ' ' + L[cursor];
-                    Inc(cursor);
-	    		until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
-                if (RightStr(nesttx, 1) = '"') then
-	            begin
-                    nesttx := nesttx.Substring(1, nesttx.Length - 2);
-		            if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    	            begin
-			            raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-		            end else begin
-                        if sets.stringmode = MCLIKE then nesttx := string_toC(nesttx);
-                        stack_push(pocz[sets.StackPointer], buildString(nesttx));
-                    end;
+            'function' : mode := MFUN;
+            'fun' : mode := MFUN;
+            'do' : mode := MDO;
+            'while' : if mode = MDO then mode := MDOWHILE else mode := MWHILE;
+            'until' : mode := MDOUNTIL;
+            'for' : mode := MFOR;
+            '?' : begin
+                cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            end;
+            'if:' : begin
+                if cond = 0 then permit := True
+			    else permit := False;
+            end;
+            'else:' :  begin
+			    if (cond = 0) then permit := False
+			    else permit := True;
+            end;
+            'unless:' :  begin
+			    if (cond = 0) then permit := False
+			    else permit := True;
+            end; 
+            '->' : begin
+                if (L[index+1][1] = '$') then L[index+1] := RightStr(L[index+1], Length(L[index+1])-1);
+                if isValidForVariables(L[index+1]) then
+                begin
+                    if LeftStr(L[index+1], 7) = 'global.' 
+                        then vardb.setGlobalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]))
+                        else
+                            //vardb.setVariable(StrEax, EntEax);
+                            vardb.setLocalVariable(L[index+1], stack_pop(pocz[sets.StackPointer]));        
                 end else begin
-                    raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+                    raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[index+1]+'"');
                 end;
-                permit := True;
-	    		index := cursor - 1;
-			end else if L[index] = '{' then begin
-	    		nestlv := 1;
-	    		nesttx := '';
-	    		cursor := index + 1;
-				while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    			Inc(cursor);
-	    		end;
-                if mode = MFUN then begin
-                    //if (StrCond <> '') then nesttx := wrapArgs(nesttx, StrCond);
-                    //if (permit) then
-                    //    if Steps = -1 then begin
-                    //        repeat
-                    //            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
-                    //        until EOF;
-                    //        stack_pop(pocz[sets.StackPointer]);
-                    //    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
-                    if (permit) then
-                        if Steps = -1 then begin
-                            repeat
-                                stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx), StrCond)); 
-                            until EOF;
-                            stack_pop(pocz[sets.StackPointer]);
-                        end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx), StrCond));
-                    mode := MNORM;
-                    StrCond := '';
-                end else if mode = MWHILE then begin
-                    StrInst := trimLeft(nesttx);
-                    doWhile(StrCond, StrInst, pocz, sets, vardb);
-                    mode := MNORM;
-                end else if mode = MFOR then begin
-                    StrInst := trimLeft(nesttx);
-                    doFor(StrCond, StrInst, pocz, sets, vardb);
-                    mode := MNORM;
-                end else if mode = MDO then begin
-                    StrInst := trimLeft(nesttx);
+                index := index + 1;
+            end;
+            '\"' : begin
+                if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) 
+                    then raiserror(stack_pop(pocz[sets.StackPointer]).Str)
+		            else stack_push(pocz[sets.StackPointer], buildString('"'));
+		    end
+            else begin
+                if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
+                    nesttx := L[index];
+	    	    	cursor := index + 1;
+			    	repeat
+			    		nesttx := nesttx + ' ' + L[cursor];
+                        Inc(cursor);
+	    	    	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
+                    if (RightStr(nesttx, 1) = '"')
+                        then ExecStr := nesttx
+                        else raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+                    permit := True;
+	    	    	index := cursor - 1;
+                    InstructionBuilt := True;
+			    end else if L[index] = '{' then
+                begin
+                    nestlv := 1;
+	    	        nesttx := ''; //RightStr(L[index], Length(L[index])-1);
+	    	        cursor := index + 1;
+			        while (nestlv > 0) and (cursor < Length(L)) do begin
+                        nestlv := nestlv + checkLevel(L[cursor]);
+			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    	        	Inc(cursor);
+	    	        end;
+                    BracesStr := trimLeft(nesttx);
+                    if (mode <> MDO) then InstructionBuilt := True;
+                    index := cursor - 1;
+                end else if L[index] = '[' then begin
+	    	        nestlv := 1;
+	    	        nesttx := '';
+	    	        cursor := index + 1;
+			        while (nestlv > 0) and (cursor < Length(L)) do begin
+                        nestlv := nestlv + checkLevel(L[cursor]);
+			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    	        	Inc(cursor);
+	    	        end;
+			        BracketsStr := nesttx;
+                    InstructionBuilt := True;
+	    	        index := cursor - 1;
+                end else if (L[index] = 'fun{') or (L[index] = 'function{') then
+                begin
+                    mode := MFUN;
+                    nestlv := 1;
+	    	        nesttx := ''; //RightStr(L[index], Length(L[index])-1);
+	    	        cursor := index + 1;
+			        while (nestlv > 0) and (cursor < Length(L)) do begin
+                        nestlv := nestlv + checkLevel(L[cursor]);
+			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    	        	Inc(cursor);
+	    	        end;
+                    BracesStr := nesttx;
+                    InstructionBuilt := True;
+                    index := cursor - 1;
+                end else if L[index] = '(' then begin
+	    	        nestlv := 1;
+	    	        nesttx := '';
+	    	        cursor := index + 1;
+			        while (nestlv > 0) and (cursor < Length(L)) do begin
+                        nestlv := nestlv + checkLevel(L[cursor]);
+			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+	    	        	Inc(cursor);
+	    	        end;
+                    ParenthStr := trimLeft(nesttx);
+                    if mode in [MNORM, MIF, MELIF, MDOWHILE, MDOUNTIL] then InstructionBuilt := True;
+	    	        index := cursor - 1;
                 end else begin
-	    		    if (permit) then
+                    ExecStr := L[index];
+                    InstructionBuilt := True;
+                end;
+            end;
+        end;
+
+        if InstructionBuilt then
+        begin
+            case mode of
+                MNORM : begin
+                    if ExecStr <> '' then
                     begin
-	    		    	if Steps = -1 then begin
-	    		    		repeat
-	    		    			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
-	    		    		until EOF;
-	    		    		stack_pop(pocz[sets.StackPointer]);
-	    		    	end else if Steps > 0 then
+                        if (permit) then
                         begin
-                            for step := 1 to Steps do pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-                        end else if Steps = 0 then Steps := 1;;
+	    			        if Steps = -1 then begin
+	    			    	    repeat
+	    			    		    evaluate(ExecStr, pocz, Steps, sets, vardb);
+	    			    	    until EOF;
+	    			    	    stack_pop(pocz[sets.StackPointer]);
+	    			        end else if Steps > 0 then
+                                for step := 1 to Steps do 
+                                    evaluate(ExecStr, pocz, Steps, sets, vardb);
+                            OldCond := 0;
+                        end;
+	    		        permit := True; 
+                        ExecStr := '';
+                    end else if BracesStr <> '' then
+                    begin
+                        if (permit) then
+                        begin
+	    	            	if Steps = -1 then begin
+	    	            		repeat
+	    	            			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    	            		until EOF;
+	    	            		stack_pop(pocz[sets.StackPointer]);
+	    	            	end else if Steps > 0 then
+                            begin
+                                for step := 1 to Steps do 
+                                    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                            end else if Steps = 0 then Steps := 1;;
+                            OldCond := 0;
+                        //end else begin
+                        //    mode := MNORM;
+                        end;
+                        permit := True;
+                        BracesStr := '';
+                    end else if ParenthStr <> '' then
+                    begin
+                        if (permit) then
+                            if Steps = -1 then begin
+                                repeat
+	    	            			stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(ParenthStr)));
+	    	            		until EOF;
+                            end else if Steps > 0 then
+                                for step := 1 to Steps do 
+                                    stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(ParenthStr)));
+                        permit := True;
+                        ParenthStr := '';
+                    end else if BracketsStr <> '' then
+                    begin
+                        if (permit) then
+	    	            	if Steps = -1 then begin
+	    	            		repeat
+	    	            			stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(BracketsStr), pocz, sets, vardb));
+	    	            		until EOF;
+	    	            		stack_pop(pocz[sets.StackPointer]);
+	    	            	end else if Steps > 0 then
+                                for step := 1 to Steps do 
+                                    stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(BracketsStr), pocz, sets, vardb));
+	    	            permit := True;
+                        BracketsStr := '';
+                    end;
+                end;
+                MIF : begin
+                    if (ParenthStr <> '') then
+                    begin
+                        OldCond := 1;
+                        pocz := parseScoped(trimLeft(ParenthStr), pocz, sets, vardb);
+	    	            cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                        if cond = 0 then permit := True
+		                else permit := False;
+                        mode := MNORM;
+                        ParenthStr := '';
+                    end;                       
+                end;
+                MELIF : begin
+                    if (ParenthStr <> '') then
+                    begin
+                        if (OldCond = 1) then
+                        begin
+                            pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+	    	                cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                            if (cond = 0) then permit := True
+		                    else permit := False;
+                            mode := MNORM;
+                        end else begin
+                            permit := False;
+                        end;
+                        ParenthStr := '';
+                    end;
+                end;
+                MFUN : begin
+                    if BracesStr <> '' then
+                    begin
+                        if (permit) then
+                        begin
+                            if Steps = -1 then begin
+                                repeat
+                                    stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(BracesStr), ParenthStr)); 
+                                until EOF;
+                                stack_pop(pocz[sets.StackPointer]);
+                            end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(BracesStr), ParenthStr));
+
+                        end;
+                        mode := MNORM;
+                        permit := True;
+                        BracesStr := '';
+                        ParenthStr := '';
+                    end;
+                end;
+                //MDO : ;
+                MDOWHILE : begin
+                    if ParenthStr <> '' then 
+                    begin
+                        if BracesStr <> '' then ExecStr := BracesStr;
+                        if (permit) then 
+                        begin
+                            doDoWhile(ParenthStr, ExecStr, pocz, sets, vardb);
+                        end;
+                        mode := MNORM;
+                        BracesStr := '';
+                        ParenthStr := '';
+                        ExecStr := '';
+                        permit := True;
+                    end;
+                end;
+                MDOUNTIL : begin
+                    if ParenthStr <> '' then 
+                    begin
+                        if BracesStr <> '' then ExecStr := BracesStr;
+                        if (permit) then 
+                        begin
+                            doDoUntil(ParenthStr, ExecStr, pocz, sets, vardb);
+                        end;
+                        mode := MNORM;
+                        BracesStr := '';
+                        ParenthStr := '';
+                        ExecStr := '';
+                        permit := True;
+                    end;
+                end;
+                MWHILE : begin
+                    if ParenthStr <> '' then
+                    begin
+                        if BracesStr <> '' then ExecStr := BracesStr;
+                        if (permit) then 
+                        begin
+                            doWhile(ParenthStr, ExecStr, pocz, sets, vardb);
+                            OldCond := 0;
+                        end;
+                        mode := MNORM;
+                        BracesStr := '';
+                        ParenthStr := '';
+                        ExecStr := '';
+                        permit := True;
+                    end;
+                end;
+                MFOR : begin
+                    if BracesStr <> '' then ExecStr := BracesStr;
+                    if (permit) then 
+                    begin
+                        doFor(ParenthStr, ExecStr, pocz, sets, vardb);
                         OldCond := 0;
-                    end else begin
-                        mode := MNORM;
                     end;
+                    mode := MNORM;
+                    ExecStr := '';
+                    BracesStr := '';
+                    ParenthStr := '';
                     permit := True;
                 end;
-                index := cursor - 1;
-            end else if L[index] = '[' then begin
-	    		nestlv := 1;
-	    		nesttx := '';
-	    		cursor := index + 1;
-				while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    			Inc(cursor);
-	    		end;
-				//writeln(nesttx);
-	    		if (permit) then
-	    			if Steps = -1 then begin
-	    				repeat
-	    					pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
-	    				until EOF;
-	    				stack_pop(pocz[sets.StackPointer]);
-	    			end else if Steps > 0 then
-                        for step := 1 to Steps do stack_push(pocz[sets.StackPointer], wrapArrayFromString(trimLeft(nesttx), pocz, sets, vardb));
-	    		permit := True;
-	    		index := cursor - 1;
-            end else if (L[index] = 'fun{') or (L[index] = 'function{') then begin
-                StrCond := '';
-                nestlv := 1;
-                nesttx := '';
-                cursor := index + 1;
-                while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-                    Inc(cursor);
-                end;
-                //writeln(trimLeft(nesttx));
-                if (permit) then
-                    if Steps = -1 then begin
-                        repeat
-                            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
-                        until EOF;
-                        stack_pop(pocz[sets.StackPointer]);
-                    end else if Steps > 0 then
-                    begin
-                        for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
-                    end else if Steps = 0 then Steps := 1;
-                mode := MNORM;
-                StrCond := '';
-                permit := True;
-                index := cursor - 1;
-            //end else if (L[index] = 'if(') then begin
-            //    mode := MIF;
-            //    OldCond := 1;
-            //    nestlv := 1;
-            //    nesttx := '';
-            //    cursor := index + 1;
-            //    while (nestlv > 0) and (cursor < Length(L)) do begin
-            //        nestlv := nestlv + checkLevel(L[cursor]);
-			//		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-            //        Inc(cursor);
-            //    end;
-            //    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    	//	cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-            //    if cond = 0 then permit := True
-			//    else permit := False;
-            //    mode := MNORM;
-            //    index := cursor - 1;
-            end else if L[index] = '(' then begin
-	    		nestlv := 1;
-	    		nesttx := '';
-	    		cursor := index + 1;
-				while (nestlv > 0) and (cursor < Length(L)) do begin
-                    nestlv := nestlv + checkLevel(L[cursor]);
-					if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    			Inc(cursor);
-	    		end;
-                if mode = MIF then begin
-                    OldCond := 1;
-                    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if cond = 0 then permit := True
-			        else permit := False;
-                    mode := MNORM;
-                end else if mode = MELIF then begin
-                    if (OldCond = 1) then
-                    begin
-                        pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
-	    		        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                        if (cond = 0) then permit := True
-			            else permit := False;
-                        mode := MNORM;
-                    end else begin
-                        permit := False;
-                    end;
-                end else if mode = MWHILE then begin
-                    StrCond := trimLeft(nesttx);
-                    permit := True;
-                end else if mode = MFOR then begin
-                    StrCond := trimLeft(nesttx);
-                    permit := True;
-                end else if mode = MDOWHILE then begin
-                    StrCond := trimLeft(nesttx);
-                    doDoWhile(StrCond, StrInst, pocz, sets, vardb);
-                    mode := MNORM;
-                end else if mode = MDOUNTIL then begin
-                    StrCond := trimLeft(nesttx);
-                    doDoUntil(StrCond, StrInst, pocz, sets, vardb);
-                    mode := MNORM;
-                end else if mode = MFUN then begin
-                    StrCond := trimLeft(nesttx);
-                end else begin
-                    //stack_push(pocz[sets.StackPointer], raiseSyntaxErrorExpression(nesttx));
-                    stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(nesttx)));
-                    //if (permit) then
-                    //    if Steps = -1 then begin
-                    //        repeat
-                    //            stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx))); 
-                    //        until EOF;
-                    //        stack_pop(pocz[sets.StackPointer]);
-                    //    end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(nesttx)));
-                    permit := True;
-                end;
-	    		index := cursor - 1;
-            end else begin
-                if mode = MIF then begin
-                    OldCond := 1;
-                    evaluate(L[index], pocz, Steps, sets, vardb);
-	    		    cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                    if cond = 0 then permit := True
-			        else permit := False;
-                    mode := MNORM;
-                end else if mode = MELIF then begin
-                    if (OldCond = 1) then
-                    begin
-                        evaluate(L[index], pocz, Steps, sets, vardb);
-	    		        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                        if (cond = 0) then permit := True
-			            else permit := False;
-                        mode := MNORM;
-                    end;
-                //end else if mode = MDO then begin
-                //    StrInst := trimLeft(L[index]);
-                //end else if mode = MDOWHILE then begin
-                //    StrCond := trimLeft(L[index]);
-                //    while True do
-                //    begin
-                //        pocz := parseScoped(StrInst, pocz, sets, vardb);
-                //        pocz := parseScoped(StrCond, pocz, sets, vardb);
-                //        cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-                //        if (cond <> 0) then break;
-                //    end;
-                //    mode := MNORM;
-                end else begin
-                    //if mode = MNORM then permit := True;
-                    if (permit) then
-                    begin
-	    			    if Steps = -1 then begin
-	    				    repeat
-	    					    evaluate(L[index], pocz, Steps, sets, vardb);
-	    				    until EOF;
-	    				    stack_pop(pocz[sets.StackPointer]);
-	    			    end else if Steps > 0 then
-                            for step := 1 to Steps do evaluate(L[index], pocz, Steps, sets, vardb);
-                        OldCond := 0;
-                    end else begin
-                        mode := MNORM;
-                    end;
-	    		    permit := True; 
-                end;
-	    	end;
-	    end;
-    	Inc(index);
+            end;
+            InstructionBuilt := False;
+        end;
+        Inc(index);
   	end;
 	sets.KeepWorking := 2;
 	//z := '';
