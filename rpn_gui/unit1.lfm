@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 950
+  Left = 951
   Height = 589
-  Top = 161
+  Top = 162
   Width = 802
   Caption = 'RPN Calculator'
-  ClientHeight = 569
+  ClientHeight = 565
   ClientWidth = 802
   Constraints.MinHeight = 160
   Constraints.MinWidth = 800
@@ -12,10 +12,10 @@ object Form1: TForm1
   OnCreate = FormCreate
   ParentBiDiMode = False
   Position = poMainFormCenter
-  LCLVersion = '2.0.8.0'
+  LCLVersion = '2.0.6.0'
   object Edit1: TEdit
     Left = 8
-    Height = 23
+    Height = 26
     Top = 29
     Width = 664
     Anchors = [akTop, akLeft, akRight]
@@ -35,7 +35,7 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 8
-    Height = 15
+    Height = 16
     Top = 8
     Width = 660
     Anchors = [akTop, akLeft, akRight]
@@ -45,7 +45,7 @@ object Form1: TForm1
   end
   object Edit2: TEdit
     Left = 8
-    Height = 23
+    Height = 26
     Top = 60
     Width = 664
     Anchors = [akTop, akLeft, akRight]
@@ -56,7 +56,7 @@ object Form1: TForm1
   end
   inline SynEdit1: TSynEdit
     Left = 8
-    Height = 308
+    Height = 304
     Top = 117
     Width = 664
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -559,7 +559,7 @@ object Form1: TForm1
   object Button2: TButton
     Left = 680
     Height = 25
-    Top = 433
+    Top = 429
     Width = 112
     Anchors = [akRight, akBottom]
     Caption = 'Run script'
@@ -569,7 +569,7 @@ object Form1: TForm1
   object Memo1: TMemo
     Left = 8
     Height = 128
-    Top = 433
+    Top = 429
     Width = 662
     Anchors = [akLeft, akRight, akBottom]
     Color = 5914170
@@ -588,7 +588,7 @@ object Form1: TForm1
   end
   object Label2: TLabel
     Left = 8
-    Height = 15
+    Height = 16
     Top = 93
     Width = 660
     Anchors = [akTop, akLeft, akRight]
@@ -619,21 +619,29 @@ object Form1: TForm1
     end
     object MenuItem2: TMenuItem
       Caption = 'Language'
-      object MenuItem6: TMenuItem
+      object MenuLangDEN: TMenuItem
         Caption = 'Dansk'
-        OnClick = MenuItem6Click
+        OnClick = MenuLangDENClick
       end
-      object MenuItem4: TMenuItem
+      object MenuLangENG: TMenuItem
         Caption = 'English'
-        OnClick = MenuItem4Click
+        OnClick = MenuLangENGClick
       end
-      object MenuItem5: TMenuItem
+      object MenuLangCSB: TMenuItem
+        Caption = 'Kaszëbsczi'
+        OnClick = MenuLangCSBClick
+      end
+      object MenuLangCSB2: TMenuItem
+        Caption = 'Kašëbsči'
+        OnClick = MenuLangCSB2Click
+      end
+      object MenuLangPOL: TMenuItem
         Caption = 'Polski'
-        OnClick = MenuItem5Click
+        OnClick = MenuLangPOLClick
       end
-      object MenuItem7: TMenuItem
+      object MenuLangHBR: TMenuItem
         Caption = 'עברית'
-        OnClick = MenuItem7Click
+        OnClick = MenuLangHBRClick
       end
     end
   end

@@ -24,11 +24,13 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuLangCSB: TMenuItem;
+    MenuLangCSB2: TMenuItem;
     MenuQuit: TMenuItem;
-    MenuItem4: TMenuItem;
-    MenuItem5: TMenuItem;
-    MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
+    MenuLangENG: TMenuItem;
+    MenuLangPOL: TMenuItem;
+    MenuLangDEN: TMenuItem;
+    MenuLangHBR: TMenuItem;
     MenuLoad: TMenuItem;
     MenuSave: TMenuItem;
     OpenDialog1: TOpenDialog;
@@ -36,15 +38,17 @@ type
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
+    procedure MenuLangCSB2Click(Sender: TObject);
+    procedure MenuLangCSBClick(Sender: TObject);
     procedure OpenOfflineFile();
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuQuitClick(Sender: TObject);
-    procedure MenuItem4Click(Sender: TObject);
-    procedure MenuItem5Click(Sender: TObject);
-    procedure MenuItem6Click(Sender: TObject);
-    procedure MenuItem7Click(Sender: TObject);
+    procedure MenuLangENGClick(Sender: TObject);
+    procedure MenuLangPOLClick(Sender: TObject);
+    procedure MenuLangDENClick(Sender: TObject);
+    procedure MenuLangHBRClick(Sender: TObject);
     procedure MenuLoadClick(Sender: TObject);
     procedure MenuSaveClick(Sender: TObject);
   private
@@ -86,6 +90,18 @@ begin
                 ShowMessage('Error when loading a file.');
           end;
      end;
+end;
+
+procedure TForm1.MenuLangCSBClick(Sender: TObject);
+begin
+     language := 'csb';
+     Unit3.set1CSB();
+end;
+
+procedure TForm1.MenuLangCSB2Click(Sender: TObject);
+begin
+    language := 'csb2';
+    Unit3.set1CSB2();
 end;
 
 { TForm1 }
@@ -156,10 +172,14 @@ begin
      // https://docs.moodle.org/dev/Table_of_locales
      //showmessage(GetLocaleLanguage);
      case (GetLocaleLanguage) of
+          'csb.UTF-8' : language := 'csb';
+          'cab_PL.UTF-8' : language := 'csb';
           'da_DK.UTF-8' : language := 'den';
           'Danish_Denmark.1252' : language := 'den';
           'Danish' : language := 'den';
           'en.UTF-8' : language := 'eng';
+          'en_GB.UTF-8' : language := 'eng';
+          'en_US.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
           'English' : language := 'eng';
           'pl.UTF-8' : language := 'pol';
@@ -176,6 +196,8 @@ begin
           'eng' : set1ENG();
           'pol' : set1POL();
 	  'hbr' : set1HBR();
+          'csb' : set1CSB();
+          'csb2' : set1CSB2();
           else set1ENG();
      end;
      {$IFDEF MSWINDOWS}
@@ -193,23 +215,27 @@ begin
      Close;
 end;
 
-procedure TForm1.MenuItem4Click(Sender: TObject);
+procedure TForm1.MenuLangENGClick(Sender: TObject);
 begin
+     language := 'eng';
      Unit3.set1ENG();
 end;
 
-procedure TForm1.MenuItem5Click(Sender: TObject);
+procedure TForm1.MenuLangPOLClick(Sender: TObject);
 begin
+     language := 'poi';
      Unit3.set1POL();
 end;
 
-procedure TForm1.MenuItem6Click(Sender: TObject);
+procedure TForm1.MenuLangDENClick(Sender: TObject);
 begin
+     language := 'den';
      Unit3.set1DEN();
 end;
 
-procedure TForm1.MenuItem7Click(Sender: TObject);
+procedure TForm1.MenuLangHBRClick(Sender: TObject);
 begin
+     language := 'hbr';
      Unit3.set1HBR();
 end;
 

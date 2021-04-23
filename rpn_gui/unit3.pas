@@ -11,11 +11,15 @@ procedure set1DEN();
 procedure set1ENG();
 procedure set1POL();
 procedure set1HBR();
+procedure set1CSB();
+procedure set1CSB2();
 
 procedure set2DEN();
 procedure set2ENG();
 procedure set2POL();
 procedure set2HBR();
+procedure set2CSB();
+procedure set2CSB2();
 
 implementation
 uses Unit1, Unit4;
@@ -108,6 +112,51 @@ begin
      Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
+procedure set1CSB();
+begin
+     Unit1.Form1.Caption := 'Kalkùlatór OPN – PapajScript';
+     Unit1.Form1.Label1.Caption := 'Wësłów PS';
+     Unit1.Form1.Edit1.TextHint  := 'Nôpisze wësłów OPN rozdzélony spacëjama, np. "2 3 +" lub "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'Windzenié';
+     Unit1.Form1.Button1.Caption := 'Rëchuj!';
+     Unit1.Form1.MenuItem1.Caption := 'Aplikacëjô';
+     Unit1.Form1.MenuItem2.Caption := 'Jãzëk';
+     Unit1.Form1.MenuQuit.Caption := 'Zamkni';
+     Unit1.Form1.Button2.Caption := 'Zrësz';
+     Unit1.Form1.Label2.Caption := 'PapajScriptòwi kòd';
+     Unit1.Form1.MenuLoad.Caption := 'Wczëtôj skript z lopkù';
+     Unit1.Form1.MenuSave.Caption := 'Zôpisze skript do lopkù';
+     Unit1.Form1.OpenDialog1.Title := 'Wczëtôj skript z lopkù';
+     Unit1.Form1.SaveDialog1.Title := 'Zôpisze skript do lopkù';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+procedure set1CSB2();
+begin
+     Unit1.Form1.Caption := 'Kalkulator OPN – PapajScript';
+     Unit1.Form1.Label1.Caption := 'Vësłóv PS';
+     Unit1.Form1.Edit1.TextHint  := 'Napiše vësłóv OPN rozdzeloni spacijama, np. "2 3 +" lub "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'Vindzenié';
+     Unit1.Form1.Button1.Caption := 'Rëchuj!';
+     Unit1.Form1.MenuItem1.Caption := 'Aplikacijô';
+     Unit1.Form1.MenuItem2.Caption := 'Jãzik';
+     Unit1.Form1.MenuQuit.Caption := 'Zamkni';
+     Unit1.Form1.Button2.Caption := 'Zreš';
+     Unit1.Form1.Label2.Caption := 'PapajScriptovi kod';
+     Unit1.Form1.MenuLoad.Caption := 'Včëtô skript z lopku';
+     Unit1.Form1.MenuSave.Caption := 'Zôpiše skript do lopku';
+     Unit1.Form1.OpenDialog1.Title := 'Včëtô skript z lopku';
+     Unit1.Form1.SaveDialog1.Title := 'Zôpiše skript do lopku';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+
 procedure set2ENG();
 begin
      Unit4.Form2.Caption := 'Scan an expression';
@@ -147,5 +196,27 @@ begin
      Unit4.Form2.Label1.BiDiMode := bdRightToLeft;
      Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
+
+procedure set2CSB();
+begin
+     Unit4.Form2.Caption := 'Wczëtôj wësłów';
+     Unit4.Form2.Label1.Caption := 'Wësłów';
+     Unit4.Form2.Button1.Caption := 'Zacwierdze';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
+
+procedure set2CSB2();
+begin
+     Unit4.Form2.Caption := 'Vczëtô vësłóv';
+     Unit4.Form2.Label1.Caption := 'Vësłóv';
+     Unit4.Form2.Button1.Caption := 'Zacvjerdze';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
+
+
 
 end.

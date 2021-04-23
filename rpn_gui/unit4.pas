@@ -41,7 +41,8 @@ var
 	mask    : String;
 begin
      try
-        Unit5.arax := Unit2.PS_parseString(Form2.Edit1.Text);
+        //Unit5.arax := Unit2.PS_parseString(Form2.Edit1.Text);
+        Unit5.arax := Form2.Edit1.Text;
         Close;
      except
         ShowMessage('Error!');
@@ -56,6 +57,8 @@ begin
           'eng' : Unit3.set2ENG();
           'pol' : Unit3.set2POL();
           'hbr' : Unit3.set2HBR();
+          'csb' : Unit3.set1CSB();
+          'csb2' : Unit3.set1CSB2();
           else Unit3.set2ENG();
      end;
 end;
