@@ -1,0 +1,8 @@
+@use(Math)
+@use(Array)
+
+scan toNumber trunc -> $n
+
+[ 2 2 $n factorial seq ]
+	fun{ countNaturalDivisors } map
+	findMax ++

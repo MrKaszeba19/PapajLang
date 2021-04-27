@@ -510,6 +510,23 @@ begin
     checkParentheses := isValid;
 end;
 
+function getScopedString(var L : TStringArray; var cursor : Integer; initStr : String = '') : String;
+var
+    nestlv : LongInt;
+    nesttx : String;
+begin
+    nestlv := 1;
+	nesttx := '';
+    Inc(cursor);
+	while (nestlv > 0) and (cursor < Length(L)) do begin
+        nestlv := nestlv + checkLevel(L[cursor]);
+		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
+		Inc(cursor);
+	end;
+    Dec(cursor);
+    Result := trimLeft(nesttx);
+end;
+
 
 function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 begin
@@ -624,55 +641,18 @@ begin
                     InstructionBuilt := True;
 			    end else if L[index] = '{' then
                 begin
-                    nestlv := 1;
-	    	        nesttx := ''; //RightStr(L[index], Length(L[index])-1);
-	    	        cursor := index + 1;
-			        while (nestlv > 0) and (cursor < Length(L)) do begin
-                        nestlv := nestlv + checkLevel(L[cursor]);
-			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    	        	Inc(cursor);
-	    	        end;
-                    BracesStr := trimLeft(nesttx);
+                    BracesStr := getScopedString(L, index);
                     if (mode <> MDO) then InstructionBuilt := True;
-                    index := cursor - 1;
                 end else if L[index] = '[' then begin
-	    	        nestlv := 1;
-	    	        nesttx := '';
-	    	        cursor := index + 1;
-			        while (nestlv > 0) and (cursor < Length(L)) do begin
-                        nestlv := nestlv + checkLevel(L[cursor]);
-			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    	        	Inc(cursor);
-	    	        end;
-			        BracketsStr := nesttx;
+                    BracketsStr := getScopedString(L, index);
                     InstructionBuilt := True;
-	    	        index := cursor - 1;
                 end else if (L[index] = 'fun{') or (L[index] = 'function{') then
                 begin
-                    mode := MFUN;
-                    nestlv := 1;
-	    	        nesttx := ''; //RightStr(L[index], Length(L[index])-1);
-	    	        cursor := index + 1;
-			        while (nestlv > 0) and (cursor < Length(L)) do begin
-                        nestlv := nestlv + checkLevel(L[cursor]);
-			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    	        	Inc(cursor);
-	    	        end;
-                    BracesStr := nesttx;
+                    BracesStr := getScopedString(L, index);
                     InstructionBuilt := True;
-                    index := cursor - 1;
                 end else if L[index] = '(' then begin
-	    	        nestlv := 1;
-	    	        nesttx := '';
-	    	        cursor := index + 1;
-			        while (nestlv > 0) and (cursor < Length(L)) do begin
-                        nestlv := nestlv + checkLevel(L[cursor]);
-			        	if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-	    	        	Inc(cursor);
-	    	        end;
-                    ParenthStr := trimLeft(nesttx);
+                    ParenthStr := getScopedString(L, index);
                     if mode in [MNORM, MIF, MELIF, MDOWHILE, MDOUNTIL] then InstructionBuilt := True;
-	    	        index := cursor - 1;
                 end else begin
                     ExecStr := L[index];
                     InstructionBuilt := True;
@@ -706,13 +686,13 @@ begin
                         begin
 	    	            	if Steps = -1 then begin
 	    	            		repeat
-	    	            			pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb); 
+	    	            			pocz := parseScoped(BracesStr, pocz, sets, vardb); 
 	    	            		until EOF;
 	    	            		stack_pop(pocz[sets.StackPointer]);
 	    	            	end else if Steps > 0 then
                             begin
                                 for step := 1 to Steps do 
-                                    pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                                    pocz := parseScoped(BracesStr, pocz, sets, vardb);
                             end else if Steps = 0 then Steps := 1;;
                             OldCond := 0;
                         //end else begin
@@ -725,11 +705,11 @@ begin
                         if (permit) then
                             if Steps = -1 then begin
                                 repeat
-	    	            			stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(ParenthStr)));
+	    	            			stack_push(pocz[sets.StackPointer], buildExpression(ParenthStr));
 	    	            		until EOF;
                             end else if Steps > 0 then
                                 for step := 1 to Steps do 
-                                    stack_push(pocz[sets.StackPointer], buildExpression(trimLeft(ParenthStr)));
+                                    stack_push(pocz[sets.StackPointer], buildExpression(ParenthStr));
                         permit := True;
                         ParenthStr := '';
                     end else if BracketsStr <> '' then
@@ -751,7 +731,7 @@ begin
                     if (ParenthStr <> '') then
                     begin
                         OldCond := 1;
-                        pocz := parseScoped(trimLeft(ParenthStr), pocz, sets, vardb);
+                        pocz := parseScoped(ParenthStr, pocz, sets, vardb);
 	    	            cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                         if cond = 0 then permit := True
 		                else permit := False;
@@ -764,7 +744,7 @@ begin
                     begin
                         if (OldCond = 1) then
                         begin
-                            pocz := parseScoped(trimLeft(nesttx), pocz, sets, vardb);
+                            pocz := parseScoped(ParenthStr, pocz, sets, vardb);
 	    	                cond := trunc(stack_pop(pocz[sets.StackPointer]).Num);
                             if (cond = 0) then permit := True
 		                    else permit := False;
@@ -782,10 +762,10 @@ begin
                         begin
                             if Steps = -1 then begin
                                 repeat
-                                    stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(BracesStr), ParenthStr)); 
+                                    stack_push(pocz[sets.StackPointer], buildFunction(BracesStr, ParenthStr)); 
                                 until EOF;
                                 stack_pop(pocz[sets.StackPointer]);
-                            end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(trimLeft(BracesStr), ParenthStr));
+                            end else for step := 1 to Steps do stack_push(pocz[sets.StackPointer], buildFunction(BracesStr, ParenthStr));
 
                         end;
                         mode := MNORM;
