@@ -90,8 +90,6 @@ begin
 end;
 
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
-var
-    i : ShortInt;
 begin
     vardb.addLayer();
     if (f.Str2 <> '') then wrapArgs(f.Str2, pocz, sets, vardb);
@@ -527,6 +525,22 @@ begin
     Result := trimLeft(nesttx);
 end;
 
+function getQuotedString(var L : TStringArray; var cursor : Integer) : String;
+var
+    nesttx : String;
+begin
+    nesttx := L[cursor];
+	Inc(cursor);
+	repeat
+		nesttx := nesttx + ' ' + L[cursor];
+        Inc(cursor);
+	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
+    Dec(cursor);
+    if (RightStr(nesttx, 1) = '"')
+        then Result := nesttx
+        else raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+end;
+
 
 function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 begin
@@ -536,17 +550,11 @@ end;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 var
     L                : TStringArray;
-	i                : String;
 	index            : LongInt;
-	z                : String;
 	step             : Integer;
-	cursor           : LongInt;
-	nestlv           : ShortInt;
-	nesttx           : String;
     permit           : Boolean;
 	cond             : ShortInt;
     mode             : ShortInt;
-    StrCond, StrInst : String;
     OldCond          : ShortInt;
     ExecStr          : String;
     BracesStr        : String;
@@ -627,17 +635,8 @@ begin
 		    end
             else begin
                 if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
-                    nesttx := L[index];
-	    	    	cursor := index + 1;
-			    	repeat
-			    		nesttx := nesttx + ' ' + L[cursor];
-                        Inc(cursor);
-	    	    	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
-                    if (RightStr(nesttx, 1) = '"')
-                        then ExecStr := nesttx
-                        else raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+                    ExecStr := getQuotedString(L, index);
                     permit := True;
-	    	    	index := cursor - 1;
                     InstructionBuilt := True;
 			    end else if L[index] = '{' then
                 begin
