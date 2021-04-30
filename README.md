@@ -74,7 +74,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 ## Languages support for the GUI application (Linux)
 - :uk: **English** - *default*
 - :denmark: **Danish** (Dansk)
-- :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and new orthography
+- :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and alternative orthography
 - :poland: **Polish** (Polski)
 - :israel: **Hebrew** (עברית)
 - :de: German (Deutsch) - *to be implemented*
