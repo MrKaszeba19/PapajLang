@@ -647,6 +647,7 @@ begin
                     InstructionBuilt := True;
                 end else if (L[index] = 'fun{') or (L[index] = 'function{') then
                 begin
+                    mode := MFUN;
                     BracesStr := getScopedString(L, index);
                     InstructionBuilt := True;
                 end else if L[index] = '(' then begin

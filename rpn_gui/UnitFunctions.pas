@@ -1149,6 +1149,20 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Math.cub' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := y*y*y;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.inv' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/y;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
 		'Math.exp' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1215,143 +1229,21 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
-        'Math.sin' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+        'Math.sign' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := sin(y);
+            if (y = 0)
+                then z := 0
+                else z := y/abs(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
-        'Math.cos' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+        'Math.sgn' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := cos(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.csc' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := 1/sin(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.sec' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := 1/cos(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.tan' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := sin(y)/cos(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.cot' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := cos(y)/sin(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arcsin' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arcsin(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arccos' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arccos(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arctan' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arctan(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arccot' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := PI/2-arctan(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.sinh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := sinh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.cosh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := cosh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.csch' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := 1/sinh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.sech' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := 1/cosh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.tanh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := sinh(y)/cosh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.coth' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := cosh(y)/sinh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arcsinh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arcsinh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arccosh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arccosh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arctanh' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := arctanh(y);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            stack_push(pocz[sets.StackPointer], buildNumber(z));
-        end;
-        'Math.arccoth' : begin
-          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(pocz[sets.StackPointer]).Num;
-            z := 0.5*ln((y+1)/(x-1));
+            if (y = 0)
+                then z := 0
+                else z := y/abs(y);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
@@ -1448,6 +1340,207 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+
+        // Trigonometrics
+
+        'Math.sin' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sin(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.cos' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cos(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.csc' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/sin(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.sec' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/cos(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.tan' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sin(y)/cos(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.cot' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cos(y)/sin(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcsin' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arcsin(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccos' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arccos(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arctan' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arctan(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccot' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := PI/2-arctan(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcsec' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1.0 / y;
+            z := arccos(z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccsc' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1.0 / y;
+            z := arcsin(z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.sinh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.cosh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.csch' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.sech' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 1/cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.tanh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := sinh(y)/cosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.coth' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := cosh(y)/sinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcsinh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arcsinh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccosh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arccosh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arctanh' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := arctanh(y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arccoth' : begin
+          	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 0.5*ln((y+1)/(x-1));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arsinh' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(y + sqrt(y*y + 1));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcosh' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(y + sqrt(y*y - 1));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.artanh' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 0.5*ln((1+y)/(1-y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcoth' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := 0.5*ln((y+1)/(y-1));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arsech' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln((1 + sqrt(1 - y*y)) / y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.arcsch' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            z := ln(1.0/y + sqrt(1.0/(y*y) + 1));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
         'Math.toRadians' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1462,6 +1555,7 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+
 
 		// boolean functions for numbers
         'Math.isPrime' : begin
@@ -1495,10 +1589,23 @@ begin
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildBoolean((isInteger(y)) and (y >= 0)));
-            //stack_push(pocz[sets.StackPointer], buildBoolean((trunc(y) = y) and (y >= 0)));
         end;
 
+        // constants
+		'Math.PI' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(PI));
+        end;
+        'Math.EU' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(EU));
+        end;
+        'Math.FI' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(FI));
+        end;
+		'Math.EM' : begin
+          stack_push(pocz[sets.StackPointer], buildNumber(EM));
+        end;
 
+        // Statistics
 		'Math.gamma' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -1770,21 +1877,6 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
-
-		// constants
-		'Math.PI' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(PI));
-        end;
-        'Math.EU' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(EU));
-        end;
-        'Math.FI' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(FI));
-        end;
-		'Math.EM' : begin
-          stack_push(pocz[sets.StackPointer], buildNumber(EM));
-        end;
-
         'Math.funcGamma' : begin
 			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             z := stack_pop(pocz[sets.StackPointer]).Num;
@@ -2002,6 +2094,8 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
 
+
+        // Number Theory
         'Math.genNaturalDivisors' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
@@ -2017,7 +2111,6 @@ begin
                 index := index + 1;
             end;
         end;
-
         'Math.genDivisors' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
