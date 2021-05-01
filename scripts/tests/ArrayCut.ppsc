@@ -1,0 +1,7 @@
+@use(Array)
+
+[ 1 1 20 seq ] -> $T
+
+$T ( 3 mod 0 = ) filter println
+$T ( 3 mod 0 = ) cut println
+
