@@ -1,0 +1,34 @@
+@use(Math)
+@use(String)
+
+function ( n ) {
+	$n toString length
+} -> intlen
+
+function ( n ) {
+	$n log10 trunc ++
+} -> intlen2
+
+function ( n ) {
+	0 -> $res
+	while ( $n 1 > ) {
+		$res ++ -> $res
+		$n 1 shr -> $n
+		//$n 10 div -> $n
+	}
+	$res
+} -> binlen
+
+function { 
+	NULL	
+	do {
+		rem
+		"Type an integer: " print
+		scan toNumber clone -> $x
+	} until ( $x isInteger )
+} -> getInteger
+
+getInteger -> $n
+$n intlen println
+$n intlen2 println
+$n binlen println

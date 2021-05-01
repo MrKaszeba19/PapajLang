@@ -552,10 +552,10 @@ var
     L                : TStringArray;
 	index            : LongInt;
 	step             : Integer;
-    permit           : Boolean;
+    permit           : Boolean = True;
 	cond             : ShortInt;
     mode             : ShortInt;
-    OldCond          : ShortInt;
+    OldCond          : ShortInt = 0;
     ExecStr          : String;
     BracesStr        : String;
     BracketsStr      : String;
@@ -567,7 +567,7 @@ begin
 
   	Steps := 1;
   	cond := -1;
-  	permit := True;
+  	//permit := True;
     mode := MNORM;
 
     ExecStr := '';

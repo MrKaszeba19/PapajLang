@@ -385,6 +385,30 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'shr' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := trunc(x) shr trunc(y);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'shl' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := trunc(x) shl trunc(y);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildNumber(x));
+            	stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end;
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
         
 
 
