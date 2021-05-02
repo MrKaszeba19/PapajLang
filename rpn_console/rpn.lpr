@@ -331,8 +331,7 @@ end;
 
 procedure RPNC.DoRun;
 var
-    x, y    : String;
-    i       : Integer;
+    x       : String;
     LoadAll : Boolean;
 begin
     {$IFDEF UNIX}

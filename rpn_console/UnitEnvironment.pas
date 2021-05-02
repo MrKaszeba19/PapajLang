@@ -553,28 +553,28 @@ var
 	index            : LongInt;
 	step             : Integer;
     permit           : Boolean = True;
-	cond             : ShortInt;
-    mode             : ShortInt;
+	cond             : ShortInt = -1;
+    mode             : ShortInt = MNORM;
     OldCond          : ShortInt = 0;
-    ExecStr          : String;
-    BracesStr        : String;
-    BracketsStr      : String;
-    ParenthStr       : String;
-    InstructionBuilt : Boolean;
+    ExecStr          : String = '';
+    BracesStr        : String = '';
+    BracketsStr      : String = '';
+    ParenthStr       : String = '';
+    InstructionBuilt : Boolean = False;
 
 begin
     L := input.Split([' ', #9, #13, #10]);
 
   	Steps := 1;
-  	cond := -1;
-  	//permit := True;
-    mode := MNORM;
+  	//cond := -1;
+  	////permit := True;
+    //mode := MNORM;
 
-    ExecStr := '';
-    BracesStr := '';
-    ParenthStr := '';
-    BracketsStr := '';
-    InstructionBuilt := False;
+    //ExecStr := '';
+    //BracesStr := '';
+    //ParenthStr := '';
+    //BracketsStr := '';
+    //InstructionBuilt := False;
 
   	index := 0;
 	while (input <> '') and (input <> #10) and (index < Length(L)) and (sets.KeepWorking > 0) do
