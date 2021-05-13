@@ -1,0 +1,23 @@
+@use(String)
+
+function { 
+	getAscii 
+	3 +
+	makeChar
+} -> CesarRight
+
+function { 
+	getAscii 
+	3 -
+	makeChar
+} -> CesarLeft
+
+
+
+scan toString -> s
+
+$s $CesarRight map -> u
+$u println
+
+$u $CesarLeft map -> s
+$s println

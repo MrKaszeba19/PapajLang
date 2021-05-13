@@ -58,6 +58,7 @@ function assertCharLocated(var stack : TStack; val : Entity; operand : String) :
 function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
 function raiseExceptionUnknownArray(var stack : TStack; operand : String) : Entity;
 function raiseSyntaxErrorExpression(operand : String) : Entity;
+function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
@@ -533,6 +534,11 @@ end;
 function raiseSyntaxErrorExpression(operand : String) : Entity;
 begin
     raiseSyntaxErrorExpression := raiseException('ESyntax:CExpression: Syntax Error at expression "('+operand+' )".');
+end;
+
+function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
+begin
+    Result := raiseException('EInput:CMaxStrLen: String length constraint violated (max length '+IntToStr(MaxLength)+' of "'+str+'") at "'+operand+'".');
 end;
 
 // exceed boundaries
