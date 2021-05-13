@@ -7,9 +7,6 @@ interface
 uses
   Classes, SysUtils, Unit2, UnitEntity;
 
-const
-  is_gui = false;
-
 function scan_value() : Entity;
 function scan_number() : Entity;
 function scan_string() : Entity;

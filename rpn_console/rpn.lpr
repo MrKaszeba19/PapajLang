@@ -17,7 +17,7 @@ uses
     windows,
     {$ENDIF}
     Classes, CustApp,
-    Unit2, UnitREPL,
+    Unit2, UnitREPL, RPNAbout,
     {$IFDEF UNIX}
     BaseUnix,
     {$ENDIF}
@@ -31,15 +31,6 @@ begin
     Halt(1);
 end;
 {$ENDIF}
-
-const RPN_version = 'X.X.X';
-const RPN_update = 0;
-const RPN_codename = 'Leviathan';
-const RPN_generation = 3;
-const RPN_isStable = False;
-const RPN_date = {$I %DATE%};
-const RPN_updated = '';
-const RPN_target = {$I %FPCTARGET%};
 
 type
     RPNC = class(TCustomApplication)
@@ -61,8 +52,8 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     if (RPN_update <= 0) 
-        then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_target+'.')
-        else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_target+'.');
+        then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetCPU+'.')
+        else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetCPU+'.');
     if (RPN_isStable)
         then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
         else writeln(' May be more unstable than usual. 3:)');

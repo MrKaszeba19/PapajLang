@@ -1,5 +1,5 @@
 === UNITS
-Units that are identical for both projects (PapajScript files):
+Units that are identical for both projects (PapajScript interpreter files):
 – Unit2.pas (the main engine of PS)
 – UnitEntity.pas (PS's entities, settings and some constants)
 – UnitFunctions.pas (PS's built-in functions)
@@ -10,6 +10,7 @@ Units that are identical for both projects (PapajScript files):
 – DTUtils.pas (PS datetime management functions)
 – ArrayUtils.pas (PS array functions)
 – ConsoleUtils.pas (a better Crt substitute for Unix systems)
+– RPNAbout.pas (constants containing interpreter information)
 
 Units that exist in both projects, but they differ slightly in each of them.
 – Unit5.pas (A connector between the console output or GUI and PS language)
@@ -47,4 +48,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 03/22/2021
+Paul Lipkowski, 05/13/2021

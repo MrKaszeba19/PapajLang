@@ -48,6 +48,7 @@ fi
 # ====== COMPILATION
 # ------ Preparation
 units=(
+    RPNAbout.pas
     MathUtils.pas
     ConsoleUtils.pas
     DTUtils.pas

@@ -3,7 +3,7 @@
   <ProjectSession>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="17">
+    <Units Count="18">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -37,7 +37,7 @@
         <Filename Value="unit3.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit3"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="86"/>
         <CursorPos X="63" Y="126"/>
         <UsageCount Value="31"/>
@@ -61,7 +61,6 @@
         <Filename Value="unit5.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit5"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="4"/>
         <CursorPos X="25" Y="37"/>
@@ -81,7 +80,7 @@
       <Unit8>
         <Filename Value="UnitFunctions.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="1412"/>
         <CursorPos X="18" Y="1465"/>
         <UsageCount Value="24"/>
@@ -126,7 +125,7 @@
       <Unit14>
         <Filename Value="ArrayUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <CursorPos X="16"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
@@ -144,6 +143,14 @@
         <CursorPos X="14"/>
         <UsageCount Value="20"/>
       </Unit16>
+      <Unit17>
+        <Filename Value="RPNAbout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <CursorPos Y="21"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit17>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>

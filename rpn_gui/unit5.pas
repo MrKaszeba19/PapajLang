@@ -7,9 +7,6 @@ interface
 uses
   Classes, SysUtils, Unit2, UnitEntity;
 
-const
-    is_gui = true;
-
 var
    arax : String;
 

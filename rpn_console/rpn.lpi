@@ -42,7 +42,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="11">
+    <Units Count="12">
       <Unit0>
         <Filename Value="rpn.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -86,8 +86,11 @@
       <Unit10>
         <Filename Value="ArrayUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ArrayUtils"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="RPNAbout.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
