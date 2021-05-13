@@ -2340,6 +2340,43 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
+        'String.trimChars' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := StrEbx;
+            while StrEcx[1] = StrEax[1] do Delete(StrEcx, 1, 1);
+            while StrEcx[Length(StrEcx)] = StrEax[1] do SetLength(StrEcx, Length(StrEcx)-1);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.trimCharsLeft' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := StrEbx;
+            while StrEcx[1] = StrEax[1] do Delete(StrEcx, 1, 1);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
+        'String.trimCharsRight' : begin
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := StrEbx;
+            while StrEcx[Length(StrEcx)] = StrEax[1] do SetLength(StrEcx, Length(StrEcx)-1);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
         'String.padLeft' : begin
         	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
@@ -2373,34 +2410,49 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
-        'String.padSpacesLeft' : begin
-        	if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+        'String.padCharsLeft' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadLeft(StrEbx, trunc(y));
+            StrEcx := AddChar(StrEax[1], StrEbx, trunc(y));
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
-        'String.padSpacesRight' : begin
+        'String.padCharsRight' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadRight(StrEbx, trunc(y));
+            StrEcx := AddCharR(StrEax[1], StrEbx, trunc(y));
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
-        'String.padSpaces' : begin
+        'String.padChars' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertCharLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := PadCenter(StrEbx, trunc(y));
+            IntEax := 0;
+            IntEbx := trunc(y)-Length(StrEbx);
+            StrEcx := StrEbx;
+            while IntEax < IntEbx do
+            begin
+                if (IntEax mod 2 = 0) 
+                    then StrEcx := StrEax[1] + StrEcx
+                    else StrEcx := StrEcx + StrEax[1];
+                IntEax := IntEax + 1;
+            end; 
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end;
