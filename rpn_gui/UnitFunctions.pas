@@ -2918,9 +2918,170 @@ begin
                 stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end else Found := False;
         end;
-		else Found := false;
+        'String.filter' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                StrEcx := 'sfilt_'+IntToStr(DateTimeToUnix(Now));
+                StrEbx := '';
+                vardb.addLayer();
+                for index := 1 to Length(StrEax) do
+                begin
+                    vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
+                    pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
+                        then StrEbx := StrEbx + StrEax[index];
+    		    end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.cut' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                StrEcx := 'scutt_'+IntToStr(DateTimeToUnix(Now));
+                StrEbx := '';
+                vardb.addLayer();
+                for index := 1 to Length(StrEax) do
+                begin
+                    vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
+                    pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) 
+                        then StrEbx := StrEbx + StrEax[index];
+    		    end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduce' : begin
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                vardb.addLayer();
+                for index := 1 to Length(StrEax) do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduceFromFirst' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                StrEbx := StrEax[1];
+                vardb.addLayer();
+                for index := 2 to Length(StrEax) do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduceLeft' : begin
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                vardb.addLayer();
+                for index := 1 to Length(StrEax) do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduceLeftFromFirst' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                StrEbx := StrEax[1];
+                vardb.addLayer();
+                for index := 2 to Length(StrEax) do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduceRight' : begin
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                vardb.addLayer();
+                for index := Length(StrEax) downto 1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+        'String.reduceRightFromLast' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                StrEbx := StrEax[Length(StrEax)];
+                vardb.addLayer();
+                for index := Length(StrEax)-1 downto 1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+                    stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                    doFunction(EntEax, pocz, sets, vardb);
+                    StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end else Found := False;
+        end;
+
+
+        else begin
+        	Found := false;
+        end;
 	end;
-	lib_strings := Found;
+	Result := Found;
 end;
 
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -4141,106 +4302,124 @@ begin
             end else Found := False;
         end;
         'Array.reduce' : begin
-            EntEbx := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TVEC) then
             begin
-                stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
                 EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], EntEbx);
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.reduceLeft' : begin
-            EntEbx := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TVEC) then
             begin
-                stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
                 EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], EntEbx);
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.reduceFromFirst' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            EntEbx := pocz[trunc(ArrEax.Num)].Values[0];
-            for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) then
             begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                EntEbx := pocz[trunc(ArrEax.Num)].Values[0];
+                for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
                 stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
-                EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.reduceLeftFromFirst' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            EntEbx := pocz[trunc(ArrEax.Num)].Values[0];
-            for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) then
             begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                EntEbx := pocz[trunc(ArrEax.Num)].Values[0];
+                for index := 1 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
                 stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
-                EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.reduceRight' : begin
-            EntEbx := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            for index := Length(pocz[trunc(ArrEax.Num)].Values)-1 downto 0 do
+            if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TVEC) then
             begin
-                stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
                 EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                for index := Length(pocz[trunc(ArrEax.Num)].Values)-1 downto 0 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], EntEbx);
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.reduceRightFromLast' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            EntEbx := pocz[trunc(ArrEax.Num)].Values[Length(pocz[trunc(ArrEax.Num)].Values)-1];
-            for index := Length(pocz[trunc(ArrEax.Num)].Values)-2 downto 0 do
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) then
             begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                EntEbx := pocz[trunc(ArrEax.Num)].Values[Length(pocz[trunc(ArrEax.Num)].Values)-1];
+                for index := Length(pocz[trunc(ArrEax.Num)].Values)-2 downto 0 do
+                begin
+                    stack_push(pocz[sets.StackPointer], EntEbx);
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    EntEbx := stack_pop(pocz[sets.StackPointer]);
+    		    end;
                 stack_push(pocz[sets.StackPointer], EntEbx);
-                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
-                doFunction(EntEax, pocz, sets, vardb);
-                EntEbx := stack_pop(pocz[sets.StackPointer]);
-    		end;
-            stack_push(pocz[sets.StackPointer], EntEbx);
-            vardb.removeLayer();
+                vardb.removeLayer();
+            end else Found := False;
         end;
         'Array.join' : begin
             if  (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) 
@@ -4290,42 +4469,48 @@ begin
             end else Found := False;
         end;
         'Array.filter' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            StrEax := 'filt_'+IntToStr(DateTimeToUnix(Now));
-            stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
-            ArrEbx := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) then
             begin
-                vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
-                pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
-                if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then
-                    stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
-    		end;
-            vardb.removeLayer();
-            stack_push(pocz[sets.StackPointer], ArrEbx);
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := 'afilt_'+IntToStr(DateTimeToUnix(Now));
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                    pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
         end;
         'Array.cut' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
-            EntEax := stack_pop(pocz[sets.StackPointer]);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            StrEax := 'filt_'+IntToStr(DateTimeToUnix(Now));
-            stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
-            ArrEbx := stack_pop(pocz[sets.StackPointer]);
-            vardb.addLayer();
-            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TVEC) then
             begin
-                vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
-                pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
-                if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then
-                    stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
-    		end;
-            vardb.removeLayer();
-            stack_push(pocz[sets.StackPointer], ArrEbx);
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                StrEax := 'acutt_'+IntToStr(DateTimeToUnix(Now));
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                vardb.addLayer();
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                    pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                vardb.removeLayer();
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
         end;
         'Array.splitByExpression' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;

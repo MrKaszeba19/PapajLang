@@ -1,0 +1,8 @@
+@use(String)
+
+"Colour!" -> $s
+
+$s println
+
+$s ( "u" = )  cut println
+$s ( "u" != ) filter println

@@ -1,0 +1,35 @@
+@use(String)
+
+"Test 1" println
+"abcdefghij" -> T
+$T println
+$T function ( x y ) { x y bind }   "" reduce println
+$T function ( a b ) { a b concat } "" reduce println
+
+newln
+"Test 2" println
+"abcdefghij" -> T
+$T println
+$T fun{ bind } "" reduce println
+$T fun{ concat } "" reduce println
+
+newln
+"Test 3" println
+"abcdefghij" -> T
+$T println
+$T fun{ bind } reduceFromFirst println
+$T fun{ concat } reduceFromFirst println
+
+newln
+"Test 4" println
+"abcdefghij" -> T
+$T println
+$T fun{ bind } reduceRightFromLast println
+$T fun{ concat } reduceRightFromLast println
+
+newln
+"Test 5" println
+"abcdefghij" -> T
+$T println
+$T fun{ swap bind } reduceFromFirst println
+$T fun{ swap concat } reduceFromFirst println
