@@ -325,12 +325,12 @@ var
     x       : String;
     LoadAll : Boolean;
 begin
-    {$IFDEF UNIX}
-    if FpSignal(SigInt, @HandleSigInt) = signalhandler(SIG_ERR) then begin
-        Writeln('Failed to install signal error: ', fpGetErrno);
-        Halt(1);
-    end;
-    {$ENDIF}
+    //{$IFDEF UNIX}
+    //if FpSignal(SigInt, @HandleSigInt) = signalhandler(SIG_ERR) then begin
+    //    Writeln('Failed to install signal error: ', fpGetErrno);
+    //    Halt(1);
+    //end;
+    //{$ENDIF}
     randomize();
 
     if ParamCount = 0 then

@@ -90,7 +90,7 @@ end;
 function pow(x, y : Extended) : Extended;
 var
     s : Extended;
-    i : integer;
+    i : LongInt;
 begin
     s := 1;
     i := 1;
@@ -125,7 +125,7 @@ end;
 function fact(x:Extended):Extended;
 var
     s : Extended;
-    i : integer;
+    i : LongInt;
 begin
     s := 1;
     i := 1; 
@@ -139,7 +139,7 @@ end;
 function ftrunc(x : Extended) : Extended;
 begin
     //{$IFDEF cpu32} writeln( 'cpu32' ); 
-    if x <= High(LongInt) 
+    if abs(x) <= High(LongInt) 
         then Result := trunc(x)
         else Result := fdiv(x,1);
     //{$ENDIF}
@@ -148,7 +148,7 @@ end;
 function ffrac(x : Extended) : Extended;
 begin
     //{$IFDEF cpu32} writeln( 'cpu32' ); 
-    if x <= High(LongInt) 
+    if abs(x) <= High(LongInt) 
         then Result := frac(x)
         else Result := fmod(x,1);
     //{$ENDIF}
