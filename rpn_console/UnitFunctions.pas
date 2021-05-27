@@ -646,6 +646,69 @@ begin
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNumber(Ord(StrEcx[1])));
         end;
+        'isNumber' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TNUM 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isBoolean' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TBOO
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isString' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TSTR 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isArray' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TVEC 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isNull' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TNIL 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isException' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TEXC 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isLogicalExpression' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TEXP 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isFunction' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TFUN 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
+        'isDateTime' : begin
+            EntEax := stack_get(pocz[sets.StackPointer]);
+            if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
+            if EntEax.EntityType = TDAT 
+                then stack_push(pocz[sets.StackPointer], buildBoolean(True))
+                else stack_push(pocz[sets.StackPointer], buildBoolean(False));
+        end;
         //'length' : begin
         //    if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, TVEC, i)) then Exit; 
         //    if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
