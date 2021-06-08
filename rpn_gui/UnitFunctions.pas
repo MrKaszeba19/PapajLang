@@ -3254,6 +3254,22 @@ begin
                 stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end else Found := False;
         end;
+        'String.first' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax[1])); 
+            end else Found := False;
+        end;
+        'String.last' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax[Length(StrEax)])); 
+            end else Found := False;
+        end;
 
 
         else begin
@@ -4910,6 +4926,22 @@ begin
                 end;
                 stack_reverse(pocz[trunc(ArrEax.Num)]);
 
+            end else Found := false;
+        end;
+        'Array.first' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[0]);
+            end else Found := false;
+        end;
+        'Array.last' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[Length(pocz[trunc(ArrEax.Num)].Values)-1]);
             end else Found := false;
         end;
         // crush, pushAt, popAt, swapAt, toString, size

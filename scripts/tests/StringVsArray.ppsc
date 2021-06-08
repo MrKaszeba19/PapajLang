@@ -15,6 +15,8 @@ $T 4 16 between println
 $T 4 13 substring println
 $T 6 split swap 2 times println
 $T 6 split join println
+$T first println
+$T last println
 
 newln
 
@@ -29,5 +31,6 @@ $U 4 16 between println
 $U 4 13 subarray println
 $U 6 split swap 2 times println
 $U 6 split join println
-
+$U first println
+$U last println
 
