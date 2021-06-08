@@ -24,6 +24,7 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemFRA: TMenuItem;
     MenuLangCSB: TMenuItem;
     MenuLangCSB2: TMenuItem;
     MenuQuit: TMenuItem;
@@ -38,6 +39,7 @@ type
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
+    procedure MenuItemFRAClick(Sender: TObject);
     procedure MenuLangCSB2Click(Sender: TObject);
     procedure MenuLangCSBClick(Sender: TObject);
     procedure OpenOfflineFile();
@@ -102,6 +104,12 @@ procedure TForm1.MenuLangCSB2Click(Sender: TObject);
 begin
     language := 'csb2';
     Unit3.set1CSB2();
+end;
+
+procedure TForm1.MenuItemFRAClick(Sender: TObject);
+begin
+    language := 'fra';
+    Unit3.set1FRA();
 end;
 
 { TForm1 }
@@ -189,11 +197,21 @@ begin
           'he_IL.utf8' : language := 'hbr';
           'Hebrew_Israel.1255' : language := 'hbr';
           'Hebrew' : language := 'hbr';
+          'French' : language := 'fra';
+          'French (Canada)' : language := 'fra';
+          'fr.UTF-8' : language := 'fra';
+          'fr_FR.UTF-8' : language := 'fra';
+          'fr_BE.UTF-8' : language := 'fra';
+          'fr_CH.UTF-8' : language := 'fra';
+          'fr_LU.UTF-8' : language := 'fra';
+          'fr_CA.UTF-8' : language := 'fra';
+          'French_France.1252' : language := 'fra';
           else language := 'eng';
      end;
      case language of
           'den' : set1DEN();
           'eng' : set1ENG();
+          'fra' : set1FRA();
           'pol' : set1POL();
 	  'hbr' : set1HBR();
           'csb' : set1CSB();

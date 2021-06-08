@@ -9,6 +9,7 @@ uses
 
 procedure set1DEN();
 procedure set1ENG();
+procedure set1FRA();
 procedure set1POL();
 procedure set1HBR();
 procedure set1CSB();
@@ -16,6 +17,7 @@ procedure set1CSB2();
 
 procedure set2DEN();
 procedure set2ENG();
+procedure set2FRA();
 procedure set2POL();
 procedure set2HBR();
 procedure set2CSB();
@@ -62,6 +64,28 @@ begin
      Unit1.Form1.MenuSave.Caption := 'Save script to file';
      Unit1.Form1.OpenDialog1.Title := 'Load script from file';
      Unit1.Form1.SaveDialog1.Title := 'Save script to file';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+procedure set1FRA();
+begin
+     Unit1.Form1.Caption := 'La calculatrice NPI – Interpréteur PapajScript';
+     Unit1.Form1.Label1.Caption := 'PS Expression';
+     Unit1.Form1.Edit1.TextHint  := 'Tapez une expression délimitée par des espaces, ex. "2 3 +" ou "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'Résultat';
+     Unit1.Form1.Button1.Caption := 'Comptons!';
+     Unit1.Form1.MenuItem1.Caption := 'Application';
+     Unit1.Form1.MenuItem2.Caption := 'Langue';
+     Unit1.Form1.MenuQuit.Caption := 'Fermer';
+     Unit1.Form1.Button2.Caption := 'Exécuter';//'Exécuter un script';
+     Unit1.Form1.Label2.Caption := 'PapajScript code';
+     Unit1.Form1.MenuLoad.Caption := 'Charger un script à partir d''un fichier';
+     Unit1.Form1.MenuSave.Caption := 'Enregistrer un script dans un fichier';
+     Unit1.Form1.OpenDialog1.Title := 'Charger un script à partir d''un fichier';
+     Unit1.Form1.SaveDialog1.Title := 'Enregistrer un script dans un fichier';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -156,6 +180,15 @@ begin
      Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
 end;
 
+procedure set2DEN();
+begin
+     Unit4.Form2.Caption := 'Scan en expression';
+     Unit4.Form2.Label1.Caption := 'Expression';
+     Unit4.Form2.Button1.Caption := 'Bekræft';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
 
 procedure set2ENG();
 begin
@@ -167,11 +200,11 @@ begin
      Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
 end;
 
-procedure set2DEN();
+procedure set2FRA();
 begin
-     Unit4.Form2.Caption := 'Scan en expression';
+     Unit4.Form2.Caption := 'Mettez une expression';
      Unit4.Form2.Label1.Caption := 'Expression';
-     Unit4.Form2.Button1.Caption := 'Bekræft';
+     Unit4.Form2.Button1.Caption := 'Soumettre';
      Unit4.Form2.BiDiMode := bdLeftToRight;
      Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
      Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;

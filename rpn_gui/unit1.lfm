@@ -627,6 +627,10 @@ object Form1: TForm1
         Caption = 'English'
         OnClick = MenuLangENGClick
       end
+      object MenuItemFRA: TMenuItem
+        Caption = 'Français'
+        OnClick = MenuItemFRAClick
+      end
       object MenuLangCSB: TMenuItem
         Caption = 'Kaszëbsczi'
         OnClick = MenuLangCSBClick
