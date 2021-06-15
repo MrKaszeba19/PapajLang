@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-June 8, 2021  
+June 15, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -71,16 +71,16 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - `\help` - display the help.
 - `\q` or `\quit` - exit the REPL.
 
-## Languages support for the GUI application (Linux)
+## Languages support for the GUI application
 - :uk: **English** - *default*
 - :denmark: **Danish** (Dansk)
+- :fr: **French** (Français)
+- :israel: **Hebrew** (עברית)
 - :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and alternative orthography
 - :poland: **Polish** (Polski)
-- :israel: **Hebrew** (עברית)
 - :de: German (Deutsch) - *to be implemented*
 - 🇳🇱 Dutch (Nederlands) - *to be implemented*
 - 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
-- :fr: France (Français) - *to be implemented*
 - :it: Italian (Italiano) - *to be implemented*
 - :morocco: Arabic (العربية) - *to be implemented*
 - :ru: Russian (Русский) - *to be implemented*
