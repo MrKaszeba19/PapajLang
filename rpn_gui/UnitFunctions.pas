@@ -604,6 +604,9 @@ begin
             if (EntEax.EntityType = TVEC) then
             begin
                 stack_push(pocz[sets.StackPointer], buildString(stack_showArrayPS(pocz[trunc(EntEax.Num)], pocz, sets.Mask))); 
+            end else if (EntEax.EntityType = TNUM) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildString(FormatFloat(sets.Mask, EntEax.Num)));
             end else begin
                 stack_push(pocz[sets.StackPointer], buildString(EntEax.Str));
             end;
@@ -3304,8 +3307,9 @@ end;
 
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found  : Boolean;
-	StrEax : String;
+	Found          : Boolean;
+	StrEax         : String;
+    IntEax, IntEbx : Integer;
 begin
 	Found := true;
     if (i[1] <> '@') then begin
@@ -3538,6 +3542,25 @@ begin
         '@stringindex(1)' : begin
             sets.StringStart := 1;
         end;
+
+        '@maxprecision(0)' : begin
+            sets.Mask := '0';
+        end;
+        '@fixprecision(0)' : begin
+            sets.Mask := '0';
+        end;
+        '@maxprecision(-1)' : begin
+            sets.Mask := '0.################';
+        end;
+        '@fixprecision(-1)' : begin
+            sets.Mask := '0.000000000000000';
+        end;
+        '@maxprecision(DEFAULT)' : begin
+            sets.Mask := '0.################';
+        end;
+        '@fixprecision(DEFAULT)' : begin
+            sets.Mask := '0.000000000000000';
+        end;
 		
         else begin
         	case LeftStr(i, 9) of
@@ -3547,11 +3570,57 @@ begin
                 		StrEax := LeftStr(StrEax, Length(StrEax)-2);
                 		pocz := read_sourcefile(StrEax, pocz, sets, vardb);
               		end else begin
-                		raiserror('Exception when attempting to read the file stream: Syntax error');
+                        stack_push(pocz[sets.StackPointer], raiseException('ESyntax:CExpression: Syntax Error at expression "'+i+'".'));
               		end;
              	end;
              	else begin
-              		Found := false;
+                    case LeftStr(i, 14) of
+                        '@maxprecision(' : begin
+                            if (RightStr(i, 1) = ')') then begin
+                                StrEax := RightStr(i, Length(i)-14);
+                		        StrEax := LeftStr(StrEax, Length(StrEax)-1);
+                                if (TryStrToInt(StrEax, IntEax)) 
+                                then begin
+                                    if IntEax > 0 then
+                                    begin
+                                        StrEax := '0.';
+                                        for IntEbx := 1 to IntEax do
+                                            StrEax := StrEax + '#';
+                                        sets.Mask := StrEax;
+                                    end else begin
+                                        stack_push(pocz[sets.StackPointer], raiseException('EConstraint:CIntegerEx: a non-negative integer (or -1) expected at "'+i+'".'));  
+                                    end;
+                                end else begin
+                                    stack_push(pocz[sets.StackPointer], raiseException('EConstraint:CIntegerEx: a non-negative integer (or -1) expected at "'+i+'".'));
+                                end;
+                            end else begin
+                	        	stack_push(pocz[sets.StackPointer], raiseException('ESyntax:CExpression: Syntax Error at expression "'+i+'".'));
+              		        end;
+                        end;
+                        '@fixprecision(' : begin
+                            if (RightStr(i, 1) = ')') then begin
+                                StrEax := RightStr(i, Length(i)-14);
+                		        StrEax := LeftStr(StrEax, Length(StrEax)-1);
+                                if (TryStrToInt(StrEax, IntEax)) 
+                                then begin
+                                    if IntEax > 0 then
+                                    begin
+                                        StrEax := '0.';
+                                        for IntEbx := 1 to IntEax do
+                                            StrEax := StrEax + '0';
+                                        sets.Mask := StrEax;
+                                    end else begin
+                                        stack_push(pocz[sets.StackPointer], raiseException('EConstraint:CIntegerEx: a non-negative integer (or -1) expected at "'+i+'".'));  
+                                    end;
+                                end else begin
+                                    stack_push(pocz[sets.StackPointer], raiseException('EConstraint:CIntegerEx: a non-negative integer (or -1) expected at "'+i+'".'));
+                                end;
+                            end else begin
+                	        	stack_push(pocz[sets.StackPointer], raiseException('ESyntax:CExpression: Syntax Error at expression "'+i+'".'));
+              		        end;
+                        end;
+                        else Found := false;
+                    end;
              	end;
         	end;
         end;
