@@ -41,9 +41,12 @@ procedure TextUnderlineOff();
 procedure TextBlinkOff();
 procedure TextFastBlinkOff();
 procedure TextInverseOff();
+procedure Delay(ms : LongInt);
 
 
 implementation
+
+uses BaseUnix;
 
 procedure TextBackground(x : ShortInt);
 begin
@@ -294,6 +297,19 @@ end;
 procedure TextInverseOff();
 begin
     write(#27+'[27m');
+end;
+
+procedure Delay(ms : LongInt);
+var
+    Req,Rem : TimeSpec;
+    Res     : Longint;
+begin
+    With Req do
+    begin
+        tv_sec := ms div 1000;
+        tv_nsec:= (ms mod 1000) * 1000000;
+    end;
+    Res:=(fpNanoSleep(@Req,@rem));
 end;
 
 end.

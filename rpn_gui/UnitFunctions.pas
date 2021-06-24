@@ -4067,18 +4067,18 @@ begin
             TextInverseOff();
         end;
         {$ENDIF}
+        'Console.delay' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            Delay(a);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(a));
+        end;
         {$IFDEF MSWINDOWS}
         'Console.whereX' : begin
             stack_push(pocz[sets.StackPointer], buildNumber(WhereX()));
         end;
         'Console.whereY' : begin
             stack_push(pocz[sets.StackPointer], buildNumber(WhereY()));
-        end;
-        'Console.delay' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
-            a := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-            Delay(a);
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(a));
         end;
         'Console.startSound' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
