@@ -3,6 +3,7 @@
 *.o
 *.or
 *.ppu
+*.obj
 *.s
 *.exe
 plans.md

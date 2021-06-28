@@ -49,7 +49,7 @@ procedure disposeEnvironment(var env : PSEnvironment);
 
 implementation
 
-uses Unit5, DateUtils;
+uses Unit5, DateUtils, StringUtils;
 
 var
 	Steps : Integer;

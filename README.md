@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-June 24, 2021  
+June 28, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -29,14 +29,14 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 ## Requirements and installation
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
-    * or **FreePascal Compiler (FPC)** (3.0.4 recommended) for Console app only – *alternative for Unix/Linux users only*
+    * or **FreePascal Compiler (FPC)** (3.0.4 recommended) for Console app only
 - There are three ways to build RPN Calculator
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
     then simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
     * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
-    then you may compile the project using `compileWithFPC.sh` (for Console app only)
+    then you may compile the **console app** project using `compileWithFPC.sh` (Unix/Linux) or `compileWithFPC.bat` (Windows)
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
 - (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH

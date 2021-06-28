@@ -10,6 +10,7 @@ Units that are identical for both projects (PapajScript interpreter files):
 – DTUtils.pas (PS datetime management functions)
 – ArrayUtils.pas (PS array functions)
 – ConsoleUtils.pas (a better Crt substitute for Unix systems)
+– StringUtils.pas (utilities for strings)
 – RPNAbout.pas (constants containing interpreter information)
 
 Units that exist in both projects, but they differ slightly in each of them.
@@ -27,14 +28,13 @@ Additional units of rpn_gui
 === REQUIREMENTS TO COMPILE THE PROJECT AND BUILDING RPN CALCULATOR
 – Have installed
     a) Lazarus IDE (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
-    b) or FreePascal Compiler (FPC) for Console app (3.0.4 recommended, Unix/Linux users only)
+    b) or FreePascal Compiler (FPC) for Console app (3.0.4 recommended)
 – There are three ways to build RPN Calculator
     a) if you have Lazarus IDE and you use the GUI app, 
        then compile it by clicking "Run" or "Compile"
     b) if you have Lazarus IDE and you are on a command shell or you don't use the GUI app, 
        then simply run compile.sh (in Unix/Linux systems) or compile.bat (in Windows systems) to compile the project
-    c) if you don't have Lazarus IDE and you use a Unix/Linux-like system, 
-       then you may compile the project using compileWithFPC.sh (for Console app only)
+    c) if you don't have Lazarus IDE, then you may compile the console app project using either compileWithFPC.sh (Unix/Linux) or compileWithFPC.bat (Windows)
 – You can make a Desktop shortcut to a RPN REPL by running installREPL.sh (Unix/Linux) or installREPL.bat (Windows)
 
 
@@ -48,4 +48,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 05/13/2021
+Paul Lipkowski, 06/28/2021
