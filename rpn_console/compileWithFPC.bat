@@ -42,5 +42,6 @@ if /i "%processor_architecture%"=="x86" GOTO x86
 	del *.o
 	del *.or
 	del *.ppu
+    del *.obj
 	ren rpn.pas rpn.lpr 
 	pause

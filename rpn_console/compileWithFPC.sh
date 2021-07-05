@@ -47,21 +47,6 @@ fi
 
 # ====== COMPILATION
 # ------ Preparation
-units=(
-    RPNAbout.pas
-    MathUtils.pas
-    ConsoleUtils.pas
-    DTUtils.pas
-    UnitEntity.pas
-    UnitStack.pas
-    UnitVariables.pas
-    ArrayUtils.pas
-    UnitFunctions.pas
-    UnitEnvironment.pas
-    UnitREPL.pas
-    unit2.pas
-    unit5.pas
-)
 
 # ------ Running
 
@@ -69,9 +54,9 @@ echo "Compiling..."
 mv rpn.lpr rpn.pas
 
 if [[ $assembler -lt 1 ]] ; then
-	fpc ${units[*]} rpn.pas -o"rpn" $opt
+	fpc rpn.pas -o"rpn" $opt
 else
-	fpc ${units[*]} rpn.pas -o"rpn" -a $opt
+	fpc rpn.pas -o"rpn" -a $opt
 fi
 
 # ------ If compiled

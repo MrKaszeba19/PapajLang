@@ -33,11 +33,11 @@ function lib_datetime(i : String; var pocz : StackDB; var Steps : Integer; var s
 
 implementation
 
-uses Unit5, MathUtils, Math, DTUtils, ArrayUtils, StringUtils,
+uses Unit5, MathUtils, Math, DTUtils, ArrayUtils, StringUtils, ConsoleUtils,
     {$IFDEF MSWINDOWS}
 		ShellApi, crt,
     {$ELSE}
-        ConsoleUtils,
+        UnixCrt,
  	{$ENDIF}
     UnitEnvironment, DateUtils;
 
@@ -72,21 +72,6 @@ begin
 end;
 
 // COMMANDS' EXECUTION
-
-function executeCommand(input, Shell : String) : String;
-var
-	s : String;
-begin
-	s := '';
-	{$IFDEF MSWINDOWS}
-	//RunCommand(Shell,['/c', input],s);
-	if ShellExecute(0,nil, PChar('cmd'),PChar('/c '+input),nil,1) =0 then;
- 	{$ELSE}
-  	RunCommand(Shell,['-c', input],s);
- 	{$ENDIF}
- 	executeCommand := s;
-end;
-
 
 
 function lib_ultravanilla(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -3197,22 +3182,23 @@ begin
             end else Found := False;
         end;
         // String.*
-        //'String.copies' : begin
-        //    if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TNUM) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TSTR) then
-        //    begin
-        //        // NUM1 STR1 copies
-        //        StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-        //        if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
-        //        ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
-        //        for index := Length(StrEbx) downto 1 do
-        //        begin
-        //            StrEax := DelChars(StrEax, StrEbx[index]);
-        //        end;
-        //        stack_push(pocz[sets.StackPointer], buildString(StrEax));
-        //    end else if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TNUM) then
-        //    begin
-        //    end else Found := False;
-        //end;
+        'String.copies' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TNUM) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TSTR) then
+            begin
+                // NUM1 STR1 copies
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+                ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax * trunc(ExtEax)));
+            end else if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TNUM) then
+            begin
+                // STR1 NUM1 copies
+                if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+                ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax * trunc(ExtEax)));
+            end else Found := False;
+        end;
 
 
         else begin

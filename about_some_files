@@ -6,11 +6,12 @@ Units that are identical for both projects (PapajScript interpreter files):
 – UnitStack.pas (PS's semi-stack)
 – UnitEnvironment.pas (PS environment and interpreter main mechanisms)
 – UnitVariables.pas (PS variables)
+– UnixCrt.pas (a better Crt substitute for Unix systems)
 – MathUtils.pas (PS mathematical functions)
 – DTUtils.pas (PS datetime management functions)
 – ArrayUtils.pas (PS array functions)
-– ConsoleUtils.pas (a better Crt substitute for Unix systems)
 – StringUtils.pas (utilities for strings)
+– ConsoleUtils.pas (utilities for Console package functions)
 – RPNAbout.pas (constants containing interpreter information)
 
 Units that exist in both projects, but they differ slightly in each of them.
@@ -48,4 +49,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 06/28/2021
+Paul Lipkowski, 07/05/2021

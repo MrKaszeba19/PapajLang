@@ -94,7 +94,7 @@
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="ConsoleUtils.pas"/>
+        <Filename Value="UnixCrt.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
@@ -121,6 +121,10 @@
         <Filename Value="StringUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
+      <Unit17>
+        <Filename Value="ConsoleUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

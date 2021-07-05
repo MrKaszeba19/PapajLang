@@ -26,7 +26,7 @@ implementation
 {$IFDEF MSWINDOWS}
 uses crt,
 {$ELSE}
-uses ConsoleUtils,
+uses UnixCrt,
 {$ENDIF}
      StrUtils, UnitStack, UnitEnvironment;
 

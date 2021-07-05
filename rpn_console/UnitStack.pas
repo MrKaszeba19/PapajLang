@@ -13,6 +13,14 @@ end;
 
 type StackDB = array of TStack;
 
+//type EntMemory = object
+//    private
+//        Layers : array of VariableLayer;
+//    public
+//        constructor Create;
+//        destructor Destroy;      
+//end;
+
 function stack_null() : TStack;
 procedure stack_push(var pocz:TStack; node : Entity);
 function stack_pop(var pocz:TStack) : Entity;
