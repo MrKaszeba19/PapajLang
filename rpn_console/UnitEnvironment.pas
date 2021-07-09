@@ -272,11 +272,50 @@ begin
 	end;
 end;
 
+function getPackage(input : String) : String;
+var
+    position : LongInt; 
+begin
+    position := Pos('.', input);
+    if (position >= 2)
+        then Result := LeftStr(input, position-1)
+        else Result := '';
+end;
+
+function searchThroughNamespacesExplicit(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+begin
+    Result := False;
+    case getPackage(i) of
+        'Array'   : if (sets.Packages.UseArray)   then Result := lib_arrays(i, pocz, Steps, sets, vardb);
+        'Console' : if (sets.Packages.UseConsole) then Result := lib_datetime(i, pocz, Steps, sets, vardb);
+        'Date'    : if (sets.Packages.UseDate)    then Result := lib_consolemanipulators(i, pocz, Steps, sets, vardb);
+        'Math'    : if (sets.Packages.UseMath)    then Result := lib_math(i, pocz, Steps, sets, vardb);
+        'String'  : if (sets.Packages.UseString)  then Result := lib_strings(i, pocz, Steps, sets, vardb);
+        //else begin
+        //    Result := vardb.isVarAssigned(i);
+        //    if Result then runFromString(i, pocz, Steps, sets, vardb);
+        //end;
+    end;
+    
+end;
+
+function searchThroughNamespacesImplicit(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+begin
+    Result := True;
+    if (not sets.Packages.UseMath) or (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) then
+    if (not sets.Packages.UseString) or (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) then
+    if (not sets.Packages.UseArray) or (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb)) then
+    if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) then
+    if (not sets.Packages.UseDate) or (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) then
+        Result := False;
+end;
+
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 var
     Im     : Extended;
     Code   : Longint;
     StrEcx : String;
+    Found  : Boolean = True;
 begin
     Steps := 1;
 
@@ -294,6 +333,8 @@ begin
             if (vardb.isVarAssigned(i)) then
             begin
                 runFromString(i, pocz, Steps, sets, vardb)
+            end else if (getPackage(i) <> '') then begin
+                if not searchThroughNamespacesExplicit(i, pocz, Steps, sets, vardb) then Found := False;
             end else begin
                 if not lib_directives(i, pocz, Steps, sets, vardb) then
     	        if not lib_constants(i, pocz, Steps, sets, vardb) then
@@ -301,39 +342,22 @@ begin
     	        if not lib_variables(i, pocz, Steps, sets, vardb) then
                 if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
                 if not lib_exceptions(i, pocz, Steps, sets, vardb) then
-
-                if (not sets.Packages.UseMath) or (
-                    (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) 
-                    and (not lib_math(i, pocz, Steps, sets, vardb)) 
-                ) then
-			    if (not sets.Packages.UseString) or (
-                    (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) 
-                    and (not lib_strings(i, pocz, Steps, sets, vardb)) 
-                ) then
-                if (not sets.Packages.UseArray) or (
-                    (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb))
-                    and (not lib_arrays(i, pocz, Steps, sets, vardb)) 
-                ) then
-                if (not sets.Packages.UseConsole) or (
-                    (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) 
-                    and (not lib_consolemanipulators(i, pocz, Steps, sets, vardb))
-                ) then
-                if (not sets.Packages.UseDate) or (
-                    (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) 
-                    and (not lib_datetime(i, pocz, Steps, sets, vardb))
-                ) then
-
-                if not lib_files(i, pocz, Steps, sets, vardb) then		
-    	        
-    	        if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
-    		    begin
-			    	raiserror(stack_pop(pocz[sets.StackPointer]).Str);
-			    end else begin
-                    stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
-                end;
+                if not searchThroughNamespacesImplicit(i, pocz, Steps, sets, vardb) then 
+                if not lib_files(i, pocz, Steps, sets, vardb) then
+                    Found := False;
             end;
         end else begin
             stack_push(pocz[sets.StackPointer], buildNumber(Im));
+        end;
+
+        if not Found then
+        begin
+            if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
+    		begin
+				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
+			end else begin
+                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+            end;
         end;
     end;
     checkExceptions(pocz, sets);

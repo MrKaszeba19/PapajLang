@@ -6,7 +6,8 @@ unit UnitEntity;
 interface
 
 uses
-  Classes, SysUtils, DateUtils, DTUtils;
+    Classes, SysUtils, DateUtils, DTUtils;
+
 
 const
     MCLIKE = 1;
@@ -117,7 +118,7 @@ implementation
 {$IFDEF MSWINDOWS}
 uses crt;
 {$ELSE}
-uses ConsoleUtils;
+uses UnixCrt;
 {$ENDIF}
 
 
@@ -413,6 +414,8 @@ begin
     pom.Num2 := 0;
 	Result := pom;
 end;
+
+// arithmetics on entities
 
 end.
 

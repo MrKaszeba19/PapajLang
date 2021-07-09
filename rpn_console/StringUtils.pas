@@ -160,6 +160,4 @@ begin
     for index := 1 to b do s := s + a;
 end;
 
-
-
 end.
