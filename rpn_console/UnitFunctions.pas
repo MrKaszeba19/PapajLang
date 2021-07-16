@@ -24,6 +24,7 @@ function lib_strings(i : String; var pocz : StackDB; var Steps : Integer; var se
 function lib_directives(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_constants(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_variables(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+function lib_variables2(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_consolemanipulators(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 function lib_exceptions(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
@@ -3562,6 +3563,106 @@ var
 	LogEax : Boolean;
 begin
 	Found := true;
+    case LeftStr(i, 1) of
+    	'$' : begin
+      		if (RightStr(i, Length(i)-1) <> '') then begin
+        		StrEax := RightStr(i, Length(i)-1);
+                if LeftStr(StrEax, 7) = 'global.'  
+                    then EntEax := vardb.getGlobalVariable(StrEax)
+                    else EntEax := vardb.getVariable(StrEax);
+    			stack_push(pocz[sets.StackPointer], EntEax);
+      		end else begin
+        		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
+      		end;
+     	end;
+     	'>' : begin 
+     		if (RightStr(i, Length(i)-1) <> '') then begin
+        		StrEax := RightStr(i, Length(i)-1);
+        		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
+        		else EntEax := stack_get(pocz[sets.StackPointer]);
+                if isValidForVariables(StrEax) then
+                begin
+                    if LeftStr(StrEax, 7) = 'global.' 
+                        then vardb.setGlobalVariable(StrEax, EntEax)
+                        else
+    			            //vardb.setVariable(StrEax, EntEax);
+                            vardb.setLocalVariable(StrEax, EntEax);
+                        
+                end else begin
+                    raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                end;
+      		end else begin
+        		raiserror('EVariable:CSetUnnamed: Attempt of setting an unnamed variable.');
+      		end;
+     	end;
+     	'?' : begin 
+     		if (RightStr(i, Length(i)-1) <> '') then begin
+        		StrEax := RightStr(i, Length(i)-1);
+    			LogEax := vardb.isVarAssigned(StrEax);
+    			stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
+      		end else begin
+        		raiserror('EVariable:CCheck: You cannot check nothing.');
+      		end;
+     	end;
+     	'~' : begin 
+     		if (RightStr(i, Length(i)-1) <> '') then begin
+        		StrEax := RightStr(i, Length(i)-1);
+    			vardb.removeVariable(StrEax);
+      		end else begin
+        		raiserror('EVariable:CDestroy: You cannot destroy an unnamed variable.');
+      		end;
+     	end;
+     	else begin
+            case LeftStr(i, 2) of
+                '@@' : begin 
+                    if (RightStr(i, Length(i)-2) <> '') then begin
+                        StrEax := RightStr(i, Length(i)-2);
+                        EntEax := vardb.getVariable(StrEax);
+                        if LeftStr(StrEax, 7) = 'global.' 
+                            then EntEax := vardb.getGlobalVariable(StrEax)
+                            else EntEax := vardb.getVariable(StrEax);
+                        if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
+                        doFunction(EntEax, pocz, sets, vardb);
+                    end else begin
+                        raiserror('EVariable:CExecute: You cannot execute an unnamed function by this method.');
+                    end;
+                end;
+                '->' : begin 
+     		        if (RightStr(i, Length(i)-2) <> '') then begin
+                		StrEax := RightStr(i, Length(i)-2);
+                		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
+                		else EntEax := stack_get(pocz[sets.StackPointer]);
+    	        		if isValidForVariables(StrEax) then
+                        begin
+                            if LeftStr(StrEax, 7) = 'global.' 
+                                then vardb.setGlobalVariable(StrEax, EntEax) 
+                                else
+    			                    //vardb.setVariable(StrEax, EntEax);
+                                    vardb.setLocalVariable(StrEax, EntEax);
+                        end else begin
+                            raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                        end;
+      	        	end else begin
+                		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
+      	        	end;
+     	        end;
+                else begin
+                    Found := false;
+                end;
+            end;
+     	end;
+    end;
+    Result := Found;
+end;
+
+function lib_variables2(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
+var
+	Found  : Boolean;
+	StrEax, StrEbx : String;
+	EntEax : Entity;
+	LogEax : Boolean;
+begin
+	Found := true;
 	case i of
 		'vset' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
@@ -3637,98 +3738,10 @@ begin
             end;
         end;
         else begin
-        	case LeftStr(i, 1) of
-            	'$' : begin
-              		if (RightStr(i, Length(i)-1) <> '') then begin
-                		StrEax := RightStr(i, Length(i)-1);
-                        if LeftStr(StrEax, 7) = 'global.'  
-                            then EntEax := vardb.getGlobalVariable(StrEax)
-                            else EntEax := vardb.getVariable(StrEax);
-            			stack_push(pocz[sets.StackPointer], EntEax);
-              		end else begin
-                		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
-              		end;
-             	end;
-             	'>' : begin 
-             		if (RightStr(i, Length(i)-1) <> '') then begin
-                		StrEax := RightStr(i, Length(i)-1);
-                		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
-                		else EntEax := stack_get(pocz[sets.StackPointer]);
-                        if isValidForVariables(StrEax) then
-                        begin
-                            if LeftStr(StrEax, 7) = 'global.' 
-                                then vardb.setGlobalVariable(StrEax, EntEax)
-                                else
-            			            //vardb.setVariable(StrEax, EntEax);
-                                    vardb.setLocalVariable(StrEax, EntEax);
-                                
-                        end else begin
-                            raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
-                        end;
-              		end else begin
-                		raiserror('EVariable:CSetUnnamed: Attempt of setting an unnamed variable.');
-              		end;
-             	end;
-             	'?' : begin 
-             		if (RightStr(i, Length(i)-1) <> '') then begin
-                		StrEax := RightStr(i, Length(i)-1);
-            			LogEax := vardb.isVarAssigned(StrEax);
-            			stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
-              		end else begin
-                		raiserror('EVariable:CCheck: You cannot check nothing.');
-              		end;
-             	end;
-             	'~' : begin 
-             		if (RightStr(i, Length(i)-1) <> '') then begin
-                		StrEax := RightStr(i, Length(i)-1);
-            			vardb.removeVariable(StrEax);
-              		end else begin
-                		raiserror('EVariable:CDestroy: You cannot destroy an unnamed variable.');
-              		end;
-             	end;
-             	else begin
-                    case LeftStr(i, 2) of
-                        '@@' : begin 
-                            if (RightStr(i, Length(i)-2) <> '') then begin
-                                StrEax := RightStr(i, Length(i)-2);
-                                EntEax := vardb.getVariable(StrEax);
-                                if LeftStr(StrEax, 7) = 'global.' 
-                                    then EntEax := vardb.getGlobalVariable(StrEax)
-                                    else EntEax := vardb.getVariable(StrEax);
-                                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
-                                doFunction(EntEax, pocz, sets, vardb);
-                            end else begin
-                                raiserror('EVariable:CExecute: You cannot execute an unnamed function by this method.');
-                            end;
-                        end;
-                        '->' : begin 
-             		        if (RightStr(i, Length(i)-2) <> '') then begin
-                        		StrEax := RightStr(i, Length(i)-2);
-                        		if (sets.Autoclear) then EntEax := stack_pop(pocz[sets.StackPointer])
-                        		else EntEax := stack_get(pocz[sets.StackPointer]);
-            	        		if isValidForVariables(StrEax) then
-                                begin
-                                    if LeftStr(StrEax, 7) = 'global.' 
-                                        then vardb.setGlobalVariable(StrEax, EntEax) 
-                                        else
-            			                    //vardb.setVariable(StrEax, EntEax);
-                                            vardb.setLocalVariable(StrEax, EntEax);
-                                end else begin
-                                    raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
-                                end;
-              	        	end else begin
-                        		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
-              	        	end;
-             	        end;
-                        else begin
-                            Found := false;
-                        end;
-                    end;
-             	end;
-        	end;
+            Found := false;
         end;
     end;
-    lib_variables := Found;
+    Result := Found;
 end;
 
 function lib_logics(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;

@@ -101,11 +101,18 @@ end;
 
 procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 begin
+    //while True do
+    //begin
+    //    pocz := parseOpen(StrCond, pocz, sets, vardb);
+    //    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) or (sets.KeepWorking = 0) then break;
+    //    pocz := parseOpen(StrInst, pocz, sets, vardb);
+    //end;
+    
+    pocz := parseOpen(StrCond, pocz, sets, vardb);
     while True do
     begin
-        pocz := parseOpen(StrCond, pocz, sets, vardb);
         if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) or (sets.KeepWorking = 0) then break;
-        pocz := parseOpen(StrInst, pocz, sets, vardb);
+        pocz := parseOpen(StrInst + LineBreak + StrCond, pocz, sets, vardb);
     end;
 end;
 
@@ -113,8 +120,10 @@ procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets
 begin
     while True do
     begin
-        pocz := parseOpen(StrInst, pocz, sets, vardb);
-        pocz := parseOpen(StrCond, pocz, sets, vardb);
+        //pocz := parseOpen(StrInst, pocz, sets, vardb);
+        //pocz := parseOpen(StrCond, pocz, sets, vardb);
+        //if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+        pocz := parseOpen(StrInst + LineBreak + StrCond, pocz, sets, vardb);
         if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
     end;
 end;
@@ -123,8 +132,10 @@ procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets
 begin
     while True do
     begin
-        pocz := parseOpen(StrInst, pocz, sets, vardb);
-        pocz := parseOpen(StrCond, pocz, sets, vardb);
+        //pocz := parseOpen(StrInst, pocz, sets, vardb);
+        //pocz := parseOpen(StrCond, pocz, sets, vardb);
+        //if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then break;
+        pocz := parseOpen(StrInst + LineBreak + StrCond, pocz, sets, vardb);
         if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then break;
     end;
 end;
@@ -142,13 +153,19 @@ begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
     begin
         L := StrCond.Split(';');
-        pocz := parseOpen(L[0], pocz, sets, vardb);
+        //pocz := parseOpen(L[0], pocz, sets, vardb);
+        //while True do
+        //begin
+        //    pocz := parseOpen(L[1], pocz, sets, vardb);
+        //    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+        //    pocz := parseOpen(StrInst, pocz, sets, vardb);
+        //    pocz := parseOpen(L[2], pocz, sets, vardb);
+        //end;
+        pocz := parseOpen(L[0] + LineBreak + L[1], pocz, sets, vardb);
         while True do
         begin
-            pocz := parseOpen(L[1], pocz, sets, vardb);
             if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
-            pocz := parseOpen(StrInst, pocz, sets, vardb);
-            pocz := parseOpen(L[2], pocz, sets, vardb);
+            pocz := parseOpen(StrInst + LineBreak + L[2] + LineBreak + L[1], pocz, sets, vardb);
         end;
     end else if OccurrencesOfChar(StrCond, ':') = 1 then
     begin
@@ -333,17 +350,24 @@ begin
             if (vardb.isVarAssigned(i)) then
             begin
                 runFromString(i, pocz, Steps, sets, vardb)
-            end else if (getPackage(i) <> '') then begin
-                if not searchThroughNamespacesExplicit(i, pocz, Steps, sets, vardb) then Found := False;
-            end else begin
+            end else if (i[1] in ['$', '>', '-', '~', '@', '?']) then
+            begin
                 if not lib_directives(i, pocz, Steps, sets, vardb) then
+                if not lib_logics(i, pocz, Steps, sets, vardb) then
+                if not lib_variables(i, pocz, Steps, sets, vardb) then
+                if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
+                    Found := False;
+            end else if (getPackage(i) <> '') then begin
+                if not searchThroughNamespacesExplicit(i, pocz, Steps, sets, vardb) then 
+                    Found := False;
+            end else begin
     	        if not lib_constants(i, pocz, Steps, sets, vardb) then
     	        if not lib_logics(i, pocz, Steps, sets, vardb) then
-    	        if not lib_variables(i, pocz, Steps, sets, vardb) then
                 if not lib_ultravanilla(i, pocz, Steps, sets, vardb) then
                 if not lib_exceptions(i, pocz, Steps, sets, vardb) then
                 if not searchThroughNamespacesImplicit(i, pocz, Steps, sets, vardb) then 
                 if not lib_files(i, pocz, Steps, sets, vardb) then
+                if not lib_variables2(i, pocz, Steps, sets, vardb) then
                     Found := False;
             end;
         end else begin

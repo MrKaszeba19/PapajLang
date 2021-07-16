@@ -4,6 +4,8 @@ unit StringUtils;
 
 interface
 
+const LineBreak = #10;
+
 function OccurrencesOfChar(const S: string; const C: char) : integer;
 function OccurrencesOfChar2(const S: string; const C: char) : integer;
 function capitalize(dupa : char) : char;
