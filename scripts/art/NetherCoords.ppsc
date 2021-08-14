@@ -1,0 +1,14 @@
+"Type Overworld\'s X coord: " print
+scan toNumber -> $x
+"Type Overworld\'s Z coord: " print
+scan toNumber -> $z
+
+"Overworld coords: " print
+$x print
+", " print
+$z println
+
+"Nether coords:    " print
+$x 8 div print
+", " print
+$z 8 div println

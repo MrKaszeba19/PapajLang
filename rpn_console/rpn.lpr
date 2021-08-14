@@ -412,7 +412,6 @@ begin
             'repl' : begin
                 LoadAll := False;
                 if HasOption('L', 'load-all') then begin
-                    writeln('chuj');
                     LoadAll := True;
                 end;
                 show_version();
