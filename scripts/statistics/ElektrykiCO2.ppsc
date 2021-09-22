@@ -1,0 +1,74 @@
+@use(String)
+
+function ( x ) {
+	$x 100 *
+	trunc
+	100 /
+} -> zaokraglijDo2
+
+40 -> $TotalKWH
+0.954 -> $WegKamiennyEmisja // kg na kWh
+0.34439 -> $KosztKWH
+0.63 -> $SprzedazKWH // w złotówkach
+
+$TotalKWH $WegKamiennyEmisja * -> $EmisjaTotal1
+
+5.9 -> $spalanie // liter na 100 km
+10 -> $energiawbenzynie // KWH na liter
+2.35 -> $paliwoemisja // kg na liter
+3600000 -> $DzuleKWH
+$TotalKWH $energiawbenzynie / -> $litrybenzyny
+$paliwoemisja $litrybenzyny * -> $EmisjaTotal2
+
+// ======================================================================
+
+"EMISJA CO2" println
+"TEST 1: ENERGIA Z ELEKTROWNI DO SILNIKA ELEKTRYCZNEGO" println
+"Paliwo w elektrowni: węgiel kamienny" println
+
+
+
+"Emisja CO2 przy produkcji " print
+$TotalKWH print
+" kWh prądu z węgla kamiennego: " print
+$EmisjaTotal1 print
+" kg" println
+
+"Koszt produkcji " print
+$TotalKWH print
+" kWh prądu: " print
+$EmisjaTotal1 $KosztKWH * zaokraglijDo2 print
+" zł" println
+
+"Koszt " print
+$TotalKWH print
+" kWh prądu dla odbiorcy: " print
+$EmisjaTotal1 $SprzedazKWH * zaokraglijDo2 print
+" zł" println
+
+newln
+"TEST 2: ENERGIA ZE SINLIKA SPALINOWEGO" println
+"Samochód:           Nissan Note, 2012" println
+"Paliwo w pojeździe: benzyna bezołowiowa 95" println
+"Spalanie samochodu: " print
+$spalanie print
+" l na 100 km" println
+
+"Równowartość energetyczna " print
+$TotalKWH print
+" kWh prądu z węgla kamiennego to " print
+$litrybenzyny print
+" l benzyny" println
+
+"Emisja CO2 przy spaleniu " print
+$litrybenzyny print
+" l benzyny: " print
+$EmisjaTotal2 print
+" kg" println
+
+
+// źródła
+// https://www.cire.pl/pliki/2/wytwarzanieenergiiaakologia.pdf
+// https://www.gramwzielone.pl/trendy/13075/ile-kosztuje-produkcja-energii-z-wegla-gazu-atomu-wiatru-i-slonca
+// https://ziemianarozdrozu.pl/encyklopedia/140/samochody
+// https://www.eia.gov/tools/faqs/faq.php?id=307&t=11

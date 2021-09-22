@@ -19,7 +19,9 @@ function TrimCharsRight(str : String; chr : Char) : String;
 
 operator - (a : String; b : String) s : String; 
 operator - (a : String; b : LongInt) s : String; 
-operator * (a : String; b : LongInt) s : String; 
+operator * (a : String; b : LongInt) s : String;
+operator / (a : String; b : String) s : String; 
+operator / (a : String; b : LongInt) s : String; 
 
 implementation
 
@@ -142,10 +144,8 @@ operator - (a : String; b : String) s : String;
 var
     index : LongInt;
 begin  
-    for index := Length(b) downto 1 do
-    begin
-        a := DelChars(a, b[index]);
-    end;
+    index := RPos(b, a);
+    Delete(a, index, Length(b));
     s := a;
 end;
 
@@ -160,6 +160,22 @@ var
 begin  
     s := '';
     for index := 1 to b do s := s + a;
+end;
+
+operator / (a : String; b : String) s : String;  
+var
+    index : LongInt;
+begin  
+    for index := Length(b) downto 1 do
+    begin
+        a := DelChars(a, b[index]);
+    end;
+    s := a;
+end;
+
+operator / (a : String; b : LongInt) s : String;  
+begin  
+    s := LeftStr(a, Trunc(Length(a)/Trunc(b)));
 end;
 
 end.

@@ -3200,6 +3200,26 @@ begin
                 stack_push(pocz[sets.StackPointer], buildString(StrEax * trunc(ExtEax)));
             end else Found := False;
         end;
+        // String./
+        'String.divide' : begin
+            if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TSTR) then
+            begin
+                // STR1 STR2 delete
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax / StrEbx));
+            end else if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) and (stack_getback(pocz[sets.StackPointer], 1).EntityType = TNUM) then
+            begin
+                // STR1 NUM1 delete
+                if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+                ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildString(StrEax / trunc(ExtEax)));
+            end else Found := False;
+        end;
 
 
         else begin
