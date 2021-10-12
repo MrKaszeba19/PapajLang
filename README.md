@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-September 22, 2021  
+October 12, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -88,6 +88,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :norway: Norwegian (Norsk bokmål) - *to be implemented*
 - :norway: Norwegian (Norsk nynorsk) - *to be implemented*
 - :sweden: Swedish (Svenska) - *to be implemented*
+- 🇲🇰 Macedonian (Македонски) - *to be implemented*
 
 
 

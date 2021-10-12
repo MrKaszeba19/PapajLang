@@ -3220,6 +3220,13 @@ begin
                 stack_push(pocz[sets.StackPointer], buildString(StrEax / trunc(ExtEax)));
             end else Found := False;
         end;
+        'String.removeMatching' : begin
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            stack_push(pocz[sets.StackPointer], buildString(StrEax / StrEbx));
+        end;
 
 
         else begin

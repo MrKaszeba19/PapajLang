@@ -16,6 +16,7 @@ function OccurrencesOfSubstring(str, sub : String) : LongInt;
 function TrimChars(str : String; chr : Char) : String;
 function TrimCharsLeft(str : String; chr : Char) : String;
 function TrimCharsRight(str : String; chr : Char) : String;
+function RemoveCharset(a : String; b : String) : String;  
 
 operator - (a : String; b : String) s : String; 
 operator - (a : String; b : LongInt) s : String; 
@@ -140,6 +141,17 @@ begin
     Result := str;
 end;
 
+function RemoveCharset(a : String; b : String) : String;  
+var
+    index : LongInt;
+begin  
+    for index := Length(b) downto 1 do
+    begin
+        a := DelChars(a, b[index]);
+    end;
+    Result := a;
+end;
+
 operator - (a : String; b : String) s : String;  
 var
     index : LongInt;
@@ -166,10 +178,7 @@ operator / (a : String; b : String) s : String;
 var
     index : LongInt;
 begin  
-    for index := Length(b) downto 1 do
-    begin
-        a := DelChars(a, b[index]);
-    end;
+    while (a - b <> a) do a := a - b;
     s := a;
 end;
 
