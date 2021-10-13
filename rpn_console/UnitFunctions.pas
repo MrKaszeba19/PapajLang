@@ -93,16 +93,6 @@ begin
 	case i of
     	// binary
     	'+' : begin
-    		//if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-    		//y := stack_pop(pocz[sets.StackPointer]).Num;
-    		//if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-    		//x := stack_pop(pocz[sets.StackPointer]).Num;
-    		//z := x + y;
-    		//if not (sets.Autoclear) then begin
-    		//	stack_push(pocz[sets.StackPointer], buildNumber(x));
-    		//	stack_push(pocz[sets.StackPointer], buildNumber(y));
-    		//end;
-            //stack_push(pocz[sets.StackPointer], buildNumber(z));
             EntEbx := stack_pop(pocz[sets.StackPointer]);
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if not (sets.Autoclear) then begin
@@ -112,26 +102,6 @@ begin
     		stack_push(pocz[sets.StackPointer], EntEax + EntEbx);
     	end;
     	'-' : begin
-            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            //y := stack_pop(pocz[sets.StackPointer]).Num;
-            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            //x := stack_pop(pocz[sets.StackPointer]).Num;
-            //if (not sets.InfMode) then
-            //begin 
-            //    z := x-y;
-            //end else begin 
-            //    if ((y = Infinity) or (y = -Infinity)) and ((x = Infinity) or (x = -Infinity)) then
-            //    begin
-            //        z := NaN;
-            //    end else begin
-            //        z := x-y;
-            //    end;
-            //end;
-            //if not (sets.Autoclear) then begin
-            //	stack_push(pocz[sets.StackPointer], buildNumber(x));
-            //	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            //end;
-            //stack_push(pocz[sets.StackPointer], buildNumber(z));
             EntEbx := stack_pop(pocz[sets.StackPointer]);
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if not (sets.Autoclear) then begin
@@ -160,38 +130,6 @@ begin
     		stack_push(pocz[sets.StackPointer], EntEax * EntEbx);
         end;
         '/' : begin
-            //if (not sets.InfMode) and (sets.StrictType) and (assertNonZeroLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
-            //y := stack_pop(pocz[sets.StackPointer]).Num;
-            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
-            //x := stack_pop(pocz[sets.StackPointer]).Num;
-            //if (not sets.InfMode) then
-            //begin 
-            //    z := x/y;
-            //end else begin 
-            //    if (y = 0) then
-            //    begin
-            //        z := x*Infinity;
-            //    end else if (y = 0) and (x = 0) then
-            //    begin
-            //        z := NaN;
-            //    end else if ((y = Infinity) or (y = -Infinity)) and ((x = Infinity) or (x = -Infinity)) then
-            //    begin
-            //        z := NaN;
-            //    end else if (y = Infinity) then
-            //    begin
-            //        z := 0;
-            //    end else if (y = -Infinity) then
-            //    begin
-            //        z := 0;
-            //    end else begin
-            //        z := x/y;
-            //    end;
-            //end;
-            //if not (sets.Autoclear) then begin
-            //	stack_push(pocz[sets.StackPointer], buildNumber(x));
-            //	stack_push(pocz[sets.StackPointer], buildNumber(y));
-            //end;
-            //stack_push(pocz[sets.StackPointer], buildNumber(z));
             EntEbx := stack_pop(pocz[sets.StackPointer]);
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if not (sets.Autoclear) then begin
@@ -3084,7 +3022,6 @@ begin
                 stack_push(pocz[sets.StackPointer], EntEbx);
             end else Found := False;
         end;
-
         'String.strreduce' : begin
             if (stack_getback(pocz[sets.StackPointer], 3).EntityType = TSTR) then
             begin
@@ -3284,7 +3221,18 @@ begin
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             stack_push(pocz[sets.StackPointer], buildString(StrEax / StrEbx));
         end;
-
+        // others
+        'String.translate' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEcx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if (length(StrEbx) = length(StrEcx))
+                then stack_push(pocz[sets.StackPointer], buildString(StringTranslate(StrEax, StrEbx, StrEcx)))
+                else stack_push(pocz[sets.StackPointer], raiseStringSameLength(i));
+        end;
 
         else begin
         	Found := false;

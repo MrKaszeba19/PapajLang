@@ -17,6 +17,7 @@ function TrimChars(str : String; chr : Char) : String;
 function TrimCharsLeft(str : String; chr : Char) : String;
 function TrimCharsRight(str : String; chr : Char) : String;
 function RemoveCharset(a : String; b : String) : String;  
+function StringTranslate(str, chin, chout : String) : String;  
 
 implementation
 
@@ -144,6 +145,17 @@ begin
         a := DelChars(a, b[index]);
     end;
     Result := a;
+end;
+
+function StringTranslate(str, chin, chout : String) : String; 
+var
+    index : LongInt;
+begin
+    for index := 1 to Length(chin) do
+    begin
+        str := StringReplace(str, chin[index], chout[index], [rfReplaceAll]);
+    end;
+    Result := str;
 end;
 
 end.

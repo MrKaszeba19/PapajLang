@@ -117,6 +117,7 @@ function raiseExceptionUnknownCommand(operand : String) : Entity;
 function raiseExceptionUnknownArray(operand : String) : Entity;
 function raiseSyntaxErrorExpression(operand : String) : Entity;
 function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
+function raiseStringSameLength(operand : String) : Entity;
 function raiseDivisionZero(operand : String) : Entity;
 
 function isZero(e : Entity) : Boolean;
@@ -467,6 +468,11 @@ end;
 function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 begin
     Result := raiseException('EInput:CMaxStrLen: String length constraint violated (max length '+IntToStr(MaxLength)+' of "'+str+'") at "'+operand+'".');
+end;
+
+function raiseStringSameLength(operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CSameStrLen: Strings must have the same length at "'+operand+'".');
 end;
 
 function raiseDivisionZero(operand : String) : Entity;
