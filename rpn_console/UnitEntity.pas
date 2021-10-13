@@ -113,13 +113,37 @@ function buildDate(val : TDateTime) : Entity;
 function buildTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
 
+function raiseExceptionUnknownCommand(operand : String) : Entity;
+function raiseExceptionUnknownArray(operand : String) : Entity;
+function raiseSyntaxErrorExpression(operand : String) : Entity;
+function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
+function raiseDivisionZero(operand : String) : Entity;
+
+function isZero(e : Entity) : Boolean;
+function isNumber(e : Entity) : Boolean;
+function isAnyInfinity(e : Entity) : Boolean;
+function isPosInfinity(e : Entity) : Boolean;
+function isNegInfinity(e : Entity) : Boolean;
+
+operator - (a : String; b : String) s : String; 
+operator - (a : String; b : LongInt) s : String; 
+operator * (a : String; b : LongInt) s : String;
+operator / (a : String; b : String) s : String; 
+operator / (a : String; b : LongInt) s : String; 
+
+operator + (a : Entity; b : Entity) res : Entity;
+operator - (a : Entity; b : Entity) res : Entity;
+operator * (a : Entity; b : Entity) res : Entity;
+operator / (a : Entity; b : Entity) res : Entity;
+
 implementation
 
 {$IFDEF MSWINDOWS}
-uses crt;
+uses crt,
 {$ELSE}
-uses UnixCrt;
+uses UnixCrt,
 {$ENDIF}
+    StrUtils, Math;
 
 
 function verifyPackages(var L : TPackages) : Boolean;
@@ -247,6 +271,8 @@ begin
 	e2 := pom;
 end;
 
+// =============================================================================
+// build entities
 
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
 var
@@ -415,7 +441,167 @@ begin
 	Result := pom;
 end;
 
+// =============================================================================
+// exceptions
+
+function raiseExceptionUnknownCommand(operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CUnknown: Unknown expression at "'+operand+'".');
+end;
+
+function raiseExceptionUnknownArray(operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CNonArray: Array expression expected at "'+operand+'".');
+end;
+
+function raiseSyntaxErrorExpression(operand : String) : Entity;
+begin
+    Result := raiseException('ESyntax:CExpression: Syntax error at expression "('+operand+' )".');
+end;
+
+function raiseImpossibleArithmetics(ent1, ent2 : Entity; operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CArithmetics: Unknown arithmetics of ('+getEntityTypeName(ent1.EntityType)+operand+getEntityTypeName(ent2.EntityType)+').');
+end;
+
+function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
+begin
+    Result := raiseException('EInput:CMaxStrLen: String length constraint violated (max length '+IntToStr(MaxLength)+' of "'+str+'") at "'+operand+'".');
+end;
+
+function raiseDivisionZero(operand : String) : Entity;
+begin
+    Result := raiseException('EInput:CDivZero: Divison by zero at "'+operand+'".');
+end;
+
+// exceed boundaries
+// not null
+// isEmpty
+
+// =============================================================================
+// functions for numerical entities
+
+function isNumber(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNUM);
+end;
+
+function isZero(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNUM) and (e.Num = 0);
+end;
+
+function isAnyInfinity(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNUM) and (abs(e.Num) = Infinity);
+end;
+
+function isPosInfinity(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNUM) and (e.Num = Infinity);
+end;
+
+function isNegInfinity(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNUM) and (e.Num = -Infinity);
+end;
+
+// =============================================================================
 // arithmetics on entities
+
+operator - (a : String; b : String) s : String;  
+var
+    index : LongInt;
+begin  
+    index := RPos(b, a);
+    Delete(a, index, Length(b));
+    s := a;
+end;
+
+operator - (a : String; b : LongInt) s : String;  
+begin  
+    s := LeftStr(a, Length(a)-Trunc(b));
+end;
+
+operator * (a : String; b : LongInt) s : String;  
+var
+    index : LongInt;
+begin  
+    s := '';
+    for index := 1 to b do s := s + a;
+end;
+
+operator / (a : String; b : String) s : String;  
+begin  
+    while (a - b <> a) do a := a - b;
+    s := a;
+end;
+
+operator / (a : String; b : LongInt) s : String;  
+begin  
+    s := LeftStr(a, Trunc(Length(a)/Trunc(b)));
+end;
+
+operator + (a : Entity; b : Entity) res : Entity;
+begin
+    if (a.EntityType = TNUM) and (b.EntityType = TNUM) then
+    begin
+        res := buildNumber(a.Num + b.Num);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TSTR) then 
+    begin
+        res := buildString(a.Str + b.Str);
+    end else begin
+        res := raiseImpossibleArithmetics(a, b, '+');
+    end;
+end;
+
+operator - (a : Entity; b : Entity) res : Entity;
+begin
+    if (a.EntityType = TNUM) and (b.EntityType = TNUM) then
+    begin
+        res := buildNumber(a.Num - b.Num);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TSTR) then
+    begin
+        res := buildString(a.Str - b.Str);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then
+    begin
+        res := buildString(a.Str - trunc(b.Num));
+    end else begin
+        res := raiseImpossibleArithmetics(a, b, '-');
+    end;
+end;
+
+operator * (a : Entity; b : Entity) res : Entity;
+begin
+    if (a.EntityType = TNUM) and (b.EntityType = TNUM) then
+    begin
+        res := buildNumber(a.Num * b.Num);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then 
+    begin
+        res := buildString(a.Str * trunc(b.Num));
+    end else if (a.EntityType = TNUM) and (b.EntityType = TSTR) then 
+    begin
+        res := buildString(b.Str * trunc(a.Num));
+    end else begin
+        res := raiseImpossibleArithmetics(a, b, '*');
+    end;
+end;
+
+operator / (a : Entity; b : Entity) res : Entity;
+begin
+    if (a.EntityType = TNUM) and (b.EntityType = TNUM) then
+    begin
+        res := buildNumber(a.Num / b.Num);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TSTR) then
+    begin
+        res := buildString(a.Str / b.Str);
+    end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then
+    begin
+        res := buildString(a.Str / trunc(b.Num));
+    end else begin
+        res := raiseImpossibleArithmetics(a, b, '/');
+    end;
+end;
 
 end.
 

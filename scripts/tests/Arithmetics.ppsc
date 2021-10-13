@@ -1,0 +1,27 @@
+4 5 + println
+4 5 - println
+4 5 * println
+4 5 / println
+
+newln
+"xyzxyz" "wdf" + println
+"xyzxyz" "xy" - println
+"xyzxyz" 2 - println
+"xyzxyz" 2 * println
+"xyzxyz" "yz" / println
+"xyzxyz" 2 / println
+
+newln
+5 "abc" * println
+"abcabcabc" "c" - println
+"abcabcabc" 2 - println 
+"abcabcabc" "c" / println
+"abcabcabc" 2 / println
+
+newln
+"xyzxyz" "" + println
+"xyzxyz" "" - println
+"xyzxyz" 0 - println
+"xyzxyz" 0 * println
+"xyzxyz" "" / println
+"xyzxyz" 0 / println

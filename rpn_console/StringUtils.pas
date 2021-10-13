@@ -18,12 +18,6 @@ function TrimCharsLeft(str : String; chr : Char) : String;
 function TrimCharsRight(str : String; chr : Char) : String;
 function RemoveCharset(a : String; b : String) : String;  
 
-operator - (a : String; b : String) s : String; 
-operator - (a : String; b : LongInt) s : String; 
-operator * (a : String; b : LongInt) s : String;
-operator / (a : String; b : String) s : String; 
-operator / (a : String; b : LongInt) s : String; 
-
 implementation
 
 uses SysUtils, StrUtils;
@@ -150,41 +144,6 @@ begin
         a := DelChars(a, b[index]);
     end;
     Result := a;
-end;
-
-operator - (a : String; b : String) s : String;  
-var
-    index : LongInt;
-begin  
-    index := RPos(b, a);
-    Delete(a, index, Length(b));
-    s := a;
-end;
-
-operator - (a : String; b : LongInt) s : String;  
-begin  
-    s := LeftStr(a, Length(a)-Trunc(b));
-end;
-
-operator * (a : String; b : LongInt) s : String;  
-var
-    index : LongInt;
-begin  
-    s := '';
-    for index := 1 to b do s := s + a;
-end;
-
-operator / (a : String; b : String) s : String;  
-var
-    index : LongInt;
-begin  
-    while (a - b <> a) do a := a - b;
-    s := a;
-end;
-
-operator / (a : String; b : LongInt) s : String;  
-begin  
-    s := LeftStr(a, Trunc(Length(a)/Trunc(b)));
 end;
 
 end.

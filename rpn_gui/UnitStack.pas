@@ -13,6 +13,14 @@ end;
 
 type StackDB = array of TStack;
 
+//type EntMemory = object
+//    private
+//        Layers : array of VariableLayer;
+//    public
+//        constructor Create;
+//        destructor Destroy;      
+//end;
+
 function stack_null() : TStack;
 procedure stack_push(var pocz:TStack; node : Entity);
 function stack_pop(var pocz:TStack) : Entity;
@@ -54,11 +62,6 @@ function assertNaturalLocated(var stack : TStack; val : Entity; operand : String
 function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
-
-function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
-function raiseExceptionUnknownArray(var stack : TStack; operand : String) : Entity;
-function raiseSyntaxErrorExpression(operand : String) : Entity;
-function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
@@ -520,30 +523,6 @@ begin
         assertCharLocated := true;
     end else assertCharLocated := false;
 end;
-
-function raiseExceptionUnknownCommand(var stack : TStack; operand : String) : Entity;
-begin
-    raiseExceptionUnknownCommand := raiseException('EInput:CUnknown: Unknown expression at "'+operand+'".');
-end;
-
-function raiseExceptionUnknownArray(var stack : TStack; operand : String) : Entity;
-begin
-    Result := raiseException('EInput:CNonArray: Array expression expected at "'+operand+'".');
-end;
-
-function raiseSyntaxErrorExpression(operand : String) : Entity;
-begin
-    raiseSyntaxErrorExpression := raiseException('ESyntax:CExpression: Syntax Error at expression "('+operand+' )".');
-end;
-
-function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
-begin
-    Result := raiseException('EInput:CMaxStrLen: String length constraint violated (max length '+IntToStr(MaxLength)+' of "'+str+'") at "'+operand+'".');
-end;
-
-// exceed boundaries
-// not null
-// isEmpty
 
 // ============= Arrays
 

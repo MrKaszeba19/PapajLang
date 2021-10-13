@@ -198,7 +198,7 @@ begin
             end;
             addr := vardb.locateVariable(L[1]);
             if (addr.Layer = -1) then 
-                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(pocz[sets.StackPointer], L[1]))
+                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(L[1]))
             else begin
                 if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
                 location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
@@ -371,7 +371,9 @@ begin
                     Found := False;
             end;
         end else begin
-            stack_push(pocz[sets.StackPointer], buildNumber(Im));
+            if (i <> '.')
+                then stack_push(pocz[sets.StackPointer], buildNumber(Im))
+                else stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(i));
         end;
 
         if not Found then
@@ -380,7 +382,7 @@ begin
     		begin
 				raiserror(stack_pop(pocz[sets.StackPointer]).Str);
 			end else begin
-                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(pocz[sets.StackPointer], i));
+                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownCommand(i));
             end;
         end;
     end;
