@@ -10,18 +10,24 @@ uses
 procedure set1DEN();
 procedure set1ENG();
 procedure set1FRA();
+procedure set1GER();
+procedure set1NED();
 procedure set1POL();
 procedure set1HBR();
 procedure set1CSB();
 procedure set1CSB2();
+procedure set1CSB3();
 
 procedure set2DEN();
 procedure set2ENG();
 procedure set2FRA();
+procedure set2GER();
+procedure set2NED();
 procedure set2POL();
 procedure set2HBR();
 procedure set2CSB();
 procedure set2CSB2();
+procedure set2CSB3();
 
 implementation
 uses Unit1, Unit4;
@@ -86,6 +92,50 @@ begin
      Unit1.Form1.MenuSave.Caption := 'Enregistrer un script dans un fichier';
      Unit1.Form1.OpenDialog1.Title := 'Charger un script à partir d''un fichier';
      Unit1.Form1.SaveDialog1.Title := 'Enregistrer un script dans un fichier';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+procedure set1GER();
+begin
+     Unit1.Form1.Caption := 'UPN-Rechner – PapajScript';
+     Unit1.Form1.Label1.Caption := 'PS-Ausdruck';
+     Unit1.Form1.Edit1.TextHint  := 'Geben Sie einen durch Leerzeichen getrennten PS-Ausdruck ein, e.g. "2 3 +" oder "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'Resultat';
+     Unit1.Form1.Button1.Caption := 'Zähle!';
+     Unit1.Form1.MenuItem1.Caption := 'Anwendung';
+     Unit1.Form1.MenuItem2.Caption := 'Sprache';
+     Unit1.Form1.MenuQuit.Caption := 'Schließen';
+     Unit1.Form1.Button2.Caption := 'Skript ausführen';
+     Unit1.Form1.Label2.Caption := 'PapajScript-Code';
+     Unit1.Form1.MenuLoad.Caption := 'Skript aus Datei laden';
+     Unit1.Form1.MenuSave.Caption := 'Skript in Datei speichern';
+     Unit1.Form1.OpenDialog1.Title := 'Skript aus Datei laden';
+     Unit1.Form1.SaveDialog1.Title := 'Skript in Datei speichern';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+procedure set1NED();
+begin
+     Unit1.Form1.Caption := 'OPN-calculator – PapajScript';
+     Unit1.Form1.Label1.Caption := 'PS-uitdrukking';
+     Unit1.Form1.Edit1.TextHint  := 'Typ een PS-uitdrukking die wordt gescheiden door spaties, bijv. "2 3 +" of "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'Resultaat';
+     Unit1.Form1.Button1.Caption := 'Bereken het!';
+     Unit1.Form1.MenuItem1.Caption := 'Toepassing';
+     Unit1.Form1.MenuItem2.Caption := 'Sprache';
+     Unit1.Form1.MenuQuit.Caption := 'Sluiten';
+     Unit1.Form1.Button2.Caption := 'Script uitvoeren';
+     Unit1.Form1.Label2.Caption := 'PapajScript-code';
+     Unit1.Form1.MenuLoad.Caption := 'Script uit bestand laden';
+     Unit1.Form1.MenuSave.Caption := 'Script in bestand opslaan';
+     Unit1.Form1.OpenDialog1.Title := 'Script uit bestand laden';
+     Unit1.Form1.SaveDialog1.Title := 'Script in bestand opslaan';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -163,17 +213,39 @@ begin
      Unit1.Form1.Caption := 'Kalkulator OPN – PapajScript';
      Unit1.Form1.Label1.Caption := 'Vësłóv PS';
      Unit1.Form1.Edit1.TextHint  := 'Napiše vësłóv OPN rozdzeloni spacijama, np. "2 3 +" lub "20 4 / 5 +"';
-     Unit1.Form1.Edit2.TextHint  := 'Vindzenié';
+     Unit1.Form1.Edit2.TextHint  := 'Vindzenje';
      Unit1.Form1.Button1.Caption := 'Rëchuj!';
      Unit1.Form1.MenuItem1.Caption := 'Aplikacijô';
      Unit1.Form1.MenuItem2.Caption := 'Jãzik';
      Unit1.Form1.MenuQuit.Caption := 'Zamkni';
      Unit1.Form1.Button2.Caption := 'Zreš';
      Unit1.Form1.Label2.Caption := 'PapajScriptovi kod';
-     Unit1.Form1.MenuLoad.Caption := 'Včëtô skript z lopku';
-     Unit1.Form1.MenuSave.Caption := 'Zôpiše skript do lopku';
-     Unit1.Form1.OpenDialog1.Title := 'Včëtô skript z lopku';
-     Unit1.Form1.SaveDialog1.Title := 'Zôpiše skript do lopku';
+     Unit1.Form1.MenuLoad.Caption := 'Včëtô skript z lopka';
+     Unit1.Form1.MenuSave.Caption := 'Zapiše skript do lopka';
+     Unit1.Form1.OpenDialog1.Title := 'Včëtô skript z lopka';
+     Unit1.Form1.SaveDialog1.Title := 'Zapiše skript do lopka';
+     Unit1.Form1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
+     Unit1.Form1.Edit2.BiDiMode := bdLeftToRight;
+end;
+
+procedure set1CSB3();
+begin
+     Unit1.Form1.Caption := 'Каљкулатор ОПН – PapajScript';
+     Unit1.Form1.Label1.Caption := 'Вёслóв PS';
+     Unit1.Form1.Edit1.TextHint  := 'Напише вёслóв ОПН розѕељони спацијама, нп. "2 3 +" луб "20 4 / 5 +"';
+     Unit1.Form1.Edit2.TextHint  := 'винѕење';
+     Unit1.Form1.Button1.Caption := 'Рёхуј!';
+     Unit1.Form1.MenuItem1.Caption := 'Апликацијô';
+     Unit1.Form1.MenuItem2.Caption := 'Јãзик';
+     Unit1.Form1.MenuQuit.Caption := 'Замкни';
+     Unit1.Form1.Button2.Caption := 'Зреш';
+     Unit1.Form1.Label2.Caption := 'ПапајСцриптови код';
+     Unit1.Form1.MenuLoad.Caption := 'Вчётô скрипт з лопка';
+     Unit1.Form1.MenuSave.Caption := 'Запише скрипт до лопка';
+     Unit1.Form1.OpenDialog1.Title := 'Вчётô скрипт з лопка';
+     Unit1.Form1.SaveDialog1.Title := 'Запише скрипт до лопка';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -205,6 +277,26 @@ begin
      Unit4.Form2.Caption := 'Mettez une expression';
      Unit4.Form2.Label1.Caption := 'Expression';
      Unit4.Form2.Button1.Caption := 'Soumettre';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
+
+procedure set2GER();
+begin
+     Unit4.Form2.Caption := 'Scanne einen Ausdruck hier';
+     Unit4.Form2.Label1.Caption := 'Ausdruck';
+     Unit4.Form2.Button1.Caption := 'Senden';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
+
+procedure set2NED();
+begin
+     Unit4.Form2.Caption := 'Een uitdrukking scannen';
+     Unit4.Form2.Label1.Caption := 'Uitdrukking';
+     Unit4.Form2.Button1.Caption := 'Indienen';
      Unit4.Form2.BiDiMode := bdLeftToRight;
      Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
      Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
@@ -242,9 +334,19 @@ end;
 
 procedure set2CSB2();
 begin
-     Unit4.Form2.Caption := 'Vczëtô vësłóv';
+     Unit4.Form2.Caption := 'Včëtô vësłóv';
      Unit4.Form2.Label1.Caption := 'Vësłóv';
      Unit4.Form2.Button1.Caption := 'Zacvjerdze';
+     Unit4.Form2.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
+     Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
+end;
+
+procedure set2CSB3();
+begin
+     Unit4.Form2.Caption := 'Вчётô вёслóв';
+     Unit4.Form2.Label1.Caption := 'вёслóв';
+     Unit4.Form2.Button1.Caption := 'Зацвјерѕе';
      Unit4.Form2.BiDiMode := bdLeftToRight;
      Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
      Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;

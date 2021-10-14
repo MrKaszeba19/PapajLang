@@ -55,10 +55,14 @@ begin
      case Unit1.language of
           'den' : Unit3.set2DEN();
           'eng' : Unit3.set2ENG();
+          'fra' : Unit3.set2FRA();
+          'ger' : Unit3.set2GER();
+          'ned' : Unit3.set2NED();
           'pol' : Unit3.set2POL();
           'hbr' : Unit3.set2HBR();
-          'csb' : Unit3.set1CSB();
-          'csb2' : Unit3.set1CSB2();
+          'csb' : Unit3.set2CSB();
+          'csb2' : Unit3.set2CSB2();
+          'csb3' : Unit3.set2CSB3();
           else Unit3.set2ENG();
      end;
 end;

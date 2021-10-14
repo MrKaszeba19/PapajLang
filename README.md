@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-October 13, 2021  
+October 14, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -72,23 +72,24 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - `\q` or `\quit` - exit the REPL.
 
 ## Languages support for the GUI application
-- :uk: **English** - *default*
+- :uk: **English** – *default*
 - :denmark: **Danish** (Dansk)
+- 🇳🇱 **Dutch** (Nederlands)
 - :fr: **French** (Français)
+- :de: **German** (Deutsch)
 - :israel: **Hebrew** (עברית)
-- :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and alternative orthography
+- :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and alternative orthographies (both Latin and Cyrilic)
 - :poland: **Polish** (Polski)
-- :de: German (Deutsch) - *to be implemented*
-- 🇳🇱 Dutch (Nederlands) - *to be implemented*
-- 🇿🇦 Afrikaans (Afrikaans) - *to be implemented*
-- :it: Italian (Italiano) - *to be implemented*
-- :morocco: Arabic (العربية) - *to be implemented*
-- :ru: Russian (Русский) - *to be implemented*
-- :israel: Yiddish (יידיש) *to be implemented*
-- :norway: Norwegian (Norsk bokmål) - *to be implemented*
-- :norway: Norwegian (Norsk nynorsk) - *to be implemented*
-- :sweden: Swedish (Svenska) - *to be implemented*
-- 🇲🇰 Macedonian (Македонски) - *to be implemented*
+- 🇿🇦 Afrikaans (Afrikaans) – *to be implemented*
+- :it: Italian (Italiano) – *to be implemented*
+- :morocco: Arabic (العربية) – *to be implemented*
+- :ru: Russian (Русский) – *to be implemented*
+- :israel: Yiddish (יידיש) – *to be implemented*
+- :norway: Norwegian (Norsk bokmål) – *to be implemented*
+- :norway: Norwegian (Norsk nynorsk) – *to be implemented*
+- :sweden: Swedish (Svenska) – *to be implemented*
+- :yellow_heart::blue_heart: Silesian (Ślůnsko godka) – *to be implemented*
+- 🇲🇰 Macedonian (Македонски) – *to be implemented*
 
 
 

@@ -623,13 +623,17 @@ object Form1: TForm1
         Caption = 'Dansk'
         OnClick = MenuLangDENClick
       end
+      object MenuLangGER: TMenuItem
+        Caption = 'Deutsch'
+        OnClick = MenuLangGERClick
+      end
       object MenuLangENG: TMenuItem
         Caption = 'English'
         OnClick = MenuLangENGClick
       end
-      object MenuItemFRA: TMenuItem
+      object MenuLangFRA: TMenuItem
         Caption = 'Français'
-        OnClick = MenuItemFRAClick
+        OnClick = MenuLangFRAClick
       end
       object MenuLangCSB: TMenuItem
         Caption = 'Kaszëbsczi'
@@ -638,6 +642,14 @@ object Form1: TForm1
       object MenuLangCSB2: TMenuItem
         Caption = 'Kašëbsči'
         OnClick = MenuLangCSB2Click
+      end
+      object MenuLangCSB3: TMenuItem
+        Caption = 'Кашёбсчи'
+        OnClick = MenuLangCSB3Click
+      end
+      object MenuLangNED: TMenuItem
+        Caption = 'Nederlands'
+        OnClick = MenuLangNEDClick
       end
       object MenuLangPOL: TMenuItem
         Caption = 'Polski'

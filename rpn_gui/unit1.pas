@@ -24,7 +24,10 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
-    MenuItemFRA: TMenuItem;
+    MenuLangCSB3: TMenuItem;
+    MenuLangGER: TMenuItem;
+    MenuLangNED: TMenuItem;
+    MenuLangFRA: TMenuItem;
     MenuLangCSB: TMenuItem;
     MenuLangCSB2: TMenuItem;
     MenuQuit: TMenuItem;
@@ -39,9 +42,12 @@ type
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
-    procedure MenuItemFRAClick(Sender: TObject);
+    procedure MenuLangCSB3Click(Sender: TObject);
+    procedure MenuLangFRAClick(Sender: TObject);
     procedure MenuLangCSB2Click(Sender: TObject);
     procedure MenuLangCSBClick(Sender: TObject);
+    procedure MenuLangGERClick(Sender: TObject);
+    procedure MenuLangNEDClick(Sender: TObject);
     procedure OpenOfflineFile();
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -100,16 +106,34 @@ begin
      Unit3.set1CSB();
 end;
 
+procedure TForm1.MenuLangGERClick(Sender: TObject);
+begin
+     language := 'ger';
+     Unit3.set1GER();
+end;
+
+procedure TForm1.MenuLangNEDClick(Sender: TObject);
+begin
+     language := 'ned';
+     Unit3.set1NED();
+end;
+
 procedure TForm1.MenuLangCSB2Click(Sender: TObject);
 begin
     language := 'csb2';
     Unit3.set1CSB2();
 end;
 
-procedure TForm1.MenuItemFRAClick(Sender: TObject);
+procedure TForm1.MenuLangFRAClick(Sender: TObject);
 begin
     language := 'fra';
     Unit3.set1FRA();
+end;
+
+procedure TForm1.MenuLangCSB3Click(Sender: TObject);
+begin
+     language := 'csb3';
+     Unit3.set1CSB3();
 end;
 
 { TForm1 }
@@ -181,7 +205,7 @@ begin
      //showmessage(GetLocaleLanguage);
      case (GetLocaleLanguage) of
           'csb.UTF-8' : language := 'csb';
-          'cab_PL.UTF-8' : language := 'csb';
+          'csb_PL.UTF-8' : language := 'csb';
           'da_DK.UTF-8' : language := 'den';
           'Danish_Denmark.1252' : language := 'den';
           'Danish' : language := 'den';
@@ -190,6 +214,12 @@ begin
           'en_US.UTF-8' : language := 'eng';
           'English_Australia.1252' : language := 'eng';
           'English' : language := 'eng';
+          'de_DE.UTF-8' : language := 'ger';
+          'German_Germany.1252' : language := 'ger';
+          'German' : language := 'ger';
+          'nl_NL.UTF-8' : language := 'ned';
+          'Dutch_Netherlands.1252' : language := 'ned';
+          'Dutch' : language := 'ned';
           'pl.UTF-8' : language := 'pol';
           'pl_PL.UTF-8' : language := 'pol';
           'Polish_Poland.1250' : language := 'pol';
@@ -212,10 +242,13 @@ begin
           'den' : set1DEN();
           'eng' : set1ENG();
           'fra' : set1FRA();
+          'ger' : set1GER();
+          'ned' : set1NED();
           'pol' : set1POL();
 	  'hbr' : set1HBR();
           'csb' : set1CSB();
           'csb2' : set1CSB2();
+          'csb3' : set1CSB3();
           else set1ENG();
      end;
      {$IFDEF MSWINDOWS}
@@ -241,7 +274,7 @@ end;
 
 procedure TForm1.MenuLangPOLClick(Sender: TObject);
 begin
-     language := 'poi';
+     language := 'pol';
      Unit3.set1POL();
 end;
 
