@@ -241,7 +241,7 @@ begin
      Unit1.Form1.MenuItem2.Caption := 'Јãзик';
      Unit1.Form1.MenuQuit.Caption := 'Замкни';
      Unit1.Form1.Button2.Caption := 'Зреш';
-     Unit1.Form1.Label2.Caption := 'ПапајСцриптови код';
+     Unit1.Form1.Label2.Caption := 'ПапајСкриптови код';
      Unit1.Form1.MenuLoad.Caption := 'Вчётô скрипт з лопка';
      Unit1.Form1.MenuSave.Caption := 'Запише скрипт до лопка';
      Unit1.Form1.OpenDialog1.Title := 'Вчётô скрипт з лопка';

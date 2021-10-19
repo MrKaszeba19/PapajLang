@@ -3221,6 +3221,16 @@ begin
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             stack_push(pocz[sets.StackPointer], buildString(StrEax / StrEbx));
         end;
+        // logics
+        'String.isEmpty' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+                StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+                stack_push(pocz[sets.StackPointer], buildBoolean(StrEax = ''));
+            end else Found := False;
+        end;
+
         // others
         'String.translate' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
@@ -4985,6 +4995,16 @@ begin
             end else Found := false;
         end;
         // crush, pushAt, popAt, swapAt, toString, size
+
+         // logics
+        'Array.isEmpty' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildBoolean(stack_size(pocz[trunc(ArrEax.Num)]) = 0));
+            end else Found := False;
+        end;
 
         else begin
             Found := false;
