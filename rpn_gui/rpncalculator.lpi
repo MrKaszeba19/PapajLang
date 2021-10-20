@@ -121,10 +121,6 @@
         <Filename Value="StringUtils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
-      <Unit17>
-        <Filename Value="ConsoleUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

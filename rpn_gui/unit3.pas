@@ -44,6 +44,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Luk';
      Unit1.Form1.Button2.Caption := 'Kør scripten';
      Unit1.Form1.Label2.Caption := 'PapajScript-kode';
+     Unit1.Form1.MenuNewFile.Caption := 'Ny fil';
      Unit1.Form1.MenuLoad.Caption := 'Hent scripten fra en fil';
      Unit1.Form1.MenuSave.Caption := 'Gem scripten som en fil';
      Unit1.Form1.OpenDialog1.Title := 'Hent scripten fra en fil';
@@ -66,6 +67,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Close';
      Unit1.Form1.Button2.Caption := 'Run script';
      Unit1.Form1.Label2.Caption := 'PapajScript code';
+     Unit1.Form1.MenuNewFile.Caption := 'New file';
      Unit1.Form1.MenuLoad.Caption := 'Load script from file';
      Unit1.Form1.MenuSave.Caption := 'Save script to file';
      Unit1.Form1.OpenDialog1.Title := 'Load script from file';
@@ -88,6 +90,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Fermer';
      Unit1.Form1.Button2.Caption := 'Exécuter';//'Exécuter un script';
      Unit1.Form1.Label2.Caption := 'PapajScript code';
+     Unit1.Form1.MenuNewFile.Caption := 'Nouveau fichier';
      Unit1.Form1.MenuLoad.Caption := 'Charger un script à partir d''un fichier';
      Unit1.Form1.MenuSave.Caption := 'Enregistrer un script dans un fichier';
      Unit1.Form1.OpenDialog1.Title := 'Charger un script à partir d''un fichier';
@@ -110,6 +113,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Schließen';
      Unit1.Form1.Button2.Caption := 'Skript ausführen';
      Unit1.Form1.Label2.Caption := 'PapajScript-Code';
+     Unit1.Form1.MenuNewFile.Caption := 'Neue Datei';
      Unit1.Form1.MenuLoad.Caption := 'Skript aus Datei laden';
      Unit1.Form1.MenuSave.Caption := 'Skript in Datei speichern';
      Unit1.Form1.OpenDialog1.Title := 'Skript aus Datei laden';
@@ -132,6 +136,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Sluiten';
      Unit1.Form1.Button2.Caption := 'Script uitvoeren';
      Unit1.Form1.Label2.Caption := 'PapajScript-code';
+     Unit1.Form1.MenuNewFile.Caption := 'Nieuw bestand';
      Unit1.Form1.MenuLoad.Caption := 'Script uit bestand laden';
      Unit1.Form1.MenuSave.Caption := 'Script in bestand opslaan';
      Unit1.Form1.OpenDialog1.Title := 'Script uit bestand laden';
@@ -154,6 +159,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Zamknij';
      Unit1.Form1.Button2.Caption := 'Uruchom';
      Unit1.Form1.Label2.Caption := 'Kod PapajScript';
+     Unit1.Form1.MenuNewFile.Caption := 'Nowy plik';
      Unit1.Form1.MenuLoad.Caption := 'Wczytaj skrypt z pliku';
      Unit1.Form1.MenuSave.Caption := 'Zapisz skrypt do pliku';
      Unit1.Form1.OpenDialog1.Title := 'Wczytaj skrypt z pliku';
@@ -176,6 +182,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'סגור';
      Unit1.Form1.Button2.Caption := 'הפעל';
      Unit1.Form1.Label2.Caption := 'קוד PapajScript';
+     Unit1.Form1.MenuNewFile.Caption := 'קובץ חדש';
      Unit1.Form1.MenuLoad.Caption := 'העלה מקובץ';
      Unit1.Form1.MenuSave.Caption := 'שמור לקובץ';
      Unit1.Form1.OpenDialog1.Title := 'העלה מקובץ';
@@ -198,10 +205,11 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Zamkni';
      Unit1.Form1.Button2.Caption := 'Zrësz';
      Unit1.Form1.Label2.Caption := 'PapajScriptòwi kòd';
-     Unit1.Form1.MenuLoad.Caption := 'Wczëtôj skript z lopkù';
-     Unit1.Form1.MenuSave.Caption := 'Zôpisze skript do lopkù';
-     Unit1.Form1.OpenDialog1.Title := 'Wczëtôj skript z lopkù';
-     Unit1.Form1.SaveDialog1.Title := 'Zôpisze skript do lopkù';
+     Unit1.Form1.MenuNewFile.Caption := 'Nowi lopk';
+     Unit1.Form1.MenuLoad.Caption := 'Wczëtôj skript z lopka';
+     Unit1.Form1.MenuSave.Caption := 'Zôpisze skript do lopka';
+     Unit1.Form1.OpenDialog1.Title := 'Wczëtôj skript z lopka';
+     Unit1.Form1.SaveDialog1.Title := 'Zôpisze skript do lopka';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -220,6 +228,7 @@ begin
      Unit1.Form1.MenuQuit.Caption := 'Zamkni';
      Unit1.Form1.Button2.Caption := 'Zreš';
      Unit1.Form1.Label2.Caption := 'PapajScriptovi kod';
+     Unit1.Form1.MenuNewFile.Caption := 'Novi lopk';
      Unit1.Form1.MenuLoad.Caption := 'Včëtô skript z lopka';
      Unit1.Form1.MenuSave.Caption := 'Zapiše skript do lopka';
      Unit1.Form1.OpenDialog1.Title := 'Včëtô skript z lopka';
@@ -234,18 +243,19 @@ procedure set1CSB3();
 begin
      Unit1.Form1.Caption := 'Каљкулатор ОПН – PapajScript';
      Unit1.Form1.Label1.Caption := 'Вёслóв PS';
-     Unit1.Form1.Edit1.TextHint  := 'Напише вёслóв ОПН розѕељони спацијама, нп. "2 3 +" луб "20 4 / 5 +"';
+     Unit1.Form1.Edit1.TextHint  := 'Напише вёслóв ОПН розѕељони спацијама, нп. "2 3 +" љуб "20 4 / 5 +"';
      Unit1.Form1.Edit2.TextHint  := 'винѕење';
      Unit1.Form1.Button1.Caption := 'Рёхуј!';
-     Unit1.Form1.MenuItem1.Caption := 'Апликацијô';
+     Unit1.Form1.MenuItem1.Caption := 'Апљикацијô';
      Unit1.Form1.MenuItem2.Caption := 'Јãзик';
      Unit1.Form1.MenuQuit.Caption := 'Замкни';
      Unit1.Form1.Button2.Caption := 'Зреш';
      Unit1.Form1.Label2.Caption := 'ПапајСкриптови код';
-     Unit1.Form1.MenuLoad.Caption := 'Вчётô скрипт з лопка';
-     Unit1.Form1.MenuSave.Caption := 'Запише скрипт до лопка';
-     Unit1.Form1.OpenDialog1.Title := 'Вчётô скрипт з лопка';
-     Unit1.Form1.SaveDialog1.Title := 'Запише скрипт до лопка';
+     Unit1.Form1.MenuNewFile.Caption := 'Нови љопк';
+     Unit1.Form1.MenuLoad.Caption := 'Вчётô скрипт з љопка';
+     Unit1.Form1.MenuSave.Caption := 'Запише скрипт до љопка';
+     Unit1.Form1.OpenDialog1.Title := 'Вчётô скрипт з љопка';
+     Unit1.Form1.SaveDialog1.Title := 'Запише скрипт до љопка';
      Unit1.Form1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Label1.BiDiMode := bdLeftToRight;
      Unit1.Form1.Edit1.BiDiMode := bdLeftToRight;
@@ -345,7 +355,7 @@ end;
 procedure set2CSB3();
 begin
      Unit4.Form2.Caption := 'Вчётô вёслóв';
-     Unit4.Form2.Label1.Caption := 'вёслóв';
+     Unit4.Form2.Label1.Caption := 'Вёслóв';
      Unit4.Form2.Button1.Caption := 'Зацвјерѕе';
      Unit4.Form2.BiDiMode := bdLeftToRight;
      Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
