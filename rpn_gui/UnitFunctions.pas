@@ -4476,6 +4476,16 @@ begin
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], table_modeStr(pocz[trunc(ArrEax.Num)].Values));
         end;
+        'Array.reduceGCD' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_gcd(pocz[trunc(ArrEax.Num)].Values)));
+        end;
+        'Array.reduceLCM' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_lcm(pocz[trunc(ArrEax.Num)].Values)));
+        end;
         'Array.reduceMin' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
@@ -5000,9 +5010,56 @@ begin
         'Array.isEmpty' : begin
             if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
             begin
-                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
                 ArrEax := stack_pop(pocz[sets.StackPointer]);
                 stack_push(pocz[sets.StackPointer], buildBoolean(stack_size(pocz[trunc(ArrEax.Num)]) = 0));
+            end else Found := False;
+        end;
+
+        // 052 functions
+        'Array.cutNulls' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (isNull(pocz[trunc(ArrEax.Num)].Values[index])) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+         'Array.cutZeros' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (isZero(pocz[trunc(ArrEax.Num)].Values[index])) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+         'Array.cutEmptyStrings' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (isEmptyString(pocz[trunc(ArrEax.Num)].Values[index])) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
             end else Found := False;
         end;
 

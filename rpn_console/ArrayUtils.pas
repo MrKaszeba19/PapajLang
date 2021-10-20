@@ -31,6 +31,10 @@ function table_modeStr(tab : TEntities) : Entity;
 function table_abs(tab : TEntities) : Extended;
 function table_variance(tab : TEntities) : Extended;
 function table_stddev(tab : TEntities) : Extended;
+function table_gcd(tab : TEntities) : Extended;
+function table_lcm(tab : TEntities) : Extended;
+
+procedure array_cutNulls(var tab : TEntities);
 
 implementation
 
@@ -468,6 +472,60 @@ function table_stddev(tab : TEntities) : Extended;
 begin
 	table_stddev := sqrt(table_variance(tab));
 end;
+
+function table_gcd(tab : TEntities) : Extended;
+var
+	i    : Integer;
+	s    : Extended;
+begin
+    s := tab[0].Num;
+    for i := 1 to Length(tab)-1 do
+        s := gcd(s, tab[i].Num);
+    Result := s;
+end;
+
+function table_lcm(tab : TEntities) : Extended;
+var
+	i    : Integer;
+	s    : Extended;
+begin
+    s := tab[0].Num;
+    for i := 1 to Length(tab)-1 do
+        s := lcm(s, tab[i].Num);
+    Result := s;
+end;
+
+// Array utilities
+
+procedure array_justpop(var pocz : TEntities; index : LongInt);
+var
+	i : LongInt;
+begin
+	for i := index to Length(pocz)-2 do pocz[i] := pocz[i+1];
+	SetLength(pocz, Length(pocz)-1);
+end;
+
+procedure array_cutNulls(var tab : TEntities);
+var
+    index : LongInt;
+    len   : LongInt;
+begin
+    index := 1;
+    len := Length(tab);
+    if (len > 0) then
+    begin
+        while (index < len) do
+        begin
+            if (isNull(tab[index])) then
+            begin
+                array_justpop(tab, index);
+            end else begin
+                index := index + 1;
+            end;
+        end;
+    end;
+end;
+
 
 end.
 

@@ -125,6 +125,8 @@ function isNumber(e : Entity) : Boolean;
 function isAnyInfinity(e : Entity) : Boolean;
 function isPosInfinity(e : Entity) : Boolean;
 function isNegInfinity(e : Entity) : Boolean;
+function isNull(e : Entity) : Boolean;
+function isEmptyString(e : Entity) : Boolean;
 
 operator - (a : String; b : String) s : String; 
 operator - (a : String; b : LongInt) s : String; 
@@ -485,7 +487,7 @@ end;
 // isEmpty
 
 // =============================================================================
-// functions for numerical entities
+// functions for checking entities
 
 function isNumber(e : Entity) : Boolean;
 begin
@@ -510,6 +512,16 @@ end;
 function isNegInfinity(e : Entity) : Boolean;
 begin
     Result := (e.EntityType = TNUM) and (e.Num = -Infinity);
+end;
+
+function isNull(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TNIL);
+end;
+
+function isEmptyString(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TSTR) and (e.Str = '');
 end;
 
 // =============================================================================
