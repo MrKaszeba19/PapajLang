@@ -1,0 +1,9 @@
+@use(Array)
+
+"Enter n: " print
+scan toNumber -> $n
+
+[ $n times { $n random } ] -> $t
+
+$t reduceAvg
+$t distinctNumbers reduceAvg println

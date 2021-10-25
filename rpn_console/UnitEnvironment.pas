@@ -248,13 +248,18 @@ var
     ArrEcx     : Entity;
 begin
     env := buildNewEnvironment();
+    //writeln('input: ', input);
     env.Stack := parseOpen(input, env.Stack, sets, vardb);
     cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+    //pocz := parseOpen(input, pocz, sets, vardb);
+    //cnt := stack_size(pocz[env.Settings.StackPointer]);
+    //writeln('cnt: ', cnt);
     stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, cnt));
     ArrEcx := stack_pop(pocz[sets.StackPointer]);
     for index := 0 to cnt-1 do
     begin
         pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
+        //pocz[trunc(ArrEcx.Num)].Values[index] := pocz[env.Settings.StackPointer].Values[index];
     end; 
     disposeEnvironment(env);
     wrapArrayFromString := ArrEcx;
@@ -712,6 +717,7 @@ begin
 
         if InstructionBuilt then
         begin
+            //writeln('command: ', ExecStr);
             case mode of
                 MNORM : begin
                     if ExecStr <> '' then
@@ -888,6 +894,8 @@ begin
             InstructionBuilt := False;
         end;
         Inc(index);
+        //writeln(stack_showFull(pocz[sets.StackPointer]));
+        //writeln(stack_show(pocz[sets.StackPointer], sets.Mask));
   	end;
 	sets.KeepWorking := 2;
 	//z := '';

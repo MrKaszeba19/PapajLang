@@ -45,8 +45,9 @@ Additional units of rpn_gui
 – Runtime parameters don't work
 – Chi-squared generator fails for big sample data when df = 1
 – Student's T generator may round values to 0.5, when df > 100 and |x| < 0.3
+– Array functions in array definitions do not work
 
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 07/05/2021
+Paul Lipkowski, 10/21/2021

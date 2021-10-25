@@ -1,0 +1,12 @@
+@use(Array)
+
+"Podaj n: " print
+scan toNumber -> $n
+
+[ 1 1 $n seq ] -> $t
+
+$n times { $t randomFrom } $n toArray reduceAvg println
+
+// [ $n ++ times { $t randomFrom } ] println
+
+

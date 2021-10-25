@@ -5047,7 +5047,7 @@ begin
                 stack_push(pocz[sets.StackPointer], ArrEbx);
             end else Found := False;
         end;
-         'Array.cutEmptyStrings' : begin
+        'Array.cutEmptyStrings' : begin
             if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
             begin
                 //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
@@ -5057,6 +5057,56 @@ begin
                 for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
                 begin
                     if not (isEmptyString(pocz[trunc(ArrEax.Num)].Values[index])) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+        'Array.randomFrom' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], array_randomFrom(pocz[trunc(ArrEax.Num)].Values));
+        end;
+        'Array.distinct' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (itemHappenedBefore(pocz[trunc(ArrEax.Num)].Values, index)) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+        'Array.distinctNumbers' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (stringHappenedBefore(pocz[trunc(ArrEax.Num)].Values, index)) then
+                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+                stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+        'Array.distinctStrings' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
+                ArrEbx := stack_pop(pocz[sets.StackPointer]);
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    if not (stringHappenedBefore(pocz[trunc(ArrEax.Num)].Values, index)) then
                         stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
     		    end;
                 stack_push(pocz[sets.StackPointer], ArrEbx);

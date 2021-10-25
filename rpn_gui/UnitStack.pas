@@ -278,13 +278,18 @@ var
   z : String;
   i : LongInt;
 begin
-    z := 'stack{ ' + #13#10;
-    for i := 0 to Length(poc.Values)-2 do
+    if (Length(poc.Values) = 0) then
     begin
-        z := z + identTabs(1) + getEntitySpec(poc.Values[i]) + ', ' + #13#10;
+        z := 'stack{}';
+    end else begin
+        z := 'stack{ ' + #13#10;
+        for i := 0 to Length(poc.Values)-2 do
+        begin
+            z := z + identTabs(1) + getEntitySpec(poc.Values[i]) + ', ' + #13#10;
+        end;
+        z := z + identTabs(1) + getEntitySpec(poc.Values[Length(poc.Values)-1]) + #13#10 + '} ';
+        z := LeftStr(z, Length(z)-1);
     end;
-    z := z + identTabs(1) + getEntitySpec(poc.Values[Length(poc.Values)-1]) + #13#10 + '} ';
-    z := LeftStr(z, Length(z)-1);
     stack_showFull := z;
 end;
 

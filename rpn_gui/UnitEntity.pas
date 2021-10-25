@@ -134,6 +134,7 @@ operator * (a : String; b : LongInt) s : String;
 operator / (a : String; b : String) s : String; 
 operator / (a : String; b : LongInt) s : String; 
 
+operator = (a : Entity; b : Entity) : Boolean;
 operator + (a : Entity; b : Entity) res : Entity;
 operator - (a : Entity; b : Entity) res : Entity;
 operator * (a : Entity; b : Entity) res : Entity;
@@ -558,6 +559,11 @@ end;
 operator / (a : String; b : LongInt) s : String;  
 begin  
     s := LeftStr(a, Trunc(Length(a)/Trunc(b)));
+end;
+
+operator = (a : Entity; b : Entity) : Boolean;
+begin
+    Result := (a.Str = b.Str) and (a.Num = b.Num);
 end;
 
 operator + (a : Entity; b : Entity) res : Entity;

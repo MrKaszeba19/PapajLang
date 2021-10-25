@@ -34,7 +34,12 @@ function table_stddev(tab : TEntities) : Extended;
 function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
 
+function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+function stringHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+
 procedure array_cutNulls(var tab : TEntities);
+function array_randomFrom(tab : TEntities) : Entity;
 
 implementation
 
@@ -495,6 +500,53 @@ begin
     Result := s;
 end;
 
+// booleans
+
+function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+var
+    index : LongInt;
+begin
+    Result := False;
+    for index := 0 to position-1 do
+    begin
+        if (tab[index] = tab[position]) then
+        begin
+            Result := true;
+            break;
+        end;
+    end;
+end;
+
+function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+var
+    index : LongInt;
+begin
+    Result := False;
+    for index := 0 to position-1 do
+    begin
+        if (tab[index].Num = tab[position].Num) then
+        begin
+            Result := true;
+            break;
+        end;
+    end;
+end;
+
+function stringHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
+var
+    index : LongInt;
+begin
+    Result := False;
+    for index := 0 to position-1 do
+    begin
+        if (tab[index].Str = tab[position].Str) then
+        begin
+            Result := true;
+            break;
+        end;
+    end;
+end;
+
 // Array utilities
 
 procedure array_justpop(var pocz : TEntities; index : LongInt);
@@ -524,6 +576,11 @@ begin
             end;
         end;
     end;
+end;
+
+function array_randomFrom(tab : TEntities) : Entity;
+begin
+    Result := tab[random(Length(tab))];
 end;
 
 
