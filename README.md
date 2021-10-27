@@ -73,9 +73,9 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 
 ## Languages support for the GUI application
 - :uk: **English** – *default*
-- 🇿🇦 **Afrikaans** (Afrikaans)
+- :south_africa: **Afrikaans** (Afrikaans)
 - :denmark: **Danish** (Dansk)
-- 🇳🇱 **Dutch** (Nederlands)
+- :netherlands: **Dutch** (Nederlands)
 - :fr: **French** (Français)
 - :de: **German** (Deutsch)
 - :israel: **Hebrew** (עברית)
@@ -89,7 +89,14 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :norway: Norwegian (Norsk nynorsk) – *to be implemented*
 - :sweden: Swedish (Svenska) – *to be implemented*
 - :yellow_heart::blue_heart: Silesian (Ślůnsko godka) – *to be implemented*
-- 🇲🇰 Macedonian (Македонски) – *to be implemented*
+- :macedonia: Macedonian (Македонски) – *to be implemented*
+- :slovenia: Slovene (Slovenski) – *to be implemented*
+- :croatia: Croatian (Hrvatski) – *to be implemented*
+- :serbia: Serbian (Српски, Srpski) – *to be implemented*
+- :portugal: Portuguese (Português) – *to be implemented*
+- :brazil: Brazilian Portuguese (Português do Brasil) – *to be implemented*
+- :yellow_heart::heart: Catalan (Català) – *to be implemented*
+- :es: Spanish (Español, Castellano) – *to be implemented*
 
 
 
