@@ -90,7 +90,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :sweden: Swedish (Svenska) – *to be implemented*
 - :yellow_heart::blue_heart: Silesian (Ślůnsko godka) – *to be implemented*
 - :macedonia: Macedonian (Македонски) – *to be implemented*
-- :slovenia: Slovene (Slovenski) – *to be implemented*
+- :slovenia: Slovene (Slovenščina) – *to be implemented*
 - :croatia: Croatian (Hrvatski) – *to be implemented*
 - :serbia: Serbian (Српски, Srpski) – *to be implemented*
 - :portugal: Portuguese (Português) – *to be implemented*
