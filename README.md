@@ -73,15 +73,15 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 
 ## Languages support for the GUI application
 - :uk: **English** – *default*
+- 🇿🇦 **Afrikaans** (Afrikaans)
 - :denmark: **Danish** (Dansk)
 - 🇳🇱 **Dutch** (Nederlands)
 - :fr: **French** (Français)
 - :de: **German** (Deutsch)
 - :israel: **Hebrew** (עברית)
-- :black_heart::yellow_heart: **Kashubian (Kaszëbsczi)** - standard and alternative orthographies (both Latin and Cyrilic)
+- :it: **Italian** (Italiano)
+- :black_heart::yellow_heart: **Kashubian** (Kaszëbsczi) - standard and alternative orthographies (both Latin and Cyrilic)
 - :poland: **Polish** (Polski)
-- 🇿🇦 Afrikaans (Afrikaans) – *to be implemented*
-- :it: Italian (Italiano) – *to be implemented*
 - :morocco: Arabic (العربية) – *to be implemented*
 - :ru: Russian (Русский) – *to be implemented*
 - :israel: Yiddish (יידיש) – *to be implemented*

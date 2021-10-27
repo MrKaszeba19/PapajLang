@@ -27,6 +27,8 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuLangITA: TMenuItem;
+    MenuLangAFR: TMenuItem;
     MenuView: TMenuItem;
     MenuDarkMode: TMenuItem;
     MenuAutoClear: TMenuItem;
@@ -55,11 +57,13 @@ type
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
     procedure ButtonTerminalClick(Sender: TObject);
+    procedure MenuLangAFRClick(Sender: TObject);
     procedure MenuLangCSB3Click(Sender: TObject);
     procedure MenuLangFRAClick(Sender: TObject);
     procedure MenuLangCSB2Click(Sender: TObject);
     procedure MenuLangCSBClick(Sender: TObject);
     procedure MenuLangGERClick(Sender: TObject);
+    procedure MenuLangITAClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
     procedure MenuRunHereClick(Sender: TObject);
@@ -113,7 +117,7 @@ begin
              LabelFileName.Caption := fn;
              SynEdit1.Modified := false;
           except
-                ShowMessage(locale.ErrorLoadFile+locale.ExclamationMark);
+                ShowMessage(locale.ExclamationMark2 + locale.ErrorLoadFile + locale.ExclamationMark);
           end;
      end;
 end;
@@ -148,6 +152,12 @@ begin
     ApplyLocaleMain(locale);
 end;
 
+procedure TForm1.MenuLangITAClick(Sender: TObject);
+begin
+    locale := GetLocale(L_ITA);
+    ApplyLocaleMain(locale);
+end;
+
 procedure TForm1.MenuLangNEDClick(Sender: TObject);
 begin
     locale := GetLocale(L_NED);
@@ -157,7 +167,10 @@ end;
 procedure TForm1.MenuNewFileClick(Sender: TObject);
 begin
      if SynEdit1.Modified then begin
-        if mrOK=MessageDlg(locale.AreYouSureQuitSave, mtConfirmation, [mbOK,mbCancel],0) then
+        if mrOK=MessageDlg(locale.QuestionMark2 + locale.AreYouSureContSave + locale.QuestionMark, 
+                           mtConfirmation, 
+                           [mbOK,mbCancel]
+                           ,0) then
         begin
              InitializeNewFile();
         end;
@@ -207,6 +220,12 @@ end;
 procedure TForm1.ButtonTerminalClick(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.MenuLangAFRClick(Sender: TObject);
+begin
+    locale := GetLocale(L_AFR);
+    ApplyLocaleMain(locale);
 end;
 
 { TForm1 }
@@ -271,7 +290,18 @@ end;
 
 procedure TForm1.MenuQuitClick(Sender: TObject);
 begin
-     Close;
+     //Close;
+     if SynEdit1.Modified then begin
+        if mrOK=MessageDlg(locale.QuestionMark2 + locale.AreYouSureQuitSave + locale.QuestionMark,
+                           mtConfirmation,
+                           [mbOK,mbCancel],
+                           0) then
+        begin
+             Close();
+        end;
+     end else begin
+         Close();
+     end;
 end;
 
 procedure TForm1.MenuLangENGClick(Sender: TObject);
@@ -301,7 +331,10 @@ end;
 procedure TForm1.MenuLoadClick(Sender: TObject);
 begin
      if SynEdit1.Modified then begin
-        if mrOK=MessageDlg(locale.AreYouSureQuitSave, mtConfirmation, [mbOK,mbCancel], 0) then
+        if mrOK=MessageDlg(locale.QuestionMark2 + locale.AreYouSureContSave + locale.QuestionMark, 
+                           mtConfirmation, 
+                           [mbOK,mbCancel], 
+                           0) then
         begin
              OpenOfflineFile();
              //SetStyles();
