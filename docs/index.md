@@ -1,6 +1,6 @@
 ## Downloads
 
-<a href="https://github.com/RooiGevaar19/RPNCalculator/releases/tag/latest">Get the latest version</a>
+<a href="https://github.com/RooiGevaar19/RPNCalculator/releases/latest">Get the latest version</a>
 
 ## About PapajScript
 **PapajScript** (PS) is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
