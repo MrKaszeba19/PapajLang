@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynHighlighterAny, SynCompletion, Forms,
   Controls, Graphics, Dialogs, StdCtrls, Menus, ShellCtrls, ComCtrls, ExtCtrls,
+  Unit3,
   UnitEntity;
 
 type
@@ -16,6 +17,7 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    ButtonTerminal: TButton;
     Edit1: TEdit;
     Edit2: TEdit;
     Label1: TLabel;
@@ -25,6 +27,12 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuView: TMenuItem;
+    MenuDarkMode: TMenuItem;
+    MenuAutoClear: TMenuItem;
+    MenuRunScript: TMenuItem;
+    MenuRunHere: TMenuItem;
+    MenuRunExternal: TMenuItem;
     MenuNewFile: TMenuItem;
     MenuLangCSB3: TMenuItem;
     MenuLangGER: TMenuItem;
@@ -46,6 +54,7 @@ type
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
+    procedure ButtonTerminalClick(Sender: TObject);
     procedure MenuLangCSB3Click(Sender: TObject);
     procedure MenuLangFRAClick(Sender: TObject);
     procedure MenuLangCSB2Click(Sender: TObject);
@@ -53,6 +62,8 @@ type
     procedure MenuLangGERClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
+    procedure MenuRunHereClick(Sender: TObject);
+    procedure MenuRunScriptClick(Sender: TObject);
 
     procedure SetFileName(x : String);
     function GetFileName() : String;
@@ -78,19 +89,14 @@ type
 
 var
   Form1    : TForm1;
-  language : string;
-
-{$IFDEF MSWINDOWS}
-function GetLocaleInformation(Flag: integer): string;
-{$ENDIF}
-function GetLocaleLanguage: string;
+  locale   : LangMap;
 
 implementation
 
 {$IFDEF MSWINDOWS}
-uses Unit2, Unit3, Windows;
+uses Unit2, Windows;
 {$ELSE}
-uses Unit2, Unit3;
+uses Unit2;
 {$ENDIF}
 
 
@@ -132,32 +138,42 @@ end;
 
 procedure TForm1.MenuLangCSBClick(Sender: TObject);
 begin
-     language := 'csb';
-     Unit3.set1CSB();
+    locale := GetLocale(L_CSB);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangGERClick(Sender: TObject);
 begin
-     language := 'ger';
-     Unit3.set1GER();
+    locale := GetLocale(L_GER);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangNEDClick(Sender: TObject);
 begin
-     language := 'ned';
-     Unit3.set1NED();
+    locale := GetLocale(L_NED);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuNewFileClick(Sender: TObject);
 begin
      if SynEdit1.Modified then begin
-        if mrOK=MessageDlg('Are you sure you want to exit without saving a file?',mtConfirmation,[mbOK,mbCancel],0) then
+        if mrOK=MessageDlg(locale.AreYouSureQuitSave, mtConfirmation, [mbOK,mbCancel],0) then
         begin
              InitializeNewFile();
         end;
      end else begin
          InitializeNewFile();
      end;
+end;
+
+procedure TForm1.MenuRunHereClick(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.MenuRunScriptClick(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.SetFileName(x: String);
@@ -172,46 +188,28 @@ end;
 
 procedure TForm1.MenuLangCSB2Click(Sender: TObject);
 begin
-    language := 'csb2';
-    Unit3.set1CSB2();
+    locale := GetLocale(L_CSB2);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangFRAClick(Sender: TObject);
 begin
-    language := 'fra';
-    Unit3.set1FRA();
+    locale := GetLocale(L_FRA);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangCSB3Click(Sender: TObject);
 begin
-     language := 'csb3';
-     Unit3.set1CSB3();
+    locale := GetLocale(L_CSB3);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.ButtonTerminalClick(Sender: TObject);
+begin
+
 end;
 
 { TForm1 }
-
-{$IFDEF MSWINDOWS}
-function GetLocaleInformation(Flag: integer): string;
-var
-    pcLCA: array[0..20] of char;
-begin
-    if (GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, Flag, pcLCA, 19) <= 0) then
-    begin
-        pcLCA[0] := #0;
-    end;
-    Result := pcLCA;
-end;
-
-{$ENDIF}
-
-function GetLocaleLanguage: string;
-begin
-    {$IFDEF MSWINDOWS}
-        Result := GetLocaleInformation(LOCALE_SENGLANGUAGE);
-    {$ELSE}
-        Result := SysUtils.GetEnvironmentVariable('LANG');
-    {$ENDIF}
-end;   
 
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -249,7 +247,7 @@ begin
          {$ENDIF}
      except
            on E : EAccessViolation do begin
-              Memo1.Text := 'Wrong RPN.';
+              Memo1.Text := 'Wrong PS code.';
            end;
            on E : Exception do begin
               Memo1.Text := E.Message;
@@ -259,56 +257,8 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     // https://docs.moodle.org/dev/Table_of_locales
-     //showmessage(GetLocaleLanguage);
-     case (GetLocaleLanguage) of
-          'csb.UTF-8' : language := 'csb';
-          'csb_PL.UTF-8' : language := 'csb';
-          'da_DK.UTF-8' : language := 'den';
-          'Danish_Denmark.1252' : language := 'den';
-          'Danish' : language := 'den';
-          'en.UTF-8' : language := 'eng';
-          'en_GB.UTF-8' : language := 'eng';
-          'en_US.UTF-8' : language := 'eng';
-          'English_Australia.1252' : language := 'eng';
-          'English' : language := 'eng';
-          'de_DE.UTF-8' : language := 'ger';
-          'German_Germany.1252' : language := 'ger';
-          'German' : language := 'ger';
-          'nl_NL.UTF-8' : language := 'ned';
-          'Dutch_Netherlands.1252' : language := 'ned';
-          'Dutch' : language := 'ned';
-          'pl.UTF-8' : language := 'pol';
-          'pl_PL.UTF-8' : language := 'pol';
-          'Polish_Poland.1250' : language := 'pol';
-          'Polish' : language := 'pol';
-          'he_IL.utf8' : language := 'hbr';
-          'Hebrew_Israel.1255' : language := 'hbr';
-          'Hebrew' : language := 'hbr';
-          'French' : language := 'fra';
-          'French (Canada)' : language := 'fra';
-          'fr.UTF-8' : language := 'fra';
-          'fr_FR.UTF-8' : language := 'fra';
-          'fr_BE.UTF-8' : language := 'fra';
-          'fr_CH.UTF-8' : language := 'fra';
-          'fr_LU.UTF-8' : language := 'fra';
-          'fr_CA.UTF-8' : language := 'fra';
-          'French_France.1252' : language := 'fra';
-          else language := 'eng';
-     end;
-     case language of
-          'den' : set1DEN();
-          'eng' : set1ENG();
-          'fra' : set1FRA();
-          'ger' : set1GER();
-          'ned' : set1NED();
-          'pol' : set1POL();
-	  'hbr' : set1HBR();
-          'csb' : set1CSB();
-          'csb2' : set1CSB2();
-          'csb3' : set1CSB3();
-          else set1ENG();
-     end;
+     locale := GetLocale(DetermineLanguage());
+     ApplyLocaleMain(locale);
      {$IFDEF MSWINDOWS}
      Memo1.Font.Name := 'Consolas';
      {$ENDIF}
@@ -326,32 +276,32 @@ end;
 
 procedure TForm1.MenuLangENGClick(Sender: TObject);
 begin
-     language := 'eng';
-     Unit3.set1ENG();
+    locale := GetLocale(L_ENG);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangPOLClick(Sender: TObject);
 begin
-     language := 'pol';
-     Unit3.set1POL();
+    locale := GetLocale(L_POL);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangDENClick(Sender: TObject);
 begin
-     language := 'den';
-     Unit3.set1DEN();
+    locale := GetLocale(L_DEN);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangHBRClick(Sender: TObject);
 begin
-     language := 'hbr';
-     Unit3.set1HBR();
+    locale := GetLocale(L_HBR);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLoadClick(Sender: TObject);
 begin
      if SynEdit1.Modified then begin
-        if mrOK=MessageDlg('Are you sure you want to exit without saving a file?',mtConfirmation,[mbOK,mbCancel],0) then
+        if mrOK=MessageDlg(locale.AreYouSureQuitSave, mtConfirmation, [mbOK,mbCancel], 0) then
         begin
              OpenOfflineFile();
              //SetStyles();
