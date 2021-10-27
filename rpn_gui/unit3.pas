@@ -25,6 +25,8 @@ type LangMap = record
     AreYouSureQuitSave : String;
     AutoClearTerminal  : String;
     DarkMode           : String;
+    Error              : String;
+    ErrorLoadFile      : String;
     Expression         : String;
     Load               : String;
     MenuApplication    : String;
@@ -47,8 +49,11 @@ type LangMap = record
     Submit             : String;
     WindowMainName     : String;
     WindowScanName     : String;
+    WrongPS            : String;
     Yes                : String;
     isRightToLeft      : Boolean;
+    ExclamationMark    : String;
+    QuestionMark       : String;
 end;
 
 function DetermineLanguage() : Language;
@@ -70,6 +75,8 @@ begin
     Result.AreYouSureQuitSave := 'Er du sikker på, at du vil lukke filen uden at gemme?';
     Result.AutoClearTerminal  := 'Clear terminal before running a script';
     Result.DarkMode           := 'Mørkt tema';
+    Result.Error              := 'Fejl';
+    Result.ErrorLoadFile      := 'Fejl ved indlæsning af en fil';
     Result.Expression         := 'Udtryk';
     Result.Load               := 'Hent';
     Result.MenuApplication    := 'Applikation';
@@ -92,8 +99,11 @@ begin
     Result.Submit             := 'Bekræft';
     Result.WindowMainName     := 'OPN-Lommeregner – PapajScript';
     Result.WindowScanName     := 'Scan en expression';
+    Result.WrongPS            := 'Forkert PS-udtryk';
     Result.Yes                := 'Ja';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langEnglish() : LangMap;
@@ -102,6 +112,8 @@ begin
     Result.AreYouSureQuitSave := 'Are you sure you want to close the application without saving the file?';
     Result.AutoClearTerminal  := 'Clear terminal before running a script';
     Result.DarkMode           := 'Dark mode';
+    Result.Error              := 'Error';
+    Result.ErrorLoadFile      := 'Error when loading a file';
     Result.Expression         := 'Expression';
     Result.Load               := 'Load';
     Result.MenuApplication    := 'Application';
@@ -124,8 +136,11 @@ begin
     Result.Submit             := 'Submit';
     Result.WindowMainName     := 'RPN Calculator – PapajScript';
     Result.WindowScanName     := 'Scan an expression';
+    Result.WrongPS            := 'Wrong PS expression';
     Result.Yes                := 'Yes';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langFrench() : LangMap;
@@ -134,6 +149,8 @@ begin
     Result.AreYouSureQuitSave := 'Êtes-vous sûr de vouloir fermer le fichier sans l''enregistrer ?';
     Result.AutoClearTerminal  := 'Effacer le terminal avant d''exécuter un script';
     Result.DarkMode           := 'Thème sombre';
+    Result.Error              := 'Erreur';
+    Result.ErrorLoadFile      := 'Erreur lors du chargement d''un fichier';
     Result.Expression         := 'Expression';
     Result.Load               := 'Charger';
     Result.MenuApplication    := 'Application';
@@ -149,15 +166,18 @@ begin
     Result.Result             := 'Résultat';
     Result.RunScriptInt       := 'Exécuter le script';
     Result.RunScriptExt       := 'Exécuter le script dans une fenêtre externe';
-    Result.SampleCaption      := 'PS Expression';
+    Result.SampleCaption      := 'Expression PS';
     Result.SampleCountIt      := 'Comptons !';
     Result.SampleHint         := 'Tapez une expression délimitée par des espaces, ex. "2 3 +" ou "20 4 / 5 +"';
     Result.Save               := 'Enregistrer';
     Result.Submit             := 'Soumettre';
     Result.WindowMainName     := 'La calculatrice NPI – Interpréteur du PapajScript';
     Result.WindowScanName     := 'Mettez une expression';
+    Result.WrongPS            := 'Expression PS incorrecte';
     Result.Yes                := 'Yes';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := ' !';
+    Result.QuestionMark       := ' ?';
 end;
 
 function langGerman() : LangMap;
@@ -166,6 +186,8 @@ begin
     Result.AreYouSureQuitSave := 'Möchten Sie die Datei wirklich ohne Speichern schließen?';
     Result.AutoClearTerminal  := 'Bevor ein Skript ausgeführt wird, das Terminal leeren';
     Result.DarkMode           := 'Dunkles Thema';
+    Result.Error              := 'Error';
+    Result.ErrorLoadFile      := 'Fehler beim Laden einer Datei';
     Result.Expression         := 'Ausdruck';
     Result.Load               := 'Laden';
     Result.MenuApplication    := 'Anwendung';
@@ -188,8 +210,11 @@ begin
     Result.Submit             := 'Senden';
     Result.WindowMainName     := 'UPN-Rechner – PapajScript';
     Result.WindowScanName     := 'Scanne einen Ausdruck hier';
+    Result.WrongPS            := 'Falscher PS-Ausdruck';
     Result.Yes                := 'Ja';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langHebrew() : LangMap;
@@ -198,6 +223,8 @@ begin
     Result.AreYouSureQuitSave := 'האם את/ה בטוח/ה שברצונך לסגור את הקובץ מבלי לשמור?';
     Result.AutoClearTerminal  := 'נקה את הטרמינל לפני הפעלת סקריפט';
     Result.DarkMode           := 'ערכת נושא כהה';
+    Result.Error              := 'שגיאה';
+    Result.ErrorLoadFile      := 'שגיאה בעת טעינת קובץ';
     Result.Expression         := 'ביטוי';
     Result.Load               := 'העלה';
     Result.MenuApplication    := 'אפליקציה';
@@ -220,8 +247,11 @@ begin
     Result.Submit             := 'אישור';
     Result.WindowMainName     := 'מחשבון RPN – PapajScript';
     Result.WindowScanName     := 'העלה ביטוי';
+    Result.WrongPS            := 'ביטוי PS שגוי';
     Result.Yes                := 'כן';
     Result.isRightToLeft      := true;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langDutch() : LangMap;
@@ -230,6 +260,8 @@ begin
     Result.AreYouSureQuitSave := 'Weet u zeker dat u het bestand wilt sluiten zonder op te slaan?';
     Result.AutoClearTerminal  := 'Terminal wissen voordat u een script uitvoert';
     Result.DarkMode           := 'Donker thema';
+    Result.Error              := 'Fout';
+    Result.ErrorLoadFile      := 'Fout bij het laden van een bestand';
     Result.Expression         := 'Uitdrukking';
     Result.Load               := 'Laden';
     Result.MenuApplication    := 'Toepassing';
@@ -252,8 +284,11 @@ begin
     Result.Submit             := 'Indienen';
     Result.WindowMainName     := 'OPN-calculator – PapajScript';
     Result.WindowScanName     := 'Een uitdrukking scannen';
+    Result.WrongPS            := 'Verkeerde PS-uitdrukking';
     Result.Yes                := 'Ja';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 
@@ -263,6 +298,8 @@ begin
     Result.AreYouSureQuitSave := 'Czy jesteś pewny/a, że chcesz zamknąć aplikację bez zapisywania pliku??';
     Result.AutoClearTerminal  := 'Wyczyść terminal przed uruchomieniem skryptu';
     Result.DarkMode           := 'Tryb ciemny';
+    Result.Error              := 'Błąd';
+    Result.ErrorLoadFile      := 'Błąd przy wczytywaniu pliku';
     Result.Expression         := 'Wyrażenie';
     Result.Load               := 'Wczytaj';
     Result.MenuApplication    := 'Aplikacja';
@@ -285,8 +322,11 @@ begin
     Result.Submit             := 'Zatwierdź';
     Result.WindowMainName     := 'Kalkulator ONP – Interpreter PapajScript';
     Result.WindowScanName     := 'Wczytaj wyrażenie';
+    Result.WrongPS            := 'Błędne wyrażenie PS';
     Result.Yes                := 'Tak';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langKashubian() : LangMap;
@@ -295,6 +335,8 @@ begin
     Result.AreYouSureQuitSave := 'Jes të pewny/ô, że të chcész aplikacëjã zamknąc bez zôpisënkù lopka?';
     Result.AutoClearTerminal  := 'Wëcziszczë terminala przed zreszëniém skripta';
     Result.DarkMode           := 'Cemni trib';
+    Result.Error              := 'Féla';
+    Result.ErrorLoadFile      := 'Féla przë wczëtônkù lopka';
     Result.Expression         := 'Wësłów';
     Result.Load               := 'Wczëtôj';
     Result.MenuApplication    := 'Aplikacëjô';
@@ -312,21 +354,26 @@ begin
     Result.RunScriptExt       := 'Zrësz skripta w bùtnowim òknié';
     Result.SampleCaption      := 'Wësłów PS';
     Result.SampleCountIt      := 'Rëchuj!';
-    Result.SampleHint         := 'Nôpisze wësłów OPN rozdzélony spacëjama, np. "2 3 +" lub "20 4 / 5 +"';
+    Result.SampleHint         := 'Nôpisze wësłów PS rozdzélony spacëjama, np. "2 3 +" lub "20 4 / 5 +"';
     Result.Save               := 'Zôpisze';
     Result.Submit             := 'Zacwierdze';
     Result.WindowMainName     := 'Kalkùlatór OPN – interpreter jãzëka PapajScript';
     Result.WindowScanName     := 'Wczëtôj wësłów';
+    Result.WrongPS            := 'Félni wësłów PS';
     Result.Yes                := 'Jo';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langKashubianNew() : LangMap;
 begin
     Result.AreYouSureQuit     := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc?';
     Result.AreYouSureQuitSave := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc bez zapisënka lopka?';
-    Result.AutoClearTerminal  := 'Vëčišči terminala prjed zrešenjem skripta';
+    Result.AutoClearTerminal  := 'Vëčišči terminala przed zrešenjem skripta';
     Result.DarkMode           := 'Cemni trib';
+    Result.Error              := 'Fela';
+    Result.ErrorLoadFile      := 'Fela przi včëtônku lopka';
     Result.Expression         := 'Vësłóv';
     Result.Load               := 'Včëtô';
     Result.MenuApplication    := 'Aplikacijô';
@@ -344,13 +391,16 @@ begin
     Result.RunScriptExt       := 'Zrëš skripta v butnovim oknje';
     Result.SampleCaption      := 'Vësłóv PS';
     Result.SampleCountIt      := 'Rëchuj!';
-    Result.SampleHint         := 'Napiše vësłóv OPN rozdzeloni spacijama, np. "2 3 +" lub "20 4 / 5 +"';
+    Result.SampleHint         := 'Napiše vësłóv PS rozdzeloni spacijama, np. "2 3 +" lub "20 4 / 5 +"';
     Result.Save               := 'Zapiše';
     Result.Submit             := 'Zacvjerdze';
     Result.WindowMainName     := 'Kalkulator OPN – interpreter jãzika PapajScript';
     Result.WindowScanName     := 'Včëtô vësłóv';
+    Result.WrongPS            := 'Felni ësłóv PS';
     Result.Yes                := 'Jo';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 function langKashubianCyrilic() : LangMap;
@@ -359,6 +409,8 @@ begin
     Result.AreYouSureQuitSave := 'Јес тё певни/ô, же тё чцеш апљикацијã замкнąц без записёнка љопка?';
     Result.AutoClearTerminal  := 'Вёчишчи терминала прјед зрешењем скрипта';
     Result.DarkMode           := 'Цемни триб';
+    Result.Error              := 'Феља';
+    Result.ErrorLoadFile      := 'Фела прји вчётôнку љопка';
     Result.Expression         := 'Вёслóв';
     Result.Load               := 'Вчётô';
     Result.MenuApplication    := 'Апљикација';
@@ -374,15 +426,18 @@ begin
     Result.Result             := 'Резултат';
     Result.RunScriptInt       := 'Зрёш скрипта';
     Result.RunScriptExt       := 'Зрёш скрипта в бутновим окње';
-    Result.SampleCaption      := 'Вёслóв PS';
+    Result.SampleCaption      := 'Вёслóв ПС';
     Result.SampleCountIt      := 'Рёхуј!';
-    Result.SampleHint         := 'Напише вёслóв ОПН розѕељони спацијама, нп. "2 3 +" љуб "20 4 / 5 +"';
+    Result.SampleHint         := 'Напише вёслóв ПС розѕељони спацијама, нп. "2 3 +" љуб "20 4 / 5 +"';
     Result.Save               := 'Запише';
     Result.Submit             := 'Зацвјерѕе';
     Result.WindowMainName     := 'Каљкуљатор ОПН – интерпретер јãзика PapajScript';
     Result.WindowScanName     := 'Вчётô вёслóв';
+    Result.WrongPS            := 'Фељни вёслóв ПС';
     Result.Yes                := 'Јо';
     Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
 end;
 
 // language setting mechanism

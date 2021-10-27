@@ -113,7 +113,7 @@ begin
              LabelFileName.Caption := fn;
              SynEdit1.Modified := false;
           except
-                ShowMessage('Error when loading a file.');
+                ShowMessage(locale.ErrorLoadFile+locale.ExclamationMark);
           end;
      end;
 end;
@@ -222,7 +222,7 @@ begin
      except
      on E : EAccessViolation do begin
        Edit1.Text := '';
-       Edit2.Text := 'Wrong PS code.';
+       Edit2.Text := locale.WrongPS+'.';
      end;
      on E : Exception do begin
        Edit1.Text := '';
@@ -247,7 +247,7 @@ begin
          {$ENDIF}
      except
            on E : EAccessViolation do begin
-              Memo1.Text := 'Wrong PS code.';
+              Memo1.Text := locale.WrongPS+'.';
            end;
            on E : Exception do begin
               Memo1.Text := E.Message;

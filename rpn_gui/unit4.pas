@@ -45,7 +45,7 @@ begin
         Unit5.arax := Form2.Edit1.Text;
         Close;
      except
-        ShowMessage('Error!');
+        ShowMessage(Unit1.locale.Error+Unit1.locale.ExclamationMark);
      end;
 end;
 
