@@ -19,7 +19,8 @@ type Language = (
 	L_HBR,
     L_ITA,
     L_NED,
-    L_POL
+    L_POL,
+    L_RUS
 );
 
 type LangMap = record
@@ -176,7 +177,7 @@ begin
     Result.MenuNewFile        := 'Nouveau fichier';
     Result.MenuSaveFile       := 'Enregistrer un script dans un fichier';
     Result.MenuClose          := 'Fermer';
-    Result.MenuView           := 'Vue';
+    Result.MenuView           := 'Voir'; // vue
     Result.MenuRun            := 'Exécution';
     Result.No                 := 'Non';
     Result.PSCode             := 'PapajScript code';
@@ -580,6 +581,49 @@ begin
     Result.QuestionMark2      := '';
 end;
 
+function langRussian() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Вы уверены, что хотите закрыть приложение';
+    Result.AreYouSureContSave := 'Вы уверены, что хотите продолжить, не сохраняя файл';
+    Result.AreYouSureQuitSave := 'Вы уверены, что хотите закрыть приложение без сохранения файла';
+    Result.AutoClearTerminal  := 'Очистите терминал перед запуском скрипта';
+    Result.DarkMode           := 'Темная тема';
+    Result.Error              := 'Ошибка';
+    Result.ErrorLoadFile      := 'Ошибка при загрузке файла';
+    Result.Expression         := 'Выражение';
+    Result.Load               := 'Нагрузка';
+    Result.MenuApplication    := 'Приложение';
+    Result.MenuLanguage       := 'Язык';
+    Result.MenuLoadFile       := 'Загрузите скрипт из файла';
+    Result.MenuNewFile        := 'Новый файл';
+    Result.MenuSaveFile       := 'Сохраните скрипт в файл';
+    Result.MenuClose          := 'Закройте';
+    Result.MenuView           := 'Вид';
+    Result.MenuRun            := 'Запуск';
+    Result.No                 := 'Нет';
+    Result.PSCode             := 'Код PapajScript';
+    Result.Result             := 'Результат';
+    Result.RunInt             := 'Запустите';
+    Result.RunExt             := 'Запустите в терминале';
+    Result.RunScriptInt       := 'Запустите скрипт';
+    Result.RunScriptExt       := 'Запустите скрипт во внешнем окне';
+    Result.SampleCaption      := 'PS Выражение';
+    Result.SampleCountIt      := 'Поехали!';
+    Result.SampleHint         := 'Введите выражение PS, разделенное пробелами, например «2 3 +» или «20 4/5 +»';
+    Result.Save               := 'Сохранение';
+    Result.Submit             := 'Отправьте';
+    Result.WindowMainName     := 'Калькулятор ОПЗ - интерпретатор PapajScript';
+    Result.WindowScanName     := 'Просканируйте выражение';
+    Result.WrongPS            := 'Неправильное выражение PS';
+    Result.Yes                := 'Да';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+
 // language setting mechanism
 
 {$IFDEF MSWINDOWS}
@@ -647,6 +691,9 @@ begin
         'pl_PL.UTF-8' : Result := L_POL;
         'Polish_Poland.1250' : Result := L_POL;
         'Polish' : Result := L_POL;    
+        'ru_RU.UTF-8' : Result := L_RUS;
+        'Russian_Russia.1251' : Result := L_RUS;
+        'Russian' : Result := L_RUS;    
         else Result := L_ENG;
     end;
 end;
@@ -666,6 +713,7 @@ begin
         L_ITA  : Result := langItalian();
         L_NED  : Result := langDutch();
         L_POL  : Result := langPolish();
+        L_RUS  : Result := langRussian();
         else Result := langEnglish();
      end;
 end;

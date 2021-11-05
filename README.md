@@ -82,8 +82,8 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :it: **Italian** (Italiano)
 - :black_heart::yellow_heart: **Kashubian** (Kaszëbsczi) - standard and alternative orthographies (both Latin and Cyrilic)
 - :poland: **Polish** (Polski)
+- :ru: **Russian** (Русский)
 - :morocco: Arabic (العربية) – *to be implemented*
-- :ru: Russian (Русский) – *to be implemented*
 - :israel: Yiddish (יידיש) – *to be implemented*
 - :norway: Norwegian (Norsk bokmål) – *to be implemented*
 - :norway: Norwegian (Norsk nynorsk) – *to be implemented*
@@ -97,6 +97,9 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :brazil: Brazilian Portuguese (Português do Brasil) – *to be implemented*
 - :yellow_heart::heart: Catalan (Català) – *to be implemented*
 - :es: Spanish (Español, Castellano) – *to be implemented*
+- :greece: Greek (Ελληνικά) – *to be implemented*
+- :slovakia: Slovak (Slovenčina) – *to be implemented*
+- :czech_republic: Czech (Čeština) – *to be implemented*
 
 
 

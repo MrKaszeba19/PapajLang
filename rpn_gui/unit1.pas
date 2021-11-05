@@ -27,6 +27,7 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItemRUS: TMenuItem;
     MenuLangITA: TMenuItem;
     MenuLangAFR: TMenuItem;
     MenuView: TMenuItem;
@@ -57,6 +58,8 @@ type
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
     procedure ButtonTerminalClick(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItemRUSClick(Sender: TObject);
     procedure MenuLangAFRClick(Sender: TObject);
     procedure MenuLangCSB3Click(Sender: TObject);
     procedure MenuLangFRAClick(Sender: TObject);
@@ -220,6 +223,17 @@ end;
 procedure TForm1.ButtonTerminalClick(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.MenuItem2Click(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.MenuItemRUSClick(Sender: TObject);
+begin
+    locale := GetLocale(L_RUS);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangAFRClick(Sender: TObject);
