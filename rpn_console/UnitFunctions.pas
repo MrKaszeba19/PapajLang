@@ -773,23 +773,44 @@ begin
           	SetLength(HelpETable, 0);
         end;
         'sort' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
-            size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-            if (size >= 0) then
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TNUM) then
             begin
-                SetLength(HelpETable, size);
-                if (sets.Autoclear) then 
-                    HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
-                else 
-                    HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
-                if (sets.sorttype = 0) then bubblesort(HelpETable);
-                if (sets.sorttype = 1) then quicksort(HelpETable);
-                if (sets.sorttype = 2) then mergesort(HelpETable);
-                if (sets.sorttype = 3) then bogosort(HelpETable);
-                stack_pushCollection(pocz[sets.StackPointer], HelpETable);
-                SetLength(HelpETable, 0);
-            end;
+                //if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+                size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+                if (size >= 0) then
+                begin
+                    SetLength(HelpETable, size);
+                    if (sets.Autoclear) then 
+                        HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
+                    else 
+                        HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
+                    if (sets.sorttype = 0) then bubblesort(HelpETable);
+                    if (sets.sorttype = 1) then quicksort(HelpETable);
+                    if (sets.sorttype = 2) then mergesort(HelpETable);
+                    if (sets.sorttype = 3) then bogosort(HelpETable);
+                    stack_pushCollection(pocz[sets.StackPointer], HelpETable);
+                    SetLength(HelpETable, 0);
+                end;
+            end else Found := false;
         end;
+        //'numsort' : begin
+        //    if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+        //    size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+        //    if (size >= 0) then
+        //    begin
+        //        SetLength(HelpETable, size);
+        //        if (sets.Autoclear) then 
+        //            HelpETable := stack_popCollection(pocz[sets.StackPointer], size)
+        //        else 
+        //            HelpETable := stack_getCollection(pocz[sets.StackPointer], size);
+        //        if (sets.sorttype = 0) then bubblesort(HelpETable);
+        //        if (sets.sorttype = 1) then quicksort(HelpETable);
+        //        if (sets.sorttype = 2) then mergesort(HelpETable);
+        //        if (sets.sorttype = 3) then bogosort(HelpETable);
+        //        stack_pushCollection(pocz[sets.StackPointer], HelpETable);
+        //        SetLength(HelpETable, 0);
+        //    end;
+        //end;
 		'strsort' : begin
             if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             size := trunc(stack_pop(pocz[sets.StackPointer]).Num);
@@ -5110,6 +5131,25 @@ begin
                         stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
     		    end;
                 stack_push(pocz[sets.StackPointer], ArrEbx);
+            end else Found := False;
+        end;
+        'Array.sort' : begin
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TVEC) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(pocz[sets.StackPointer]);
+                if (pocz[trunc(ArrEax.Num)].Values[index].EntityType = TSTR) then
+                begin
+                    strings_sort(pocz[trunc(ArrEax.Num)].Values);
+                end else begin
+                    case sets.sorttype of
+                        0 : bubblesort(pocz[trunc(ArrEax.Num)].Values);
+                        1 : quicksort(pocz[trunc(ArrEax.Num)].Values);
+                        2 : mergesort(pocz[trunc(ArrEax.Num)].Values);
+                        3 : bogosort(pocz[trunc(ArrEax.Num)].Values);
+                    end; 
+                end;
+                stack_push(pocz[sets.StackPointer], ArrEax);
             end else Found := False;
         end;
 
