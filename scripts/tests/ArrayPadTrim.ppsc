@@ -1,0 +1,20 @@
+@use(Array)
+
+[ 1 1 5 seq ] -> $t
+
+"Pad:" println
+$t 11 Array.padLeft println
+$t 12 Array.padLeft println
+
+$t 11 Array.padRight println
+$t 12 Array.padRight println
+
+$t 11 Array.pad println
+$t 12 Array.pad println
+
+[ NULL NULL 1 1 5 seq NULL NULL NULL ] -> $u
+
+"Trim:" println
+$u Array.trim println
+$u Array.trimLeft println
+$u Array.trimRight println

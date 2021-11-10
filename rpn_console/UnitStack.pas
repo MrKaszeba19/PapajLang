@@ -51,7 +51,7 @@ procedure stack_pushFront(var pocz : TStack; node : Entity; index : LongInt = 0)
 function stack_popFront(var pocz : TStack; index : LongInt = 0) : Entity;
 procedure stack_justpopFront(var pocz : TStack; index : LongInt);
 procedure stack_replaceFront(var pocz : TStack; node : Entity; index : LongInt);
-function stack_getFront(pocz : TStack; index : LongInt) : Entity;
+function stack_getFront(pocz : TStack; index : LongInt = 0) : Entity;
 
 function assertEntity(var stack : TStack; val : Entity; const wtype : TEntityType) : Boolean;
 function assertEntityLocated(var stack : TStack; val : Entity; const wtype : TEntityType; operand : String) : Boolean;
@@ -363,7 +363,7 @@ begin
     pocz.Values[index] := node;
 end;
 
-function stack_getFront(pocz : TStack; index : LongInt) : Entity;
+function stack_getFront(pocz : TStack; index : LongInt = 0) : Entity;
 begin
     stack_getFront := pocz.Values[index];
 end;

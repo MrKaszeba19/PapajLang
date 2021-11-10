@@ -1,0 +1,20 @@
+@use(String)
+
+"abcde" -> $t
+
+"Pad:" println
+$t 11 padLeft quoted println
+$t 12 padLeft quoted println
+
+$t 11 padRight quoted println
+$t 12 padRight quoted println
+
+$t 11 pad quoted println
+$t 12 pad quoted println
+
+"  abcde   " -> $u
+
+"Trim:" println
+$u trim quoted println
+$u trimLeft quoted println
+$u trimRight quoted println
