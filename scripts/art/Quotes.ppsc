@@ -1,0 +1,16 @@
+@use(Array)
+
+[
+	"Tak jak pan Jezus powiedział."
+	"Bądźmy łagodni."
+	"Nie lękajcie się."
+	"Podążajcie z entuzjazmem."
+	"Tolerancja jest możliwa."
+	"Nie wiem."
+	"Trwajcie mocno w Chrystusie."
+	"Niech zstapi Duch Twój." 
+	"Jestem z Wami"
+	"Wypływajcie na głębie." 
+] -> $quotes
+
+$quotes randomFrom println

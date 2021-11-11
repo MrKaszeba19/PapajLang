@@ -1,0 +1,20 @@
+@use(Array)
+@use(String)
+
+
+[ "Tak jak pan Jezus powiedział." "John Paul II" ]
+[ "Bądźmy łagodni." "John Paul II" ]
+[ "Nie lękajcie się." "John Paul II" ]
+[ "Podążajcie z entuzjazmem." "John Paul II" ]
+[ "Tolerancja jest możliwa." "John Paul II" ]
+[ "Nie wiem." "John Paul II" ]
+[ "Trwajcie mocno w Chrystusie." "John Paul II" ]
+[ "Niech zstapi Duch Twój." "John Paul II" ]
+[ "Jestem z Wami" "John Paul II" ]
+[ "Wypływajcie na głębie." "John Paul II" ]
+all toArray -> $quotes
+
+//$quotes println
+$quotes randomFrom -> $quote
+$quote first quoted println
+"~" $quote last + println
