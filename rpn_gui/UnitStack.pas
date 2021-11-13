@@ -65,7 +65,7 @@ function assertCharLocated(var stack : TStack; val : Entity; operand : String) :
 
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
-function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt = 0) : Entity;
 
 implementation
 
@@ -563,7 +563,7 @@ begin
 	buildNewArray := ent;
 end;
 
-function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt = 0) : Entity;
 var
     i       : LongInt;
     memsize : LongInt;

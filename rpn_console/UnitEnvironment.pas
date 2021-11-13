@@ -241,28 +241,42 @@ end;
 
 // EVALUATION
 
+//function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
+//var
+//    env        : PSEnvironment;
+//    cnt, index : LongInt;
+//    ArrEcx     : Entity;
+//begin
+//    env := buildNewEnvironment();
+//    //writeln('input: ', input);
+//    env.Stack := parseOpen(input, env.Stack, sets, vardb);
+//    cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+//    //pocz := parseOpen(input, pocz, sets, vardb);
+//    //cnt := stack_size(pocz[env.Settings.StackPointer]);
+//    //writeln('cnt: ', cnt);
+//    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, cnt));
+//    ArrEcx := stack_pop(pocz[sets.StackPointer]);
+//    for index := 0 to cnt-1 do
+//    begin
+//        pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
+//        //pocz[trunc(ArrEcx.Num)].Values[index] := pocz[env.Settings.StackPointer].Values[index];
+//    end; 
+//    disposeEnvironment(env);
+//    wrapArrayFromString := ArrEcx;
+//end;
+
 function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
 var
-    env        : PSEnvironment;
-    cnt, index : LongInt;
+    stk        : LongInt;
     ArrEcx     : Entity;
 begin
-    env := buildNewEnvironment();
-    //writeln('input: ', input);
-    env.Stack := parseOpen(input, env.Stack, sets, vardb);
-    cnt := stack_size(env.Stack[env.Settings.StackPointer]);
-    //pocz := parseOpen(input, pocz, sets, vardb);
-    //cnt := stack_size(pocz[env.Settings.StackPointer]);
-    //writeln('cnt: ', cnt);
-    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, cnt));
+    stk := sets.StackPointer;
+    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets));
     ArrEcx := stack_pop(pocz[sets.StackPointer]);
-    for index := 0 to cnt-1 do
-    begin
-        pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
-        //pocz[trunc(ArrEcx.Num)].Values[index] := pocz[env.Settings.StackPointer].Values[index];
-    end; 
-    disposeEnvironment(env);
-    wrapArrayFromString := ArrEcx;
+    sets.StackPointer := trunc(ArrEcx.Num);
+    pocz := parseOpen(input, pocz, sets, vardb);
+    sets.StackPointer := stk;
+    Result := ArrEcx;
 end;
 
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
