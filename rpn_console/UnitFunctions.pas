@@ -1117,9 +1117,9 @@ end;
 
 function lib_math(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found      : Boolean;
-	x, y, z, w : Extended;
-    index      : LongInt;
+	Found        : Boolean;
+	x, y, z, w   : Extended;
+    index, jndex : LongInt;
 begin
 	Found := true;
 	case i of
@@ -2190,7 +2190,66 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             stack_push(pocz[sets.StackPointer], buildNumber(num_pi(x)));
         end;
-
+        //'Math.factorize' : begin
+        //    if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+        //    x := stack_pop(pocz[sets.StackPointer]).Num;
+        //    if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+        //    index := trunc(x);
+        //    while (index > 1) do
+        //    begin
+        //        jndex := 2;
+        //        while not (divides(index, jndex)) do jndex := jndex + 1;
+        //        stack_push(pocz[sets.StackPointer], buildNumber(jndex));
+        //        index := index div jndex;
+        //    end;
+        //end;
+        'Math.primeDistribution' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            while (x > 1) do
+            begin
+                if (isPrime(x)) then
+                begin
+                    stack_push(pocz[sets.StackPointer], buildNumber(x));
+                    //stack_push(pocz[sets.StackPointer], buildNumber(1));
+                    x := 1;
+                end else begin
+                    y := 2;
+                    while not (divides(x, y)) do y := y + 1;
+                    stack_push(pocz[sets.StackPointer], buildNumber(y));
+                    x := x / y;
+                end;
+            end;
+        end;
+        'Math.leastPrimeDivisor' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if (isPrime(x)) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+            end else begin
+                y := 2;
+                while not (divides(x, y)) do y := y + 1;
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end;
+        end;
+        'Math.factorize' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if (isPrime(x)) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+                stack_push(pocz[sets.StackPointer], buildNumber(1));
+            end else begin
+                y := 2;
+                while not (divides(x, y)) do y := y + 1;
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+                stack_push(pocz[sets.StackPointer], buildNumber(x/y));
+            end;
+        end;
 		else begin
             Found := false;
         end;
