@@ -19,6 +19,8 @@ function ffrac(x : Extended) : Extended;
 function fround(x : Extended) : Extended;
 function ffloor(x : Extended) : Extended;
 function fceiling(x : Extended) : Extended;
+function randomIntRange(x, y : Extended) : Extended;
+function randomRealRange(x, y : Extended) : Extended;
 
 function isPrime(x : Extended) : Boolean;
 function isInteger(x : Extended) : Boolean;
@@ -187,6 +189,16 @@ begin
 	        else if (x < 0) 
                 then Result := fdiv(x,1) 
                 else Result := fdiv(x,1)+1;
+end;
+
+function randomIntRange(x, y : Extended) : Extended;
+begin
+    Result := trunc(x) + random(trunc(y)-trunc(x)+1);
+end;
+
+function randomRealRange(x, y : Extended) : Extended;
+begin
+    Result := x + random * (y - x);
 end;
 
 // ======== booleans

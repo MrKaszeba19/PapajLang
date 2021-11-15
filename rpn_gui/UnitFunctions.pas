@@ -2250,6 +2250,44 @@ begin
                 stack_push(pocz[sets.StackPointer], buildNumber(x/y));
             end;
         end;
+        'Math.randomIntRange' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end; 
+            if (x < y) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(randomIntRange(x, y)));
+            end else if (x = y) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+            end else begin
+                stack_push(pocz[sets.StackPointer], buildNumber(randomIntRange(y, x)));
+            end;
+        end;
+        'Math.randomRealRange' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end; 
+            if (x < y) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(randomRealRange(x, y)));
+            end else if (x = y) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(NaN));
+            end else begin
+                stack_push(pocz[sets.StackPointer], buildNumber(randomRealRange(y, x)));
+            end;
+        end;
 		else begin
             Found := false;
         end;
