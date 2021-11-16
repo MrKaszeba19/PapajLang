@@ -30,6 +30,7 @@ function newton_int(n, k : Extended) : Extended;
 function newton_real(n, k : Extended) : Extended;
 function gcd(a, b : Extended) : Extended;
 function lcm(a, b : Extended) : Extended;
+function gcdExtended(a, b : LongInt; var x : LongInt; var y : LongInt) : LongInt;
 function fib(n: Extended) : Extended;
 
 function LogGamma(x : Extended) : Extended;
@@ -302,6 +303,30 @@ end;
 function lcm(a, b : Extended) : Extended;
 begin
 	Result := (a*b)/gcd(a, b);
+end;
+
+function gcdExtended(a, b : LongInt; var x : LongInt; var y : LongInt) : LongInt;
+var 
+    c, q, r, s, r1, s1 : LongInt;
+begin
+    x := 1;
+    y := 0;
+    r := 0;
+    s := 1;
+    while (b <> 0) do
+    begin
+        c := a mod b;
+        q := a div b;
+        a := b;
+        b := c;
+        r1 := r;
+        s1 := s;
+        r := x - q * r;
+        s := y - q * s;
+        x := r1;
+        y := s1;
+    end;
+    Result := a;
 end;
 
 //function fib(n: Extended) : Extended;

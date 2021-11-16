@@ -2288,6 +2288,19 @@ begin
                 stack_push(pocz[sets.StackPointer], buildNumber(randomRealRange(y, x)));
             end;
         end;
+        'Math.euclidean' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end; 
+            w := gcdExtended(trunc(x), trunc(y), index, jndex);
+            stack_push(pocz[sets.StackPointer], buildNumber(index));
+            stack_push(pocz[sets.StackPointer], buildNumber(jndex));
+        end;
 		else begin
             Found := false;
         end;
