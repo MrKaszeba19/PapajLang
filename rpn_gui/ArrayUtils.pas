@@ -33,6 +33,7 @@ function table_variance(tab : TEntities) : Extended;
 function table_stddev(tab : TEntities) : Extended;
 function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
+function table_moment(tab : TEntities; k : LongInt) : Extended;
 
 function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
@@ -498,6 +499,17 @@ begin
     for i := 1 to Length(tab)-1 do
         s := lcm(s, tab[i].Num);
     Result := s;
+end;
+
+function table_moment(tab : TEntities; k : LongInt) : Extended;
+var
+	i : Integer;
+	s : Extended;
+begin
+	s := 0.0;
+    for i := 0 to Length(tab)-1 do
+        s := s + pow(tab[i].Num, k);
+    Result := s/Length(tab);
 end;
 
 // booleans
