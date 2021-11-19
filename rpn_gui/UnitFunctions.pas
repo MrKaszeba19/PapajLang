@@ -1629,8 +1629,6 @@ begin
             x := stack_pop(pocz[sets.StackPointer]).Num;
             w := fnorm(x, 0, 1);
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
             stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
         'Math.randomNormStd' : begin
@@ -1638,14 +1636,15 @@ begin
             stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
         'Math.genNormStd' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
             x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             for index := 1 to trunc(x) do
             begin
                 //checkSIGINT();
                 w := randg(0, 1);
                 stack_push(pocz[sets.StackPointer], buildNumber(w));
             end;
-            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
         end;
 		'Math.distNorm' : begin
           	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
@@ -2300,6 +2299,20 @@ begin
             w := gcdExtended(trunc(x), trunc(y), index, jndex);
             stack_push(pocz[sets.StackPointer], buildNumber(index));
             stack_push(pocz[sets.StackPointer], buildNumber(jndex));
+        end;
+        'Math.erf' : begin
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            w := ferf(x);
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.erfc' : begin
+			if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            w := ferfc(x);
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
 		else begin
             Found := false;

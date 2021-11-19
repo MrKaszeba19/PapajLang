@@ -36,6 +36,9 @@ function fib(n: Extended) : Extended;
 function LogGamma(x : Extended) : Extended;
 function vgamma(x : Extended) : Extended;
 function vlowergamma(s, x : Extended) : Extended;
+function ferf(x : Extended) : Extended;
+function ferfc(x : Extended) : Extended;
+
 function dstdnorm(x : Extended) : Extended;
 function dnorm(x, mu, si : Extended) : Extended;
 function fnorm(x, mu, si : Extended) : Extended;
@@ -426,7 +429,6 @@ begin
             Result := sum;
         end;
     end;
-     
 end;
 
 function fgamma2(x : Extended) : Extended;
@@ -470,6 +472,36 @@ begin
 		//end;
 		//fgamma := s;
 	end;
+end;
+
+function ferf(x : Extended) : Extended;
+var
+    t, sum  : Extended;
+	epsilon : Extended;
+begin
+    if x = 0 then
+    begin
+        Result := 0;
+    end else if x < 0 then
+    begin
+        Result := ferf(-x);
+    end else begin
+        epsilon := 0.0001*trunc(x+1);
+        sum := 0;
+        t := 0;
+        while (t <= x) do
+        begin
+            sum := sum + epsilon*(exp(-(t*t)));
+            t := t + epsilon;
+        end;
+        sum := sum * 1.1283791670955125;
+        Result := sum;
+    end;
+end;
+
+function ferfc(x : Extended) : Extended;
+begin
+    Result := 1 - ferf(x);
 end;
 
 function dstdnorm(x : Extended) : Extended;
