@@ -27,6 +27,7 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuLangMKD: TMenuItem;
     MenuItemRUS: TMenuItem;
     MenuLangITA: TMenuItem;
     MenuLangAFR: TMenuItem;
@@ -67,6 +68,7 @@ type
     procedure MenuLangCSBClick(Sender: TObject);
     procedure MenuLangGERClick(Sender: TObject);
     procedure MenuLangITAClick(Sender: TObject);
+    procedure MenuLangMKDClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
     procedure MenuRunHereClick(Sender: TObject);
@@ -158,6 +160,12 @@ end;
 procedure TForm1.MenuLangITAClick(Sender: TObject);
 begin
     locale := GetLocale(L_ITA);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangMKDClick(Sender: TObject);
+begin
+    locale := GetLocale(L_MKD);
     ApplyLocaleMain(locale);
 end;
 

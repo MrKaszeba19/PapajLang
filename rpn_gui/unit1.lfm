@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 951
+  Left = 952
   Height = 589
-  Top = 162
+  Top = 164
   Width = 802
   Caption = 'RPN Calculator'
   ClientHeight = 565
@@ -728,6 +728,10 @@ object Form1: TForm1
       object MenuLangCSB3: TMenuItem
         Caption = 'Кашёбсчи'
         OnClick = MenuLangCSB3Click
+      end
+      object MenuLangMKD: TMenuItem
+        Caption = 'Македонски'
+        OnClick = MenuLangMKDClick
       end
       object MenuLangNED: TMenuItem
         Caption = 'Nederlands'
