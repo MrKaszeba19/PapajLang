@@ -27,8 +27,11 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuLangNOR: TMenuItem;
+    MenuLangNOR2: TMenuItem;
+    MenuLangSWE: TMenuItem;
     MenuLangMKD: TMenuItem;
-    MenuItemRUS: TMenuItem;
+    MenuLangRUS: TMenuItem;
     MenuLangITA: TMenuItem;
     MenuLangAFR: TMenuItem;
     MenuView: TMenuItem;
@@ -60,7 +63,9 @@ type
     SynEdit1: TSynEdit;
     procedure ButtonTerminalClick(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
-    procedure MenuItemRUSClick(Sender: TObject);
+    procedure MenuLangNOR2Click(Sender: TObject);
+    procedure MenuLangNORClick(Sender: TObject);
+    procedure MenuLangRUSClick(Sender: TObject);
     procedure MenuLangAFRClick(Sender: TObject);
     procedure MenuLangCSB3Click(Sender: TObject);
     procedure MenuLangFRAClick(Sender: TObject);
@@ -70,6 +75,7 @@ type
     procedure MenuLangITAClick(Sender: TObject);
     procedure MenuLangMKDClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
+    procedure MenuLangSWEClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
     procedure MenuRunHereClick(Sender: TObject);
     procedure MenuRunScriptClick(Sender: TObject);
@@ -175,6 +181,12 @@ begin
     ApplyLocaleMain(locale);
 end;
 
+procedure TForm1.MenuLangSWEClick(Sender: TObject);
+begin
+    locale := GetLocale(L_SWE);
+    ApplyLocaleMain(locale);
+end;
+
 procedure TForm1.MenuNewFileClick(Sender: TObject);
 begin
      if SynEdit1.Modified then begin
@@ -238,7 +250,19 @@ begin
 
 end;
 
-procedure TForm1.MenuItemRUSClick(Sender: TObject);
+procedure TForm1.MenuLangNOR2Click(Sender: TObject);
+begin
+    locale := GetLocale(L_NOR2);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangNORClick(Sender: TObject);
+begin
+    locale := GetLocale(L_NOR);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangRUSClick(Sender: TObject);
 begin
     locale := GetLocale(L_RUS);
     ApplyLocaleMain(locale);

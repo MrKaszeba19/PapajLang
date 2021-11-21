@@ -737,13 +737,25 @@ object Form1: TForm1
         Caption = 'Nederlands'
         OnClick = MenuLangNEDClick
       end
+      object MenuLangNOR: TMenuItem
+        Caption = 'Norsk (Bokmål)'
+        OnClick = MenuLangNORClick
+      end
+      object MenuLangNOR2: TMenuItem
+        Caption = 'Norsk (Nynorsk)'
+        OnClick = MenuLangNOR2Click
+      end
       object MenuLangPOL: TMenuItem
         Caption = 'Polski'
         OnClick = MenuLangPOLClick
       end
-      object MenuItemRUS: TMenuItem
+      object MenuLangRUS: TMenuItem
         Caption = 'Русский'
-        OnClick = MenuItemRUSClick
+        OnClick = MenuLangRUSClick
+      end
+      object MenuLangSWE: TMenuItem
+        Caption = 'Svenska'
+        OnClick = MenuLangSWEClick
       end
       object MenuLangHBR: TMenuItem
         Caption = 'עברית'
