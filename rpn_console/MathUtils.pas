@@ -13,6 +13,7 @@ function pow2(x, y : Extended) : Extended;
 function fmod(x, y : Extended) : Extended;
 function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
+function minusOneTo(x : LongInt) : LongInt;
 
 function ftrunc(x : Extended) : Extended;
 function ffrac(x : Extended) : Extended;
@@ -77,6 +78,10 @@ function num_sigma(n : Extended) : Extended;
 function num_mobius(n : Extended) : Extended;
 function num_euler(n : Extended) : Extended;
 function num_pi(n : Extended) : Extended;
+function num_omega(n : Extended) : LongInt;
+function num_omega2(n : Extended) : LongInt;
+function num_liouville(n : Extended) : LongInt;
+
 
 implementation
 
@@ -140,6 +145,13 @@ begin
         i := i + 1;
     end;
     Result := s;
+end;
+
+function minusOneTo(x : LongInt) : LongInt;
+begin
+    if (x mod 2 = 0) 
+        then Result := 1
+        else Result := -1;
 end;
 
 function ftrunc(x : Extended) : Extended;
@@ -1176,6 +1188,64 @@ begin
         i := i + 1;
     end;
     Result := s;
+end;
+
+function num_omega(n : Extended) : LongInt;
+var
+    s    : LongInt;
+    x, y : Extended;
+begin
+    s := 0;
+    x := 1;
+    while (n > 1) do
+    begin
+        if (isPrime(n)) then
+        begin
+            if (n <> x) then
+            begin
+                s := s + 1;
+            end;
+            n := 1;
+        end else begin
+            y := 2;
+            while not (divides(n, y)) do y := y + 1;
+            if (x <> y) then
+            begin
+                s := s + 1;
+                x := y;
+            end;
+            n := n / y;
+        end;
+    end;
+    Result := s;
+end;
+
+function num_omega2(n : Extended) : LongInt;
+var
+    s    : LongInt;
+    x, y : Extended;
+begin
+    s := 0;
+    x := 1;
+    while (n > 1) do
+    begin
+        if (isPrime(n)) then
+        begin
+            s := s + 1;
+            n := 1;
+        end else begin
+            y := 2;
+            while not (divides(n, y)) do y := y + 1;
+            s := s + 1;
+            n := n / y;
+        end;
+    end;
+    Result := s;
+end;
+
+function num_liouville(n : Extended) : LongInt;
+begin
+    Result := minusOneTo(num_omega2(n));
 end;
 
 

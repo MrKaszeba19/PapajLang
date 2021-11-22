@@ -2314,6 +2314,42 @@ begin
             w := ferfc(x);
             stack_push(pocz[sets.StackPointer], buildNumber(w));
         end;
+        'Math.fomega' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_omega(x)));
+        end;
+        'Math.fOmega' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_omega2(x)));
+        end;
+        'Math.countDistinctFactors' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_omega(x)));
+        end;
+        'Math.countAllFactors' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_omega2(x)));
+        end;
+        'Math.fLambda' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_liouville(x)));
+        end;
+        'Math.fLiouville' : begin
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            stack_push(pocz[sets.StackPointer], buildNumber(num_liouville(x)));
+        end;
 		else begin
             Found := false;
         end;
