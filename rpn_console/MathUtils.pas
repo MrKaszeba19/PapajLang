@@ -71,6 +71,9 @@ function vrinbeta(x, a, b : Extended) : Extended;
 function fstudentt(x, nu : Extended) : Extended;
 function dstudentt(x, nu : Extended) : Extended;
 function rstudentt(df: Extended) : Extended;
+function fbeta(x, alpha, beta : Extended) : Extended;
+function dbeta(x, alpha, beta : Extended) : Extended;
+function rbeta(a, b : Extended) : Extended;
 function rfischerf(v, w: Extended) : Extended;
 
 function num_tau(n : Extended) : Extended;
@@ -962,23 +965,24 @@ begin
 end;
 
 function vbeta(x, y : Extended) : Extended;
-var
-    eps  : Extended;
-    t, s : Extended;
+//var
+//    eps  : Extended;
+//    t, s : Extended;
 begin
     if (isInteger(x)) and (isInteger(y)) then
     begin
         Result := ((x+y)/(x*y))*(1/(newton_int(x+y, x)))
     end else begin
-        eps := 0.0001;
-        s := 0;
-        t := 0;
-        while (t < 1) do
-        begin
-            s := s + (pow2(t, x-1) * pow2(1-t, y-1));
-            t := t + eps;
-        end;
-        Result := s;
+        //eps := 0.0001;
+        //s := 0;
+        //t := 0;
+        //while (t < 1) do
+        //begin
+        //    s := s + eps*(pow2(t, x-1) * pow2(1-t, y-1));
+        //    t := t + eps;
+        //end;
+        //Result := s;
+        Result := exp(LogGamma(x) + LogGamma(y) - LogGamma(x+y));
     end;
 end;
 
@@ -992,7 +996,7 @@ begin
     t := 0;
     while (t < x) do
     begin
-        s := s + (pow2(t, a-1) * pow2(1-t, b-1));
+        s := s + eps*(pow2(t, a-1) * pow2(1-t, b-1));
         t := t + eps;
     end;
     Result := s;
@@ -1007,8 +1011,9 @@ begin
     else if (x = 1)   then Result := 1
     else if (b = 1)   then Result := pow2(x, a)
     else if (a = 1)   then Result := 1 - pow2(1-x, b)
-    else if (x > 0.5) then Result := 1 - vrinbeta(1.0-x, b, a)
+    //else if (x > 0.5) then Result := 1 - vrinbeta(1.0-x, b, a)
     else Result := vinbeta(x, a, b)/vbeta(a, b);
+    //Result := vinbeta(x, a, b)/vbeta(a, b);
 end;
 
 function gammat(nu : Extended) : Extended;
@@ -1088,6 +1093,42 @@ begin
     else
         Result := rchisq(v) / v / (rchisq(w) / w);
 end;
+
+function fbeta(x, alpha, beta : Extended) : Extended;
+begin
+    if (abs(x) > 1) then
+    begin
+        Result := NaN;
+    end else begin
+        //Result := pow2(x, alpha-1) * pow2(1-x, beta-1) * vgamma(alpha+beta) / (vgamma(alpha) * vgamma(beta));
+        Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+    end;
+end;
+
+function dbeta(x, alpha, beta : Extended) : Extended;
+begin
+    if (abs(x) > 1) then
+    begin
+        Result := NaN;
+    end else begin
+        Result := vrinbeta(x, alpha, beta);
+    end;
+end;
+
+function rbeta(a, b : Extended) : Extended;
+var
+    x, y : Extended;
+begin
+    if (a = 1) and (b = 1) then
+    begin
+        Result := random();
+    end else begin
+        x := rgengamma(0, 1, a);
+        y := rgengamma(0, 1, b);
+        Result := x / (x+y);
+    end;
+end;
+
 
 // ====== NUMBER THEORY
 

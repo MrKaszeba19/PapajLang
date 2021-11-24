@@ -1,0 +1,22 @@
+@use(Math)
+@use(Array)
+
+2 -> alpha
+5 -> beta
+
+[ 0 1 100 seq ] fun{ 100 / } map -> T
+
+"Array of X: " print 
+@real
+T println
+
+"\nx\tf(x)\tF(x)" println
+for ( item : T ) {
+	@real
+	item print
+	@milli
+	"\t" print	
+	item alpha beta funcBeta print
+	"\t" print
+	item alpha beta distBeta println
+}

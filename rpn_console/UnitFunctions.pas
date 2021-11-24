@@ -2089,6 +2089,63 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
         end;
+        'Math.funcBeta' : begin
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := fbeta(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.distBeta' : begin
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            w := dbeta(x, y, z);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(w));
+        end;
+        'Math.randomBeta' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            z := rbeta(x, y);
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
+        'Math.genBeta' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+			if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                //checkSIGINT();
+                //w := rgengamma(1/z, y, 1);
+                //w := rgamma1(y, z);
+                w := rbeta(y, z);
+                //w := rgengamma(z, y, 1);
+                // do poprawki
+                stack_push(pocz[sets.StackPointer], buildNumber(w));
+            end;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+        end;
 
 
         // Number Theory
