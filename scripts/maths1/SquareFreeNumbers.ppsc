@@ -1,0 +1,12 @@
+@use(Math)
+@use(Array)
+
+"Type a positive integer: " print
+[ 1 1 scan toNumber seq ] -> $t
+
+for ( const $i : $t ) { 
+	$i print 
+	"\t" print 
+	$i isSquareFree println 
+}
+

@@ -84,6 +84,7 @@ function num_pi(n : Extended) : Extended;
 function num_omega(n : Extended) : LongInt;
 function num_omega2(n : Extended) : LongInt;
 function num_liouville(n : Extended) : LongInt;
+function num_isSquareFree(n : Extended) : Boolean;
 
 
 implementation
@@ -1287,6 +1288,47 @@ end;
 function num_liouville(n : Extended) : LongInt;
 begin
     Result := minusOneTo(num_omega2(n));
+end;
+
+function num_isSquareFree(n : Extended) : Boolean;
+var
+    s    : LongInt;
+    x, y : Extended;
+begin
+    s := 0;
+    x := 1;
+    Result := True;
+    if (isPrime(n)) then
+    begin
+        Result := True;
+    end else begin
+        while (n > 1) do
+        begin
+            if (isPrime(n)) then
+            begin
+                if (n <> x) then
+                begin
+                    s := s + 1;
+                end else begin
+                     Result := False;
+                     break;
+                end;
+                n := 1;
+            end else begin
+                y := 2;
+                while not (divides(n, y)) do y := y + 1;
+                if (x <> y) then
+                begin
+                    s := s + 1;
+                    x := y;
+                end else begin
+                    Result := False;
+                    break;
+                end;
+                n := n / y;
+            end;
+        end;
+    end;
 end;
 
 
