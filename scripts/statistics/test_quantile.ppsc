@@ -1,0 +1,14 @@
+@use(Math)
+@use(Array)
+
+[ 10 times rand ] -> t
+
+$t sort println
+
+[ 1 1 20 seq ] fun{ 20 / } map -> $values
+
+for ( i : $values ) {
+	$i print
+	"\t" print
+	$t $i quantile println
+}

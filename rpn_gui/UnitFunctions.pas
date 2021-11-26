@@ -1120,6 +1120,7 @@ var
 	Found        : Boolean;
 	x, y, z, w   : Extended;
     index, jndex : LongInt;
+    ArrEax       : Entity;
 begin
 	Found := true;
 	case i of
@@ -2146,6 +2147,25 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
         end;
+        'Math.moment' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            index := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            stack_push(pocz[sets.StackPointer], buildNumber(table_moment(pocz[trunc(ArrEax.Num)].Values, index)));
+        end;
+        'Math.quantile' : begin
+            if (sets.StrictType) and (assertNotNegativeLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit; 
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 1) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile(pocz[trunc(ArrEax.Num)].Values, x)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 1));
+            end;
+        end;
 
 
         // Number Theory
@@ -2345,6 +2365,19 @@ begin
             end;
         end;
         'Math.euclidean' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then begin
+                stack_push(pocz[sets.StackPointer], buildNumber(x));
+                stack_push(pocz[sets.StackPointer], buildNumber(y));
+            end; 
+            w := gcdExtended(trunc(x), trunc(y), index, jndex);
+            stack_push(pocz[sets.StackPointer], buildNumber(index));
+            stack_push(pocz[sets.StackPointer], buildNumber(jndex));
+        end;
+        'Math.bezoutCoefs' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
             y := stack_pop(pocz[sets.StackPointer]).Num;
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
@@ -4746,13 +4779,6 @@ begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNumber(table_lcm(pocz[trunc(ArrEax.Num)].Values)));
-        end;
-        'Array.reduceMoment' : begin
-            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
-            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(pocz[sets.StackPointer]);
-            stack_push(pocz[sets.StackPointer], buildNumber(table_moment(pocz[trunc(ArrEax.Num)].Values, IntEax)));
         end;
         'Array.reduceMin' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 

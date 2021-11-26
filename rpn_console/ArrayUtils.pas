@@ -34,6 +34,7 @@ function table_stddev(tab : TEntities) : Extended;
 function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
 function table_moment(tab : TEntities; k : LongInt) : Extended;
+function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
 
 function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
@@ -510,6 +511,24 @@ begin
     for i := 0 to Length(tab)-1 do
         s := s + pow(tab[i].Num, k);
     Result := s/Length(tab);
+end;
+
+function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
+begin
+	quicksort(tab);
+    if (factor = 0) then
+    begin
+        Result := tab[0].Num;
+    end
+    else if (factor = 1) then
+    begin
+        Result := tab[Length(tab)-1].Num;
+    end else if (isInteger(Length(tab) * factor)) then
+    begin
+        Result := 0.5*(tab[Ceil(Length(tab) * factor) - 1].Num + tab[Ceil(Length(tab) * factor)].Num);
+    end else begin 
+        Result := tab[Ceil(Length(tab) * factor) - 1].Num;
+    end;
 end;
 
 // booleans

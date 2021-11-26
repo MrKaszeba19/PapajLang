@@ -116,6 +116,7 @@ function buildNull() : Entity;
 function raiseExceptionUnknownCommand(operand : String) : Entity;
 function raiseExceptionUnknownArray(operand : String) : Entity;
 function raiseSyntaxErrorExpression(operand : String) : Entity;
+function raiseNumRangeConstraint(operand : String; x, y : Extended) : Entity;
 function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 function raiseStringSameLength(operand : String) : Entity;
 function raiseDivisionZero(operand : String) : Entity;
@@ -481,6 +482,11 @@ end;
 function raiseDivisionZero(operand : String) : Entity;
 begin
     Result := raiseException('EInput:CDivZero: Divison by zero at "'+operand+'".');
+end;
+
+function raiseNumRangeConstraint(operand : String; x, y : Extended) : Entity;
+begin
+    Result := raiseException('EInput:CNumRange: Number must be within a range of ['+FormatFloat('0.###############', x)+', '+FormatFloat('0.###############', y)+'] at "'+operand+'".');
 end;
 
 // exceed boundaries
