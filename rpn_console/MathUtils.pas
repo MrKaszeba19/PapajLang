@@ -74,6 +74,8 @@ function rstudentt(df: Extended) : Extended;
 function fbeta(x, alpha, beta : Extended) : Extended;
 function dbeta(x, alpha, beta : Extended) : Extended;
 function rbeta(a, b : Extended) : Extended;
+function ffischerf(x, d1, d2 : Extended) : Extended;
+function dfischerf(x, d1, d2 : Extended) : Extended;
 function rfischerf(v, w: Extended) : Extended;
 
 function num_tau(n : Extended) : Extended;
@@ -1085,6 +1087,16 @@ begin
     else begin
         Result := randg(0, 1) / sqrt(rchisq(df) / df);
     end;
+end;
+
+function ffischerf(x, d1, d2 : Extended) : Extended;
+begin
+    Result := sqrt((pow(d1 * x, d1) * pow(d2, d2)) / (pow(d1*x + d2, d1+d2)))/(x * vbeta(d1/2, d2/2));
+end;
+
+function dfischerf(x, d1, d2 : Extended) : Extended;
+begin
+    Result := vrinbeta((d1*x)/(d1*x+d2), d1/2, d2/2);
 end;
 
 function rfischerf(v, w: Extended) : Extended;

@@ -1,0 +1,24 @@
+@use(Math)
+@use(Array)
+
+"Type degrees of freedom 1: " print
+scan toNumber trunc -> v
+"Type degrees of freedom 2: " print
+scan toNumber trunc -> w
+
+[ 1 1 100 seq ] fun{ 10 / } map -> T
+
+"Array of X: " print 
+@real
+T println
+
+"\nx\tf(x)\tF(x)" println
+for ( item : T ) {
+	//@real
+	item print
+	//@milli
+	"\t" print	
+	item v w funcF print
+	"\t" print
+	item v w distF println
+}
