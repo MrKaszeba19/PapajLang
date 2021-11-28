@@ -56,19 +56,75 @@ var
 
 // HELPFUL THINGS
 
+// to be removed
+function checkLevel2(input : String) : Integer;
+begin
+         if (input = '{')         then Result := 1
+    //else if (input = 'else{')     then Result := 1
+    else if (input = 'fun{')      then Result := 1
+    else if (input = 'function{') then Result := 1
+    else if (input = '[')         then Result := 1
+    else if (input = '(')         then Result := 1
+    //else if (input = 'if(')       then Result := 1
+	else if (input = '}')         then Result := -1
+    else if (input = ']')         then Result := -1
+    else if (input = ')')         then Result := -1
+    else Result := 0;
+end;
+
+// to be removed
+function checkLevel1(input : String) : Integer;
+begin
+         if (LeftStr(input, 1) = '{')          then Result := 1
+    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
+    else if (LeftStr(input, 9) = 'function{')  then Result := 1
+    else if (LeftStr(input, 1) = '[')          then Result := 1
+    else if (LeftStr(input, 1) = '(')          then Result := 1
+	else if (RightStr(input, 1) = '}')         then Result := -1
+    else if (RightStr(input, 1) = ']')         then Result := -1
+    else if (RightStr(input, 1) = ')')         then Result := -1
+    else Result := 0;
+end;
+
+// to be removed
+function checkLevel3(input : String) : Integer;
+begin
+         if (LeftStr(input, 1) = '{')          then Result := 1
+    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
+    else if (LeftStr(input, 9) = 'function{')  then Result := 1
+    else if (LeftStr(input, 1) = '[')          then Result := 1
+    else if (LeftStr(input, 1) = '(')          then Result := 1
+    else Result := 0;
+	     if (RightStr(input, 1) = '}')         then Result := Result - 1
+    else if (RightStr(input, 1) = ']')         then Result := Result - 1
+    else if (RightStr(input, 1) = ')')         then Result := Result - 1
+    else ;
+end;
+
+function getbackchars(input : String; chr : Char) : Integer;
+var i : LongInt;
+begin
+    Result := 0;
+    for i := High(input) downto Low(input) do
+    begin
+        if (input[i] = chr) then
+            Result := Result + 1
+        else break;
+    end;
+end;
+
 function checkLevel(input : String) : Integer;
 begin
-         if (input = '{')         then checkLevel := 1
-    //else if (input = 'else{')     then checkLevel := 1
-    else if (input = 'fun{')      then checkLevel := 1
-    else if (input = 'function{') then checkLevel := 1
-    else if (input = '[')         then checkLevel := 1
-    else if (input = '(')         then checkLevel := 1
-    //else if (input = 'if(')       then checkLevel := 1
-	else if (input = '}')         then checkLevel := -1
-    else if (input = ']')         then checkLevel := -1
-    else if (input = ')')         then checkLevel := -1
-    else checkLevel := 0;
+         if (LeftStr(input, 1) = '{')          then Result := 1
+    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
+    else if (LeftStr(input, 9) = 'function{')  then Result := 1
+    else if (LeftStr(input, 1) = '[')          then Result := 1
+    else if (LeftStr(input, 1) = '(')          then Result := 1
+    else Result := 0;
+	     if (RightStr(input, 1) = '}')         then Result := Result - getbackchars(input, '}')
+    else if (RightStr(input, 1) = ']')         then Result := Result - getbackchars(input, ']')
+    else if (RightStr(input, 1) = ')')         then Result := Result - getbackchars(input, ')')
+    else ;
 end;
 
 // FUNCTION
@@ -583,6 +639,37 @@ var
     nesttx : String;
 begin
     nestlv := 1;
+	nesttx := initstr;
+    //writeln('init: ', initStr);
+    if (checkLevel(initstr) < 0) then
+    begin
+        Result := LeftStr(initstr, Length(initstr)-1);
+    end else begin
+        //writeln(initstr, #9, checkLevel(initstr), #9, nestlv, ' start');
+        nestlv := nestlv + checkLevel(initstr);
+        Inc(cursor);
+	    while (nestlv > 0) and (cursor < Length(L)) do begin
+            nestlv := nestlv + checkLevel(L[cursor]);
+            //writeln(L[cursor], #9, checkLevel(L[cursor]), #9, nestlv);
+	    	if (nestlv > 0) 
+                then nesttx := nesttx + ' ' + L[cursor]
+                else nesttx := nesttx + ' ' + LeftStr(L[cursor], Length(L[cursor])-1);
+	    	Inc(cursor);
+	    end;
+        Dec(cursor);
+        Result := trimLeft(nesttx);
+    end;
+    //writeln(Result);
+    //writeln();
+end;
+
+// to be removed
+function getScopedString2(var L : TStringArray; var cursor : Integer; initStr : String = '') : String;
+var
+    nestlv : LongInt;
+    nesttx : String;
+begin
+    nestlv := 1;
 	nesttx := '';
     Inc(cursor);
 	while (nestlv > 0) and (cursor < Length(L)) do begin
@@ -707,20 +794,44 @@ begin
                     ExecStr := getQuotedString(L, index);
                     permit := True;
                     InstructionBuilt := True;
-			    end else if L[index] = '{' then
+			    //end else if L[index] = '{' then
+                //begin
+                //    BracesStr := getScopedString(L, index);
+                //    if (mode <> MDO) then InstructionBuilt := True;
+                //end else if L[index] = '[' then begin
+                //    BracketsStr := getScopedString(L, index);
+                //    InstructionBuilt := True;
+                //end else if (L[index] = 'fun{') or (L[index] = 'function{') then
+                //begin
+                //    mode := MFUN;
+                //    BracesStr := getScopedString(L, index);
+                //    InstructionBuilt := True;
+                //end else if L[index] = '(' then begin
+                //    ParenthStr := getScopedString(L, index);
+                //    if mode in [MNORM, MIF, MELIF, MDOWHILE, MDOUNTIL] then InstructionBuilt := True;
+                //end else begin
+                //    ExecStr := L[index];
+                //    InstructionBuilt := True;
+                //end;
+                end else if LeftStr(L[index], 1) = '{' then
                 begin
-                    BracesStr := getScopedString(L, index);
+                    BracesStr := getScopedString(L, index, RightStr(L[index], Length(L[index])-1));
                     if (mode <> MDO) then InstructionBuilt := True;
-                end else if L[index] = '[' then begin
-                    BracketsStr := getScopedString(L, index);
+                end else if LeftStr(L[index], 1) = '[' then begin
+                    BracketsStr := getScopedString(L, index, RightStr(L[index], Length(L[index])-1));
                     InstructionBuilt := True;
-                end else if (L[index] = 'fun{') or (L[index] = 'function{') then
+                end else if LeftStr(L[index], 4) = 'fun{' then
                 begin
                     mode := MFUN;
-                    BracesStr := getScopedString(L, index);
+                    BracesStr := getScopedString(L, index, RightStr(L[index], Length(L[index])-4));
                     InstructionBuilt := True;
-                end else if L[index] = '(' then begin
-                    ParenthStr := getScopedString(L, index);
+                end else if LeftStr(L[index], 9) = 'function{' then
+                begin
+                    mode := MFUN;
+                    BracesStr := getScopedString(L, index, RightStr(L[index], Length(L[index])-9));
+                    InstructionBuilt := True;
+                end else if LeftStr(L[index], 1) = '(' then begin
+                    ParenthStr := getScopedString(L, index, RightStr(L[index], Length(L[index])-1));
                     if mode in [MNORM, MIF, MELIF, MDOWHILE, MDOUNTIL] then InstructionBuilt := True;
                 end else begin
                     ExecStr := L[index];

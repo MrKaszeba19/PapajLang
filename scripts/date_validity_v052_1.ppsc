@@ -1,0 +1,87 @@
+@silent
+@use(String)
+
+function (date) { 
+	if (date "a" occurs 1 >=) {
+		FALSE
+	} elif (date "/" occurs 2 =
+                date "//" occurs 0 =
+                and) {
+		date "/" splitBy 
+		>y >d >m
+		m toNumber >m
+		d toNumber >d
+		y toNumber >y
+		if (m type "Number" !=
+		    d type "Number" !=
+		    y type "Number" !=
+		     or or) 
+		{FALSE} else {TRUE}
+	}  
+	else {FALSE}
+} -> isValidString
+
+function (date) {
+	date "/" splitBy 
+	-> y -> d -> m
+	m toNumber -> m
+	d toNumber -> d
+	y toNumber -> y
+	if (m 0 < d 0 < y 0 < or or) {
+		FALSE 
+	} elif (
+		m 1 = d 31 <= and
+		m 2 = y 4 mod 0 = and y 400 mod 0 = and d 29 <= and
+		m 2 = y 4 mod 0 = and y 400 mod 0 != and y 100 mod 0 != and d 29 <= and
+		m 2 = y 4 mod 0 = and y 400 mod 0 != and y 100 mod 0 = and d 28 <= and
+		m 2 = y 4 mod 0 != and d 28 <= and
+		m 3 = d 31 <= and
+		m 4 = d 30 <= and
+		m 5 = d 31 <= and
+		m 6 = d 30 <= and
+		m 7 = d 31 <= and
+		m 8 = d 31 <= and
+		m 9 = d 30 <= and
+		m 10 = d 31 <= and
+		m 11 = d 30 <= and
+		m 12 = d 31 <= and		
+		14 times or
+	) {TRUE} else {FALSE}
+} -> isValidDate
+
+function (month) {
+	$month toNumber -> month
+	  if (month 1 =) {"January"}
+	elif (month 2 =) {"February"}
+	elif (month 3 =) {"March"}
+	elif (month 4 =) {"April"}
+	elif (month 5 =) {"May"}
+	elif (month 6 =) {"June"}
+	elif (month 7 =) {"July"}
+	elif (month 8 =) {"August"}
+	elif (month 9 =) {"September"}
+	elif (month 10 =) {"October"}
+	elif (month 11 =) {"November"}
+	elif (month 12 =) {"December"}
+} -> sayMonth
+
+function (date) {
+	date "/" splitBy 
+	>y >d >m
+	m sayMonth d "," y bind concat bind
+} -> sayDate
+
+"Enter a date in format MM/DD/YYYY: " print
+scan toString -> input
+
+if (input isValidString) {
+	if (input isValidDate) { 
+		"Today is " input sayDate "."
+		2 times concat 
+		println
+	} else {
+		"This string doesn't contain a valid date." println
+	}
+} else {
+	"This string doesn't contain a date." println
+}

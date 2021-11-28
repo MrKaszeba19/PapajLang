@@ -1,0 +1,19 @@
+@use(Array)
+
+"TEST 1" println
+[ [ 1 2 ] [ 3 4 ] ] -> t
+$t first first println
+
+"TEST 2" println
+[ [1 2] [3 4] ] -> t
+$t first first println
+
+"TEST 3" println
+[[1 2] [3 4] ] -> t
+$t first first println
+
+"TEST 4" println
+[[1 2] [3 4]] -> t
+$t first first println
+
+{{{"done" println}}}

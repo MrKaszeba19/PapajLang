@@ -1,0 +1,12 @@
+@use(Math)
+@use(Array)
+
+function (item) { 
+	if ($item 15 divides) "FizzBuzz"
+	elif ($item 3 divides) "Fizz"
+	elif ($item 5 divides) "Buzz" 
+	else $item
+} -> eval
+
+
+[1 1 500 seq] $eval map println
