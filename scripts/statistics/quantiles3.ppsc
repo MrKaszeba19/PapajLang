@@ -1,0 +1,56 @@
+@use(Math)
+@use(Array)
+
+[ 100 times rand ] -> t
+
+
+"median: " print
+$t reduceMedian println
+
+newln
+"n\ttertile" println
+for ( 0 -> $i ; $i 3 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i tertile println
+}
+
+newln
+"n\tquartile" println
+for ( 0 -> $i ; $i 4 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i quartile println
+}
+
+newln
+"n\toctile" println
+for ( 0 -> $i ; $i 8 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i octile println
+}
+
+newln
+"n\tdecile" println
+for ( 0 -> $i ; $i 10 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i decile println
+}
+
+newln
+"n\thexadecile" println
+for ( 0 -> $i ; $i 16 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i hexadecile println
+}
+
+newln
+"n\tpercentile" println
+for ( 0 -> $i ; $i 100 <= ; $i ++ -> $i ) {
+	$i print
+	"\t" print
+	$t $i percentile println
+}

@@ -1,0 +1,20 @@
+@use(Math)
+@use(Array)
+
+"Enter q: " print
+scan toNumber -> $q
+
+[ 100 times rand ] -> t
+
+$t sort println
+
+[ 0 1 $q seq ] fun{ $q / } map -> $values
+
+newln
+"Q quantiles" println
+"n\tquantile" println
+for ( i : $values ) {
+	$i $q * print
+	"\t" print
+	$t $i quantile println
+}

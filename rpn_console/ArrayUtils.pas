@@ -35,6 +35,7 @@ function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
 function table_moment(tab : TEntities; k : LongInt) : Extended;
 function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
+function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : Extended;
 
 function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
@@ -528,6 +529,28 @@ begin
         Result := 0.5*(tab[Ceil(Length(tab) * factor) - 1].Num + tab[Ceil(Length(tab) * factor)].Num);
     end else begin 
         Result := tab[Ceil(Length(tab) * factor) - 1].Num;
+    end;
+end;
+
+function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : Extended;
+begin
+	quicksort(tab);
+    if (num = 0) then
+    begin
+        Result := tab[0].Num;
+    end
+    else if (num > denom) or (num < 0) then
+    begin
+        Result := NaN;
+    end
+    else if (num = denom) then
+    begin
+        Result := tab[Length(tab)-1].Num;
+    end else if (isInteger(Length(tab) * num / denom)) then
+    begin
+        Result := 0.5*(tab[Ceil(Length(tab) * num / denom) - 1].Num + tab[Ceil(Length(tab) * num / denom)].Num);
+    end else begin 
+        Result := tab[Ceil(Length(tab) * num / denom) - 1].Num;
     end;
 end;
 

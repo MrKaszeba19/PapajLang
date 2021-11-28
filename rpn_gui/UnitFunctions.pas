@@ -2218,6 +2218,78 @@ begin
                 stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 1));
             end;
         end;
+        'Math.tertile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 3) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 3)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 3));
+            end;
+        end;
+        'Math.quartile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 4) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 4)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 4));
+            end;
+        end;
+        'Math.octile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 8) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 8)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 8));
+            end;
+        end;
+        'Math.decile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 10) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 10)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 10));
+            end;
+        end;
+        'Math.hexadecile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 16) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 16)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 16));
+            end;
+        end;
+        'Math.percentile' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(pocz[sets.StackPointer]);
+            if (x >= 0) and (x <= 100) then
+            begin
+                stack_push(pocz[sets.StackPointer], buildNumber(table_quantile2(pocz[trunc(ArrEax.Num)].Values, x, 100)));
+            end else begin
+                stack_push(pocz[sets.StackPointer], raiseNumRangeConstraint(i, 0, 100));
+            end;
+        end;
 
 
         // Number Theory
