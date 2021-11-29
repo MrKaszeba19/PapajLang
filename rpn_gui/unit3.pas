@@ -380,7 +380,7 @@ begin
     Result.AreYouSureQuit     := 'Jes të pewny/ô, że të chcész aplikacëjã zamknąc';
     Result.AreYouSureContSave := 'Jes të pewny/ô, że të chcész jisc dali bez zôpisënkù lopka';
     Result.AreYouSureQuitSave := 'Jes të pewny/ô, że të chcész aplikacëjã zamknąc bez zôpisënkù lopka';
-    Result.AutoClearTerminal  := 'Wëcziszczë terminala przed zreszëniém skripta';
+    Result.AutoClearTerminal  := 'Wëcziszczë terminala przed zrëszeniém skripta';
     Result.DarkMode           := 'Cemni trib';
     Result.Error              := 'Féla';
     Result.ErrorLoadFile      := 'Féla przë wczëtônkù lopka';
@@ -422,7 +422,7 @@ begin
     Result.AreYouSureQuit     := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc';
     Result.AreYouSureContSave := 'Jes të pewny/ô, że të chcész jisc dalji bez zôpisënkù lopka';
     Result.AreYouSureQuitSave := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc bez zapisënka lopka';
-    Result.AutoClearTerminal  := 'Vëčišči terminala przed zrešenjem skripta';
+    Result.AutoClearTerminal  := 'Vëčišči terminala przed zrëšenjem skripta';
     Result.DarkMode           := 'Cemni trib';
     Result.Error              := 'Fela';
     Result.ErrorLoadFile      := 'Fela przi včëtônku lopka';
@@ -434,7 +434,7 @@ begin
     Result.MenuNewFile        := 'Novi lopk';
     Result.MenuSaveFile       := 'Zapiše skripta do lopka';
     Result.MenuClose          := 'Zamkni';
-    Result.MenuView           := 'Vëzdrjatk';
+    Result.MenuView           := 'Vëzdrzatk';
     Result.MenuRun            := 'Zrëšenje';
     Result.No                 := 'Nje';
     Result.PSCode             := 'PapajScriptovi kod';
@@ -464,7 +464,7 @@ begin
     Result.AreYouSureQuit     := 'Јес тё певни/ô, же тё чцеш апљикација̃ замкну̃ц';
     Result.AreYouSureContSave := 'Јес тё певни/ô, же тё чцеш јисц даљи без записёнка љопка';
     Result.AreYouSureQuitSave := 'Јес тё певни/ô, же тё чцеш апљикација̃ замкну̃ц без записёнка љопка';
-    Result.AutoClearTerminal  := 'Вёчишчи терминала прјед зрешењем скрипта';
+    Result.AutoClearTerminal  := 'Вёчишчи терминала прјед зрёшењем скрипта';
     Result.DarkMode           := 'Цемни триб';
     Result.Error              := 'Феља';
     Result.ErrorLoadFile      := 'Фела прји вчётôнку љопка';
@@ -739,7 +739,7 @@ begin
     Result.RunScriptExt       := 'Kjør skript i eit eksternt vindu';
     Result.SampleCaption      := 'PS uttrykk';
     Result.SampleCountIt      := 'La oss telle det!';
-    Result.SampleHint         := 'Skriv inn et PS-uttrykk avgrenset med mellomrom, f.eks. "2 3 +" eller "20 4 / 5 +"';
+    Result.SampleHint         := 'Skriv inn eit PS-uttrykk avgrenset med mellomrom, f.eks. "2 3 +" eller "20 4 / 5 +"';
     Result.Save               := 'Lagre';
     Result.Submit             := 'Sende inn';
     Result.WindowMainName     := 'RPN-kalkulator – PapajScript-tolker';
