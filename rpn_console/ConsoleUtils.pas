@@ -5,12 +5,13 @@ unit ConsoleUtils;
 interface
 
 function executeCommand(input, Shell : String) : String;
+function getUser() : String;
 
 implementation
 
 uses 
     {$IFDEF MSWINDOWS}
-		ShellApi, crt,
+		ShellApi, crt, Windows,
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
@@ -28,6 +29,22 @@ begin
   	RunCommand(Shell,['-c', input], s);
  	{$ENDIF}
  	executeCommand := s;
+end;
+
+function getUser() : String;
+{$IFDEF WINDOWS}
+var
+    buffer : array[0..255] of char;
+    size   : dword;
+{$ENDIF}
+begin
+    {$IFDEF WINDOWS}
+    size := 256;
+    GetUserName(buffer, size);
+    Result := buffer;
+    {$ELSE}
+    Result := GetEnvironmentVariable('USER'); 
+    {$ENDIF}
 end;
 
 end.

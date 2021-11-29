@@ -4490,6 +4490,9 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
+        'Console.getUser' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getUser()));
+        end;
         else begin
             Found := false;
         end;
