@@ -56,77 +56,6 @@ var
 
 // HELPFUL THINGS
 
-// to be removed
-function checkLevel2(input : String) : Integer;
-begin
-         if (input = '{')         then Result := 1
-    //else if (input = 'else{')     then Result := 1
-    else if (input = 'fun{')      then Result := 1
-    else if (input = 'function{') then Result := 1
-    else if (input = '[')         then Result := 1
-    else if (input = '(')         then Result := 1
-    //else if (input = 'if(')       then Result := 1
-	else if (input = '}')         then Result := -1
-    else if (input = ']')         then Result := -1
-    else if (input = ')')         then Result := -1
-    else Result := 0;
-end;
-
-// to be removed
-function checkLevel1(input : String) : Integer;
-begin
-         if (LeftStr(input, 1) = '{')          then Result := 1
-    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
-    else if (LeftStr(input, 9) = 'function{')  then Result := 1
-    else if (LeftStr(input, 1) = '[')          then Result := 1
-    else if (LeftStr(input, 1) = '(')          then Result := 1
-	else if (RightStr(input, 1) = '}')         then Result := -1
-    else if (RightStr(input, 1) = ']')         then Result := -1
-    else if (RightStr(input, 1) = ')')         then Result := -1
-    else Result := 0;
-end;
-
-// to be removed
-function checkLevel3(input : String) : Integer;
-begin
-         if (LeftStr(input, 1) = '{')          then Result := 1
-    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
-    else if (LeftStr(input, 9) = 'function{')  then Result := 1
-    else if (LeftStr(input, 1) = '[')          then Result := 1
-    else if (LeftStr(input, 1) = '(')          then Result := 1
-    else Result := 0;
-	     if (RightStr(input, 1) = '}')         then Result := Result - 1
-    else if (RightStr(input, 1) = ']')         then Result := Result - 1
-    else if (RightStr(input, 1) = ')')         then Result := Result - 1
-    else ;
-end;
-
-function getbackchars(input : String; chr : Char) : Integer;
-var i : LongInt;
-begin
-    Result := 0;
-    for i := High(input) downto Low(input) do
-    begin
-        if (input[i] = chr) then
-            Result := Result + 1
-        else break;
-    end;
-end;
-
-function checkLevel(input : String) : Integer;
-begin
-         if (LeftStr(input, 1) = '{')          then Result := 1
-    else if (LeftStr(input, 4) = 'fun{')       then Result := 1
-    else if (LeftStr(input, 9) = 'function{')  then Result := 1
-    else if (LeftStr(input, 1) = '[')          then Result := 1
-    else if (LeftStr(input, 1) = '(')          then Result := 1
-    else Result := 0;
-	     if (RightStr(input, 1) = '}')         then Result := Result - getbackchars(input, '}')
-    else if (RightStr(input, 1) = ']')         then Result := Result - getbackchars(input, ']')
-    else if (RightStr(input, 1) = ')')         then Result := Result - getbackchars(input, ')')
-    else ;
-end;
-
 // FUNCTION
 
 procedure wrapArgs(args : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
@@ -633,50 +562,63 @@ begin
     checkParentheses := isValid;
 end;
 
+function checkLevelChar(input : Char) : Integer;
+begin
+         if (input = '{') then Result := 1
+    else if (input = '[') then Result := 1
+    else if (input = '(') then Result := 1
+	else if (input = '}') then Result := -1
+    else if (input = ']') then Result := -1
+    else if (input = ')') then Result := -1
+    else Result := 0;
+    //writeln(input, ': ', Result);
+end;
+
+procedure checkWordString(var str : String; var quoted : Boolean; var nesttx : String; var nestlv : LongInt);
+var
+    index  : LongInt;
+begin
+    if (Length(str) > 0) then 
+    begin
+        if (str[1] = '"') then quoted := not quoted;
+        if not quoted then nestlv := nestlv + checkLevelChar(str[1]);
+        nesttx := nesttx + str[1];
+        for index := 2 to Length(str) do
+        begin
+            if (str[index] = '"') and (str[index-1] <> '\') then 
+            begin
+                //writeln('quote'); 
+                quoted := not quoted;
+            end;
+            if not quoted then nestlv := nestlv + checkLevelChar(str[index]);
+            nesttx := nesttx + str[index];
+        end;
+    end;
+end;
+
 function getScopedString(var L : TStringArray; var cursor : Integer; initStr : String = '') : String;
 var
     nestlv : LongInt;
     nesttx : String;
+    quoted : Boolean = False;
 begin
     nestlv := 1;
-	nesttx := initstr;
-    //writeln('init: ', initStr);
-    if (checkLevel(initstr) < 0) then
-    begin
-        Result := LeftStr(initstr, Length(initstr)-1);
-    end else begin
-        //writeln(initstr, #9, checkLevel(initstr), #9, nestlv, ' start');
-        nestlv := nestlv + checkLevel(initstr);
-        Inc(cursor);
-	    while (nestlv > 0) and (cursor < Length(L)) do begin
-            nestlv := nestlv + checkLevel(L[cursor]);
-            //writeln(L[cursor], #9, checkLevel(L[cursor]), #9, nestlv);
-	    	if (nestlv > 0) 
-                then nesttx := nesttx + ' ' + L[cursor]
-                else nesttx := nesttx + ' ' + LeftStr(L[cursor], Length(L[cursor])-1);
-	    	Inc(cursor);
-	    end;
-        Dec(cursor);
-        Result := trimLeft(nesttx);
-    end;
-    //writeln(Result);
-    //writeln();
-end;
-
-// to be removed
-function getScopedString2(var L : TStringArray; var cursor : Integer; initStr : String = '') : String;
-var
-    nestlv : LongInt;
-    nesttx : String;
-begin
-    nestlv := 1;
-	nesttx := '';
+    //writeln(initstr, Length(L[cursor]):8, nestlv:8, quoted:8);
+    checkWordString(initstr, quoted, nesttx, nestlv);
+    nesttx := initstr + ' ';
     Inc(cursor);
-	while (nestlv > 0) and (cursor < Length(L)) do begin
-        nestlv := nestlv + checkLevel(L[cursor]);
-		if (nestlv > 0) then nesttx := nesttx + ' ' + L[cursor];
-		Inc(cursor);
-	end;
+    while (nestlv > 0) and (cursor < Length(L)) do begin
+        //writeln(L[cursor]:16, Length(L[cursor]):8, nestlv:8, quoted:8);
+        checkWordString(L[cursor], quoted, nesttx, nestlv);
+        nesttx := nesttx + ' ';
+        Inc(cursor);
+    end;
+    //writeln(nesttx);
+    if (Length(nesttx) > 0) then 
+    begin
+        nesttx := LeftStr(nesttx, Length(nesttx)-1);
+        if (RightStr(nesttx, 1)[1] in ['}', ')', ']']) then nesttx := LeftStr(nesttx, Length(nesttx)-1); 
+    end;
     Dec(cursor);
     Result := trimLeft(nesttx);
 end;
@@ -689,9 +631,11 @@ begin
 	Inc(cursor);
 	repeat
 		nesttx := nesttx + ' ' + L[cursor];
+        //writeln(L[cursor], ' ', cursor);
         Inc(cursor);
 	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
     Dec(cursor);
+    //writeln(nesttx);
     if (RightStr(nesttx, 1) = '"')
         then Result := nesttx
         else raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');

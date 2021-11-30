@@ -1,0 +1,26 @@
+@use(Array)
+@use(String)
+
+[
+	[ "Tak jak pan Jezus powiedział." "John Paul II" ]
+	[ "Bądźmy łagodni." "John Paul II" ]
+	[ "Nie lękajcie się." "John Paul II" ]
+	[ "Podążajcie z entuzjazmem." "John Paul II" ]
+	[ "Tolerancja jest możliwa." "John Paul II" ]
+	[ "Nie wiem." "John Paul II" ]
+	[ "Trwajcie mocno w Chrystusie." "John Paul II" ]
+	[ "Są tylko 2 rzeczy pewne na tym świecie:
+           \n\t1) śmierć
+           \n\t2) podatki" "Benjamin Franklin" ]
+	[ "1)) Wolność
+	   \n\t2) Równość
+	   \n\t3) Braterstwo" "rewolucja francuska" ]
+	[ "Niech zstapi Duch Twój." "John Paul II" ]
+	[ "Jestem z Wami" "John Paul II" ]
+	[ "Wypływajcie na głębie." "John Paul II" ]
+] -> $quotes
+
+//$quotes println
+$quotes randomFrom -> $quote
+$quote first quoted println
+"~" $quote last + println

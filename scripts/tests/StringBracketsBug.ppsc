@@ -1,0 +1,26 @@
+"TEST 1" println
+"There) is} no]bug" println
+
+"TEST 2" println
+"There is
+no
+bug" println
+
+"TEST 3" println
+"List:
+\n\t1) a
+\n\t2) b
+\n\t3) c" println
+
+
+{"abc" println }
+{ "abc" println }
+{" abc" println }
+{" abc" println}
+{ " abc" println}
+
+{5} println
+{5 } println
+{ 5} println
+{ 5 } println
+{}
