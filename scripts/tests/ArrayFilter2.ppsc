@@ -1,0 +1,30 @@
+@use(Array)
+@use(Math)
+
+@money
+"TEST 1" println
+[ 10 Math.genNormStd ] -> T
+$T ( 0 >= ) Array.filter -> U 
+$T ( 0 < ) Array.filter -> V
+$T println
+$U println
+$V println
+
+newln
+$T ( 0 >= ) Array.splitByExpression -> V -> U
+$T println
+$U println
+$V println
+
+"TEST 2" println
+$T function (x) { $x 0 >= } Array.filter -> U 
+$T function (x) { $x 0 < } Array.filter -> V
+$T println
+$U println
+$V println
+
+newln
+$T function (x) { $x 0 >= } Array.splitByExpression -> V -> U
+$T println
+$U println
+$V println

@@ -3288,19 +3288,30 @@ begin
         'String.filter' : begin
             if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
             begin
-                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, TFUN, i)) then Exit;
                 EntEax := stack_pop(pocz[sets.StackPointer]);
                 StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-                StrEcx := 'sfilt_'+IntToStr(DateTimeToUnix(Now));
                 StrEbx := '';
                 vardb.addLayer();
-                for index := 1 to Length(StrEax) do
+                if (EntEax.EntityType = TFUN) then
                 begin
-                    vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
-                    pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
-                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
-                        then StrEbx := StrEbx + StrEax[index];
-    		    end;
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                        doFunction(EntEax, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
+                            then StrEbx := StrEbx + StrEax[index];
+    		        end;
+                end else begin
+                    StrEcx := 'sfilt_'+IntToStr(DateTimeToUnix(Now));
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
+                        pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
+                            then StrEbx := StrEbx + StrEax[index];
+    		        end;
+                end;
                 vardb.removeLayer();
                 stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end else Found := False;
@@ -3308,19 +3319,30 @@ begin
         'String.cut' : begin
             if (stack_getback(pocz[sets.StackPointer], 2).EntityType = TSTR) then
             begin
-                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+                if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, TFUN, i)) then Exit;
                 EntEax := stack_pop(pocz[sets.StackPointer]);
                 StrEax := stack_pop(pocz[sets.StackPointer]).Str;
-                StrEcx := 'scutt_'+IntToStr(DateTimeToUnix(Now));
                 StrEbx := '';
                 vardb.addLayer();
-                for index := 1 to Length(StrEax) do
+                if (EntEax.EntityType = TFUN) then
                 begin
-                    vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
-                    pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
-                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) 
-                        then StrEbx := StrEbx + StrEax[index];
-    		    end;
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        stack_push(pocz[sets.StackPointer], buildString(StrEax[index]));
+                        doFunction(EntEax, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) 
+                            then StrEbx := StrEbx + StrEax[index];
+    		        end;
+                end else begin
+                    StrEcx := 'scutt_'+IntToStr(DateTimeToUnix(Now));
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        vardb.setLocalVariable(StrEcx, buildString(StrEax[index]));
+                        pocz := parseOpen('$' + StrEcx + ' ' + EntEax.Str, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) 
+                            then StrEbx := StrEbx + StrEax[index];
+    		        end;
+                end;
                 vardb.removeLayer();
                 stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end else Found := False;
@@ -5153,17 +5175,28 @@ begin
                 EntEax := stack_pop(pocz[sets.StackPointer]);
                 //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
                 ArrEax := stack_pop(pocz[sets.StackPointer]);
-                StrEax := 'afilt_'+IntToStr(DateTimeToUnix(Now));
                 stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
                 ArrEbx := stack_pop(pocz[sets.StackPointer]);
                 vardb.addLayer();
-                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                if (EntEax.EntityType = TFUN) then
                 begin
-                    vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
-                    pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
-                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then
-                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
-    		    end;
+                    for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                        doFunction(EntEax, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then
+                            stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end else begin
+                    StrEax := 'afilt_'+IntToStr(DateTimeToUnix(Now));
+                    for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                        pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) then
+                            stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end;
                 vardb.removeLayer();
                 stack_push(pocz[sets.StackPointer], ArrEbx);
             end else Found := False;
@@ -5180,36 +5213,61 @@ begin
                 stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
                 ArrEbx := stack_pop(pocz[sets.StackPointer]);
                 vardb.addLayer();
-                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                if (EntEax.EntityType = TFUN) then
                 begin
-                    vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
-                    pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
-                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then
-                        stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
-    		    end;
+                    for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                        doFunction(EntEax, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then
+                            stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end else begin
+                    StrEax := 'acutt_'+IntToStr(DateTimeToUnix(Now));
+                    for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                        pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
+                        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then
+                            stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end;
                 vardb.removeLayer();
                 stack_push(pocz[sets.StackPointer], ArrEbx);
             end else Found := False;
         end;
         'Array.splitByExpression' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+            //if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, TFUN, i)) then Exit;
             EntEax := stack_pop(pocz[sets.StackPointer]);
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(pocz[sets.StackPointer]);
-            StrEax := 'filt_'+IntToStr(DateTimeToUnix(Now));
             stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
             ArrEbx := stack_pop(pocz[sets.StackPointer]);
             stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, 0));
             ArrEcx := stack_pop(pocz[sets.StackPointer]);
             vardb.addLayer();
-            for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+            if (EntEax.EntityType = TFUN) then
             begin
-                vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
-                pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
-                if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
-                    then stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index])
-                    else stack_push(pocz[trunc(ArrEcx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
-    		end;
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    stack_push(pocz[sets.StackPointer], pocz[trunc(ArrEax.Num)].Values[index]);
+                    doFunction(EntEax, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
+                        then stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index])
+                        else stack_push(pocz[trunc(ArrEcx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+            end else begin
+                StrEax := 'asplt_'+IntToStr(DateTimeToUnix(Now));
+                for index := 0 to Length(pocz[trunc(ArrEax.Num)].Values)-1 do
+                begin
+                    vardb.setLocalVariable(StrEax, pocz[trunc(ArrEax.Num)].Values[index]);
+                    pocz := parseOpen('$' + StrEax + ' ' + EntEax.Str, pocz, sets, vardb);
+                    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) 
+                        then stack_push(pocz[trunc(ArrEbx.Num)], pocz[trunc(ArrEax.Num)].Values[index])
+                        else stack_push(pocz[trunc(ArrEcx.Num)], pocz[trunc(ArrEax.Num)].Values[index]);
+    		    end;
+            end;
             vardb.removeLayer();
             stack_push(pocz[sets.StackPointer], ArrEbx);
             stack_push(pocz[sets.StackPointer], ArrEcx);
