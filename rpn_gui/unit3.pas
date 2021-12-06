@@ -80,7 +80,11 @@ procedure ApplyLocaleMain(lang : LangMap);
 procedure ApplyLocaleScan(lang : LangMap);
 
 implementation
-uses Unit1, Unit4;
+uses 
+{$IFDEF MSWINDOWS}
+Windows,
+{$ENDIF}
+Unit1, Unit4;
 
 // NEW LANG ENGINE
 
