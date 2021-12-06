@@ -65,25 +65,26 @@ object Form1: TForm1
   end
   object Label2: TLabel
     Left = 8
-    Height = 16
+    Height = 20
     Top = 93
     Width = 576
     Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
     Caption = 'PapajScript code'
     ParentColor = False
   end
   object CodePanel: TPanel
     Left = 8
-    Height = 448
-    Top = 112
+    Height = 440
+    Top = 120
     Width = 576
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 448
+    ClientHeight = 440
     ClientWidth = 576
     TabOrder = 4
     inline SynEdit1: TSynEdit
       Left = 0
-      Height = 256
+      Height = 248
       Top = 32
       Width = 576
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -588,7 +589,7 @@ object Form1: TForm1
     object Memo1: TMemo
       Left = 0
       Height = 136
-      Top = 312
+      Top = 304
       Width = 576
       Anchors = [akLeft, akRight, akBottom]
       Color = 5914170
@@ -609,7 +610,7 @@ object Form1: TForm1
       Cursor = crVSplit
       Left = 0
       Height = 19
-      Top = 288
+      Top = 280
       Width = 576
       Align = alNone
       Anchors = [akLeft, akRight, akBottom]
@@ -669,11 +670,13 @@ object Form1: TForm1
       object MenuDarkMode: TMenuItem
         Caption = 'Dark Mode'
         ShowAlwaysCheckable = True
+        Visible = False
       end
       object MenuAutoClear: TMenuItem
         Caption = 'Clear terminal window before running a script'
         Checked = True
         ShowAlwaysCheckable = True
+        OnClick = MenuAutoClearClick
       end
     end
     object MenuRunScript: TMenuItem
@@ -713,6 +716,10 @@ object Form1: TForm1
         Caption = 'Français'
         OnClick = MenuLangFRAClick
       end
+      object MenuLangCRO: TMenuItem
+        Caption = 'Hrvatski'
+        OnClick = MenuLangCROClick
+      end
       object MenuLangITA: TMenuItem
         Caption = 'Italiano'
         OnClick = MenuLangITAClick
@@ -738,20 +745,46 @@ object Form1: TForm1
         OnClick = MenuLangNEDClick
       end
       object MenuLangNOR: TMenuItem
-        Caption = 'Norsk (Bokmål)'
-        OnClick = MenuLangNORClick
-      end
-      object MenuLangNOR2: TMenuItem
-        Caption = 'Norsk (Nynorsk)'
-        OnClick = MenuLangNOR2Click
+        Caption = 'Norsk'
+        object MenuLangNOR1: TMenuItem
+          Caption = 'Bokmål'
+          OnClick = MenuLangNOR1Click
+        end
+        object MenuLangNOR2: TMenuItem
+          Caption = 'Nynorsk'
+          OnClick = MenuLangNOR2Click
+        end
       end
       object MenuLangPOL: TMenuItem
         Caption = 'Polski'
         OnClick = MenuLangPOLClick
       end
+      object MenuLangPOR: TMenuItem
+        Caption = 'Português'
+        object MenuLangPOR1: TMenuItem
+          Caption = 'de Portugal'
+          OnClick = MenuLangPOR1Click
+        end
+        object MenuLangPOR2: TMenuItem
+          Caption = 'do Brasil'
+          OnClick = MenuLangPOR2Click
+        end
+      end
       object MenuLangRUS: TMenuItem
         Caption = 'Русский'
         OnClick = MenuLangRUSClick
+      end
+      object MenuLangSLO: TMenuItem
+        Caption = 'Slovenščina'
+        OnClick = MenuLangSLOClick
+      end
+      object MenuLangSRB: TMenuItem
+        Caption = 'Српски'
+        OnClick = MenuLangSRBClick
+      end
+      object MenuLangSRB2: TMenuItem
+        Caption = 'Srpski'
+        OnClick = MenuLangSRB2Click
       end
       object MenuLangSWE: TMenuItem
         Caption = 'Svenska'
@@ -824,5 +857,21 @@ object Form1: TForm1
     FileName = 'Unititled.ppsc'
     left = 752
     top = 240
+  end
+  object ProcessExt: TProcessUTF8
+    Active = False
+    Options = [poNewConsole]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoNone
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    left = 752
+    top = 200
   end
 end

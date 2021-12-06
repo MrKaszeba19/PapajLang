@@ -9,6 +9,7 @@ uses
 
 type Language = (
     L_AFR,
+    L_CRO,
     L_CSB,
     L_CSB2,
     L_CSB3,
@@ -23,7 +24,12 @@ type Language = (
     L_NOR,
     L_NOR2,
     L_POL,
+    L_POR,
+    L_POR2,
     L_RUS,
+    L_SLO,
+    L_SRB,
+    L_SRB2,
     L_SWE
 );
 
@@ -795,6 +801,258 @@ begin
     Result.QuestionMark2      := '';
 end;
 
+function langSerbian() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Да ли си сигуран/на да желиш да затвориш апликацију';
+    Result.AreYouSureContSave := 'Да ли си сигуран/на да желиш да наставиш без сачувања датотеке';
+    Result.AreYouSureQuitSave := 'Да ли си сигуран/на да желиш да затвориш апликацију без сачувања датотеке';
+    Result.AutoClearTerminal  := 'Испразни терминал пре покретања скрипте';
+    Result.DarkMode           := 'Мрачна тема';
+    Result.Error              := 'Грешка';
+    Result.ErrorLoadFile      := 'Грешка при учитавању датотеке';
+    Result.Expression         := 'Израз';
+    Result.Load               := 'Учитај';
+    Result.MenuApplication    := 'Апликација';
+    Result.MenuLanguage       := 'Језик';
+    Result.MenuLoadFile       := 'Учитај скрипту из датотеке';
+    Result.MenuNewFile        := 'Нова датотека';
+    Result.MenuSaveFile       := 'Сачувајте скрипту у датотеку';
+    Result.MenuClose          := 'Затвори';
+    Result.MenuView           := 'Поглед';
+    Result.MenuRun            := 'Покретање';
+    Result.No                 := 'Не';
+    Result.PSCode             := 'ПапајСцрипт код';
+    Result.Result             := 'Резултат';
+    Result.RunInt             := 'Покрени';
+    Result.RunExt             := 'Покрени у терминалу';
+    Result.RunScriptInt       := 'Покрени скрипту';
+    Result.RunScriptExt       := 'Покрени скрипту у спољном прозору';
+    Result.SampleCaption      := 'ПС Израз';
+    Result.SampleCountIt      := 'Хајде да пребројимо!';
+    Result.SampleHint         := 'Унеси ПС израз омеђен размацима, нпр. "2 3 +" или "20 4 / 5 +"';
+    Result.Save               := 'Сачувај';
+    Result.Submit             := 'Пошаљи';
+    Result.WindowMainName     := 'ОПН калкулатор – тумач ПапајСцрипт';
+    Result.WindowScanName     := 'Скенирај израз';
+    Result.WrongPS            := 'Погрешан ПС израз';
+    Result.Yes                := 'Да';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+function langSerbian2() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Da li si siguran/na da želiš da zatvoriš aplikaciju';
+    Result.AreYouSureContSave := 'Da li si siguran/na da želiš da nastaviš bez sačuvanja datoteke';
+    Result.AreYouSureQuitSave := 'Da li si siguran/na da želiš da zatvoriš aplikaciju bez sačuvanja datoteke';
+    Result.AutoClearTerminal  := 'Isprazni terminal pre pokretanja skripte';
+    Result.DarkMode           := 'Mračna tema';
+    Result.Error              := 'Greška';
+    Result.ErrorLoadFile      := 'Greška pri učitavanju datoteke';
+    Result.Expression         := 'Izraz';
+    Result.Load               := 'Učitaj';
+    Result.MenuApplication    := 'Aplikacija';
+    Result.MenuLanguage       := 'Jezik';
+    Result.MenuLoadFile       := 'Učitaj skriptu iz datoteke';
+    Result.MenuNewFile        := 'Nova datoteka';
+    Result.MenuSaveFile       := 'Sačuvajte skriptu u datoteku';
+    Result.MenuClose          := 'Zatvori';
+    Result.MenuView           := 'Pogled';
+    Result.MenuRun            := 'Pokretanje';
+    Result.No                 := 'Ne';
+    Result.PSCode             := 'PapajScript kod';
+    Result.Result             := 'Rezultat';
+    Result.RunInt             := 'Pokreni';
+    Result.RunExt             := 'Pokreni u terminalu';
+    Result.RunScriptInt       := 'Pokreni skriptu';
+    Result.RunScriptExt       := 'Pokreni skriptu u spoljnom prozoru';
+    Result.SampleCaption      := 'PS Izraz';
+    Result.SampleCountIt      := 'Hajde da prebrojimo!';
+    Result.SampleHint         := 'Unesi PS izraz omeđen razmacima, npr. "2 3 +" ili "20 4 / 5 +"';
+    Result.Save               := 'Sačuvaj';
+    Result.Submit             := 'Pošalji';
+    Result.WindowMainName     := 'OPN kalkulator – tumač PapajScript';
+    Result.WindowScanName     := 'Skeniraj izraz';
+    Result.WrongPS            := 'Pogrešan PS izraz';
+    Result.Yes                := 'Da';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+function langCroatian() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Jesi li siguran/na da želiš zatvoriti aplikaciju';
+    Result.AreYouSureContSave := 'Jesi li siguran/na da želiš nastaviti bez spremanja datoteke';
+    Result.AreYouSureQuitSave := 'Jesi li siguran/na da želiš zatvoriti aplikaciju bez spremanja datoteke';
+    Result.AutoClearTerminal  := 'Isprazni terminal prije pokretanja skripte';
+    Result.DarkMode           := 'Tamna tema';
+    Result.Error              := 'Greška';
+    Result.ErrorLoadFile      := 'Pogreška pri učitavanju datoteke';
+    Result.Expression         := 'Izraz';
+    Result.Load               := 'Učitaj';
+    Result.MenuApplication    := 'Aplikacija';
+    Result.MenuLanguage       := 'Jezik';
+    Result.MenuLoadFile       := 'Učitaj skriptu iz datoteke';
+    Result.MenuNewFile        := 'Nova datoteka';
+    Result.MenuSaveFile       := 'Spremi skriptu u datoteku';
+    Result.MenuClose          := 'Zatvori';
+    Result.MenuView           := 'Pogled';
+    Result.MenuRun            := 'Pokretanje';
+    Result.No                 := 'Ne';
+    Result.PSCode             := 'PapajScript kod';
+    Result.Result             := 'Rezultat';
+    Result.RunInt             := 'Pokreni';
+    Result.RunExt             := 'Pokreni u terminalu';
+    Result.RunScriptInt       := 'Pokreni skriptu';
+    Result.RunScriptExt       := 'Pokreni skriptu u vanjskom prozoru';
+    Result.SampleCaption      := 'PS izraz';
+    Result.SampleCountIt      := 'Izbrojimo!';
+    Result.SampleHint         := 'Upiši PS izraz omeđen razmacima, npr. "2 3 +" ili "20 4 / 5 +"';
+    Result.Save               := 'Spremi';
+    Result.Submit             := 'Pošalji';
+    Result.WindowMainName     := 'OPN kalkulator – tumač PapajScript';
+    Result.WindowScanName     := 'Skeniraj izraz';
+    Result.WrongPS            := 'Pogrešan PS izraz';
+    Result.Yes                := 'Da';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+function langSlovene() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Ali si prepričan/na, da želiš zapreti aplikacijo';
+    Result.AreYouSureContSave := 'Ali si prepričan/na, da želiš nadaljevati brez shranjevanja datoteke';
+    Result.AreYouSureQuitSave := 'Ali si prepričan/na, da želiš zapreti aplikacijo brez shranjevanja datoteke';
+    Result.AutoClearTerminal  := 'Pred zagonom skripta izprazni terminal';
+    Result.DarkMode           := 'Temna tema';
+    Result.Error              := 'Napaka';
+    Result.ErrorLoadFile      := 'Napaka pri nalaganju datoteke';
+    Result.Expression         := 'Izraz';
+    Result.Load               := 'Naloži';
+    Result.MenuApplication    := 'Aplikacija';
+    Result.MenuLanguage       := 'Jezik';
+    Result.MenuLoadFile       := 'Naloži skript iz datoteke';
+    Result.MenuNewFile        := 'Nova datoteka';
+    Result.MenuSaveFile       := 'Shrani skript v datoteko';
+    Result.MenuClose          := 'Zapri';
+    Result.MenuView           := 'Ogled';
+    Result.MenuRun            := 'Zagon';
+    Result.No                 := 'Ne';
+    Result.PSCode             := 'Koda PapajScript';
+    Result.Result             := 'Rezultat';
+    Result.RunInt             := 'Zaženi';
+    Result.RunExt             := 'Zaženi v terminalu';
+    Result.RunScriptInt       := 'Zaženi skript';
+    Result.RunScriptExt       := 'Zaženi skript v zunanjem oknu';
+    Result.SampleCaption      := 'PS izraz';
+    Result.SampleCountIt      := 'Preštejmo!';
+    Result.SampleHint         := 'Vnesi izraz PS, razmejen s presledki, npr. "2 3 +" ali "20 4 / 5 +"';
+    Result.Save               := 'Shrani';
+    Result.Submit             := 'Pošlji';
+    Result.WindowMainName     := 'RPN kalkulator – tolmač PapajScript';
+    Result.WindowScanName     := 'Skeniraj izraz';
+    Result.WrongPS            := 'Napačen izraz PS';
+    Result.Yes                := 'Da';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+function langPortuguese() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Tens certeza que deseja fechar o aplicativo';
+    Result.AreYouSureContSave := 'Tens certeza que deseja continuar sem salvar o arquivo';
+    Result.AreYouSureQuitSave := 'Tens certeza que deseja fechar o aplicativo sem salvar o arquivo';
+    Result.AutoClearTerminal  := 'Esvazia o terminal antes de executar um script';
+    Result.DarkMode           := 'Tema escuro';
+    Result.Error              := 'Erro';
+    Result.ErrorLoadFile      := 'Erro ao carregar um arquivo';
+    Result.Expression         := 'Expressão';
+    Result.Load               := 'Carregar';
+    Result.MenuApplication    := 'Aplicativo';
+    Result.MenuLanguage       := 'Língua';
+    Result.MenuLoadFile       := 'Carregar script do arquivo';
+    Result.MenuNewFile        := 'Novo arquivo';
+    Result.MenuSaveFile       := 'Salvar script em arquivo';
+    Result.MenuClose          := 'Fechar';
+    Result.MenuView           := 'Vista';
+    Result.MenuRun            := 'Execução';
+    Result.No                 := 'Não';
+    Result.PSCode             := 'Código PapajScript';
+    Result.Result             := 'Resultado';
+    Result.RunInt             := 'Executar';
+    Result.RunExt             := 'Executar no terminal';
+    Result.RunScriptInt       := 'Executar script';
+    Result.RunScriptExt       := 'Executa o script em uma janela externa';
+    Result.SampleCaption      := 'Expressão PS';
+    Result.SampleCountIt      := 'Vamos contar!';
+    Result.SampleHint         := 'Escreve uma expressão PS delimitada por espaços, por exemplo, "2 3 +" ou "20 4/5 +"';
+    Result.Save               := 'Salvar';
+    Result.Submit             := 'Submeter';
+    Result.WindowMainName     := 'RPN Calculator - interpretador PapajScript';
+    Result.WindowScanName     := 'Escanea uma expressão';
+    Result.WrongPS            := 'Expressão de PS errada';
+    Result.Yes                := 'Sim';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
+function langPortuguese2() : LangMap;
+begin
+    Result.AreYouSureQuit     := 'Tem certeza de que deseja fechar o aplicativo';
+    Result.AreYouSureContSave := 'Tem certeza que deseja continuar sem salvar o arquivo';
+    Result.AreYouSureQuitSave := 'Tem certeza que deseja fechar o aplicativo sem salvar o arquivo';
+    Result.AutoClearTerminal  := 'Esvazie o terminal antes de executar um script';
+    Result.DarkMode           := 'Tema escuro';
+    Result.Error              := 'Erro';
+    Result.ErrorLoadFile      := 'Erro ao carregar um arquivo';
+    Result.Expression         := 'Expressão';
+    Result.Load               := 'Carregar';
+    Result.MenuApplication    := 'Aplicativo';
+    Result.MenuLanguage       := 'Língua';
+    Result.MenuLoadFile       := 'Carregar script do arquivo';
+    Result.MenuNewFile        := 'Novo arquivo';
+    Result.MenuSaveFile       := 'Salvar script em arquivo';
+    Result.MenuClose          := 'Fechar';
+    Result.MenuView           := 'Vista';
+    Result.MenuRun            := 'Execução';
+    Result.No                 := 'Não';
+    Result.PSCode             := 'Código PapajScript';
+    Result.Result             := 'Resultado';
+    Result.RunInt             := 'Executar';
+    Result.RunExt             := 'Executar no terminal';
+    Result.RunScriptInt       := 'Executar script';
+    Result.RunScriptExt       := 'Execute o script em uma janela externa';
+    Result.SampleCaption      := 'Expressão PS';
+    Result.SampleCountIt      := 'Vamos contar!';
+    Result.SampleHint         := 'Escreva uma expressão PS delimitada por espaços, por exemplo, "2 3 +" ou "20 4/5 +"';
+    Result.Save               := 'Salvar';
+    Result.Submit             := 'Envie';
+    Result.WindowMainName     := 'RPN Calculator - interpretador PapajScript';
+    Result.WindowScanName     := 'Escaneie uma expressão';
+    Result.WrongPS            := 'Expressão de PS errada';
+    Result.Yes                := 'Sim';
+    Result.isRightToLeft      := false;
+    Result.ExclamationMark    := '!';
+    Result.QuestionMark       := '?';
+    Result.ExclamationMark2   := '';
+    Result.QuestionMark2      := '';
+end;
+
 
 // language setting mechanism
 
@@ -829,6 +1087,12 @@ begin
         'af_ZA.utf8' : Result := L_AFR;
         'Afrikaans_South Africa.1252' : Result := L_AFR;
         'Afrikaans' : Result := L_AFR;
+        'Afrikaans (South Africa)' : Result := L_AFR;
+        'Afrikaans (Namibia)' : Result := L_AFR;
+        'hr_HR.UTF-8' : Result := L_CRO;
+        'hr_HR.utf8' : Result := L_CRO;
+        'Croatian_Croatia.1250' : Result := L_CRO;
+        'Croatian' : Result := L_CRO;
         'csb.UTF-8' : Result := L_CSB;
         'csb_PL.UTF-8' : Result := L_CSB;
         'csb.utf8' : Result := L_CSB;
@@ -908,6 +1172,9 @@ begin
         'mk_MK.utf8' : Result := L_MKD;
         'Macedonian_Macedonia.1251' : Result := L_MKD;
         'Macedonian' : Result := L_MKD;
+        'Macedonian (Macedonia)' : Result := L_MKD;
+        'Macedonian (FYROM)' : Result := L_MKD;
+        'Macedonian (North Macedonia)' : Result := L_MKD;
         'nl_NL.UTF-8' : Result := L_NED;
         'nl_NL.utf8' : Result := L_NED;
         'Dutch_Netherlands.1252' : Result := L_NED;
@@ -927,15 +1194,47 @@ begin
         'pl.utf8' : Result := L_POL;
         'pl_PL.utf8' : Result := L_POL;
         'Polish_Poland.1250' : Result := L_POL;
-        'Polish' : Result := L_POL;    
+        'Polish' : Result := L_POL; 
+        'Polish (Poland)' : Result := L_POL;  
+        'pt_PT.UTF-8' : Result := L_POR;
+        'pt_PT.utf8' : Result := L_POR;
+        'Portuguese_Portugal.1252' : Result := L_POR;
+        'Portuguese' : Result := L_POR;
+        'Portuguese (Portugal)' : Result := L_POR;  
+        'pt_BR.UTF-8' : Result := L_POR2;
+        'pt_BR.utf8' : Result := L_POR2;
+        'Portuguese_Brazil.1252' : Result := L_POR2;
+        'Portuguese (Brazil)' : Result := L_POR2;  
         'ru_RU.UTF-8' : Result := L_RUS;
         'ru_RU.utf8' : Result := L_RUS;
         'Russian_Russia.1251' : Result := L_RUS;
-        'Russian' : Result := L_RUS;  
+        'Russian' : Result := L_RUS; 
+        'Russian (Russia)' : Result := L_RUS; 
+        'sl_SI.UTF-8' : Result := L_SLO;
+        'sl_SI.utf8' : Result := L_SLO;
+        'Slovenian_Slovenia.1250' : Result := L_SLO;
+        'Slovenian' : Result := L_SLO;
+        'Slovene' : Result := L_SLO; 
+        'sr_CS.UTF-8' : Result := L_SRB;
+        'sr_CS.utf8' : Result := L_SRB;
+        'sr_RS.UTF-8' : Result := L_SRB;
+        'sr_RS.utf8' : Result := L_SRB;
+        'sr_CS.UTF-8@latin' : Result := L_SRB2;
+        'sr_CS.utf8@latin' : Result := L_SRB2;
+        'sr_RS.UTF-8@latin' : Result := L_SRB2;
+        'sr_RS.utf8@latin' : Result := L_SRB2;
+        'Serbian_Serbia.1251' : Result := L_SRB;
+        'Serbian' : Result := L_SRB;  
+        'Serbian (Cyrilic)' : Result := L_SRB;  
+        'Serbian (Latin)' : Result := L_SRB2; 
+        'Serbian (Cyrilic, Serbia)' : Result := L_SRB;  
+        'Serbian (Latin, Serbia)' : Result := L_SRB2;  
         'sv_SE.UTF-8' : Result := L_SWE;
         'sv_SE.utf8' : Result := L_SWE;
         'Swedish_Sweden.1252' : Result := L_SWE;
         'Swedish' : Result := L_SWE;  
+        'Swedish (Sweden)' : Result := L_SWE;  
+        'Swedish (Finland)' : Result := L_SWE;  
         else Result := L_ENG;
     end;
 end;
@@ -944,6 +1243,7 @@ function GetLocale(lang : Language) : LangMap;
 begin
     case lang of
         L_AFR  : Result := langAfrikaans();
+        L_CRO  : Result := langCroatian();
         L_CSB  : Result := langKashubian();
         L_CSB2 : Result := langKashubianNew();
         L_CSB3 : Result := langKashubianCyrilic();
@@ -958,7 +1258,12 @@ begin
         L_NOR  : Result := langNorwegian();
         L_NOR2 : Result := langNorwegian2();
         L_POL  : Result := langPolish();
+        L_POR  : Result := langPortuguese();
+        L_POR2 : Result := langPortuguese2();
         L_RUS  : Result := langRussian();
+        L_SLO  : Result := langSlovene();
+        L_SRB  : Result := langSerbian();
+        L_SRB2 : Result := langSerbian2();
         L_SWE  : Result := langSwedish();
         else Result := langEnglish();
      end;

@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-December 1, 2021  
+December 6, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -78,6 +78,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :netherlands: **Dutch** (Nederlands)
 - :fr: **French** (Français)
 - :de: **German** (Deutsch)
+- :croatia: **Croatian** (Hrvatski)
 - :israel: **Hebrew** (עברית)
 - :it: **Italian** (Italiano)
 - :black_heart::yellow_heart: **Kashubian** (Kaszëbsczi) - standard and alternative orthographies (both Latin and Cyrilic)
@@ -85,16 +86,15 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :norway: **Norwegian** (Norsk bokmål)
 - :norway: **Norwegian** (Norsk nynorsk)
 - :poland: **Polish** (Polski)
+- :portugal: **Portuguese** (Português)
+- :brazil: **Brazilian Portuguese** (Português do Brasil)
 - :ru: **Russian** (Русский)
+- :serbia: **Serbian** (Српски, Srpski) – both Cyrilic and Latin
+- :slovenia: **Slovene** (Slovenščina)
 - :sweden: **Swedish** (Svenska)
 - :morocco: Arabic (العربية) – *to be implemented*
 - :israel: Yiddish (יידיש) – *to be implemented*
 - :yellow_heart::blue_heart: Silesian (Ślůnsko godka) – *to be implemented*
-- :slovenia: Slovene (Slovenščina) – *to be implemented*
-- :croatia: Croatian (Hrvatski) – *to be implemented*
-- :serbia: Serbian (Српски, Srpski) – *to be implemented*
-- :portugal: Portuguese (Português) – *to be implemented*
-- :brazil: Brazilian Portuguese (Português do Brasil) – *to be implemented*
 - :yellow_heart::heart: Catalan (Català) – *to be implemented*
 - :es: Spanish (Español, Castellano) – *to be implemented*
 - :greece: Greek (Ελληνικά) – *to be implemented*

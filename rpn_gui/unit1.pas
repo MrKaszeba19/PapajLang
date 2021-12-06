@@ -5,10 +5,9 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynHighlighterAny, SynCompletion, Forms,
-  Controls, Graphics, Dialogs, StdCtrls, Menus, ShellCtrls, ComCtrls, ExtCtrls,
-  Unit3,
-  UnitEntity;
+  Classes, SysUtils, process, FileUtil, UTF8Process, SynEdit, SynHighlighterAny,
+  SynCompletion, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
+  ShellCtrls, ComCtrls, ExtCtrls, Unit3, UnitEntity;
 
 type
 
@@ -27,8 +26,16 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
-    MenuLangNOR: TMenuItem;
+    MenuLangPOR1: TMenuItem;
+    MenuLangPOR2: TMenuItem;
+    MenuLangNOR1: TMenuItem;
     MenuLangNOR2: TMenuItem;
+    MenuLangSRB2: TMenuItem;
+    MenuLangSRB: TMenuItem;
+    MenuLangPOR: TMenuItem;
+    MenuLangSLO: TMenuItem;
+    MenuLangCRO: TMenuItem;
+    MenuLangNOR: TMenuItem;
     MenuLangSWE: TMenuItem;
     MenuLangMKD: TMenuItem;
     MenuLangRUS: TMenuItem;
@@ -56,15 +63,22 @@ type
     MenuSave: TMenuItem;
     OpenDialog1: TOpenDialog;
     CodePanel: TPanel;
+    ProcessExt: TProcessUTF8;
     SaveDialog1: TSaveDialog;
     Splitter1: TSplitter;
     SynAnySyn1: TSynAnySyn;
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
     procedure ButtonTerminalClick(Sender: TObject);
+    procedure MenuAutoClearClick(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
+    procedure MenuLangNOR1Click(Sender: TObject);
+    procedure MenuLangCROClick(Sender: TObject);
     procedure MenuLangNOR2Click(Sender: TObject);
     procedure MenuLangNORClick(Sender: TObject);
+    procedure MenuLangPOR1Click(Sender: TObject);
+    procedure MenuLangPOR2Click(Sender: TObject);
+    procedure MenuLangPORClick(Sender: TObject);
     procedure MenuLangRUSClick(Sender: TObject);
     procedure MenuLangAFRClick(Sender: TObject);
     procedure MenuLangCSB3Click(Sender: TObject);
@@ -75,6 +89,9 @@ type
     procedure MenuLangITAClick(Sender: TObject);
     procedure MenuLangMKDClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
+    procedure MenuLangSLOClick(Sender: TObject);
+    procedure MenuLangSRB2Click(Sender: TObject);
+    procedure MenuLangSRBClick(Sender: TObject);
     procedure MenuLangSWEClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
     procedure MenuRunHereClick(Sender: TObject);
@@ -181,6 +198,24 @@ begin
     ApplyLocaleMain(locale);
 end;
 
+procedure TForm1.MenuLangSLOClick(Sender: TObject);
+begin
+    locale := GetLocale(L_SLO);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangSRB2Click(Sender: TObject);
+begin
+    locale := GetLocale(L_SRB2);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangSRBClick(Sender: TObject);
+begin
+    locale := GetLocale(L_SRB);
+    ApplyLocaleMain(locale);
+end;
+
 procedure TForm1.MenuLangSWEClick(Sender: TObject);
 begin
     locale := GetLocale(L_SWE);
@@ -242,12 +277,37 @@ end;
 
 procedure TForm1.ButtonTerminalClick(Sender: TObject);
 begin
+    SynEdit1.Lines.SaveToFile('temp.ppsc');
+    {$IFDEF MSWINDOWS}
+    Memo1.Font.Name := 'Consolas';
+    ProcessExt.CommandLine := 'rpn.exe temp.ppsc';
+    {$ELSE}
+    Memo1.Font.Name := 'Monospace';
+    ProcessExt.CommandLine := 'rpn temp.ppsc';
+    {$ENDIF}
+    ProcessExt.Execute();
+end;
 
+procedure TForm1.MenuAutoClearClick(Sender: TObject);
+begin
+     MenuAutoClear.Checked := not MenuAutoClear.Checked;
 end;
 
 procedure TForm1.MenuItem2Click(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.MenuLangNOR1Click(Sender: TObject);
+begin
+    locale := GetLocale(L_NOR);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangCROClick(Sender: TObject);
+begin
+    locale := GetLocale(L_CRO);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangNOR2Click(Sender: TObject);
@@ -258,8 +318,24 @@ end;
 
 procedure TForm1.MenuLangNORClick(Sender: TObject);
 begin
-    locale := GetLocale(L_NOR);
+
+end;
+
+procedure TForm1.MenuLangPOR1Click(Sender: TObject);
+begin
+    locale := GetLocale(L_POR);
     ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangPOR2Click(Sender: TObject);
+begin
+    locale := GetLocale(L_POR2);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangPORClick(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.MenuLangRUSClick(Sender: TObject);
@@ -302,7 +378,7 @@ var
      mask    : String;
 begin
      try
-        Memo1.Text := '';
+        if (MenuAutoClear.Checked) then Memo1.Text := '';
         Memo1.Append(PS_parseString(SynEdit1.Text));
         {$IFDEF LINUX}
         // scroll down:
@@ -312,10 +388,10 @@ begin
          {$ENDIF}
      except
            on E : EAccessViolation do begin
-              Memo1.Text := locale.WrongPS+'.';
+              Memo1.Text := Memo1.Text + locale.WrongPS+'.';
            end;
            on E : Exception do begin
-              Memo1.Text := E.Message;
+              Memo1.Text := Memo1.Text + E.Message;
            end;
      end;
 end;
@@ -326,9 +402,12 @@ begin
      ApplyLocaleMain(locale);
      {$IFDEF MSWINDOWS}
      Memo1.Font.Name := 'Consolas';
-     {$ENDIF}
-     {$IFDEF UNIX}
+     ProcessExt.CommandLine := 'rpn.exe "2 2 +"';
+     //{$ENDIF}
+     //{$IFDEF UNIX}
+     {$ELSE}
      Memo1.Font.Name := 'Monospace';
+     ProcessExt.CommandLine := 'rpn "2 2 +"';
      {$ENDIF}
      SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
      Memo1.Text := '';
