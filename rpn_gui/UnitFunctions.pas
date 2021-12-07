@@ -4515,6 +4515,9 @@ begin
         'Console.getUser' : begin
             stack_push(pocz[sets.StackPointer], buildString(getUser()));
         end;
+        'Console.getHost' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getHost()));
+        end;
         else begin
             Found := false;
         end;
