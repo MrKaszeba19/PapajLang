@@ -18,7 +18,7 @@ implementation
 
 uses 
     {$IFDEF MSWINDOWS}
-		ShellApi, crt, Windows,
+		ShellApi, crt, Dos, Windows,
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
@@ -98,7 +98,7 @@ begin
 end;
 {$ENDIF}
 {$IFDEF WINDOWS}
-function getOSNickname(Release : String);
+function getOSNickname(Release : String) : String;
 begin
     case Release of
         '1.1'  : Result := '1.01';
@@ -126,10 +126,7 @@ begin
         '6.3'  : Result := '8.1';
         '10.0' : Result := '10';
         else Result := 'v'+Release;
-    end;
- 
-  ShowMessage('Your OS is '+OS+' '+Version);
- 
+    end; 
 end;
 {$ENDIF}
 
