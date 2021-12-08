@@ -4518,6 +4518,20 @@ begin
         'Console.getHost' : begin
             stack_push(pocz[sets.StackPointer], buildString(getHost()));
         end;
+        'Console.getOS' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getOS()));
+        end;
+        'Console.getOSVersion' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getOSVersion()));
+        end;
+        'Console.getOSDistribution' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getOSDistribution()));
+        end;
+        {$IFDEF LINUX}
+        'Console.getShell' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getShell()));
+        end;
+        {$ENDIF}
         else begin
             Found := false;
         end;
