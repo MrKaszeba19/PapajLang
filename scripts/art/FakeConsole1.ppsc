@@ -1,0 +1,4 @@
+@use(Console)
+
+UserName "@" HostName ":" UserHome "$"
+all -- times + println

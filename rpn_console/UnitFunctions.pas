@@ -3075,15 +3075,6 @@ begin
             pocz := parseScoped(StrEbx, pocz, sets, vardb);
             //stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
-        'String.system' : begin
-            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := executeCommand(StrEbx, sets.Shell);
-            if not (sets.Autoclear) then begin
-            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
-            end;
-            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
-        end;
 		'String.length' : begin
             if (stack_get(pocz[sets.StackPointer]).EntityType = TSTR) then
             begin
@@ -4512,23 +4503,47 @@ begin
             end;
             stack_push(pocz[sets.StackPointer], buildString(StrEcx));
         end;
-        'Console.getUser' : begin
+        'Console.UserName' : begin
             stack_push(pocz[sets.StackPointer], buildString(getUser()));
         end;
-        'Console.getHost' : begin
+        'Console.UserHome' : begin
+            stack_push(pocz[sets.StackPointer], buildString(GetUserDir()));
+        end;
+        'Console.HostName' : begin
             stack_push(pocz[sets.StackPointer], buildString(getHost()));
         end;
-        'Console.getOS' : begin
+        'Console.OSName' : begin
             stack_push(pocz[sets.StackPointer], buildString(getOS()));
         end;
-        'Console.getOSVersion' : begin
+        'Console.OSVersion' : begin
             stack_push(pocz[sets.StackPointer], buildString(getOSVersion()));
         end;
-        'Console.getOSDistribution' : begin
+        'Console.OSDistribution' : begin
             stack_push(pocz[sets.StackPointer], buildString(getOSDistribution()));
         end;
+        'Console.OSDist' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getOSDistribution()));
+        end;
+        'Console.CPUArchitecture' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getCPUArch()));
+        end;
+        'Console.CPUArch' : begin
+            stack_push(pocz[sets.StackPointer], buildString(getCPUArch()));
+        end;
+        'Console.CPUBits' : begin
+            stack_push(pocz[sets.StackPointer], buildNumber(getCPUBits()));
+        end;
+        'Console.system' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
+            StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+            StrEcx := executeCommand(StrEbx, sets.Shell);
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(StrEcx));
+        end;
         {$IFDEF LINUX}
-        'Console.getShell' : begin
+        'Console.UserShell' : begin
             stack_push(pocz[sets.StackPointer], buildString(getShell()));
         end;
         {$ENDIF}

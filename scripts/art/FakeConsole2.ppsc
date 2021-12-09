@@ -1,0 +1,11 @@
+@use(Console)
+
+function {
+	UserName "@" HostName ":" UserHome "$ "
+	all -- times + print
+} -> printPrompt
+
+do {
+	printPrompt
+	scan toString -> command
+} while (command "exit" !=)

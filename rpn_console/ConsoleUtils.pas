@@ -10,6 +10,8 @@ function getHost() : String;
 function getOS() : String;
 function getOSVersion() : String;
 function getOSDistribution() : String;
+function getCPUArch() : String;
+function getCPUBits() : LongInt;
 {$IFDEF LINUX}
 function getShell() : String;
 {$ENDIF}
@@ -202,8 +204,20 @@ begin
     {$ifdef QNX}
     Result := 'QNX';
     {$endif}
+    {$IFDEF HASAMIGA}
+    Result := 'Amiga-like';
+    {$ENDIF}
+    {$IFDEF AMIGA}
+    Result := 'Amiga';
+    {$ENDIF}
+    {$IFDEF MACOS}
+    Result := 'MacOS';
+    {$ENDIF}
     {$IFDEF DOS}
     Result := 'DOS';
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := 'MS-DOS';
     {$ENDIF}
     {$IFDEF WINDOWS}
     Result := 'Windows';
@@ -227,6 +241,128 @@ begin
     Result := getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
     {$ELSE}
     Result := getOSDist('PRETTY_NAME');
+    {$ENDIF}
+end;
+
+function getCPUArch() : String;
+begin
+    Result := 'Other';
+    {$iFDEF CPU8}
+    Result := '8-bit';
+    {$ENDIF}
+    {$iFDEF CPU16}
+    Result := '16-bit';
+    {$ENDIF}
+    {$iFDEF CPU32}
+    Result := '32-bit';
+    {$ENDIF}
+    {$IFDEF CPU64}
+    Result := '64-bit';
+    {$ENDIF}
+
+    {$IFDEF CPU86}
+    Result := '8086';
+    {$ENDIF}
+    {$IFDEF CPU386}
+    Result := 'x86';
+    {$ENDIF}
+    {$IFDEF CPUi386}
+    Result := 'i386';
+    {$ENDIF}
+    {$IFDEF CPUAMD64}
+    Result := 'amd64';
+    {$ENDIF}
+    {$IFDEF CPUX86_64}
+    Result := 'x86_64';
+    {$ENDIF}
+    {$IFDEF AMD64}
+    Result := 'amd64';
+    {$ENDIF}
+    {$IFDEF CPUIA64}
+    Result := 'IA-64';
+    {$ENDIF}
+
+    {$iFDEF CPUPOWERPC}
+    Result := 'PowerPC';
+    {$ENDIF}
+    {$iFDEF CPUPOWERPC32}
+    Result := 'PowerPC';
+    {$ENDIF}
+    {$IFDEF CPUPOWERPC64}
+    Result := 'PowerPC';
+    {$ENDIF}
+
+    {$iFDEF CPUARM}
+    Result := 'ARM';
+    {$ENDIF}
+    {$iFDEF CPUARM32}
+    Result := 'ARM';
+    {$ENDIF}
+    {$IFDEF CPUAARCH64}
+    Result := 'ARM';
+    {$ENDIF}
+    {$IFDEF CPUARM64}
+    Result := 'ARM';
+    {$ENDIF}
+end;
+
+
+function getCPUBits() : LongInt;
+begin
+    Result := -1;
+    {$iFDEF CPU8}
+    Result := 8;
+    {$ENDIF}
+    {$iFDEF CPU16}
+    Result := 16;
+    {$ENDIF}
+    {$iFDEF CPU32}
+    Result := 32;
+    {$ENDIF}
+    {$IFDEF CPU64}
+    Result := 64;
+    {$ENDIF}
+
+    {$IFDEF CPU86}
+    Result := 16;
+    {$ENDIF}
+    {$IFDEF CPU386}
+    Result := 32;
+    {$ENDIF}
+    {$IFDEF CPUi386}
+    Result := 32;
+    {$ENDIF}
+    {$IFDEF CPUAMD64}
+    Result := 64;
+    {$ENDIF}
+    {$IFDEF CPUX86_64}
+    Result := 64;
+    {$ENDIF}
+    {$IFDEF AMD64}
+    Result := 64;
+    {$ENDIF}
+    {$IFDEF CPUIA64}
+    Result := 64;
+    {$ENDIF}
+
+    {$iFDEF CPUPOWERPC32}
+    Result := 32;
+    {$ENDIF}
+    {$IFDEF CPUPOWERPC64}
+    Result := 64;
+    {$ENDIF}
+
+    {$iFDEF CPUARM}
+    Result := 32;
+    {$ENDIF}
+    {$iFDEF CPUARM32}
+    Result := 32;
+    {$ENDIF}
+    {$IFDEF CPUAARCH64}
+    Result := 64;
+    {$ENDIF}
+    {$IFDEF CPUARM64}
+    Result := 64;
     {$ENDIF}
 end;
 
