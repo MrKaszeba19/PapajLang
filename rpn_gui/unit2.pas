@@ -31,17 +31,18 @@ begin
         input := cutCommentMultiline(input);
         input := cutCommentEndline(input);
     end;
-    if not (checkParentheses(input)) then
-    begin
-        raiserror('ESyntax:CLevels: Wrong amount of braces and/or parentheses.');
-    end else begin
-        env := buildNewEnvironment(LoadAll);
-        env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
-        res := stack_show(env.Stack[0], env.Settings.Mask);
-        disposeEnvironment(env);
-        if (env.Settings.Prevent) then res := '';
-        Result := res;
-    end;
+    case checkParentheses(input) of 
+        -1 : raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+        0  : raiserror('ESyntax:CLevels: Wrong amount of braces and/or parentheses.');
+        1  : begin
+            env := buildNewEnvironment(LoadAll);
+            env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
+            res := stack_show(env.Stack[0], env.Settings.Mask);
+            disposeEnvironment(env);
+            if (env.Settings.Prevent) then res := '';
+            Result := res;
+        end;
+    end; 
 end;
 
 end.

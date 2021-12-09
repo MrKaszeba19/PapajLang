@@ -61,7 +61,8 @@ end;
 
 function string_toC(dupa : String) : String;
 begin
-	dupa := StringReplace(dupa, '\a', #7, [rfReplaceAll]);
+	dupa := StringReplace(dupa, '\0', #0, [rfReplaceAll]);
+    dupa := StringReplace(dupa, '\a', #7, [rfReplaceAll]);
 	dupa := StringReplace(dupa, '\b', #8, [rfReplaceAll]);
 	dupa := StringReplace(dupa, '\e', #27, [rfReplaceAll]);
 	dupa := StringReplace(dupa, '\f', #12, [rfReplaceAll]);

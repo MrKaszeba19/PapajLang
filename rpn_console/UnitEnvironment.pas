@@ -39,7 +39,7 @@ function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
 function cutCommentEndline(input : String) : String;
 function cutShebang(input : String) : String;
-function checkParentheses(input : String) : Boolean;
+function checkParentheses(input : String) : ShortInt;
 procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB);
 function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
@@ -505,14 +505,13 @@ begin
     cutShebang := trim(pom);
 end;
 
-function checkParentheses(input : String) : Boolean;
+function checkParentheses(input : String) : ShortInt;
 var
-    isValid    : Boolean;
     v1, v2, v3 : LongInt;
     i          : LongInt;
     comment    : Boolean;
 begin
-    isValid := True;
+    Result := 1;
     comment := False;
     i := 1;
     v1 := 0; v2 := 0; v3 := 0;
@@ -530,7 +529,7 @@ begin
                 '}' : begin
                     v1 := v1 - 1;
                     if (v1 < 0) then begin
-                        isValid := False;
+                        Result := 0;
                         Break;
                     end;
                 end; 
@@ -540,7 +539,7 @@ begin
                 ')' : begin
                     v2 := v2 - 1;
                     if (v2 < 0) then begin
-                        isValid := False;
+                        Result := 0;
                         Break;
                     end;
                 end; 
@@ -550,7 +549,7 @@ begin
                 ']' : begin
                     v3 := v3 - 1;
                     if (v3 < 0) then begin
-                        isValid := False;
+                        Result := 0;
                         Break;
                     end;
                 end; 
@@ -558,8 +557,8 @@ begin
         end;
         i := i + 1;
     end;
-    if (v1 <> 0) or (v2 <> 0) or (v3 <> 0) then isValid := False;
-    checkParentheses := isValid;
+    if (v1 <> 0) or (v2 <> 0) or (v3 <> 0) then Result := 0;
+    if (comment) then Result := -1; 
 end;
 
 function checkLevelChar(input : Char) : Integer;
