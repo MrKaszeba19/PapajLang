@@ -639,12 +639,6 @@ begin
                 stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEbx)));
             end;
         end;
-        //'len' : begin
-        //  	if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
-        //    StrEax := stack_get(pocz[sets.StackPointer]).Str;
-        //    //if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
-        //    stack_push(pocz[sets.StackPointer], buildNumber(Length(StrEax)));
-        //end;
         'print' : begin
             EntEax := stack_get(pocz[sets.StackPointer]);
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
@@ -4045,7 +4039,7 @@ begin
                     else EntEax := vardb.getVariable(StrEax);
     			stack_push(pocz[sets.StackPointer], EntEax);
       		end else begin
-        		raiserror('EVariable:CGet: You cannot get a value from an unnamed variable.');
+                stack_push(pocz[sets.StackPointer], raiseGetUnnamedVariable());
       		end;
      	end;
      	'>' : begin 
@@ -4062,10 +4056,10 @@ begin
                             vardb.setLocalVariable(StrEax, EntEax);
                         
                 end else begin
-                    raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                    stack_push(pocz[sets.StackPointer], raiseSetInvalidVariable(i, StrEax));
                 end;
       		end else begin
-        		raiserror('EVariable:CSetUnnamed: Attempt of setting an unnamed variable.');
+        		stack_push(pocz[sets.StackPointer], raiseSetUnnamedVariable());
       		end;
      	end;
      	'?' : begin 
@@ -4074,7 +4068,7 @@ begin
     			LogEax := vardb.isVarAssigned(StrEax);
     			stack_push(pocz[sets.StackPointer], buildBoolean(LogEax));
       		end else begin
-        		raiserror('EVariable:CCheck: You cannot check nothing.');
+        		stack_push(pocz[sets.StackPointer], raiseGetUnnamedVariable());
       		end;
      	end;
      	'~' : begin 
@@ -4082,7 +4076,7 @@ begin
         		StrEax := RightStr(i, Length(i)-1);
     			vardb.removeVariable(StrEax);
       		end else begin
-        		raiserror('EVariable:CDestroy: You cannot destroy an unnamed variable.');
+        		stack_push(pocz[sets.StackPointer], raiseGetUnnamedVariable());
       		end;
      	end;
      	else begin
@@ -4097,7 +4091,7 @@ begin
                         if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], EntEax, TFUN, i)) then Exit;   
                         doFunction(EntEax, pocz, sets, vardb);
                     end else begin
-                        raiserror('EVariable:CExecute: You cannot execute an unnamed function by this method.');
+                        stack_push(pocz[sets.StackPointer], raiseGetUnnamedVariable());
                     end;
                 end;
                 '->' : begin 
@@ -4113,10 +4107,10 @@ begin
     			                    //vardb.setVariable(StrEax, EntEax);
                                     vardb.setLocalVariable(StrEax, EntEax);
                         end else begin
-                            raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                            stack_push(pocz[sets.StackPointer], raiseSetInvalidVariable(i, StrEax));
                         end;
       	        	end else begin
-                		raiserror('EVariable:CSet: You cannot set a value to an unnamed variable.');
+                		stack_push(pocz[sets.StackPointer], raiseSetUnnamedVariable());
       	        	end;
      	        end;
                 else begin
@@ -4146,7 +4140,7 @@ begin
                 //vardb.setVariable(StrEax, EntEax);
                 vardb.setLocalVariable(StrEax, EntEax);
             end else begin
-                raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                stack_push(pocz[sets.StackPointer], raiseSetInvalidVariable(i, StrEax));
             end;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], EntEax);
@@ -4162,7 +4156,7 @@ begin
                 //vardb.setVariable(StrEax, EntEax);
                 vardb.setLocalVariable(StrEax, EntEax);
             end else begin
-                raiserror('EVariable:CSetInvalid: Invalid variable string at "'+StrEax+'"');
+                stack_push(pocz[sets.StackPointer], raiseSetInvalidVariable(i, StrEax));
             end;
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], EntEax);

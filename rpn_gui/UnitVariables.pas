@@ -368,25 +368,51 @@ begin
 	buildVariable := pom;
 end;
 
-// ASCII 45, 46, 48-57, 65-90, 95, 97-122
+// ASCII 
+// 33     !
+// 45     -
+// 46     .
+// 48-57  0-9
+// 65-90  A-Z
+// 95     _
+// 97-122 a-z
 function isValidForVariables(guess : String) : Boolean;
 var
     i    : LongInt;
     flag : Boolean;
+    chr  : LongInt;
 begin
-    flag := True;
-    for i := 1 to Length(guess) do 
+    if (Length(guess) > 0) then
     begin
-        if (Ord(guess[i]) < 45) 
-        or (Ord(guess[i]) = 47) 
-        or (Ord(guess[i]) in [58..64])
-        or (Ord(guess[i]) in [91..94])
-        or (Ord(guess[i]) = 96)
-        or (Ord(guess[i]) > 123) 
+        flag := True;
+        chr := ord(guess[1]);
+        if (chr < 45) 
+        or (chr in [47..64])
+        or (chr in [91..94])
+        or (chr = 96)
+        or (chr > 123) 
         then begin
             flag := False;
-            break;
         end;
+        if flag then
+        begin
+            for i := 2 to Length(guess) do 
+            begin
+                chr := ord(guess[i]);
+                if (chr < 45) 
+                or (chr = 47) 
+                or (chr in [58..64])
+                or (chr in [91..94])
+                or (chr = 96)
+                or (chr > 123) 
+                then begin
+                    flag := False;
+                    break;
+                end;
+            end;
+        end;
+    end else begin
+        flag := False;
     end;
     Result := flag;
 end;

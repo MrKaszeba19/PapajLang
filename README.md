@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-December 9, 2021  
+December 10, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -16,7 +16,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`, `rpn -h` or `rpn --help`.
 - If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. 
-- If you want to include some input parameters that would be laid on the stack when script begins, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes script.rpn with input parameters of `2 3 4` being laid on the stack. (**_Runtime params are out of use as of now_**) 
+- If you want to include some input parameters that would be laid on the stack when script begins, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being laid on the stack. (**_Runtime params are out of use as of now_**) 
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 - If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
 
@@ -25,6 +25,9 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
 - There is also a simple script running engine – just paste your PS script or load it from file and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
+- There is a possibility of executing the PS script in an external terminal window (it is an experimental feature)
+    * Linux users are required to have `rpn` console app in the **$PATH**
+    * Windows users are required to have `rpn` console app in the same directory as the GUI app
 
 ## Requirements and installation
 - Have installed
@@ -40,7 +43,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
 - (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH
-    * run `installBash.sh` to add `rpn` executable to your $PATH automatically
+    * run `installBash.sh` to add `rpn` executable to your **$PATH** automatically
 
 ## PapajScript:
 
