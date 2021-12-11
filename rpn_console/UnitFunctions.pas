@@ -511,6 +511,27 @@ begin
           	if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
           	stack_push(pocz[sets.StackPointer], buildString(getEntityTypeName(EntEax.EntityType)));
         end;
+        'swapAt' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            index := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if not (sets.Autoclear) then begin
+    			stack_push(pocz[sets.StackPointer], buildNumber(index));
+    		end;
+            swapEntities(pocz[sets.StackPointer].Values[index-1], pocz[sets.StackPointer].Values[index]);
+        end;
+        'swapAt2' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            index := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if not (sets.Autoclear) then begin
+    			stack_push(pocz[sets.StackPointer], buildNumber(IntEax));
+    			stack_push(pocz[sets.StackPointer], buildNumber(index));
+    		end;
+            swapEntities(pocz[sets.StackPointer].Values[IntEax], pocz[sets.StackPointer].Values[index]);
+        end;
+
+        // casting types
         'toString' : begin
           	EntEax := stack_get(pocz[sets.StackPointer]);
             if (sets.Autoclear) then stack_pop(pocz[sets.StackPointer]);
