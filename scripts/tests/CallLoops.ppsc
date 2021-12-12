@@ -1,0 +1,4 @@
+1 -> i
+(i 5 <= )
+fun{ i println i ++ -> i } 
+callWhile

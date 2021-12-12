@@ -33,7 +33,10 @@ procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer;
 
 //procedure doFunction(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
+procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
+procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
+procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 
 function commentcut(input : String) : String;
 function cutCommentMultiline(input : String) : String;
