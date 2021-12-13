@@ -34,6 +34,7 @@ procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer;
 //procedure doFunction(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
 procedure doWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
+procedure doUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 procedure doDoWhile(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 procedure doDoUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
@@ -100,6 +101,23 @@ begin
     while True do
     begin
         if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) or (sets.KeepWorking = 0) then break;
+        pocz := parseOpen(StrInst + LineBreak + StrCond, pocz, sets, vardb);
+    end;
+end;
+
+procedure doUntil(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
+begin
+    //while True do
+    //begin
+    //    pocz := parseOpen(StrCond, pocz, sets, vardb);
+    //    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) or (sets.KeepWorking = 0) then break;
+    //    pocz := parseOpen(StrInst, pocz, sets, vardb);
+    //end;
+    
+    pocz := parseOpen(StrCond, pocz, sets, vardb);
+    while True do
+    begin
+        if (trunc(stack_pop(pocz[sets.StackPointer]).Num) = 0) or (sets.KeepWorking = 0) then break;
         pocz := parseOpen(StrInst + LineBreak + StrCond, pocz, sets, vardb);
     end;
 end;

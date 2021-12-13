@@ -2,3 +2,20 @@
 (i 5 <= )
 fun{ i println i ++ -> i } 
 callWhile
+
+1 -> i
+fun{ i println i ++ -> i } 
+(i 5 <= )
+callWhile
+
+1 -> i
+(i 5 > )
+fun{ i println i ++ -> i } 
+callUntil
+
+1 -> i
+fun{ i println i ++ -> i } 
+(i 5 > )
+callUntil
+
+

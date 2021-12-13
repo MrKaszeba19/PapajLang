@@ -464,21 +464,39 @@ begin
                 EntEax := stack_pop(pocz[sets.StackPointer]);
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;  
                 StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                doWhile(StrEbx, EntEax.Str, pocz, sets, vardb);
             end else begin
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;  
                 StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
                 if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
                 EntEax := stack_pop(pocz[sets.StackPointer]);
+                doDoWhile(StrEbx, EntEax.Str, pocz, sets, vardb);
             end;
-            while (True) do
-            begin
-                pocz := parseOpen(StrEbx, pocz, sets, vardb);
-                if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
-                //doFunction(EntEax, pocz, sets, vardb);
-                pocz := parseOpen(EntEax.Str, pocz, sets, vardb);
-            end;
+            //while (True) do
+            //begin
+            //    pocz := parseOpen(StrEbx, pocz, sets, vardb);
+            //    if (trunc(stack_pop(pocz[sets.StackPointer]).Num) <> 0) then break;
+            //    //doFunction(EntEax, pocz, sets, vardb);
+            //    pocz := parseOpen(EntEax.Str, pocz, sets, vardb);
+            //end;
         end; 
-        //callLoop         
+        'callUntil' : begin
+            if (sets.StrictType) and (assertEitherLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, TEXP, i)) then Exit; 
+            if (stack_get(pocz[sets.StackPointer]).EntityType = TFUN) then
+            begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                doUntil(StrEbx, EntEax.Str, pocz, sets, vardb);
+            end else begin
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TEXP, i)) then Exit;  
+                StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
+                if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TFUN, i)) then Exit;  
+                EntEax := stack_pop(pocz[sets.StackPointer]);
+                doDoUntil(StrEbx, EntEax.Str, pocz, sets, vardb);
+            end;
+        end;        
 
         'break' : begin
             sets.KeepWorking := 0;
