@@ -44,9 +44,10 @@ Additional units of rpn_gui
 – Non-linear recursion does not work
 – Runtime parameters don't work
 – Chi-squared generator fails for big sample data when df = 1
-– Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in general) 
+– Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in this order) 
+– GUI App external script execution might not work
 
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 12/09/2021
+Paul Lipkowski, 12/14/2021

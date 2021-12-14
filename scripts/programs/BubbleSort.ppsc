@@ -1,0 +1,20 @@
+@use(Array)
+
+10 -> $n
+
+[ $n times rand ] -> $t
+
+$n -- -> $i
+
+while ( $i 0 > ) {
+	for ( 0 -> j ; j i < ; j ++ -> j ) {
+		if ( $t $j getAt $t $j ++ getAt > ) {
+			$t $j getAt -> pom
+			$t $j $t $j ++ getAt setAt!!
+			$t $j ++ pom setAt!!
+		}
+	}
+	$i -- -> $i
+}
+
+$t println

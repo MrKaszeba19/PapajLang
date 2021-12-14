@@ -6341,11 +6341,11 @@ end;
 
 function lib_datetime(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
 var
-	Found          : Boolean;
-    StrEax         : String; 
-    IntEax         : LongInt;
-    ExtEax, ExtEbx : Extended;
-    DatEax, DatEbx : TDateTime;
+	Found                  : Boolean;
+    StrEax                 : String; 
+    IntEax                 : LongInt;
+    ExtEax, ExtEbx, ExtEcx : Extended;
+    DatEax, DatEbx, DatEcx : TDateTime;
 begin
 	Found := true;
 	case i of
@@ -6604,6 +6604,14 @@ begin
             DatEax := TimestampToDateTime(ExtEax);
             stack_push(pocz[sets.StackPointer], buildDateTime(IncSecond(DatEax, IntEax)));
         end;
+        'Date.addWeek' : begin
+            if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
+            IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            stack_push(pocz[sets.StackPointer], buildDateTime(IncDay(DatEax, IntEax*7)));
+        end;
         'Date.addMillisecond' : begin
             if (sets.StrictType) and (assertIntegerLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(pocz[sets.StackPointer]).Num);
@@ -6782,6 +6790,42 @@ begin
             DatEax := TimestampToDateTime(ExtEax);
             DatEbx := TimestampToDateTime(ExtEbx);
             stack_push(pocz[sets.StackPointer], buildNumber(CompareTime(DatEbx, DatEax)));
+        end;
+        'Date.isInRange' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEcx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            DatEcx := TimestampToDateTime(ExtEcx);
+            stack_push(pocz[sets.StackPointer], buildBoolean(DateTimeInRange(DatEax, DatEbx, DatEcx)));
+        end;
+        'Date.isDateInRange' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEcx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            DatEcx := TimestampToDateTime(ExtEcx);
+            stack_push(pocz[sets.StackPointer], buildBoolean(DateInRange(DatEax, DatEbx, DatEcx)));
+        end;
+        'Date.isTimeInRange' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEcx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEbx := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit; 
+            ExtEax := stack_pop(pocz[sets.StackPointer]).Num;
+            DatEax := TimestampToDateTime(ExtEax);
+            DatEbx := TimestampToDateTime(ExtEbx);
+            DatEcx := TimestampToDateTime(ExtEcx);
+            stack_push(pocz[sets.StackPointer], buildBoolean(TimeInRange(DatEax, DatEbx, DatEcx)));
         end;
         'Date.getYearWeek' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TDAT, i)) then Exit;

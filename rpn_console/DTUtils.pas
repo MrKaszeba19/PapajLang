@@ -36,6 +36,10 @@ function FormatYMD(input : TDateTime) : String;
 function DateTimeToTimestamp(input : TDateTime) : Real;
 function TimestampToDateTime(input : Real) : TDateTime;
 
+function DateTimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+function DateInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+function TimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+
 implementation
 
 uses DateUtils;
@@ -89,6 +93,83 @@ begin
         else Result := IncMillisecond(UnixToDateTime(trunc(input)), trunc(frac(input)*1000));
 end;
 
+function DateTimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+begin
+    if Inclusive then
+    begin
+        if CompareDateTime(dstart, dend) < 0 then
+        begin
+            Result := (CompareDateTime(dstart, date) <= 0) and (CompareDateTime(date, dend) <= 0);
+        end else if SameDateTime(dstart, dend) then
+        begin
+            Result := SameDateTime(dstart, date);
+        end else begin
+            Result := (CompareDateTime(dend, date) <= 0) and (CompareDateTime(date, dstart) <= 0);
+        end;
+    end else begin
+        if CompareDateTime(dstart, dend) < 0 then
+        begin
+            Result := (CompareDateTime(dstart, date) < 0) and (CompareDateTime(date, dend) < 0);
+        end else if SameDateTime(dstart, dend) then
+        begin
+            Result := False;
+        end else begin
+            Result := (CompareDateTime(dend, date) < 0) and (CompareDateTime(date, dstart) < 0);
+        end;
+    end;
+end;
+
+function DateInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+begin
+    if Inclusive then
+    begin
+        if CompareDate(dstart, dend) < 0 then
+        begin
+            Result := (CompareDate(dstart, date) <= 0) and (CompareDate(date, dend) <= 0);
+        end else if SameDate(dstart, dend) then
+        begin
+            Result := SameDate(dstart, date);
+        end else begin
+            Result := (CompareDate(dend, date) <= 0) and (CompareDate(date, dstart) <= 0);
+        end;
+    end else begin
+        if CompareDate(dstart, dend) < 0 then
+        begin
+            Result := (CompareDate(dstart, date) < 0) and (CompareDate(date, dend) < 0);
+        end else if SameDate(dstart, dend) then
+        begin
+            Result := False;
+        end else begin
+            Result := (CompareDate(dend, date) < 0) and (CompareDate(date, dstart) < 0);
+        end;
+    end;
+end;
+
+function TimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+begin
+    if Inclusive then
+    begin
+        if CompareTime(dstart, dend) < 0 then
+        begin
+            Result := (CompareTime(dstart, date) <= 0) and (CompareTime(date, dend) <= 0);
+        end else if SameTime(dstart, dend) then
+        begin
+            Result := SameTime(dstart, date);
+        end else begin
+            Result := (CompareTime(dend, date) <= 0) and (CompareTime(date, dstart) <= 0);
+        end;
+    end else begin
+        if CompareTime(dstart, dend) < 0 then
+        begin
+            Result := (CompareTime(dstart, date) < 0) and (CompareTime(date, dend) < 0);
+        end else if SameTime(dstart, dend) then
+        begin
+            Result := False;
+        end else begin
+            Result := (CompareTime(dend, date) < 0) and (CompareTime(date, dstart) < 0);
+        end;
+    end;
+end;
 
 end.
 
