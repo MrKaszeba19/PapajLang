@@ -279,13 +279,45 @@ procedure TForm1.ButtonTerminalClick(Sender: TObject);
 begin
     SynEdit1.Lines.SaveToFile('temp.ppsc');
     {$IFDEF MSWINDOWS}
-    Memo1.Font.Name := 'Consolas';
-    ProcessExt.CommandLine := 'rpn.exe temp.ppsc';
+    //Memo1.Font.Name := 'Consolas';
+    //ProcessExt.CommandLine := 'rpn.exe temp.ppsc';
+    if FileExists('rpn.exe') then
+    begin
+        if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'),nil,1) = 0 then;
+    end else begin
+        writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
+        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
+    end;
     {$ELSE}
-    Memo1.Font.Name := 'Monospace';
-    ProcessExt.CommandLine := 'rpn temp.ppsc';
+    //Memo1.Font.Name := 'Monospace';
+    //ProcessExt.CommandLine := 'rpn temp.ppsc';
+    if FileExists('rpn') then
+    begin
+        //ProcessExt.Executable := GetEnvironmentVariable('SHELL');
+        //ProcessExt.Parameters.Add('-c');
+        //ProcessExt.Parameters.Add('./rpn temp.ppsc');
+        ProcessExt.Executable := GetCurrentDir()+'/rpn';
+        ProcessExt.Parameters.Add('temp.ppsc');
+        //ProcessExt.CommandLine := './rpn temp.ppsc';
+        //writeln('Executing from: ', ProcessExt.Executable);
+        ProcessExt.CommandLine := GetEnvironmentVariable('SHELL')+' -c "'+GetCurrentDir()+'/rpn temp.ppsc"';
+        ProcessExt.Execute();
+    end else if (FindDefaultExecutablePath('rpn') <> '') then begin
+        writeln('Attempting to run RPN Calculator console app from $PATH.');
+        writeln('If the script does not run, then rpn is not installed in your $PATH.');
+        //ProcessExt.Executable := GetEnvironmentVariable('SHELL');
+        //ProcessExt.Parameters.Add('-c');
+        //ProcessExt.Parameters.Add('"rpn temp.ppsc"');
+        //ProcessExt.Executable := FindDefaultExecutablePath('rpn');
+        //ProcessExt.Parameters.Add('repl');
+        //ProcessExt.CommandLine := 'rpn temp.ppsc';
+        ProcessExt.CommandLine := GetEnvironmentVariable('SHELL')+' -c "rpn temp.ppsc"';
+        ProcessExt.Execute();
+    end else begin
+        writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
+        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
+    end;
     {$ENDIF}
-    ProcessExt.Execute();
 end;
 
 procedure TForm1.MenuAutoClearClick(Sender: TObject);
@@ -407,7 +439,7 @@ begin
      //{$IFDEF UNIX}
      {$ELSE}
      Memo1.Font.Name := 'Monospace';
-     ProcessExt.CommandLine := 'rpn "2 2 +"';
+     ProcessExt.CommandLine := 'rpn "2 2 + scan"';
      {$ENDIF}
      SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
      Memo1.Text := '';
