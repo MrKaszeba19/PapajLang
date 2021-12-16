@@ -282,6 +282,31 @@ begin
     ApplyLocaleMain(locale);
 end;
 
+{$IFNDEF WINDOWS}
+function isDebianBased() : Boolean;
+begin
+    if FileExists('/etc/debian_version') then Result := True else Result := False;
+end;
+
+function detectTerminal() : String;
+var
+    s : String;
+begin
+    //RunCommand(shell, ['-c', 'ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))"'], terminal);
+    s := '';
+    if (isDebianBased()) then 
+    begin
+        s := 'x-terminal-emulator';
+    end else begin
+        if (s = '') then s := GetEnvironmentVariable('TERMINAL');
+        if (s = '') then s := GetEnvironmentVariable('TERM');
+        if (s = '') then s := 'xterm';
+        if (LeftStr(s, 5) = 'xterm') then s := 'xterm';
+    end;
+    Result := trim(s);
+end;
+{$ENDIF}
+
 procedure TForm1.ButtonTerminalClick(Sender: TObject);
 {$IFDEF MSWINDOWS}
 var
@@ -296,7 +321,7 @@ begin
         if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'+Pause),nil,1) = 0 then;
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
-        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
+        ShowMessage(locale.NoAppFound+#13#10+locale.AddAppDir);
     end;
 end;
 {$ELSE}
@@ -309,8 +334,7 @@ begin
         then Pause := ' -P'
         else Pause := '';
     shell := GetEnvironmentVariable('SHELL');
-    RunCommand(shell, ['-c', 'ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))"'], terminal);
-    terminal := trim(terminal);
+    terminal := detectTerminal();
     writeln('Shell:    ', shell);
     writeln('Terminal: ', terminal);
     if FileExists('rpn') then
@@ -326,7 +350,7 @@ begin
         writeln(out);
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
-        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
+        ShowMessage(locale.NoAppFound+#13#10+locale.AddAppDirPath);
     end;
 end;
 {$ENDIF}
