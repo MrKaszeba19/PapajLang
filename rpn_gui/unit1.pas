@@ -26,6 +26,7 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuRunPause: TMenuItem;
     MenuLangPOR1: TMenuItem;
     MenuLangPOR2: TMenuItem;
     MenuLangNOR1: TMenuItem;
@@ -95,6 +96,7 @@ type
     procedure MenuLangSWEClick(Sender: TObject);
     procedure MenuNewFileClick(Sender: TObject);
     procedure MenuRunHereClick(Sender: TObject);
+    procedure MenuRunPauseClick(Sender: TObject);
     procedure MenuRunScriptClick(Sender: TObject);
 
     procedure SetFileName(x : String);
@@ -242,6 +244,11 @@ begin
 
 end;
 
+procedure TForm1.MenuRunPauseClick(Sender: TObject);
+begin
+    MenuRunPause.Checked := not MenuRunPause.Checked;
+end;
+
 procedure TForm1.MenuRunScriptClick(Sender: TObject);
 begin
 
@@ -277,11 +284,16 @@ end;
 
 procedure TForm1.ButtonTerminalClick(Sender: TObject);
 {$IFDEF MSWINDOWS}
+var
+    Pause : String = '';
 begin
     SynEdit1.Lines.SaveToFile('temp.ppsc');
+    if (MenuRunPause.Checked) 
+        then Pause := ' -P'
+        else Pause := '';
     if FileExists('rpn.exe') then
     begin
-        if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'),nil,1) = 0 then;
+        if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'+Pause),nil,1) = 0 then;
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
         ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
@@ -289,9 +301,13 @@ begin
 end;
 {$ELSE}
 var
+    Pause                : String = '';
     terminal, shell, out : String;
 begin
     SynEdit1.Lines.SaveToFile('temp.ppsc');
+    if (MenuRunPause.Checked) 
+        then Pause := ' -P'
+        else Pause := '';
     shell := GetEnvironmentVariable('SHELL');
     RunCommand(shell, ['-c', 'ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))"'], terminal);
     terminal := trim(terminal);
@@ -300,13 +316,13 @@ begin
     if FileExists('rpn') then
     begin
         writeln('Attempting to run RPN Calculator console app from local directory.');
-        RunCommand(terminal, ['-e', './rpn temp.ppsc -P'], out);
+        RunCommand(terminal, ['-e', './rpn temp.ppsc'+Pause], out);
         writeln(out);
     end else if (FindDefaultExecutablePath('rpn') <> '') then begin
         writeln('Attempting to run RPN Calculator console app from $PATH.');
         writeln('If the script does not run, then rpn is not installed in your $PATH.');
         writeln('Executable: ', FindDefaultExecutablePath('rpn'));
-        RunCommand(terminal, ['-e', FindDefaultExecutablePath('rpn')+' temp.ppsc -P'], out);
+        RunCommand(terminal, ['-e', FindDefaultExecutablePath('rpn')+' temp.ppsc'+Pause], out);
         writeln(out);
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');

@@ -692,6 +692,12 @@ object Form1: TForm1
         ShortCut = 121
         OnClick = ButtonTerminalClick
       end
+      object MenuRunPause: TMenuItem
+        Caption = 'Pause the script after execution'
+        Checked = True
+        ShowAlwaysCheckable = True
+        OnClick = MenuRunPauseClick
+      end
     end
     object MenuItem2: TMenuItem
       Caption = 'Language'
