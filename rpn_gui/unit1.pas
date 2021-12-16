@@ -286,6 +286,7 @@ end;
 function isDebianBased() : Boolean;
 begin
     if FileExists('/etc/debian_version') then Result := True else Result := False;
+    //Result := False;
 end;
 
 function detectTerminal() : String;
@@ -326,32 +327,54 @@ begin
 end;
 {$ELSE}
 var
+    dir, command         : String;
     Pause                : String = '';
     terminal, shell, out : String;
 begin
-    SynEdit1.Lines.SaveToFile('temp.ppsc');
+    //dir := GetAppConfigDir(false)+'/';
+    //if not DirectoryExists(dir) then
+    //begin
+    //    if not CreateDir(dir) then
+    //    begin
+    //        raiserror('Error: Failed to set up a directory for the config file.');
+    //        isDir := false;  
+    //    end else begin
+    //        isDir := true;
+    //    end;
+    //end else begin
+    //    isDir := true;
+    //end;
+    dir := GetTempDir();
+    SynEdit1.Lines.SaveToFile(dir+'rpng_temp.ppsc');
     if (MenuRunPause.Checked) 
         then Pause := ' -P'
         else Pause := '';
     shell := GetEnvironmentVariable('SHELL');
     terminal := detectTerminal();
-    writeln('Shell:    ', shell);
-    writeln('Terminal: ', terminal);
-    if FileExists('rpn') then
+    writeln('Shell:      ', shell);
+    writeln('Terminal:   ', terminal);
+    writeln('Temp dir:   ', dir);
+    writeln('App dir:    ', GetCurrentDir);
+    if FileExists('./rpn') then
     begin
-        writeln('Attempting to run RPN Calculator console app from local directory.');
-        RunCommand(terminal, ['-e', './rpn temp.ppsc'+Pause], out);
+        writeln('Attempting to run RPN Calculator console app from GUI app local directory.');
+        command := './rpn '+dir+'rpng_temp.ppsc'+Pause;
+        writeln('Command:    ', command);
+        RunCommand(terminal, ['-e', command], out);
         writeln(out);
     end else if (FindDefaultExecutablePath('rpn') <> '') then begin
         writeln('Attempting to run RPN Calculator console app from $PATH.');
         writeln('If the script does not run, then rpn is not installed in your $PATH.');
         writeln('Executable: ', FindDefaultExecutablePath('rpn'));
-        RunCommand(terminal, ['-e', FindDefaultExecutablePath('rpn')+' temp.ppsc'+Pause], out);
+        command := FindDefaultExecutablePath('rpn')+' '+dir+'rpng_temp.ppsc'+Pause;
+        writeln('Command:    ', command);
+        RunCommand(terminal, ['-e', command], out);
         writeln(out);
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
         ShowMessage(locale.NoAppFound+#13#10+locale.AddAppDirPath);
     end;
+    //DeleteFile(dir+'rpng_temp.ppsc');
 end;
 {$ENDIF}
 
