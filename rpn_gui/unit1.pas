@@ -275,7 +275,10 @@ begin
     ApplyLocaleMain(locale);
 end;
 
-procedure TForm1.ButtonTerminalClick(Sender: TObject);
+{*
+procedure ButtonTerminal2Click(Sender: TObject);
+var
+    terminal : String;
 begin
     SynEdit1.Lines.SaveToFile('temp.ppsc');
     {$IFDEF MSWINDOWS}
@@ -319,6 +322,46 @@ begin
     end;
     {$ENDIF}
 end;
+}
+
+procedure TForm1.ButtonTerminalClick(Sender: TObject);
+{$IFDEF MSWINDOWS}
+begin
+    SynEdit1.Lines.SaveToFile('temp.ppsc');
+    if FileExists('rpn.exe') then
+    begin
+        if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'),nil,1) = 0 then;
+    end else begin
+        writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
+        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
+    end;
+end;
+{$ELSE}
+var
+    terminal, shell, out : String;
+begin
+    SynEdit1.Lines.SaveToFile('temp.ppsc');
+    shell := GetEnvironmentVariable('SHELL');
+    RunCommand(shell, ['-c', 'ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))"'], terminal);
+    terminal := trim(terminal);
+    writeln('Shell:    ', shell);
+    writeln('Terminal: ', terminal);
+    if FileExists('rpn') then
+    begin
+        writeln('Attempting to run RPN Calculator console app from local directory.');
+        RunCommand(terminal, ['-e', './rpn temp.ppsc -P'], out);
+        writeln(out);
+    end else if (FindDefaultExecutablePath('rpn') <> '') then begin
+        writeln('Attempting to run RPN Calculator console app from $PATH.');
+        writeln('If the script does not run, then rpn is not installed in your $PATH.');
+        RunCommand(terminal, ['-e', 'rpn temp.ppsc -P'], out);
+        writeln(out);
+    end else begin
+        writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
+        ShowMessage('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
+    end;
+end;
+{$ENDIF}
 
 procedure TForm1.MenuAutoClearClick(Sender: TObject);
 begin

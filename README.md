@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-December 15, 2021  
+December 16, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -19,6 +19,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - If you want to include some input parameters that would be laid on the stack when script begins, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS expressions. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being laid on the stack. (**_Runtime params are out of use as of now_**) 
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 - If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
+- If you want to  pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `rpn do '2 2 +' -P` or `rpn script.ppsc --pause`
 
 ### GUI Application
 - Open an app executable.
@@ -26,7 +27,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - There is also a simple script running engine – just paste your PS script or load it from file and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - There is a possibility of executing the PS script in an external terminal window (it is an experimental feature)
-    * Linux users are required to have `rpn` console app in the **$PATH**
+    * Linux users are required to have `rpn` console app in the **$PATH** or the same directory as the GUI app
     * Windows users are required to have `rpn` console app in the same directory as the GUI app
 
 ## Requirements and installation
@@ -121,5 +122,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
 0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
-0.5.2 | Lamed | soon | Environment rebuild, more efficiency, better memory management, less bugs, dataframes, file management and more
+0.5.2 | Lamed | very soon | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
+0.5.3 | Mem | soon | Dataframes, files management, memory management, rebuild of PS Environment
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

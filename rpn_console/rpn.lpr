@@ -323,7 +323,8 @@ end;
 procedure RPNC.DoRun;
 var
     x       : String;
-    LoadAll : Boolean;
+    LoadAll : Boolean = False;
+    Pause   : Boolean = False;
 begin
     //{$IFDEF UNIX}
     //if FpSignal(SigInt, @HandleSigInt) = signalhandler(SIG_ERR) then begin
@@ -343,6 +344,9 @@ begin
                 if HasOption('L', 'load-all') then begin
                     LoadAll := True;
                 end;
+                if HasOption('P', 'pause') then begin
+                    Pause := True;
+                end;
                 try
                     x := PS_parseString(ParamStr(2), LoadAll);
                     if (x <> '') then writeln(x);
@@ -352,6 +356,7 @@ begin
                         writeln(StdErr, E.ToString);
                     end;
                 end;
+                if (Pause) then readln();
             end;
      		'expression' : begin
      			show_version();
@@ -414,13 +419,20 @@ begin
                 if HasOption('L', 'load-all') then begin
                     LoadAll := True;
                 end;
+                if HasOption('P', 'pause') then begin
+                    Pause := True;
+                end;
                 show_version();
                 PS_runREPL(LoadAll);
+                if (Pause) then readln();
             end;
             'run' : begin
                 LoadAll := False;
                 if HasOption('L', 'load-all') then begin
                     LoadAll := True;
+                end;
+                if HasOption('P', 'pause') then begin
+                    Pause := True;
                 end;
                 try
                     x := read_file(ParamStr(2), LoadAll);
@@ -431,11 +443,15 @@ begin
                         writeln(StdErr, E.ToString);
                     end;
                 end;
+                if (Pause) then readln();
             end
      		else begin
                 LoadAll := False;
                 if HasOption('L', 'load-all') then begin
                     LoadAll := True;
+                end;
+                if HasOption('P', 'pause') then begin
+                    Pause := True;
                 end;
      			try
                     x := read_file(ParamStr(1), LoadAll);
@@ -446,6 +462,7 @@ begin
                   		writeln(StdErr, E.ToString);
              		end;
             	end;
+                if (Pause) then readln();
      		end;
         end;
     end;
