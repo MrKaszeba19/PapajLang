@@ -289,6 +289,17 @@ begin
     //Result := False;
 end;
 
+function findRPN() : String;
+var
+    s : String;
+begin
+	s := '';
+	if FileExists(GetUserDir()+'bin/rpn') then s := GetUserDir()+'bin/rpn';
+	if (s = '') and (FileExists(GetUserDir()+'rpn')) then s := GetUserDir()+'rpn';
+	if s = '' then s := FindDefaultExecutablePath('rpn');
+	Result := s;
+end;
+
 function detectTerminal() : String;
 var
     s : String;
@@ -299,6 +310,15 @@ begin
     begin
         s := 'x-terminal-emulator';
     end else begin
+	    if FindDefaultExecutablePath('xdg-terminal') <> '' then s := 'xdg-terminal';
+        if (s = '') and (FindDefaultExecutablePath('xfce4-terminal') <> '') then s := 'xfce4-terminal';
+        if (s = '') and (FindDefaultExecutablePath('gnome-terminal') <> '') then s := 'gnome-terminal';
+        if (s = '') and (FindDefaultExecutablePath('konsole') <> '') then s := 'konsole';
+        if (s = '') and (FindDefaultExecutablePath('guake') <> '') then s := 'guake';
+        if (s = '') and (FindDefaultExecutablePath('terminator') <> '') then s := 'terminator';
+        if (s = '') and (FindDefaultExecutablePath('tilda') <> '') then s := 'tilda';
+        if (s = '') and (FindDefaultExecutablePath('yakuake') <> '') then s := 'yakuake';
+        if (s = '') and (FindDefaultExecutablePath('xterm') <> '') then s := 'xterm';
         if (s = '') then s := GetEnvironmentVariable('TERMINAL');
         if (s = '') then s := GetEnvironmentVariable('TERM');
         if (s = '') then s := 'xterm';
@@ -362,13 +382,17 @@ begin
         writeln('Command:    ', command);
         RunCommand(terminal, ['-e', command], out);
         writeln(out);
-    end else if (FindDefaultExecutablePath('rpn') <> '') then begin
+    end else if (findRPN() <> '') then begin
         writeln('Attempting to run RPN Calculator console app from $PATH.');
         writeln('If the script does not run, then rpn is not installed in your $PATH.');
-        writeln('Executable: ', FindDefaultExecutablePath('rpn'));
-        command := FindDefaultExecutablePath('rpn')+' '+dir+'rpng_temp.ppsc'+Pause;
+        writeln('Executable: ', findRPN());
+        command := findRPN()+' '+dir+'rpng_temp.ppsc'+Pause;
         writeln('Command:    ', command);
-        RunCommand(terminal, ['-e', command], out);
+        if (terminal = 'xdg-terminal') 
+            then RunCommand(terminal, [command], out)
+            else if (terminal = 'tilda') 
+                then RunCommand(terminal, ['-c', command], out)
+                else RunCommand(terminal, ['-e', command], out);
         writeln(out);
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to the $PATH or the directory where the GUI app is located.');
