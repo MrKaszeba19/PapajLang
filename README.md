@@ -1,13 +1,12 @@
 # RPN Calculator
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version X.X.X (Leviathan)  
+Version 0.5.2 (Lamed)  
 December 18, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.1**.2, nickname Khaf) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
 
 ## How to use it
 
@@ -16,7 +15,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `rpn help`, `rpn -h` or `rpn --help`.
 - If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. 
-- If you want to include some input parameters that would be laid on the stack when script begins, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
+- If you want to include some input parameters, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 - If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
 - If you want to pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `rpn do '2 2 +' -P` or `rpn script.ppsc --pause`
@@ -123,6 +122,6 @@ Version | Version Name | Date of Release | Improvements
 0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
 0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
-0.5.2 | Lamed | very soon | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
+0.5.2 | Lamed | 12/18/2021 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
 0.5.3 | Mem | soon | Dataframes, files management, memory management, rebuild of PS Environment
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
