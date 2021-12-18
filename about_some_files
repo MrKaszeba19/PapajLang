@@ -30,6 +30,7 @@ Additional units of rpn_gui
 – Have installed
     a) Lazarus IDE (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
     b) or FreePascal Compiler (FPC) for Console app (3.0.4 recommended)
+    c) xterm (may be recommended for non-Debian-like Linux users, if the GUI App cannot run the script in a external terminal window) 
 – There are three ways to build RPN Calculator
     a) if you have Lazarus IDE and you use the GUI app, 
        then compile it by clicking "Run" or "Compile"
@@ -42,11 +43,10 @@ Additional units of rpn_gui
 === REPORTED FLAWS
 – Windows systems' shell usage does not work
 – Non-linear recursion does not work
-– Runtime parameters don't work
 – Chi-squared generator fails for big sample data when df = 1
 – Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in this order) 
 
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 12/16/2021
+Paul Lipkowski, 12/18/2021

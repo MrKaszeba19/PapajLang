@@ -9,7 +9,8 @@ const LineBreak = #10;
 function OccurrencesOfChar(const S: string; const C: char) : integer;
 function OccurrencesOfChar2(const S: string; const C: char) : integer;
 function capitalize(dupa : char) : char;
-function string_toC(dupa : String) : String;
+function string_fromC(dupa : String) : String;
+function isNotFlagParam(str : String) : Boolean;
 
 function PadCharsCenter(str : String; size : LongInt; chr : Char) : String;
 function OccurrencesOfSubstring(str, sub : String) : LongInt;
@@ -58,8 +59,16 @@ begin
     else Result := dupa;
 end;
 
+function isNotFlagParam(str : String) : Boolean;
+begin
+    Result := True;
+    if (str = '-P') 
+    or (str = '--pause')
+    or (str = '-L')
+    or (str = '--load-all') then Result := False;
+end;
 
-function string_toC(dupa : String) : String;
+function string_fromC(dupa : String) : String;
 begin
 	dupa := StringReplace(dupa, '\0', #0, [rfReplaceAll]);
     dupa := StringReplace(dupa, '\a', #7, [rfReplaceAll]);
@@ -74,7 +83,7 @@ begin
 	dupa := StringReplace(dupa, '\''', #39, [rfReplaceAll]);
 	dupa := StringReplace(dupa, '\"', #34, [rfReplaceAll]);
 	dupa := StringReplace(dupa, '\?', '?', [rfReplaceAll]);
-	string_toC := dupa;
+	string_fromC := dupa;
 end;
 
 function PadCharsCenter(str : String; size : LongInt; chr : Char) : String;

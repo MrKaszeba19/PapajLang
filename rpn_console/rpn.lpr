@@ -282,7 +282,7 @@ begin
 end;
 
 
-function read_file(filename : String; LoadAll : Boolean = False) : String;
+function read_file(filename : String; LoadAll : Boolean = False; startFrom : LongInt = -1) : String;
 var
     fun, S : String;
     fp     : Text;
@@ -297,10 +297,10 @@ begin
         fun := fun + #10 + S;
     end;
     closefile(fp);
-    read_file := PS_parseString(fun, LoadAll);
+    read_file := PS_parseString(fun, LoadAll, startFrom);
 end;
 
-function read_file_params(filename, params : String; LoadAll : Boolean = False) : String;
+function read_file_params(filename, params : String; LoadAll : Boolean = False; startFrom : LongInt = -1) : String;
 var
     fun, S : String;
     fp     : Text;
@@ -315,7 +315,7 @@ begin
             fun := fun + #10 + S;
         end;
         closefile(fp);
-    read_file_params := PS_parseString(params+fun, LoadAll);
+    read_file_params := PS_parseString(params+fun, LoadAll, startFrom);
 end;
 
 // main
@@ -348,7 +348,7 @@ begin
                     Pause := True;
                 end;
                 try
-                    x := PS_parseString(ParamStr(2), LoadAll);
+                    x := PS_parseString(ParamStr(2), LoadAll, 3);
                     if (x <> '') then writeln(x);
                 except
                     On E : Exception do
@@ -435,7 +435,7 @@ begin
                     Pause := True;
                 end;
                 try
-                    x := read_file(ParamStr(2), LoadAll);
+                    x := read_file(ParamStr(2), LoadAll, 3);
                     if (x <> '') then writeln(x);
                 except
                     On E : Exception do
@@ -454,7 +454,7 @@ begin
                     Pause := True;
                 end;
      			try
-                    x := read_file(ParamStr(1), LoadAll);
+                    x := read_file(ParamStr(1), LoadAll, 2);
         			if (x <> '') then writeln(x);
             	except
             		On E : Exception do

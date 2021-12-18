@@ -1,0 +1,5 @@
+if (Params length 0 =) {
+	"No params provided!" println
+} else {
+	Params println
+}

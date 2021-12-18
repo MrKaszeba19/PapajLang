@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, StrUtils, 
   UnitEntity, UnitStack, UnitFunctions, UnitVariables;
 
+
 const
     MNORM = 0;
     MIF = 1;
@@ -21,6 +22,8 @@ const
     //MFOR2 = 6;
     MELIF = 7;
 
+type TParams = array of String;
+
 type PSEnvironment = record
     Stack     : StackDB;
     Settings  : TSettings;
@@ -30,6 +33,9 @@ end;
 
 function read_source(filename : String; var env : PSEnvironment) : StackDB;
 procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
+
+function obtainParams(from : LongInt = 0) : TParams;
+procedure assignParameters(var env : PSEnvironment; Params : TParams = Default(TParams));
 
 //procedure doFunction(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
@@ -59,6 +65,51 @@ var
 	Steps : Integer;
 
 // HELPFUL THINGS
+
+// RUNTIME ARGS ENGINE
+
+function obtainParams(from : LongInt = 0) : TParams;
+var
+    i, j : LongInt;
+    x    : TParams;
+begin
+    j := 0;
+    SetLength(x, 0);
+    for i := from to ParamCount do
+    begin
+        if isNotFlagParam(ParamStr(i)) then
+        begin
+            SetLength(x, j + 1);
+            x[j] := ParamStr(i);
+            j := j + 1;
+        end;
+    end;
+    Result := x;
+end;
+
+procedure assignParameters(var env : PSEnvironment; Params : TParams = Default(TParams));
+var
+    i      : LongInt;
+    stk    : LongInt;
+    str    : String;
+    ArrEcx : Entity;
+begin
+    if Length(Params) > 0 then
+    begin
+        stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings));
+        ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+        stk := env.Settings.StackPointer;
+        env.Settings.StackPointer := trunc(ArrEcx.Num);
+        for i := 0 to Length(Params)-1 do
+        begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(string_fromC(Params[i])));
+        end;
+        env.Variables.setLocalVariable('Params', ArrEcx);
+        env.Settings.StackPointer := stk;
+    end else begin
+        env.Variables.setLocalVariable('Params', buildNewEmptyArray(env.Stack, env.Settings));
+    end;
+end;
 
 // FUNCTION
 
@@ -365,7 +416,7 @@ begin
     if (LeftStr(i, 1) = '"') and (RightStr(i, 1) = '"') then
 	begin
         StrEcx := i.Substring(1, i.Length - 2);
-        if sets.stringmode = MCLIKE then StrEcx := string_toC(StrEcx);
+        if sets.stringmode = MCLIKE then StrEcx := string_fromC(StrEcx);
         stack_push(pocz[sets.StackPointer], buildString(StrEcx));
 	end else begin
         if not (sets.CaseSensitive) then i := LowerCase(i);

@@ -3153,7 +3153,7 @@ begin
 		'String.inC' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit; 
             StrEbx := stack_pop(pocz[sets.StackPointer]).Str;
-            StrEcx := string_toC(StrEbx);
+            StrEcx := string_fromC(StrEbx);
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEbx));
             end;
