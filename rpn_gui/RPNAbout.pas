@@ -11,8 +11,8 @@ const RPN_date = {$I %DATE%};
 const RPN_updated = '';
 const RPN_targetCPU = {$I %FPCTARGETCPU%};
 const RPN_targetOS = {$I %FPCTARGETOS%};
-const RPN_apptype = 'Console';
-const RPN_isGUI = false;
+const RPN_apptype = 'GUI';
+const RPN_isGUI = true;
 
 {$IFDEF cpu64}
 type LongInt = Int64;

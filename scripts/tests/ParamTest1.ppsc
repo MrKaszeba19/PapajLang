@@ -1,0 +1,7 @@
+@use(Array)
+@use(String)
+if (Params length 0 =) {
+	"No params provided!" println
+} else {
+	Params crush all -- times bind println
+}
