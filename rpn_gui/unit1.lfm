@@ -732,15 +732,18 @@ object Form1: TForm1
       end
       object MenuLangCSB: TMenuItem
         Caption = 'Kaszëbsczi'
-        OnClick = MenuLangCSBClick
-      end
-      object MenuLangCSB2: TMenuItem
-        Caption = 'Kašëbsči'
-        OnClick = MenuLangCSB2Click
-      end
-      object MenuLangCSB3: TMenuItem
-        Caption = 'Кашёбсчи'
-        OnClick = MenuLangCSB3Click
+        object MenuLangCSB1: TMenuItem
+          Caption = 'Kaszëbsczi (standard)'
+          OnClick = MenuLangCSB1Click
+        end
+        object MenuLangCSB2: TMenuItem
+          Caption = 'Kašëbsči (novô ortografijô)'
+          OnClick = MenuLangCSB2Click
+        end
+        object MenuLangCSB3: TMenuItem
+          Caption = 'Кашёбсчи (Кирилица)'
+          OnClick = MenuLangCSB3Click
+        end
       end
       object MenuLangMKD: TMenuItem
         Caption = 'Македонски'
@@ -785,12 +788,15 @@ object Form1: TForm1
         OnClick = MenuLangSLOClick
       end
       object MenuLangSRB: TMenuItem
-        Caption = 'Српски'
-        OnClick = MenuLangSRBClick
-      end
-      object MenuLangSRB2: TMenuItem
-        Caption = 'Srpski'
-        OnClick = MenuLangSRB2Click
+        Caption = 'Српски / Srpski'
+        object MenuLangSRB1: TMenuItem
+          Caption = 'Српски (Кирилица)'
+          OnClick = MenuLangSRB1Click
+        end
+        object MenuLangSRB2: TMenuItem
+          Caption = 'Srpski (Latinica)'
+          OnClick = MenuLangSRB2Click
+        end
       end
       object MenuLangSWE: TMenuItem
         Caption = 'Svenska'

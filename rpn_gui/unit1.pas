@@ -26,12 +26,16 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuLangSRB1: TMenuItem;
+    MenuLangSRB2: TMenuItem;
+    MenuLangCSB1: TMenuItem;
+    MenuLangCSB2: TMenuItem;
+    MenuLangCSB3: TMenuItem;
     MenuRunPause: TMenuItem;
     MenuLangPOR1: TMenuItem;
     MenuLangPOR2: TMenuItem;
     MenuLangNOR1: TMenuItem;
     MenuLangNOR2: TMenuItem;
-    MenuLangSRB2: TMenuItem;
     MenuLangSRB: TMenuItem;
     MenuLangPOR: TMenuItem;
     MenuLangSLO: TMenuItem;
@@ -49,12 +53,10 @@ type
     MenuRunHere: TMenuItem;
     MenuRunExternal: TMenuItem;
     MenuNewFile: TMenuItem;
-    MenuLangCSB3: TMenuItem;
     MenuLangGER: TMenuItem;
     MenuLangNED: TMenuItem;
     MenuLangFRA: TMenuItem;
     MenuLangCSB: TMenuItem;
-    MenuLangCSB2: TMenuItem;
     MenuQuit: TMenuItem;
     MenuLangENG: TMenuItem;
     MenuLangPOL: TMenuItem;
@@ -73,6 +75,7 @@ type
     procedure ButtonTerminalClick(Sender: TObject);
     procedure MenuAutoClearClick(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
+    procedure MenuLangCSB1Click(Sender: TObject);
     procedure MenuLangNOR1Click(Sender: TObject);
     procedure MenuLangCROClick(Sender: TObject);
     procedure MenuLangNOR2Click(Sender: TObject);
@@ -91,6 +94,7 @@ type
     procedure MenuLangMKDClick(Sender: TObject);
     procedure MenuLangNEDClick(Sender: TObject);
     procedure MenuLangSLOClick(Sender: TObject);
+    procedure MenuLangSRB1Click(Sender: TObject);
     procedure MenuLangSRB2Click(Sender: TObject);
     procedure MenuLangSRBClick(Sender: TObject);
     procedure MenuLangSWEClick(Sender: TObject);
@@ -203,6 +207,12 @@ end;
 procedure TForm1.MenuLangSLOClick(Sender: TObject);
 begin
     locale := GetLocale(L_SLO);
+    ApplyLocaleMain(locale);
+end;
+
+procedure TForm1.MenuLangSRB1Click(Sender: TObject);
+begin
+    locale := GetLocale(L_SRB);
     ApplyLocaleMain(locale);
 end;
 
@@ -410,6 +420,12 @@ end;
 procedure TForm1.MenuItem2Click(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.MenuLangCSB1Click(Sender: TObject);
+begin
+    locale := GetLocale(L_CSB);
+    ApplyLocaleMain(locale);
 end;
 
 procedure TForm1.MenuLangNOR1Click(Sender: TObject);

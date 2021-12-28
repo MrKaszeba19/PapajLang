@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-December 19, 2021  
+December 28, 2021  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -34,7 +34,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 recommended) for Console app only
-    * **xterm** (*may be recommended for non-Debian-like Linux users*) 
+    * if you use a non-Debian-like Linux, then **xterm** *might be recommended* 
 - There are three ways to build RPN Calculator
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
