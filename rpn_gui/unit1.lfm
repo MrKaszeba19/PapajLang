@@ -812,7 +812,7 @@ object Form1: TForm1
     Enabled = False
     CommentAttri.Foreground = clGreen
     Comments = [csCStyle]
-    DetectPreprocessor = False
+    DetectPreprocessor = True
     IdentifierChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
     KeyAttri.Foreground = clBlue
     VariableAttri.Foreground = clFuchsia
@@ -836,6 +836,7 @@ object Form1: TForm1
       'PI'
     )
     NumberAttri.Foreground = clTeal
+    PreprocessorAttri.Style = [fsItalic]
     StringAttri.Foreground = clRed
     StringDelim = sdDoubleQuote
     Markup = False
