@@ -322,6 +322,7 @@ begin
     end else begin
 	    if FindDefaultExecutablePath('xdg-terminal') <> '' then s := 'xdg-terminal';
         if (s = '') and (FindDefaultExecutablePath('xfce4-terminal') <> '') then s := 'xfce4-terminal';
+        if (s = '') and (FindDefaultExecutablePath('mate-terminal') <> '') then s := 'mate-terminal';
         if (s = '') and (FindDefaultExecutablePath('gnome-terminal') <> '') then s := 'gnome-terminal';
         if (s = '') and (FindDefaultExecutablePath('konsole') <> '') then s := 'konsole';
         if (s = '') and (FindDefaultExecutablePath('guake') <> '') then s := 'guake';
@@ -390,7 +391,12 @@ begin
         writeln('Attempting to run RPN Calculator console app from GUI app local directory.');
         command := './rpn '+dir+'rpng_temp.ppsc'+Pause;
         writeln('Command:    ', command);
-        RunCommand(terminal, ['-e', command], out);
+        if (terminal = 'xdg-terminal') 
+            then RunCommand(terminal, [command], out)
+            else if (terminal = 'tilda') 
+                then RunCommand(terminal, ['-c', command], out)
+                else RunCommand(terminal, ['-e', command], out);
+        //RunCommand(terminal, ['-e', command], out);
         writeln(out);
     end else if (findRPN() <> '') then begin
         writeln('Attempting to run RPN Calculator console app from $PATH.');
