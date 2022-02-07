@@ -3292,9 +3292,25 @@ begin
             if not (sets.Autoclear) then begin
             	stack_push(pocz[sets.StackPointer], buildString(StrEax));
             end;
-            stack_push(pocz[sets.StackPointer], buildString(QuotedStr(StrEax)));
+            stack_push(pocz[sets.StackPointer], buildString(quoteRaw(StrEax, '''')));
         end;
         'String.quoted' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(quoteRaw(StrEax, '"')));
+        end;
+        'String.apostrophed2' : begin
+            if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(pocz[sets.StackPointer]).Str;
+            if not (sets.Autoclear) then begin
+            	stack_push(pocz[sets.StackPointer], buildString(StrEax));
+            end;
+            stack_push(pocz[sets.StackPointer], buildString(QuotedStr(StrEax)));
+        end;
+        'String.quoted2' : begin
             if (sets.StrictType) and (assertEntityLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), TSTR, i)) then Exit;  
             StrEax := stack_pop(pocz[sets.StackPointer]).Str;
             if not (sets.Autoclear) then begin

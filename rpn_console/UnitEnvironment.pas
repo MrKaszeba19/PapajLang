@@ -704,7 +704,7 @@ begin
 		nesttx := nesttx + ' ' + L[cursor];
         //writeln(L[cursor], ' ', cursor);
         Inc(cursor);
-	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
+	until ((RightStr(L[cursor-1], 1) = '"') and (RightStr(L[cursor-1], 2) <> '\"')) or (cursor-1 >= Length(L));
     Dec(cursor);
     //writeln(nesttx);
     if (RightStr(nesttx, 1) = '"')

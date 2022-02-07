@@ -19,6 +19,7 @@ function TrimCharsLeft(str : String; chr : Char) : String;
 function TrimCharsRight(str : String; chr : Char) : String;
 function RemoveCharset(a : String; b : String) : String;  
 function StringTranslate(str, chin, chout : String) : String;  
+function quoteRaw(str : String; chr : Char) : String;
 
 implementation
 
@@ -166,6 +167,11 @@ begin
         str := StringReplace(str, chin[index], chout[index], [rfReplaceAll]);
     end;
     Result := str;
+end;
+
+function quoteRaw(str : String; chr : Char) : String;
+begin
+    Result := chr + str + chr;
 end;
 
 end.
