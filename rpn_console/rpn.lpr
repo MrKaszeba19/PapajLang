@@ -63,7 +63,7 @@ begin
     //    else writeln('Released on '+RPN_date+', updated on '+RPN_updated+'.');
     if (RPN_updated = '')
         then writeln('Released on '+convertToMDY(RPN_date)+'.')
-        else writeln('Released on '+convertToMDY(RPN_date)+', updated on '+convertToMDY(RPN_date)+'.');
+        else writeln('Released on '+convertToMDY(RPN_date)+', updated on '+convertToMDY(RPN_updated)+'.');
     writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
     writeln('');
 end;

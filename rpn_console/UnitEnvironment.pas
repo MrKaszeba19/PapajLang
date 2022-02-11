@@ -704,7 +704,7 @@ begin
 		nesttx := nesttx + ' ' + L[cursor];
         //writeln(L[cursor], ' ', cursor);
         Inc(cursor);
-	until (RightStr(L[cursor-1], 1) = '"') or (cursor-1 >= Length(L));
+	until ((RightStr(L[cursor-1], 1) = '"') and (RightStr(L[cursor-1], 2) <> '\"')) or (cursor-1 >= Length(L));
     Dec(cursor);
     //writeln(nesttx);
     if (RightStr(nesttx, 1) = '"')
@@ -805,7 +805,9 @@ begin
 		            else stack_push(pocz[sets.StackPointer], buildString('"'));
 		    end
             else begin
-                if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
+                if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"'))
+                    or ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 2) = '\"'))
+                    or (L[index] = '"') then begin
                     ExecStr := getQuotedString(L, index);
                     permit := True;
                     InstructionBuilt := True;

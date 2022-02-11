@@ -2,7 +2,9 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version 0.5.2 (Lamed)  
-December 18, 2021  
+released on December 18, 2021  
+Update #1  
+Released on February 11, 2022  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
