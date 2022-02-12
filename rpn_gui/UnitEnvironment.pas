@@ -805,7 +805,9 @@ begin
 		            else stack_push(pocz[sets.StackPointer], buildString('"'));
 		    end
             else begin
-                if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"')) or (L[index] = '"') then begin
+                if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) <> '"'))
+                    or ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 2) = '\"'))
+                    or (L[index] = '"') then begin
                     ExecStr := getQuotedString(L, index);
                     permit := True;
                     InstructionBuilt := True;
