@@ -14,6 +14,8 @@ function fmod(x, y : Extended) : Extended;
 function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
 function minusOneTo(x : LongInt) : LongInt;
+//function modularPower(a, b, m : Extended) : Extended;
+function modularPower(a, b, m : LongInt) : LongInt;
 
 function ftrunc(x : Extended) : Extended;
 function ffrac(x : Extended) : Extended;
@@ -159,6 +161,30 @@ begin
         then Result := 1
         else Result := -1;
 end;
+
+//function modularPower(a, b, m : Extended) : Extended;
+function modularPower(a, b, m : LongInt) : LongInt;
+var
+    r : LongInt;
+begin
+    if m = 1 then
+    begin
+        Result := 0;
+    end else begin
+        r := 1;
+        a := a mod m;
+        while (b > 0) do
+        begin
+            if (b mod 2 = 1) then begin
+                r := (r * a) mod m;
+            end;
+            a := (a*a) mod m;
+            b := b shr 1;
+        end;
+        Result := r;
+    end;
+end;
+
 
 function ftrunc(x : Extended) : Extended;
 begin

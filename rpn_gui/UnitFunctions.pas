@@ -2625,6 +2625,18 @@ begin
             if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
             stack_push(pocz[sets.StackPointer], buildBoolean(num_isSquareFree(y)));
         end;
+        'Math.modularPower' : begin
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            z := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            y := stack_pop(pocz[sets.StackPointer]).Num;
+            if (sets.StrictType) and (assertNaturalLocated(pocz[sets.StackPointer], stack_get(pocz[sets.StackPointer]), i)) then Exit;
+            x := stack_pop(pocz[sets.StackPointer]).Num;
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(x));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(y));
+            if not (sets.Autoclear) then stack_push(pocz[sets.StackPointer], buildNumber(z));
+            stack_push(pocz[sets.StackPointer], buildNumber(modularPower(trunc(x), trunc(y), trunc(z))));
+        end;
 		else begin
             Found := false;
         end;
