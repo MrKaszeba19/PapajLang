@@ -1,0 +1,29 @@
+@use(Math)
+
+function (n k) {
+	TRUE -> $result
+	$k times {
+		2 $n randomIntRange -> $a
+		if ($a $n -- $n modularPower 1 !=) {
+			FALSE -> $result
+		}
+	}
+	$result
+} -> isFermatPrime
+
+"FERMAT PRIMALITY TEST!!!!" println
+"Type a number: " print
+scan toNumber trunc -> $n
+"How many tries for the test? " print
+scan toNumber trunc -> $k
+
+"I am "
+1 2 $k ^ inv - 100 * toString 
+"% sure that " 
+$n toString
+" is"
+//if ($n $k isFermatPrime) { " " } else { "n\'t " }
+if ($n $k isFermatPrime) " " else "n\'t "
+"prime."
+6 times +
+println

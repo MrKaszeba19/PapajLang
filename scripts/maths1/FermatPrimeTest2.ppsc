@@ -1,0 +1,14 @@
+@use(Math)
+
+function (n k) {
+	TRUE -> $result
+	$k times {
+		2 $n randomIntRange -> $a
+		if ($a $n -- $n modularPower 1 !=) {
+			FALSE -> $result
+		}
+	}
+	$result
+} -> isPrime
+
+scan toNumber trunc 20 isPrime println
