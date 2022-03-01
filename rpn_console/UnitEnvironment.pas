@@ -809,7 +809,7 @@ begin
                     or ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 2) = '\"'))
                     or (L[index] = '"') then begin
                     ExecStr := getQuotedString(L, index);
-                    permit := True;
+                    //permit := True;
                     InstructionBuilt := True;
 			    //end else if L[index] = '{' then
                 //begin
