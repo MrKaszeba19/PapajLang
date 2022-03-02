@@ -574,7 +574,7 @@ begin
             i := i + 1;
         end;
     end;
-    cutShebang := trim(pom);
+    Result := trim(pom);
 end;
 
 function checkParentheses(input : String) : ShortInt;
