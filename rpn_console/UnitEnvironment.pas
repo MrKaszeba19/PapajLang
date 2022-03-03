@@ -199,7 +199,7 @@ end;
 
 procedure doFor(StrCond : String; StrInst : String; var pocz : StackDB; sets : TSettings; var vardb : VariableDB);
 var
-	L               : TStringArray;
+	L, M            : TStringArray;
     index, location : LongInt;
     addr            : VariableAddress;
     input, tname    : String;
@@ -235,44 +235,96 @@ begin
             alter := False;
             L[0] := RightStr(L[0], Length(L[0])-6);
         end;
-        if (L[0][1] = '$') then L[0] := RightStr(L[0], Length(L[0])-1);
-        if (L[1][1] = '$') then L[1] := RightStr(L[1], Length(L[1])-1);
-        // check if RHS is either variable or not
-        if isValidForVariables(L[0]) then
-        begin
-            is_set := False;
-            if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
-            begin
-                input := L[1].Substring(1, L[1].Length - 2);
-                env := buildNewEnvironment();
-                env.Stack := parseOpen(input, env.Stack, sets, vardb);
-                cnt := stack_size(env.Stack[env.Settings.StackPointer]);
-                disposeEnvironment(env);
-                tname := 'T_'+IntToStr(DateTimeToUnix(Now));
-                pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
-                L[1] := tname;
-                is_set := True;
-            end;
-            addr := vardb.locateVariable(L[1]);
-            if (addr.Layer = -1) then 
-                stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(L[1]))
-            else begin
-                if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
-                location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
-                for index := 0 to Length(pocz[location].Values)-1 do
+
+        case OccurrencesOfChar(L[0], ' ') of
+            0 : begin
+                if (L[0][1] = '$') then L[0] := RightStr(L[0], Length(L[0])-1);
+                if (L[1][1] = '$') then L[1] := RightStr(L[1], Length(L[1])-1);
+                // check if RHS is either variable or not
+                if isValidForVariables(L[0]) then
                 begin
-                    vardb.setLocalVariable(L[0], pocz[location].Values[index]);
-                    pocz := parseOpen(StrInst, pocz, sets, vardb);
-                    if alter then pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
-                end;
+                    is_set := False;
+                    if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
+                    begin
+                        input := L[1].Substring(1, L[1].Length - 2);
+                        env := buildNewEnvironment();
+                        env.Stack := parseOpen(input, env.Stack, sets, vardb);
+                        cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+                        disposeEnvironment(env);
+                        tname := 'T_'+IntToStr(DateTimeToUnix(Now));
+                        pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
+                        L[1] := tname;
+                        is_set := True;
+                    end;
+                    addr := vardb.locateVariable(L[1]);
+                    if (addr.Layer = -1) then 
+                        stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(L[1]))
+                    else begin
+                        if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
+                        location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
+                        for index := 0 to Length(pocz[location].Values)-1 do
+                        begin
+                            vardb.setLocalVariable(L[0], pocz[location].Values[index]);
+                            pocz := parseOpen(StrInst, pocz, sets, vardb);
+                            if alter then pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
+                        end;
+                    end;
+                    if is_set then 
+                    begin
+                        pocz := parseOpen('~'+tname, pocz, sets, vardb);
+                    end;
+                end else begin
+                    raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[0]+'"');
+                end;              
             end;
-            if is_set then 
-            begin
-                pocz := parseOpen('~'+tname, pocz, sets, vardb);
+            1 : begin
+                M := L[0].Split(' ');
+                if (M[0][1] = '$') then M[0] := RightStr(M[0], Length(M[0])-1);
+                if (M[1][1] = '$') then M[1] := RightStr(M[1], Length(M[1])-1);
+                if (L[1][1] = '$') then L[1] := RightStr(L[1], Length(L[1])-1);
+                // check if RHS is either variable or not
+                if (isValidForVariables(M[0])) and (isValidForVariables(M[1])) then
+                begin
+                    is_set := False;
+                    if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
+                    begin
+                        input := L[1].Substring(1, L[1].Length - 2);
+                        env := buildNewEnvironment();
+                        env.Stack := parseOpen(input, env.Stack, sets, vardb);
+                        cnt := stack_size(env.Stack[env.Settings.StackPointer]);
+                        disposeEnvironment(env);
+                        tname := 'T_'+IntToStr(DateTimeToUnix(Now));
+                        pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
+                        L[1] := tname;
+                        is_set := True;
+                    end;
+                    addr := vardb.locateVariable(L[1]);
+                    if (addr.Layer = -1) then 
+                        stack_push(pocz[sets.StackPointer], raiseExceptionUnknownArray(L[1]))
+                    else begin
+                        if assertEntityLocated(pocz[sets.StackPointer], vardb.getLocatedVariable(L[1], addr), TVEC, L[1]) then Exit; 
+                        location := trunc(vardb.getLocatedVariable(L[1], addr).Num);
+                        for index := 0 to Length(pocz[location].Values)-1 do
+                        begin
+                            vardb.setLocalVariable(M[0], buildNumber(index));
+                            vardb.setLocalVariable(M[1], pocz[location].Values[index]);
+                            pocz := parseOpen(StrInst, pocz, sets, vardb);
+                            if alter then pocz[location].Values[index] := vardb.getLocalVariable(L[0]);
+                        end;
+                    end;
+                    if is_set then 
+                    begin
+                        pocz := parseOpen('~'+tname, pocz, sets, vardb);
+                    end;
+                end else begin
+                    raiserror('EVariable:CSetInvalid: Invalid names of variables at "'+L[0]+'"');
+                end; 
             end;
-        end else begin
-            raiserror('EVariable:CSetInvalid: Invalid variable string at "'+L[0]+'"');
+            else begin
+                raiserror('EVariable:CSetInvalid: Too many variables at "'+L[0]+'" (max 2 allowed)');
+            end;
         end;
+
         if (sets.StrictType) and (stack_searchException(pocz[sets.StackPointer])) then
     	begin
 			raiserror(stack_pop(pocz[sets.StackPointer]).Str);

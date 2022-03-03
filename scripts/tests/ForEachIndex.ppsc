@@ -1,0 +1,13 @@
+@use(String)
+
+[ "abcdefghijklmnopqrstuvwxyz" crush ] -> t
+
+for (const $i $item : $t) {
+	"The letter #"
+	i ++ toString
+	"\tis "
+	$item upper
+	"."
+	4 times +
+	println
+}
