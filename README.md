@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-March 3, 2022  
+March 4, 2022  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -46,7 +46,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH
     * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
-    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file)
+    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The script requires root privileges to be executed.
 
 ## PapajScript:
 
