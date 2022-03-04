@@ -3,8 +3,8 @@
 and interpreter of **PapajScript**  
 Version 0.5.2 (Lamed)  
 released on December 18, 2021  
-Update #1  
-Released on February 11, 2022  
+Update #2  
+Released on March 4, 2022  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -46,7 +46,8 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
 - (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH
-    * run `installBash.sh` to add `rpn` executable to your **$PATH** automatically
+    * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
+    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The script requires root privileges to be executed.
 
 ## PapajScript:
 

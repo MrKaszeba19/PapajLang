@@ -1,7 +1,8 @@
 @echo off
 echo Starting...
 
-set ver=3.0.4
+:: set ver=3.0.4
+set ver=3.2.0
 
 if /i "%processor_architecture%"=="AMD64" GOTO AMD64
 if /i "%PROCESSOR_ARCHITEW6432%"=="AMD64" GOTO AMD64

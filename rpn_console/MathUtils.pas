@@ -87,6 +87,11 @@ function num_omega(n : Extended) : LongInt;
 function num_omega2(n : Extended) : LongInt;
 function num_liouville(n : Extended) : LongInt;
 function num_isSquareFree(n : Extended) : Boolean;
+function num_isCarmichael(n : LongInt) : Boolean;
+
+//function modularPower(a, b, m : Extended) : Extended;
+function modularPower(a, b, m : LongInt) : LongInt;
+function modularInverse(a, m : LongInt) : LongInt;
 
 
 implementation
@@ -159,6 +164,7 @@ begin
         then Result := 1
         else Result := -1;
 end;
+
 
 function ftrunc(x : Extended) : Extended;
 begin
@@ -312,6 +318,19 @@ begin
 end;
 
 function gcd(a, b : Extended) : Extended;
+var
+    temp : Extended;
+begin
+    while b <> 0 do
+    begin
+      temp := b;
+      b := fmod(a, b);
+      a := temp;
+    end;
+    result := a;
+end;
+
+function gcd2(a, b : Extended) : Extended;
 begin
 	while (a <> b) do
 	begin
@@ -1341,6 +1360,112 @@ begin
             end;
         end;
     end;
+end;
+
+
+function num_isCarmichael(n : LongInt) : Boolean;
+var
+    i     : LongInt;
+begin
+    if (n = 1) then
+    begin
+        Result := True;
+    end else if (isPrime(n)) then
+    begin
+        Result := False;
+    end else begin
+        Result := True;
+        for i := 2 to n-1 do
+        begin
+            if (gcd(n, i) = 1) then
+            begin
+                if (modularPower(i, n-1, n) <> 1) then
+                begin
+                    Result := False;
+                    break;
+                end;
+            end;
+        end;
+    end;
+end;
+
+
+// junk to remove
+function num_isCarmichael2(n : LongInt) : Boolean;
+var
+    i     : LongInt;
+    prime : Boolean;// = False; 
+begin
+    if (n = 1) then
+    begin
+        Result := True;
+    end else begin
+        prime := True;
+        Result := True;
+        for i := 2 to n-1 do
+        begin
+            if (gcd(n, i) = 1) then
+            begin
+                prime := False;
+                if (modularPower(i, n-1, n) <> 1) then
+                begin
+                    writeln(i);
+                    Result := False;
+                    break;
+                end;
+            end;
+        end;
+        writeln(prime);
+        writeln(Result);
+        Result := (not prime) and Result;
+    end;
+end;
+
+//function modularPower(a, b, m : Extended) : Extended;
+function modularPower(a, b, m : LongInt) : LongInt;
+var
+    r : LongInt;
+begin
+    if m = 1 then
+    begin
+        Result := 0;
+    end else begin
+        r := 1;
+        a := a mod m;
+        while (b > 0) do
+        begin
+            if (b mod 2 = 1) then begin
+                r := (r * a) mod m;
+            end;
+            a := (a*a) mod m;
+            b := b shr 1;
+        end;
+        Result := r;
+    end;
+end;
+
+function modularInverseNaive(a, m : LongInt) : LongInt;
+var
+    i : LongInt;
+begin
+    Result := -1;
+    for i := 1 to m-1 do
+        if (((a mod m) * (i mod m)) mod m = 1) then
+        begin
+            Result := i;
+            break;
+        end;
+end;
+
+function modularInverse(a, m : LongInt) : LongInt;
+var
+    x, y, g : LongInt;
+begin
+    g := gcdExtended(a, m, x, y);
+    if (g <> 1) then
+        Result := modularInverseNaive(a, m)
+    else
+        Result := (x mod m + m) mod m;
 end;
 
 

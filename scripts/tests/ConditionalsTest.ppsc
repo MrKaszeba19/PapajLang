@@ -1,0 +1,54 @@
+
+scan toNumber -> $x
+
+"TEST 1" println
+if ($x 0 >) {
+	TRUE
+} else {
+	FALSE
+}
+println
+statusln
+
+"TEST 2" println
+if ($x 0 >)
+	TRUE
+else
+	FALSE
+println
+statusln
+
+"TEST 3" println
+if ($x 0 >)
+	FALSE
+else
+	TRUE
+println
+statusln
+
+"TEST 4" println
+"This number is "
+if ($x 0 >)
+	"positive"
+else
+	"not positive"
++ println
+statusln
+
+"TEST 5" println
+"This number is"
+if ($x 0 >)
+	" positive"
+else
+	" not positive"
++ println
+statusln
+
+"TEST 6" println
+"This number is"
+if ($x 0 >)
+	" "
+else
+	" not "
+"positive" + + println
+statusln
