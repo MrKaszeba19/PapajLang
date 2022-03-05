@@ -156,7 +156,7 @@ var
 begin
     normalTheme(th);
     maxdisp := 50;
-    env := buildNewEnvironment(LoadAll);
+    env.Create(LoadAll);
     SetLength(history, 0);
     writeln('REPL for PapajScript');
     writeln();
@@ -247,7 +247,7 @@ begin
                     TextColor(th.ColorReset);
                     fname := 'export.ppsc';
                 end;
-                env.Stack := read_source(fname, env);
+                env.runFromFile(fname);
             except
                 On E : Exception do
                 begin
@@ -363,8 +363,8 @@ begin
                 TextColor(th.ColorReset);
             end;
             '\reset' : begin
-                disposeEnvironment(env);
-                env := buildNewEnvironment();
+                env.Destroy;
+                env.Create(LoadAll);
                 SetLength(history, 0);
                 TextColor(th.ColorGood);
                 writeln('All settings, history and data have been reset.');
@@ -412,12 +412,7 @@ begin
                 end;
                 try
                     if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
-                    if (Length(input) > 0) then 
-                    begin
-                        input := cutCommentMultiline(input);
-                        input := cutCommentEndline(input);
-                    end;
-                    env.Stack := parseOpen(input, env.Stack, env.Settings, env.Variables);
+                    env.runFromString(input);
                     if (stack_size(env.Stack[env.Settings.StackPointer]) > maxdisp) and (maxdisp <> 0) 
                         then res := '<Stack of '+IntToStr(stack_size(env.Stack[env.Settings.StackPointer]))+' elements>'
                         else res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
@@ -439,7 +434,7 @@ begin
             end;
         end;
     until not ((input <> '\q') and (input <> '\quit'));
-    disposeEnvironment(env);
+    env.Destroy;
 end;
 
 end.

@@ -24,18 +24,23 @@ const
 
 type TParams = array of String;
 
-type PSEnvironment = record
-    Stack     : StackDB;
-    Settings  : TSettings;
-    Variables : VariableDB;
-    AutoReset : Boolean;
-end;
+type PSEnvironment = object
+    private
+        procedure params_assign(Params : TParams = Default(TParams));   
+    public
+        Stack     : StackDB;
+        Settings  : TSettings;
+        Variables : VariableDB;
+        AutoReset : Boolean;
+        constructor Create(LoadAll : Boolean = False);
+        constructor Create(sets : TSettings);
+        destructor Destroy;
+        procedure runFromString(input : String);
+        procedure runFromFile(input : String);
+        procedure assignParams(startFrom : LongInt = 0);
+end; 
 
-function read_source(filename : String; var env : PSEnvironment) : StackDB;
-procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
-
-function obtainParams(from : LongInt = 0) : TParams;
-procedure assignParameters(var env : PSEnvironment; Params : TParams = Default(TParams));
+procedure variablePutOrRun(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
 
 //procedure doFunction(Body : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB; Args : String = '');
 procedure doFunction(f : Entity; var pocz : StackDB; sets : TSettings; vardb : VariableDB);
@@ -54,9 +59,6 @@ procedure evaluate(i : String; var pocz : StackDB; var Steps : Integer; var sets
 function parseScoped(input : string; pocz : StackDB; sets : TSettings; vardb : VariableDB) : StackDB;
 function parseOpen(input : string; pocz : StackDB; var sets : TSettings; var vardb : VariableDB) : StackDB;
 
-function buildNewEnvironment(LoadAll : Boolean = False) : PSEnvironment;
-procedure disposeEnvironment(var env : PSEnvironment);
-
 implementation
 
 uses Unit5, DateUtils, StringUtils;
@@ -65,51 +67,6 @@ var
 	Steps : Integer;
 
 // HELPFUL THINGS
-
-// RUNTIME ARGS ENGINE
-
-function obtainParams(from : LongInt = 0) : TParams;
-var
-    i, j : LongInt;
-    x    : TParams;
-begin
-    j := 0;
-    SetLength(x, 0);
-    for i := from to ParamCount do
-    begin
-        if isNotFlagParam(ParamStr(i)) then
-        begin
-            SetLength(x, j + 1);
-            x[j] := ParamStr(i);
-            j := j + 1;
-        end;
-    end;
-    Result := x;
-end;
-
-procedure assignParameters(var env : PSEnvironment; Params : TParams = Default(TParams));
-var
-    i      : LongInt;
-    stk    : LongInt;
-    str    : String;
-    ArrEcx : Entity;
-begin
-    if Length(Params) > 0 then
-    begin
-        stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings));
-        ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
-        stk := env.Settings.StackPointer;
-        env.Settings.StackPointer := trunc(ArrEcx.Num);
-        for i := 0 to Length(Params)-1 do
-        begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(string_fromC(Params[i])));
-        end;
-        env.Variables.setLocalVariable('Params', ArrEcx);
-        env.Settings.StackPointer := stk;
-    end else begin
-        env.Variables.setLocalVariable('Params', buildNewEmptyArray(env.Stack, env.Settings));
-    end;
-end;
 
 // FUNCTION
 
@@ -204,7 +161,7 @@ var
     addr            : VariableAddress;
     input, tname    : String;
     cnt             : LongInt;
-    env             : PSEnvironment;
+    env2            : PSEnvironment;
     is_set, alter   : Boolean;
 begin
     if OccurrencesOfChar(StrCond, ';') = 2 then
@@ -247,10 +204,12 @@ begin
                     if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
                     begin
                         input := L[1].Substring(1, L[1].Length - 2);
-                        env := buildNewEnvironment();
-                        env.Stack := parseOpen(input, env.Stack, sets, vardb);
-                        cnt := stack_size(env.Stack[env.Settings.StackPointer]);
-                        disposeEnvironment(env);
+                        //env2 := buildNewEnvironment();
+                        env2.Create(sets);
+                        env2.Stack := parseOpen(input, env2.Stack, sets, vardb);
+                        cnt := stack_size(env2.Stack[env2.Settings.StackPointer]);
+                        env2.Destroy;
+                        //disposeEnvironment(env2);
                         tname := 'T_'+IntToStr(DateTimeToUnix(Now));
                         pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
                         L[1] := tname;
@@ -289,10 +248,12 @@ begin
                     if (LeftStr(L[1], 1) = '[') and (RightStr(L[1], 1) = ']') then
                     begin
                         input := L[1].Substring(1, L[1].Length - 2);
-                        env := buildNewEnvironment();
-                        env.Stack := parseOpen(input, env.Stack, sets, vardb);
-                        cnt := stack_size(env.Stack[env.Settings.StackPointer]);
-                        disposeEnvironment(env);
+                        //env2 := buildNewEnvironment();
+                        env2.Create(sets);
+                        env2.Stack := parseOpen(input, env2.Stack, sets, vardb);
+                        cnt := stack_size(env2.Stack[env2.Settings.StackPointer]);
+                        env2.Destroy;
+                        //disposeEnvironment(env2);
                         tname := 'T_'+IntToStr(DateTimeToUnix(Now));
                         pocz := parseOpen(input+' '+IntToStr(cnt)+' toArray >'+tname, pocz, sets, vardb);
                         L[1] := tname;
@@ -334,7 +295,7 @@ begin
     end;
 end;
 
-procedure runFromString(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
+procedure variablePutOrRun(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
 var
     EntEax : Entity;
 begin
@@ -350,29 +311,6 @@ end;
 
 // EVALUATION
 
-//function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
-//var
-//    env        : PSEnvironment;
-//    cnt, index : LongInt;
-//    ArrEcx     : Entity;
-//begin
-//    env := buildNewEnvironment();
-//    //writeln('input: ', input);
-//    env.Stack := parseOpen(input, env.Stack, sets, vardb);
-//    cnt := stack_size(env.Stack[env.Settings.StackPointer]);
-//    //pocz := parseOpen(input, pocz, sets, vardb);
-//    //cnt := stack_size(pocz[env.Settings.StackPointer]);
-//    //writeln('cnt: ', cnt);
-//    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets, cnt));
-//    ArrEcx := stack_pop(pocz[sets.StackPointer]);
-//    for index := 0 to cnt-1 do
-//    begin
-//        pocz[trunc(ArrEcx.Num)].Values[index] := env.Stack[env.Settings.StackPointer].Values[index];
-//        //pocz[trunc(ArrEcx.Num)].Values[index] := pocz[env.Settings.StackPointer].Values[index];
-//    end; 
-//    disposeEnvironment(env);
-//    wrapArrayFromString := ArrEcx;
-//end;
 
 function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
 var
@@ -386,27 +324,6 @@ begin
     pocz := parseOpen(input, pocz, sets, vardb);
     sets.StackPointer := stk;
     Result := ArrEcx;
-end;
-
-function read_source(filename : String; var env : PSEnvironment) : StackDB;
-var
-  fun, S : String;
-  fp     : Text;
-begin
-  fun := '';
-  assignfile(fp, filename);
-  reset(fp);
-  while not eof(fp) do
-  begin
-    readln(fp, S);
-    S := trim(S);
-    fun := fun + #10 + S;
-  end;
-  closefile(fp);
-  //writeln(fun);
-    fun := cutCommentMultiline(fun);
-    fun := cutCommentEndline(fun);
-  read_source := parseScoped(trim(fun), env.Stack, env.Settings, env.Variables); 
 end;
 
 procedure checkExceptions(var pocz : StackDB; var sets : TSettings);
@@ -477,7 +394,7 @@ begin
         begin
             if (vardb.isVarAssigned(i)) then
             begin
-                runFromString(i, pocz, Steps, sets, vardb)
+                variablePutOrRun(i, pocz, Steps, sets, vardb)
             end else if (i[1] in ['$', '>', '-', '~', '@', '?']) then
             begin
                 if not lib_directives(i, pocz, Steps, sets, vardb) then
@@ -1097,25 +1014,122 @@ begin
   	Result := pocz;
 end;
 
-function buildNewEnvironment(LoadAll : Boolean = False) : PSEnvironment;
-var
-	env : PSEnvironment;
+// ==================================================================
+// NEW ENVIRONMENT
+
+
+constructor PSEnvironment.Create(LoadAll : Boolean = False);
 begin
-	SetLength(env.Stack, 1);
-	env.Stack[0] := stack_null();
-	env.Settings := default_settings(LoadAll);
-    env.Variables.Create;
-    env.AutoReset := False;
-    buildNewEnvironment := env;
+	SetLength(Self.Stack, 1);
+	Self.Stack[0] := stack_null();
+	Self.Settings := default_settings(LoadAll);
+    Self.Variables.Create;
+    Self.AutoReset := False;
 end;
 
-procedure disposeEnvironment(var env : PSEnvironment);
+constructor PSEnvironment.Create(sets : TSettings);
+begin
+	SetLength(Self.Stack, 1);
+	Self.Stack[0] := stack_null();
+	Self.Settings := sets;
+    Self.Variables.Create;
+    Self.AutoReset := False;
+end;
+
+destructor PSEnvironment.Destroy;
 var
 	i : LongInt;
 begin
-    env.Variables.Destroy;
-	for i := 0 to Length(env.Stack)-1 do stack_clear(env.Stack[i]);
-	SetLength(env.Stack, 0);
+    Self.Variables.Destroy;
+	for i := 0 to Length(Self.Stack)-1 do stack_clear(Self.Stack[i]);
+	SetLength(Self.Stack, 0);
+end;
+
+// args engine
+
+function params_obtain(from : LongInt) : TParams;
+var
+    i, j : LongInt;
+    x    : TParams;
+begin
+    j := 0;
+    SetLength(x, 0);
+    for i := from to ParamCount do
+    begin
+        if isNotFlagParam(ParamStr(i)) then
+        begin
+            SetLength(x, j + 1);
+            x[j] := ParamStr(i);
+            j := j + 1;
+        end;
+    end;
+    Result := x;
+end;
+
+procedure PSEnvironment.params_assign(Params : TParams = Default(TParams));
+var
+    i      : LongInt;
+    stk    : LongInt;
+    str    : String;
+    ArrEcx : Entity;
+begin
+    if Length(Params) > 0 then
+    begin
+        stack_push(Stack[Settings.StackPointer], buildNewEmptyArray(Stack, Settings));
+        ArrEcx := stack_pop(Stack[Settings.StackPointer]);
+        stk := Settings.StackPointer;
+        Settings.StackPointer := trunc(ArrEcx.Num);
+        for i := 0 to Length(Params)-1 do
+        begin
+            stack_push(Stack[Settings.StackPointer], buildString(string_fromC(Params[i])));
+        end;
+        Variables.setLocalVariable('Params', ArrEcx);
+        Settings.StackPointer := stk;
+    end else begin
+        Variables.setLocalVariable('Params', buildNewEmptyArray(Stack, Settings));
+    end;
+end;
+
+procedure PSEnvironment.assignParams(startFrom : LongInt = 0);
+begin
+    params_assign(params_obtain(startFrom));
+end;
+
+// run code from string
+
+procedure PSEnvironment.runFromString(input : String);
+begin
+    if (Length(input) > 0) then 
+    begin
+        input := cutShebang(input);
+        input := cutCommentMultiline(input);
+        input := cutCommentEndline(input);
+    end;
+    case checkParentheses(input) of 
+        -1 : raiserror('ESyntax:CQuotes: Wrong amount of quotation marks. Quotes are not closed.');
+        0  : raiserror('ESyntax:CLevels: Wrong amount of braces and/or parentheses.');
+        1  : begin
+            Self.Stack := parseOpen(input, Self.Stack, Self.Settings, Self.Variables);
+        end;
+    end;
+end;
+
+procedure PSEnvironment.runFromFile(input : String);
+var
+    fun, S : String;
+    fp     : Text;
+begin
+    fun := '';
+    assignfile(fp, input);
+    reset(fp);
+    while not eof(fp) do
+    begin
+        readln(fp, S);
+        S := trim(S);
+        fun := fun + #10 + S;
+    end;
+    closefile(fp);
+    runFromString(fun);
 end;
 
 end.
