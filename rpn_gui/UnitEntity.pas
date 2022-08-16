@@ -104,6 +104,7 @@ function buildNumber(val : Extended) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
 function buildFunction(val : String; args : String = '') : Entity;
+function buildFunction(val : LongInt) : Entity;
 function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
@@ -350,6 +351,19 @@ begin
 	pom.Str := val;
     pom.Str2 := args;
 	pom.Num := Length(val);
+    pom.Num2 := 0;
+	//pom.EArray := nil;
+	buildFunction := pom;
+end;
+
+function buildFunction(val : LongInt) : Entity;
+var
+	pom : Entity;
+begin
+	//pom := New(Entity);
+	pom.EntityType := TFUN;
+	pom.Str := '';
+	pom.Num := val;
     pom.Num2 := 0;
 	//pom.EArray := nil;
 	buildFunction := pom;

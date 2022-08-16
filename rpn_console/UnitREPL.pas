@@ -5,7 +5,7 @@ unit UnitREPL;
 interface
 
 uses
-    Classes, SysUtils;
+    Classes, SysUtils, UnitEnvironment;
 
 type REPLTheme = record
     ColorPrompt1 : ShortInt;
@@ -28,7 +28,7 @@ uses crt,
 {$ELSE}
 uses UnixCrt,
 {$ENDIF}
-     StrUtils, UnitStack, UnitEnvironment;
+     StrUtils, UnitStack;
 
 // ========= REPL
 
@@ -238,7 +238,8 @@ begin
         end else if (LeftStr(input, 8) = '\import:') or (input = '\import') then
         begin
             try
-                if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
+                //if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
+                if (env.AutoReset) then env.runFromString('clear');
                 if (input <> '\import') then fname := RightStr(input, Length(input)-8)
                 else fname := '';
                 if (fname = '') then begin
@@ -411,8 +412,9 @@ begin
                     history[Length(history)-1] := input;
                 end;
                 try
-                    if (env.AutoReset) then env.Stack := parseOpen('clear', env.Stack, env.Settings, env.Variables);
+                    if (env.AutoReset) then env.runFromString('clear');
                     env.runFromString(input);
+                    //env.executePSCode(fun);
                     if (stack_size(env.Stack[env.Settings.StackPointer]) > maxdisp) and (maxdisp <> 0) 
                         then res := '<Stack of '+IntToStr(stack_size(env.Stack[env.Settings.StackPointer]))+' elements>'
                         else res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);

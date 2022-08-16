@@ -379,7 +379,7 @@ end;
 function isValidForVariables(guess : String) : Boolean;
 var
     i    : LongInt;
-    flag : Boolean;
+    flag : Boolean = False;
     chr  : LongInt;
 begin
     if (Length(guess) > 0) then
@@ -390,7 +390,7 @@ begin
         or (chr in [47..64])
         or (chr in [91..94])
         or (chr = 96)
-        or (chr > 123) 
+        or (chr >= 123) 
         then begin
             flag := False;
         end;
@@ -404,7 +404,7 @@ begin
                 or (chr in [58..64])
                 or (chr in [91..94])
                 or (chr = 96)
-                or (chr > 123) 
+                or (chr >= 123) 
                 then begin
                     flag := False;
                     break;
