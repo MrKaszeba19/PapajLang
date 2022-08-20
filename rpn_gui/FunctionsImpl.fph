@@ -99,7 +99,7 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := pow2(x,1/y);
+            z := root(x,y);
             if not (env.Settings.Autoclear) then begin
             	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
             	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));

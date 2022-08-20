@@ -10,6 +10,7 @@ uses
 procedure swapNumbers(var e1 : Extended; var e2 : Extended);
 function pow(x, y : Extended) : Extended;
 function pow2(x, y : Extended) : Extended;
+function root(x, y : Extended) : Extended;
 function fmod(x, y : Extended) : Extended;
 function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
@@ -113,14 +114,28 @@ function pow(x, y : Extended) : Extended;
 var
     s : Extended;
     i : LongInt;
+    d : LongInt;
 begin
-    s := 1;
-    i := 1;
-    while i <= abs(y) do begin
-        s := s * x;
-        i := i + 1;
+    if (x = 0) then 
+    begin
+        if (y <= 0) then s := NaN else s := 0;
+    end
+    else if (x*x = 1) then 
+    begin 
+        if (x = -1) 
+            then s := minusOneTo(trunc(y))
+            else s := 1;
+    end else begin
+        d := abs(trunc(y));
+        s := 1;
+        if (d > 0) then
+        begin
+            if (d mod 2 = 0) 
+                then s := sqr(pow(x, d div 2))
+                else s := x * pow(x, d-1);
+            if (y < 0) then s := 1 / s;
+        end;
     end;
-    if (y < 0) then s := 1 / s;
     Result := s;
 end;
 
@@ -134,7 +149,20 @@ begin
     Result := s;
 end;
 
-function fmod(x,y:Extended):Extended;
+function root(x, y : Extended) : Extended;
+begin
+    if (x < 0) then 
+    begin
+        if (isInteger(y)) then
+        begin
+            if (trunc(y) mod 2 = 0) 
+                then Result := NaN // so far
+                else Result := -pow2(abs(x),1/y);
+        end else Result := pow2(x,1/y); 
+    end else Result := pow2(x,1/y);
+end;
+
+function fmod(x, y : Extended) : Extended;
 begin
     Result := x - y * Int(x/y);
 end;
@@ -144,7 +172,7 @@ begin
     Result := Int(x/y);
 end;
 
-function fact(x:Extended):Extended;
+function fact(x : Extended) : Extended;
 var
     s : Extended;
     i : LongInt;

@@ -238,18 +238,6 @@ begin
     end;
 end;
 
-//procedure variablePutOrRun(guess : String; var pocz : StackDB; var Steps : Integer; sets : TSettings; vardb : VariableDB);
-//var
-//    EntEax : Entity;
-//begin
-//    EntEax := vardb.getVariable(guess);
-//    if (EntEax.EntityType = TFUN) then
-//    begin
-//        env.doFunction(db, trunc(EntEax.Num));
-//    end else begin
-//        stack_push(pocz[sets.StackPointer], EntEax);
-//    end;
-//end;
 procedure PSEnvironment.variablePutOrRun(guess : String; var db : PSCommandDB);
 var
     EntEax : Entity;
@@ -266,35 +254,6 @@ end;
 
 // EVALUATION
 
-
-//function wrapArrayFromString(input : String; var pocz : StackDB; sets : TSettings; vardb : VariableDB) : Entity;
-//var
-//    stk        : LongInt;
-//    ArrEcx     : Entity;
-//begin
-//    stk := sets.StackPointer;
-//    stack_push(pocz[sets.StackPointer], buildNewEmptyArray(pocz, sets));
-//    ArrEcx := stack_pop(pocz[sets.StackPointer]);
-//    sets.StackPointer := trunc(ArrEcx.Num);
-//    pocz := parseOpen(input, pocz, sets, vardb);
-//    sets.StackPointer := stk;
-//    Result := ArrEcx;
-//end;
-//function PSEnvironment.wrapArrayFromString(input : String; var db : PSCommandDB) : Entity;
-//var
-//    stk        : LongInt;
-//    ArrEcx     : Entity;
-//begin
-//    stk := sets.StackPointer;
-//    stack_push(Stack[sets.StackPointer], buildNewEmptyArray(Stack, sets));
-//    ArrEcx := stack_pop(Stack[sets.StackPointer]);
-//    sets.StackPointer := trunc(ArrEcx.Num);
-//    pocz := parseOpen(input, pocz, sets, vardb);
-//    sets.StackPointer := stk;
-//    Result := ArrEcx;
-//end;
-
-
 function getPackage(input : String) : String;
 var
     position : LongInt; 
@@ -304,34 +263,6 @@ begin
         then Result := LeftStr(input, position-1)
         else Result := '';
 end;
-
-//function searchThroughNamespacesExplicit(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
-//begin
-//    Result := False;
-//    case getPackage(i) of
-//        'Array'   : if (sets.Packages.UseArray)   then Result := lib_arrays(i, pocz, Steps, sets, vardb);
-//        'Console' : if (sets.Packages.UseConsole) then Result := lib_datetime(i, pocz, Steps, sets, vardb);
-//        'Date'    : if (sets.Packages.UseDate)    then Result := lib_consolemanipulators(i, pocz, Steps, sets, vardb);
-//        'Math'    : if (sets.Packages.UseMath)    then Result := lib_math(i, pocz, Steps, sets, vardb);
-//        'String'  : if (sets.Packages.UseString)  then Result := lib_strings(i, pocz, Steps, sets, vardb);
-//        //else begin
-//        //    Result := vardb.isVarAssigned(i);
-//        //    if Result then runFromString(i, pocz, Steps, sets, vardb);
-//        //end;
-//    end;
-//    
-//end;
-//
-//function searchThroughNamespacesImplicit(i : String; var pocz : StackDB; var Steps : Integer; var sets : TSettings; var vardb : VariableDB) : Boolean;
-//begin
-//    Result := True;
-//    if (not sets.Packages.UseMath) or (not lib_math(concat('Math.',i), pocz, Steps, sets, vardb)) then
-//    if (not sets.Packages.UseString) or (not lib_strings(concat('String.',i), pocz, Steps, sets, vardb)) then
-//    if (not sets.Packages.UseArray) or (not lib_arrays(concat('Array.',i), pocz, Steps, sets, vardb)) then
-//    if (not sets.Packages.UseConsole) or (not lib_consolemanipulators(concat('Console.',i), pocz, Steps, sets, vardb)) then
-//    if (not sets.Packages.UseDate) or (not lib_datetime(concat('Date.',i), pocz, Steps, sets, vardb)) then
-//        Result := False;
-//end;
 
 function searchThroughNamespacesExplicit(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 begin
@@ -2385,20 +2316,6 @@ end;
 
 // to be rebuilt as script = function
 
-//procedure PSEnvironment.executePSCode(input : String);
-//var
-////   cmds : PSCommandDB;
-//    index : LongInt;
-//begin
-//    //buildCommands(input, cmds);
-//    //executeCommands(cmds);
-//    //SetLength(cmds, 0);
-//    index := Length(Scripts);
-//    SetLength(Scripts, Length(Scripts)+1);
-//    buildCommands(input, Scripts[index]);
-//    executeCommands(Scripts[index]);
-//    SetLength(Scripts, Length(Scripts)-1);
-//end;
 
 procedure PSEnvironment.executePSCode(input : String);
 var

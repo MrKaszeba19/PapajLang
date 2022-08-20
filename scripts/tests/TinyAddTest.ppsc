@@ -1,0 +1,9 @@
+function (x y) {
+	$x $y + 2 /
+} -> f
+
+1000000 times {
+	10 10 f clear
+}
+
+"ok" println
