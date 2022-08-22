@@ -1559,6 +1559,43 @@ begin
                     end;
                     db.Commands[x][y] := buildCreateFunction(z);
                     SetLength(N, 0);
+                end else if checkWord(L[index], 'fun', 3) then begin
+                    L[index] := RightStr(L[index], Length(L[index])-3);
+                    while (L[index] = '') do index := index + 1; 
+                    if (LeftStr(L[index], 1) = '(') then
+                    begin
+                        //z1 := Length(db.Commands);
+                        if (LeftStr(L[index], 1) = '(') and (RightStr(L[index], 1) <> ')') then
+                        begin
+                            N := getScopedCommands(L, index, RightStr(L[index], Length(L[index])-1));
+                        end else begin
+                            //N := getScopedCommand(index, L[index]);
+                            //if (LeftStr(L[index], 1) = '(') then RightStr(L[index], Length(L[index])-1);
+                            //writeln(L[index]);
+                            N := getScopedCommands(L, index, L[index], 0);
+                        end;
+                        index := index + 1;
+                    end else begin
+                        SetLength(N, 0);
+                    end;
+                    z := Length(Scripts);
+                    SetLength(Scripts, z+1);
+                    if (LeftStr(L[index], 1) = '{') and (RightStr(L[index], 1) <> '}') then
+                    begin
+                        makeListOfCommands(getScopedCommands(L, index, RightStr(L[index], Length(L[index])-1)), Scripts[z], N);
+                    end else begin
+                        makeListOfCommands(getScopedCommands(L, index, L[index], 0), Scripts[z], N);
+                    end;
+                    db.Commands[x][y] := buildCreateFunction(z);
+                    SetLength(N, 0);
+                    //
+                end else if LeftStr(L[index], 1) = '(' then begin
+                    //L[index] := RightStr(L[index], Length(L[index])-1);
+                    //while (L[index] = '') do index := index + 1; 
+                    z := Length(Scripts);
+                    SetLength(Scripts, z+1);
+                    makeListOfCommands(getScopedCommands(L, index, RightStr(L[index], Length(L[index])-1)), Scripts[z]);
+                    db.Commands[x][y] := buildCreateFunction(z);
                 end else begin
                     Val(L[index], Num, Code);
                     if Code <> 0 then
