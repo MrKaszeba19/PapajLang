@@ -1,5 +1,5 @@
 // test for conditionals for for-loops without using brackets
-@use(Math)
+@use(Number)
 
 scan toNumber -> $x
 

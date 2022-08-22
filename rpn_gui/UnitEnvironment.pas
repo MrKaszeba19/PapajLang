@@ -272,6 +272,7 @@ begin
         'Console' : if (env.Settings.Packages.UseConsole) then Result := lib_datetime(i, env, db);
         'Date'    : if (env.Settings.Packages.UseDate)    then Result := lib_consolemanipulators(i, env, db);
         'Math'    : if (env.Settings.Packages.UseMath)    then Result := lib_math(i, env, db);
+        'Number'  : if (env.Settings.Packages.UseNumber)  then Result := lib_numbers(i, env, db);
         'String'  : if (env.Settings.Packages.UseString)  then Result := lib_strings(i, env, db);
         //else begin
         //    Result := vardb.isVarAssigned(i);
@@ -284,6 +285,7 @@ end;
 function searchThroughNamespacesImplicit(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 begin
     Result := True;
+    if (not env.Settings.Packages.UseNumber) or (not lib_numbers(concat('Number.',i), env, db)) then
     if (not env.Settings.Packages.UseMath) or (not lib_math(concat('Math.',i), env, db)) then
     if (not env.Settings.Packages.UseString) or (not lib_strings(concat('String.',i), env, db)) then
     if (not env.Settings.Packages.UseArray) or (not lib_arrays(concat('Array.',i), env, db)) then
@@ -1547,17 +1549,6 @@ begin
                     end else begin
                         SetLength(N, 0);
                     end;
-                    // old to remove
-                    // z := Length(db.Commands);
-                    // if (LeftStr(L[index], 1) = '{') and (RightStr(L[index], 1) <> '}') then
-                    // begin
-                    //     makeListOfCommands(getScopedCommands(L, index, RightStr(L[index], Length(L[index])-1)), db, N);
-                    // end else begin
-                    //     makeListOfCommands(getScopedCommands(L, index, L[index], 0), db);
-                    // end;
-                    // db.Commands[x][y] := buildCreateFunction(z);
-                    // SetLength(N, 0);
-
                     z := Length(Scripts);
                     SetLength(Scripts, z+1);
                     if (LeftStr(L[index], 1) = '{') and (RightStr(L[index], 1) <> '}') then

@@ -1,6 +1,6 @@
 @silent
 @use(Array)
-@use(Math)
+@use(Number)
 
 [
 	do {

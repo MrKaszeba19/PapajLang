@@ -1,4 +1,4 @@
-@use(Math)
+@use(Number)
 @use(Array)
 
 "Enter coord of the bridge start: " print

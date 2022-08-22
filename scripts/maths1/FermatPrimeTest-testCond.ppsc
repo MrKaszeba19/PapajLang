@@ -1,4 +1,5 @@
 @use(Math)
+@use(Number)
 
 function (n k) {
 	TRUE -> $result

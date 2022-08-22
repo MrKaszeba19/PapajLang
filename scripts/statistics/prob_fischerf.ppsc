@@ -1,5 +1,6 @@
 @silent
 @use(Math)
+@use(Number)
 @use(String)
 @use(Array)
 

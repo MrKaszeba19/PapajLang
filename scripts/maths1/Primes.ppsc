@@ -1,4 +1,4 @@
-@use(Math)
+@use(Number)
 @use(Array)
 
 "Type a positive integer: " print

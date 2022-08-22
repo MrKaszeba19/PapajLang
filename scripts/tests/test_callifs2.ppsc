@@ -1,4 +1,6 @@
-2 31 ^ -- Math.isPrime
+@use(Number)
+
+2 31 ^ -- Number.isPrime
 clone
-fun{ "yes" println } callIf
-fun{ "no" println } callUnless
+function { "yes" println } callIf
+function { "no" println } callUnless

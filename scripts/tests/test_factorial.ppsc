@@ -1,11 +1,13 @@
-fun{
-	clone 0 = ?
-	if: { rem 1 } 
-	else: { clone -- @@factorial * }
-} >factorial
+function (x) {
+	if ( $x 0 = ) { 
+		1 
+	} else { 
+		$x $x -- fact * 
+	}
+} -> fact
 
 
 0 1 10 seq
 size times {
-	qshift @@factorial
+	qshift fact
 }

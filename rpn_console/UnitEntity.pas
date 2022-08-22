@@ -44,6 +44,7 @@ type TPackages = record
     UseArray    : Boolean;
     UseConsole  : Boolean;
     UseDate     : Boolean;
+    UseNumber   : Boolean;
 end;
 
 type TSettings = record
@@ -157,7 +158,7 @@ uses UnixCrt,
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
-	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate;
+	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate or L.UseNumber;
 end;
 
 function default_packages(LoadAll : Boolean = False) : TPackages;
@@ -169,6 +170,7 @@ begin
     pom.UseArray := LoadAll;
     pom.UseConsole := LoadAll;
     pom.UseDate := LoadAll;
+    pom.UseNumber := LoadAll;
 	Result := pom;
 end;
 

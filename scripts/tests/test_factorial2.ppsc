@@ -1,10 +1,10 @@
-fun{
+function {
 	>n
 	if ( n 0 = ) {
 		1
 	} else { 
-		n n -- factorial * 
+		n n -- fact * 
 	}
-} >factorial
+} -> fact
 
-scan toNumber factorial
+scan toNumber fact

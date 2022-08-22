@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-AUgust 20, 2022  
+August 22, 2022  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -116,7 +116,7 @@ Version | Version Name | Date of Release | Improvements
 0.1.0 | Aleph | 11/24/2017 | Basic version
 0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
 0.2.1 | Gimel | 12/10/2017 | Unary operands
-0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix of some bugs, stack operations
+0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix bugs, stack operations
 0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
 0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
 0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
@@ -125,5 +125,6 @@ Version | Version Name | Date of Release | Improvements
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
 0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | 12/18/2021 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
-0.5.3 | Mem | soon | Dataframes, files management, memory management, rebuild of PS Environment
+0.5.3 | Mem | probably in 2022 | Locales, environment optimization
+0.5.4 | Nun | soon | Dataframes, files management, memory management
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

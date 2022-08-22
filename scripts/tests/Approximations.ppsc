@@ -1,5 +1,5 @@
 @silent
-@use(Math)
+@use(Number)
 
 function { 
 	>a

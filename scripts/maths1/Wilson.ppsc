@@ -1,8 +1,8 @@
-@use(Math)
+@use(Number)
 @use(Array)
 
 function {
-	-- ! ++
+	-- factorial ++
 } -> f
 
 [ 2 1 25 seq ] -> T

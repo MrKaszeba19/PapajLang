@@ -1,8 +1,8 @@
 @silent
-@use(Math)
+@use(Number)
 
 "Enter a number (greater than 2): " print
 scan toNumber >x
 1 1 $x seq
-all times { qshift clone isPrime ? unless: rem }
+all times { qshift clone if (isPrime not) rem }
 "Primes: " print statusln

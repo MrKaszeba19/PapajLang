@@ -1077,199 +1077,6 @@ begin
             end;
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
-
-		// unary
-        'Math.sqr' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := y*y;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.cub' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := y*y*y;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.inv' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := 1/y;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-		'Math.exp' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := exp(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-		'Math.log' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ln(x)/ln(y);
-            if not (env.Settings.Autoclear) then begin
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-		'Math.lbin' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := log2(x);
-            if not (env.Settings.Autoclear) then begin
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.ldec' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := log10(x);
-            if not (env.Settings.Autoclear) then begin
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.lhex' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ln(x)/ln(16);
-            if not (env.Settings.Autoclear) then begin
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.cbrt' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if y = 0 then begin
-                z := 0;
-            end else if y < 0 then begin
-                z := -exp(ln(-y)/3);
-            end else begin
-                z := exp(ln(y)/3);
-            end;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.abs' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := abs(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.sign' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (y = 0)
-                then z := 0
-                else z := y/abs(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.sgn' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (y = 0)
-                then z := 0
-                else z := y/abs(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.!' : begin
-            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fact(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.factorial' : begin
-          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fact(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.ln' : begin
-          	if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ln(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.log2' : begin
-          	if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := log2(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.log10' : begin
-          	if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := log10(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.log16' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ln(x)/ln(16);
-            if not (env.Settings.Autoclear) then begin
-            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.floor' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ffloor(y);
-			//if (y = trunc(y)) then z := trunc(y)
-			//else if (y < 0) then z := trunc(y)-1 else z := trunc(y);
-            //if (y = ftrunc(y)) 
-            //    then z := ftrunc(y)
-			//    else if (y < 0) 
-            //        then z := ftrunc(y)-1 
-            //        else z := ftrunc(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.ceiling' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fceiling(y);
-            //if (y = trunc(y)) then z := trunc(y)
-			//else if (y < 0) then z := trunc(y) else z := trunc(y)+1;
-            //if (y = ftrunc(y)) 
-            //    then z := ftrunc(y)
-			//    else if (y < 0) 
-            //        then z := ftrunc(y) 
-            //        else z := ftrunc(y)+1;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.trunc' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ftrunc(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'Math.round' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit; 
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fround(y);
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
 		'Math.fibonacci' : begin
           	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -1465,40 +1272,6 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
 
-
-		// boolean functions for numbers
-        'Math.isPrime' : begin
-            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isPrime(y)));
-        end;
-		'Math.isEven' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            //stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(trunc(y) mod 2 = 0));
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(fmod(y, 2) = 0));
-        end;
-		'Math.isOdd' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            //stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(trunc(y) mod 2 = 1));
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(fmod(y, 2) = 1));
-        end;
-		'Math.isInteger' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isInteger(y)));
-        end;
-        'Math.isNatural' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean((isInteger(y)) and (y >= 0)));
-        end;
 
         // constants
 		'Math.PI' : begin
@@ -3926,6 +3699,15 @@ begin
            env.Settings.Packages.UseDate := false;
 		   env.Settings.Packages.UseAnything := verifyPackages(env.Settings.Packages);
         end;
+        '@use(Number)' : begin
+           env.Settings.Packages.UseNumber := true;
+		   env.Settings.Packages.UseAnything := true;
+        end;
+		'@unuse(Number)' : begin
+           env.Settings.Packages.UseNumber := false;
+		   env.Settings.Packages.UseAnything := verifyPackages(env.Settings.Packages);
+        end;
+        
 
 
         '@stringmode' : begin
@@ -6874,6 +6656,209 @@ begin
             ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             DatEax := TimestampToDateTime(ExtEax);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(FormatDateTime(StrEax, DatEax)));
+        end;
+        else begin
+            Found := false;
+        end;
+	end;
+	Result := Found;
+end;
+
+function lib_numbers(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
+var
+	Found    : Boolean;
+    x, y, z  : Extended;
+begin
+	Found := true;
+	case i of
+        'Number.inv' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := 1/y;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.abs' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := abs(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+
+        // powers
+        'Number.sqr' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := y*y;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.cub' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := y*y*y;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+
+        // roots and logarithms
+        'Number.log' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ln(x)/ln(y);
+            if not (env.Settings.Autoclear) then begin
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+		'Number.lbin' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := log2(x);
+            if not (env.Settings.Autoclear) then begin
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.ldec' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := log10(x);
+            if not (env.Settings.Autoclear) then begin
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.lhex' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ln(x)/ln(16);
+            if not (env.Settings.Autoclear) then begin
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.cbrt' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if y = 0 then begin
+                z := 0;
+            end else if y < 0 then begin
+                z := -exp(ln(-y)/3);
+            end else begin
+                z := exp(ln(y)/3);
+            end;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.sign' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (y = 0)
+                then z := 0
+                else z := y/abs(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.sgn' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (y = 0)
+                then z := 0
+                else z := y/abs(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.factorial' : begin
+          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := fact(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.log2' : begin
+          	if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := log2(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.log10' : begin
+          	if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := log10(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.log16' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ln(x)/ln(16);
+            if not (env.Settings.Autoclear) then begin
+            	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+
+        // approximations
+        'Number.floor' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ffloor(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.ceiling' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := fceiling(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Number.round' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit; 
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := fround(y);
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+
+        // boolean functions for numbers
+        'Number.isPrime' : begin
+            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isPrime(y)));
+        end;
+		'Number.isEven' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            //stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(trunc(y) mod 2 = 0));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(fmod(y, 2) = 0));
+        end;
+		'Number.isOdd' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            //stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(trunc(y) mod 2 = 1));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(fmod(y, 2) = 1));
+        end;
+		'Number.isInteger' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isInteger(y)));
+        end;
+        'Number.isNatural' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if not (env.Settings.Autoclear) then stack_push(env.Stack[env.Settings.StackPointer], buildNumber(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean((isInteger(y)) and (y >= 0)));
         end;
         else begin
             Found := false;

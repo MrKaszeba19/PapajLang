@@ -534,19 +534,25 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-     locale := GetLocale(DetermineLanguage());
-     ApplyLocaleMain(locale);
-     {$IFDEF MSWINDOWS}
-     Memo1.Font.Name := 'Consolas';
-     ProcessExt.CommandLine := 'rpn.exe "2 2 +"';
-     //{$ENDIF}
-     //{$IFDEF UNIX}
-     {$ELSE}
-     Memo1.Font.Name := 'Monospace';
-     ProcessExt.CommandLine := 'rpn "2 2 + scan"';
-     {$ENDIF}
-     SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
-     Memo1.Text := '';
+    write(' - Applying locale... ');
+    locale := GetLocale(DetermineLanguage());
+    ApplyLocaleMain(locale);
+    writeln('Done.');
+    write(' - Setting up fonts... ');
+    {$IFDEF MSWINDOWS}
+    Memo1.Font.Name := 'Consolas';
+    ProcessExt.CommandLine := 'rpn.exe "2 2 +"';
+    //{$ENDIF}
+    //{$IFDEF UNIX}
+    {$ELSE}
+    Memo1.Font.Name := 'Monospace';
+    ProcessExt.CommandLine := 'rpn "2 2 +"';
+    {$ENDIF}
+    writeln('Done.');
+    write(' - Setting up text... ');
+    SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
+    Memo1.Text := '';
+    writeln('Done.');
 end;
 
 procedure TForm1.MenuQuitClick(Sender: TObject);
