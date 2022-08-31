@@ -21,6 +21,10 @@ function ffrac(x : Extended) : Extended;
 function fround(x : Extended) : Extended;
 function ffloor(x : Extended) : Extended;
 function fceiling(x : Extended) : Extended;
+function ftruncTo(x : Extended; digits : LongInt = 0) : Extended;
+function froundTo(x : Extended; digits : LongInt = 0) : Extended;
+function ffloorTo(x : Extended; digits : LongInt = 0) : Extended;
+function fceilingTo(x : Extended; digits : LongInt = 0) : Extended;
 function randomIntRange(x, y : Extended) : Extended;
 function randomRealRange(x, y : Extended) : Extended;
 
@@ -246,6 +250,72 @@ begin
                 then Result := fdiv(x,1) 
                 else Result := fdiv(x,1)+1;
 end;
+
+function ftruncTo(x : Extended; digits : LongInt = 0) : Extended;
+var i : LongInt;
+begin
+    if digits > 0 then
+    begin
+        for i := 1 to digits do x := x * 10;
+        x := ftrunc(x);
+        for i := 1 to digits do x := x / 10;
+    end else begin
+        for i := 1 to -digits do x := x / 10;
+        x := ftrunc(x);
+        for i := 1 to -digits do x := x * 10;
+    end;
+    Result := x;
+end;
+
+function froundTo(x : Extended; digits : LongInt = 0) : Extended;
+var i : LongInt;
+begin
+    if digits > 0 then
+    begin
+        for i := 1 to digits do x := x * 10;
+        x := fround(x);
+        for i := 1 to digits do x := x / 10;
+    end else begin
+        for i := 1 to -digits do x := x / 10;
+        x := fround(x);
+        for i := 1 to -digits do x := x * 10;
+    end;
+    Result := x;
+end;
+
+
+function ffloorTo(x : Extended; digits : LongInt = 0) : Extended;
+var i : LongInt;
+begin
+    if digits > 0 then
+    begin
+        for i := 1 to digits do x := x * 10;
+        x := ffloor(x);
+        for i := 1 to digits do x := x / 10;
+    end else begin
+        for i := 1 to -digits do x := x / 10;
+        x := ffloor(x);
+        for i := 1 to -digits do x := x * 10;
+    end;
+    Result := x;
+end;
+
+function fceilingTo(x : Extended; digits : LongInt = 0) : Extended;
+var i : LongInt;
+begin
+    if digits > 0 then
+    begin
+        for i := 1 to digits do x := x * 10;
+        x := fceiling(x);
+        for i := 1 to digits do x := x / 10;
+    end else begin
+        for i := 1 to -digits do x := x / 10;
+        x := fceiling(x);
+        for i := 1 to -digits do x := x * 10;
+    end;
+    Result := x;
+end;
+
 
 function randomIntRange(x, y : Extended) : Extended;
 begin

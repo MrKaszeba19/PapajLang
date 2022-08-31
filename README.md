@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-August 22, 2022  
+August 31, 2022  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -27,7 +27,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - There is also a simple script running engine – just paste your PS script or load it from file and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - There is a possibility of executing the PS script in an external terminal window (it is an experimental feature)
-    * Linux users are required to have `rpn` console app in the **$PATH** or the same directory as the GUI app. It is recommended to have `xterm` installed, if the external terminal window does not appear (unless you use a Debian-like system, or any other Linux that uses Xfce, GNOME or KDE desktop).
+    * Linux users are required to have `rpn` console app in the **$PATH** or the same directory as the GUI app. It is recommended to have `xterm` installed, if the external terminal window does not appear (unless you use a Debian-like system, or any other Linux that uses Xfce, GNOME/Cinnamon or KDE desktop).
     * Windows users are required to have `rpn` console app in the same directory as the GUI app
 
 ## Requirements and installation
