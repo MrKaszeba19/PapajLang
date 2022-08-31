@@ -535,6 +535,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
     write(' - Applying locale... ');
+    DefaultFormatSettings.DecimalSeparator := '.';
     locale := GetLocale(DetermineLanguage());
     ApplyLocaleMain(locale);
     writeln('Done.');

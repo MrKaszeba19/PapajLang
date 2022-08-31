@@ -23,9 +23,10 @@ begin
     if (RPN_update <= 0) 
         then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetCPU+'.')
         else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetCPU+'.');
-    if (RPN_isStable)
-        then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
-        else writeln(' May be more unstable than usual. 3:)');
+    //if (RPN_isStable)
+    //    then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
+    //    else writeln(' May be more unstable than usual. 3:)');
+    if (not RPN_isStable) then writeln(' May be more unstable than usual. 3:)');
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
     //if (RPN_updated = '')
     //    then writeln('Released on '+RPN_date+'.')

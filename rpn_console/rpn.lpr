@@ -54,9 +54,10 @@ begin
     if (RPN_update <= 0) 
         then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetCPU+'.')
         else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetCPU+'.');
-    if (RPN_isStable)
-        then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
-        else writeln(' May be more unstable than usual. 3:)');
+    //if (RPN_isStable)
+    //    then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
+    //    else writeln(' May be more unstable than usual. 3:)');
+    if (not RPN_isStable) then writeln(' May be more unstable than usual. 3:)');
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
     //if (RPN_updated = '')
     //    then writeln('Released on '+RPN_date+'.')
@@ -187,33 +188,37 @@ end;
 procedure show_operands6();
 begin
     writeln('Variables: ');
-    writeln('    LONG FORM :  SHORT F : EXPLANATION ');
-    writeln(' abc xyz vset : abc >xyz : Move an "abc" to a var "xyz".');
-    writeln('     xyz vget :     $xyz : Put either the var "xyz" or NULL on the stack.');
-    writeln('  xyz vexists :     ?xyz : Return true or false, depending if var "xyz" exists.');
-    writeln(' xyz vdestroy :     ~xyz : Destroy a variable "xyz".');
-    writeln('    xyz vcall :    @@xyz : If the var is a function, then call it directly.');
+    writeln('  SYNTAX : EXPLANATION ');
+    writeln('   "abc" >xyz : Move an "abc" to a var "xyz".');
+    writeln(' "abc" -> xyz : As above');
+    writeln('"abc" -> $xyz : As above');
+    writeln('         $xyz : Put either the var "xyz" or NULL on the stack.');
+    writeln('         ?xyz : Return true or false, depending if var "xyz" exists.');
+    writeln('         ~xyz : Destroy a variable "xyz".');
+    writeln('        @@xyz : If the var is a function, then call it directly.');
+    writeln('          xyz : If xyz is a function, then call it. Otherwise put it on the stack.');
     writeln();
     writeln('Data types: ');
     writeln('Number    String    Boolean   NULL');
-    writeln('Function  Exception ');
+    writeln('Function  Exception Date      Array');
 end;
 
 procedure show_operands7();
 begin
     writeln('Conditionals: ');
-    writeln(' <expression> ?            : Check if an expression if true or equal to zero.');
-    writeln(' if: { set_of_commands }   : If the last check returned true, then execute the set_of_commands');
-    writeln(' else: { set_of_commands } : If the last check returned false, then execute the set_of_commands');
+    writeln(' if (expression) { set_of_commands }');
+    writeln(' else { set_of_commands }');
     writeln();
-    writeln('Functions'' syntax: fun{ set_of_commands }');
-    writeln('Execute the functions via "call" command or via "vcall" or @@var (var - var name).');
+    writeln('Functions'' syntax: function { set_of_commands }');
+    writeln('                    function (args) { set_of_commands }');
+    writeln('Execute the functions via "call" command or simply "VAR" (if a function is stored in a VARiable).');
 end;
 
 procedure show_operands8();
 begin
     writeln('Other operations: ');
-    writeln('      rand : Get a random integer value from 0 to N-1 (execute "N rand")');
+    writeln('      rand : Get a random real value from the range [0; 1) (execute "rand")');
+    writeln('    random : Get a random integer value from 0 to N-1 (execute "N random")');
     writeln('      scan : Scan any value from input');
     writeln('  toNumber : Convert anything to number if possible');
     writeln('  toString : Convert anything to string');
@@ -229,7 +234,7 @@ procedure show_packages();
 begin
     writeln('Packages:');
     writeln('Page 1: Array');
-	writeln('Page 2: Math');
+	writeln('Page 2: Number and Math');
 	writeln('Page 3: String');
     writeln('Page 4: Console');
 	writeln;
@@ -250,9 +255,11 @@ end;
 
 procedure show_packages2();
 begin
+    writeln('Number package functions:');
+    writeln('factorial     round     floor   ceiling');
+    writeln('      sqr       cub      cbrt       abs');
     writeln('Math package functions:');
     writeln(' - Unary');
-    writeln('     exp      ln       !    fact   floor ceiling');
     writeln('     sin     cos     tan     csc     sec     cot');
     writeln('  arcsin  arccos  arctan  arccot   round');
     writeln(' - Binary');
@@ -473,6 +480,7 @@ constructor RPNC.Create(TheOwner: TComponent);
 begin
     inherited Create(TheOwner);
     StopOnException:=True;
+    DefaultFormatSettings.DecimalSeparator := '.';
 end;
 
 destructor RPNC.Destroy;
