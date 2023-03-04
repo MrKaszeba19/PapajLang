@@ -66,7 +66,8 @@ function ( month ) {
 	elif ( month 10 = ) { "October" }
 	elif ( month 11 = ) { "November" }
 	elif ( month 12 = ) { "December" }
-} >sayMonth
+	//else { }
+} -> sayMonth
 
 function ( date ) {
 	date "/" splitBy 

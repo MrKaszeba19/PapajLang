@@ -1,0 +1,8 @@
+function (x) {
+	function (n) {
+		n n *	
+	} -> sqr
+	3 sqr	
+} -> f
+
+3 f

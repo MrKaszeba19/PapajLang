@@ -17,4 +17,5 @@ rpn_gui/rpncalculator.exe
 rpn_gui/temp.ppsc
 rpn_gui/rpn
 rpn_gui/rpn.exe
+*.test.ppsc
 

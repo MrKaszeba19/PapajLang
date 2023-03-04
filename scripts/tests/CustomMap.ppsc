@@ -1,0 +1,13 @@
+function ($T $func) {
+	for ($i : $T) 
+	{
+		$i func -> $i	
+	}
+
+	$T
+} -> map
+
+[1 1 5 seq] -> T
+function (x) { x x * } -> f
+
+$T $f map println

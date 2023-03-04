@@ -737,11 +737,11 @@ object Form1: TForm1
           OnClick = MenuLangCSB1Click
         end
         object MenuLangCSB2: TMenuItem
-          Caption = 'Kašëbsči (novô ortografijô)'
+          Caption = 'Kašëbskji (modernô ortografijô)'
           OnClick = MenuLangCSB2Click
         end
         object MenuLangCSB3: TMenuItem
-          Caption = 'Кашёбсчи (Кирилица)'
+          Caption = 'Кашёбсќи (Кирилица)'
           OnClick = MenuLangCSB3Click
         end
       end

@@ -40,11 +40,11 @@ Additional units of rpn_gui
 – You can make a Desktop shortcut to a RPN REPL by running installREPL.sh (Unix/Linux) or installREPL.bat (Windows)
 
 
-=== REPORTED FLAWS
+=== REPORTED FLAWS AND ISSUES
 – Windows systems' shell usage does not work
 – Non-linear recursion does not work
 – Chi-squared generator fails for big sample data when df = 1
-– Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in this order) 
+– Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in this order) - fixed so far 
 
 
 ===========================================

@@ -1,0 +1,272 @@
+function buildCmdEval(input : String) : PSCommand;
+begin
+    Result.Name     := _EVAL;
+    Result.StrParam := input;
+end;
+
+function buildCmdJump(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _JUMP;
+    Result.IntParam := input;
+end;
+
+function buildCmdPush(ent : Entity) : PSCommand;
+begin
+    Result.Name          := _PUSH;
+    Result.EntityRelated := ent;
+end;
+
+function buildCmdPop() : PSCommand;
+begin
+    Result.Name := _POP;
+end;
+
+function buildCmdClone() : PSCommand;
+begin
+    Result.Name := _CLONE;
+end;
+
+function buildCmdQShift() : PSCommand;
+begin
+    Result.Name := _QSHIFT;
+end;
+
+function buildCmdPrint() : PSCommand;
+begin
+    Result.Name     := _PRINT;
+    Result.Name2    := _NONE;
+end;
+
+function buildCmdPrintLn() : PSCommand;
+begin
+    Result.Name     := _PRINT;
+    Result.Name2    := _LN;
+end;
+
+function buildCmdScan() : PSCommand;
+begin
+    Result.Name := _SCAN;
+end;
+
+function buildCmdSize() : PSCommand;
+begin
+    Result.Name := _SIZE;
+end;
+
+function buildCreateArray(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _CREATE;
+    Result.Name2    := _ARRAY;
+    Result.IntParam := input;
+end;
+
+function buildCreateFunction(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _CREATE;
+    Result.Name2    := _FUNC;
+    Result.IntParam := input;
+end;
+
+function buildCreateExpression(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _CREATE;
+    Result.Name2    := _EXPR;
+    Result.IntParam := input;
+end;
+
+function buildDoTimes(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _DO;
+    Result.Name2    := _TIMES;
+    Result.IntParam := input;
+end;
+
+function buildDoIf(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _DO;
+    Result.Name2    := _IF;
+    Result.IntParam := input;
+end;
+
+function buildDoWhile(input1, input2 : LongInt) : PSCommand;
+begin
+    Result.Name      := _DO;
+    Result.Name2     := _WHILE;
+    Result.IntParam  := input1;
+    Result.IntParam2 := input2;
+end;
+
+function buildDoDoWhile(input1, input2 : LongInt) : PSCommand;
+begin
+    Result.Name      := _DO;
+    Result.Name2     := _DWHILE;
+    Result.IntParam  := input1;
+    Result.IntParam2 := input2;
+end;
+
+function buildDoDoUntil(input1, input2 : LongInt) : PSCommand;
+begin
+    Result.Name      := _DO;
+    Result.Name2     := _DUNTIL;
+    Result.IntParam  := input1;
+    Result.IntParam2 := input2;
+end;
+
+function buildDoFor1(input1, input2, input3, input4 : LongInt) : PSCommand;
+begin
+    Result.Name      := _DO;
+    Result.Name2     := _FOR;
+    Result.IntParam  := input1;
+    Result.IntParam2 := input2;
+    Result.IntParam3 := input3;
+    Result.IntParam4 := input4;
+end;
+
+function buildDoFor2(input1, input2, input3 : String; input4, input5 : LongInt) : PSCommand;
+begin
+    Result.Name      := _DO;
+    Result.Name2     := _FOR2;
+    Result.StrParam  := input1;
+    Result.StrParam2 := input2;
+    Result.StrParam3 := input3;
+    Result.IntParam  := input4;
+    Result.IntParam2 := input5;
+end;
+
+function buildDoFunction(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _DO;
+    Result.Name2    := _FUNC;
+    Result.IntParam := input;
+end;
+
+function buildCallFunction(input : String = '<Function>') : PSCommand;
+begin
+    Result.Name     := _CALL;
+    Result.Name2    := _FUNC;
+    Result.StrParam := input;
+end;
+
+function buildSetGlobalVar(input : String) : PSCommand;
+begin
+    Result.Name     := _SET;
+    Result.Name2    := _GVAR;
+    Result.StrParam := input;
+end;
+
+function buildSetLocalVar(input : String) : PSCommand;
+begin
+    Result.Name     := _SET;
+    Result.Name2    := _LVAR;
+    Result.StrParam := input;
+end;
+
+function buildGetGlobalVar(input : String) : PSCommand;
+begin
+    Result.Name     := _GET;
+    Result.Name2    := _GVAR;
+    Result.StrParam := input;
+end;
+
+function buildGetLocalVar(input : String) : PSCommand;
+begin
+    Result.Name     := _GET;
+    Result.Name2    := _LVAR;
+    Result.StrParam := input;
+end;
+
+function buildCalcAdd() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _ADD;
+end;
+
+function buildCalcSub() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _SUB;
+end;
+
+function buildCalcInc() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _INC;
+end;
+
+function buildCalcDec() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _DEC;
+end;
+
+function buildCalcMul() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _MUL;
+end;
+
+function buildCalcDiv() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _DIV;
+end;
+
+function buildTestEq() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _EQ;
+end;
+
+function buildTestNeq() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _NEQ;
+end;
+
+function buildTestGt() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _GT;
+end;
+
+function buildTestLt() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _LT;
+end;
+
+function buildTestGe() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _GE;
+end;
+
+function buildTestLe() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _LE;
+end;
+
+function buildTestAnd() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _AND;
+end;
+
+function buildTestOr() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _OR;
+end;
+
+function buildTestXor() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _XOR;
+end;
+
+function buildTestNot() : PSCommand;
+begin
+    Result.Name  := _TEST;
+    Result.Name2 := _NOT;
+end;

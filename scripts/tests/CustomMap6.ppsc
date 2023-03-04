@@ -1,0 +1,30 @@
+@use(Math)
+@use(Number)
+@use(Array)
+
+$Params first toNumber -> $n
+
+function { inv } -> f
+function { sin } -> g
+
+function ($T $func) {
+	for ($i : $T) 
+	{
+		$i func -> $i	
+	}
+	$T
+} -> map
+
+function (f g k) {
+	[$n genNaturalDivisors] -> T
+	T println
+	function (i) {
+		$i f 
+		$n $i div g 
+		* 
+	} -> fu
+	$T $fu map reduceSum
+} -> DirichletConvolve
+
+$f $g 50 DirichletConvolve
+

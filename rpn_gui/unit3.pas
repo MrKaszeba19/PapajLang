@@ -588,7 +588,7 @@ begin
     Result.Duplicate          := 'Duplikòwôj';
     Result.Remove             := 'Rëmôj';
     Result.Move               := 'Przeniése';
-    Result.Edit               := 'Edituwôj';
+    Result.Edit               := 'Edytuwôj';
     Result.Search             := 'Szëkôj';
     Result.Find               := 'Najdze';
     Result.Replace            := 'Zamiéni';
@@ -610,7 +610,7 @@ end;
 function langKashubianNew() : LangMap;
 begin
     Result.AreYouSureQuit     := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc';
-    Result.AreYouSureContSave := 'Jes të pewny/ô, że të chcész jisc dalji bez zôpisënkù lopka';
+    Result.AreYouSureContSave := 'Jes të pewny/ô, že të chceš jic dalji bez zapisënka lopka';
     Result.AreYouSureQuitSave := 'Jes të pevni/ô, že të chceš aplikacijã zamknąc bez zapisënka lopka';
     Result.AutoClearTerminal  := 'Vëčišči terminala przed zrëšenjem skripta';
     Result.DarkMode           := 'Cemni trib';
@@ -640,7 +640,7 @@ begin
     Result.Submit             := 'Zacvjerdze';
     Result.WindowMainName     := 'Kalkulator OPN – interpreter jãzika PapajScript';
     Result.WindowScanName     := 'Včëtôj vësłóv';
-    Result.WrongPS            := 'Felni ësłóv PS';
+    Result.WrongPS            := 'Felni vësłóv PS';
     Result.Yes                := 'Jo';
     Result.Cut                := 'Vëtni';
     Result.Copy               := 'Kopivôj';
@@ -657,9 +657,9 @@ begin
     Result.SelectAll          := 'Vëbjerze všëtko';
     Result.Print              := 'Drëkuj';
     Result.NoAppFound         := 'Konsolovô aplikacijô RPN Calculator nje je nalazłô.';
-    Result.AddAppDir          := 'Dodôj konsolovą aplikacijã RPN Calculator do kataloga, gdze aplikacijô GUI sã znajdôvô.';
-    Result.AddAppDirPath      := 'Dodôj konsolową aplikacijã RPN Calculator do kataloga, gdze aplikacijô GUI sã znajdôvô, lub do svojego $PATH.';
-    Result.PauseAfterExec     := 'Zatrzim terminala po zrëszenjem skripta';
+    Result.AddAppDir          := 'Dodôj konsolovą aplikacijã RPN Calculator do kataloga, dze aplikacijô GUI sã znajdôvô.';
+    Result.AddAppDirPath      := 'Dodôj konsolową aplikacijã RPN Calculator do kataloga, dze aplikacijô GUI sã znajdôvô, lub do svojego $PATH.';
+    Result.PauseAfterExec     := 'Zatrzim terminala po zrëšenjem skripta';
     Result.isRightToLeft      := false;
     Result.ExclamationMark    := '!';
     Result.QuestionMark       := '?';
@@ -670,15 +670,15 @@ end;
 function langKashubianCyrilic() : LangMap;
 begin
     Result.AreYouSureQuit     := 'Јес тё певни/ô, же тё чцеш апљикација̃ замкну̃ц';
-    Result.AreYouSureContSave := 'Јес тё певни/ô, же тё чцеш јисц даљи без записёнка љопка';
+    Result.AreYouSureContSave := 'Јес тё певни/ô, же тё чцеш јиц даљи без записёнка љопка';
     Result.AreYouSureQuitSave := 'Јес тё певни/ô, же тё чцеш апљикација̃ замкну̃ц без записёнка љопка';
     Result.AutoClearTerminal  := 'Вёчишчи терминала прјед зрёшењем скрипта';
     Result.DarkMode           := 'Цемни триб';
     Result.Error              := 'Феља';
-    Result.ErrorLoadFile      := 'Фела прји вчётôнку љопка';
+    Result.ErrorLoadFile      := 'Феља прји вчётôнку љопка';
     Result.Expression         := 'Вёсло́в';
     Result.Load               := 'Вчётôј';
-    Result.MenuApplication    := 'Апљикацијô';
+    Result.MenuApplication    := 'Апликацијô';
     Result.MenuLanguage       := 'Ја̃зик';
     Result.MenuLoadFile       := 'Вчётôј скрипт з љопка';
     Result.MenuNewFile        := 'Нови љопк';
@@ -698,7 +698,7 @@ begin
     Result.SampleHint         := 'Напише вёсло́в ПС розѕељони спацијама, нп. "2 3 +" љуб "20 4 / 5 +"';
     Result.Save               := 'Запише';
     Result.Submit             := 'Зацвјерѕе';
-    Result.WindowMainName     := 'Каљкуљатор ОПН – интерпретер ја̃зика PapajScript';
+    Result.WindowMainName     := 'Калкулатор ОПН – интерпретер ја̃зика PapajScript';
     Result.WindowScanName     := 'Вчётôј вёсло́в';
     Result.WrongPS            := 'Фељни вёсло́в ПС';
     Result.Yes                := 'Јо';
@@ -713,18 +713,19 @@ begin
     Result.Find               := 'Најѕе';
     Result.Replace            := 'Замјени';
     Result.Settings           := 'Настôвё';
-    Result.About              := 'О апљикацији';
+    Result.About              := 'О апликацији';
     Result.SelectAll          := 'Вёбјерје вшётко';
     Result.Print              := 'Дрёкуј';
-    Result.NoAppFound         := 'Консољовô апљикацијô ОПН Каљкуљатор ње је наљазлô.';
-    Result.AddAppDir          := 'Додôј консољову̃ апликација̃ ОПН Каљкуљатор до катаљога, гѕе апљикацијô GUI са̃ знајдôвô.';
-    Result.AddAppDirPath      := 'Додôј консољову̃ апликација̃ ОПН Каљкуљатор до катаљога, гѕе апљикацијô GUI са̃ знајдôвô, љуб до својего $PATH.';
+    Result.NoAppFound         := 'Консоловô апликацијô ОПН Калкулатор њије налазлô.';
+    Result.AddAppDir          := 'Додôј консолову̃ апликација̃ ОПН Калкулатор до каталога, ѕе апликацијô GUI са̃ знајдôвô.';
+    Result.AddAppDirPath      := 'Додôј консолову̃ апликација̃ ОПН Калкулатор до каталога, ѕе апликацијô GUI са̃ знајдôвô, љуб до својего $PATH.';
     Result.PauseAfterExec     := 'Затрјим терминала по зрёшењем скрипта';
     Result.isRightToLeft      := false;
     Result.ExclamationMark    := '!';
     Result.QuestionMark       := '?';
     Result.ExclamationMark2   := '';
     Result.QuestionMark2      := '';
+    // љ
 end;
 
 function langAfrikaans() : LangMap;

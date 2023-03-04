@@ -1,0 +1,25 @@
+@use(Math)
+@use(Number)
+@use(Array)
+
+$Params first toNumber -> $n
+
+function { inv } -> f
+function { sin } -> g
+
+function ($T $func) {
+	for ($i : $T) 
+	{
+		$i func -> $i	
+	}
+	$T
+} -> map
+
+[$n genNaturalDivisors] -> T
+function (i) {
+	$i f 
+	$n $i div g 
+	* 
+} -> fu
+
+$T $fu map reduceSum println
