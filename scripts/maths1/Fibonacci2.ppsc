@@ -1,0 +1,13 @@
+function (n) {
+	if ( $n 0 = ) { 
+		0
+	} elif ( $n 1 = ) {
+		1
+	} else {
+		$n -- fib
+		$n -- -- fib
+		+
+	}
+} -> fib
+
+scan toNumber fib

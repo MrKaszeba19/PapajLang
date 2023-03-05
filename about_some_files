@@ -2,8 +2,10 @@
 Units that are identical for both projects (PapajScript interpreter files):
 – Unit2.pas (the main engine of PS)
 – UnitEntity.pas (PS's entities, settings and some constants)
-– FunctionsHeaders.fph and FunctionsImpl.fph (PS's built-in functions)
 – UnitStack.pas (PS's semi-stack)
+– FunctionsHeaders.fph and FunctionsImpl.fph (PS's built-in functions)
+– CommandBuilder.fph (functions that create list of commands from code input)
+– EnviDef1.fph, EnviDef2.fph (definitions for interpreter)
 – UnitEnvironment.pas (PS environment and interpreter main mechanisms)
 – UnitVariables.pas (PS variables)
 – UnixCrt.pas (a better Crt substitute for Unix systems)
@@ -42,11 +44,10 @@ Additional units of rpn_gui
 
 === REPORTED FLAWS AND ISSUES
 – Windows systems' shell usage does not work
-– Non-linear recursion does not work
+– Non-linear recursion does not work (fix is being tested)
 – Chi-squared generator fails for big sample data when df = 1
-– Spacing does not apply between `}{`, `)(`, `][` (closing and opening chars in this order) - fixed so far 
 
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 08/20/2021
+Paul Lipkowski, 03/04/2023

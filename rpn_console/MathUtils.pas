@@ -7,6 +7,8 @@ interface
 uses
 	Classes, SysUtils;
 
+//const charbase : String = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 procedure swapNumbers(var e1 : Extended; var e2 : Extended);
 function pow(x, y : Extended) : Extended;
 function pow2(x, y : Extended) : Extended;
@@ -98,6 +100,9 @@ function num_isCarmichael(n : LongInt) : Boolean;
 function modularPower(a, b, m : LongInt) : LongInt;
 function modularInverse(a, m : LongInt) : LongInt;
 
+function convertDecToBase(a : LongInt; base : Integer) : String;
+function convertBaseToDec(str : String; base : Integer) : LongInt;
+
 
 implementation
 
@@ -151,6 +156,12 @@ begin
     else if (x = 0) and (y = 0) then s := NaN
     else s := exp(y*ln(x));
     Result := s;
+end;
+
+function pow_int(a, f : longint) : longint;
+begin
+	if f = 0 then Result := 1
+	else Result := a * pow_int(a, f-1);
 end;
 
 function root(x, y : Extended) : Extended;
@@ -1565,6 +1576,72 @@ begin
     else
         Result := (x mod m + m) mod m;
 end;
+
+function getBaseValue(x : Char) : LongInt;
+var
+    val : LongInt;
+begin
+    val := Ord(x);
+         if (val in [48..57])  then Result := val-48
+    else if (val in [65..90])  then Result := val-65+10
+    else if (val in [97..122]) then Result := val-97+10
+    else Result := -1;
+end;
+
+function getBaseLetter(x : LongInt) : Char;
+begin
+         if (x in [0..9])   then Result := Chr(x+48)
+    else if (x in [10..35]) then Result := Chr(x-10+65)
+    else Result := Chr(0);
+end;
+
+//function HexToDec(x : String) : longint;
+function convertBaseToDec(str : String; base : Integer) : LongInt;
+var
+	i, f, s	: longint;
+begin
+	s := 0;
+	f := 0;
+	if str[1] = '-' then
+	begin
+		for i := length(str) downto 2 do
+        begin
+            s := s - getBaseValue(str[i])*pow_int(base, f);
+            inc(f);
+        end;
+	end else begin
+		for i := length(str) downto 1 do
+        begin
+            s := s + getBaseValue(str[i])*pow_int(base, f);
+            inc(f);
+        end;
+	end;
+	Result := s;
+end;
+
+function convertDecToBase(a : LongInt; base : Integer) : String;
+var
+	temp, liczba : longint;
+	hex 		 : String;
+begin
+	liczba := abs(a);
+	hex := ''; 
+    if (base = 1) then 
+    begin
+        for temp := 1 to liczba do hex := '1' + hex; 
+    end else begin
+	    repeat
+	    	temp := liczba MOD base;
+            hex := getBaseLetter(temp) + hex;
+	    	liczba := liczba DIV base;
+	    until liczba = 0;
+    end;
+	if a < 0 then hex := '-' + hex;
+	Result := hex;
+end;
+
+
+
 
 
 end.

@@ -1953,9 +1953,6 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            
-            
-            
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(modularPower(trunc(x), trunc(y), trunc(z))));
         end;
         'Math.modPower' : begin
@@ -2009,6 +2006,7 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(num_isCarmichael(trunc(y))));
         end;
+
 		else begin
             Found := false;
         end;
@@ -6003,6 +6001,7 @@ function lib_numbers(i : String; var env : PSEnvironment; var db : PSCommandDB) 
 var
 	Found    : Boolean;
     x, y, z  : Extended;
+    StrEax   : String;
 begin
 	Found := true;
 	case i of
@@ -6196,6 +6195,52 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean((isInteger(y)) and (y >= 0)));
         end;
+
+        'Number.decToBase' : begin
+            if (env.Settings.StrictType) and (assertPositiveNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(convertDecToBase(trunc(x), trunc(y))));
+        end;
+        'Number.baseToDec' : begin
+            if (env.Settings.StrictType) and (assertPositiveNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, trunc(y))));
+        end;
+        'Number.decToBin' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(convertDecToBase(trunc(x), 2)));
+        end;
+        'Number.binToDec' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, 2)));
+        end;
+        'Number.decToOct' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(convertDecToBase(trunc(x), 8)));
+        end;
+        'Number.octToDec' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, 8)));
+        end;
+        'Number.decToHex' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(convertDecToBase(trunc(x), 16)));
+        end;
+        'Number.hexToDec' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, 16)));
+        end;
+
         else begin
             Found := false;
         end;
