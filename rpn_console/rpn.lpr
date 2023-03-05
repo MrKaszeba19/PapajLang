@@ -52,21 +52,30 @@ procedure show_version();
 begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.'); 
     if (RPN_update <= 0) 
-        then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetCPU+'.')
-        else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetCPU+'.');
+        then writeln('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetOS+' '+RPN_targetCPU+'.')
+        else writeln('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetOS+' '+RPN_targetCPU+'.');
     //if (RPN_isStable)
     //    then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
     //    else writeln(' May be more unstable than usual. 3:)');
-    if (not RPN_isStable) then writeln(' May be more unstable than usual. 3:)');
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
     //if (RPN_updated = '')
     //    then writeln('Released on '+RPN_date+'.')
     //    else writeln('Released on '+RPN_date+', updated on '+RPN_updated+'.');
     if (RPN_updated = '')
         then writeln('Released on '+convertToMDY(RPN_date)+'.')
-        else writeln('Released on '+convertToMDY(RPN_date)+', updated on '+convertToMDY(RPN_date)+'.');
-    writeln('Since 11/24/2017. Proudly written in FreePascal. :)');
+        else writeln('Released on '+convertToMDY(RPN_date)+', updated on '+convertToMDY(RPN_updated)+'.');
+    writeln('Since 11/24/2017. Written in FreePascal. :)');
+    if (not RPN_isStable) then writeln('May be more unstable than usual. 3:)');
     writeln('');
+end;
+
+procedure show_version_short();
+begin
+    if (not RPN_isStable) 
+        then writeln('unstable ('+RPN_codename+'), '+convertToMDY(RPN_date)+' update, for '+RPN_targetOS+' '+RPN_targetCPU+'.')
+        else if (RPN_update <= 0) 
+            then writeln(''+RPN_version+' ('+RPN_codename+'), for '+RPN_targetOS+' '+RPN_targetCPU+'.')
+            else writeln(''+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+', for '+RPN_targetOS+' '+RPN_targetCPU+'.');
 end;
 
 procedure show_help();
@@ -74,12 +83,14 @@ begin
     writeln('SYNTAX: rpn do "quoted_PS_code"');
     writeln('        rpn FILENAME');
     writeln('');
-    writeln('Run ''rpn help'' or ''rpn'' to display this again.');
+    writeln('Run ''rpn help'' to display this again.');
     writeln('Run ''rpn expression'' to obtain info about making RPN expressions.');
-    writeln('Run ''rpn functions [page]'' to obtain info about available functions.');
+    writeln('Run ''rpn functions'' to obtain info about available functions.');
+    writeln('Run ''rpn functions PAGE'' to obtain info about functions (specific page).');
     writeln('Run ''rpn packages'' to check the packages for PapajScript');
-    writeln('Run ''rpn run (FILENAME)'' to run a PS script file');
+    writeln('Run ''rpn run FILENAME'' to run a PS script file');
     writeln('Run ''rpn repl'' to run a REPL for PapajScript');
+    writeln('Run ''rpn version'' to display the app version');
     writeln('');
     writeln('More help at github.com/RooiGevaar19/RPNCalculator');
 end;
@@ -87,12 +98,14 @@ end;
 procedure show_expressions;
 begin
 	writeln('EXPRESSIONS: ');
-	writeln('Remember - the expression in console mode must be a "quoted" string');
-	writeln('and each operation must be separated by 1 space.');
+	writeln('Remember - the expression in console mode must be a "quoted" string.');
+	writeln('In PS language all functions and operations are written using post-fix notation,');
+    writeln('i.e. the function name is located after its arguments.');
+    writeln('All words must be delimited by at least 1 whitespace char (e.g. space bar).');
 	writeln('');
-	writeln('Type ''rpn functions'' to check out the available operands.');
+	writeln('Type ''rpn functions'' to check out the available functions.');
     writeln('Type ''rpn packages'' to check the packages for PapajScript');
-	writeln('');
+	//writeln('');
 	writeln('MATHEMATICAL EXAMPLES');
 	writeln(' 6              -> 6');
 	writeln(' 2+3            -> 2 3 +');
@@ -115,7 +128,7 @@ begin
     writeln('Page 7: Conditionals and custom functions');
 	writeln('Page 8: Other');
 	writeln;
-	writeln('Type ''rpn functions [page_num]'' to obtain info about specific functions, e.g. ''rpn functions 1''');
+	writeln('Type ''rpn functions PAGE'' to obtain info about specific functions, e.g. ''rpn functions 1''');
 	writeln('Type ''rpn functions all'' to print all pages at once.');
     writeln('Type ''rpn packages'' to check the packages for PapajScript');
 end;
@@ -344,7 +357,14 @@ begin
     if ParamCount = 0 then
     begin
         show_version();
-     	writeln('No arguments provided - run ''rpn help'' or ''rpn -h'' or ''rpn --help''');
+     	writeln('No arguments provided - run ''rpn help'', ''rpn -h'' or ''rpn --help''');
+    end else if HasOption('v', 'version') then 
+    begin
+        show_version_short();
+    end else if HasOption('h', 'help') then
+    begin
+     	show_version();
+     	show_help();
     end else begin
         case ParamStr(1) of
             'do' : begin
@@ -400,6 +420,9 @@ begin
             'help' : begin
      			show_version();
      			show_help();
+     		end;
+            'version' : begin
+     			show_version_short();
      		end;
             'packages' : begin
      			show_version();

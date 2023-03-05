@@ -19,7 +19,8 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - If you want to include some input parameters, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
 - If you want to run a REPL of PapajScript, then execute `rpn repl`.
 - If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
-- If you want to pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `rpn do '2 2 +' -P` or `rpn script.ppsc --pause`
+- If you want to pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `rpn do '2 2 +' -P` or `rpn script.ppsc --pause`.
+- If you need app version, you can type `rpn version`, `rpn -v` or `rpn --version`.
 
 ### GUI Application
 - Open an app executable.
@@ -32,9 +33,10 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 
 ## Requirements and installation
 - Have installed
-    * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.0.4 as of now) 
+    * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) for Console app only
     * if you use a non-Debian-like Linux, then **xterm** *might be recommended* 
+    * **bash** shell, if you use Linux (zsh and sh support is planned)
 - There are three ways to build RPN Calculator
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
@@ -46,7 +48,7 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
 - (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH
     * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
-    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The script requires root privileges to be executed.
+    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed.
 
 ## PapajScript:
 
@@ -125,6 +127,6 @@ Version | Version Name | Date of Release | Improvements
 0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
 0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | 12/18/2021 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
-0.5.3 | Mem | probably in 2022 | Locales, environment optimization
+0.5.3 | Mem | probably in 2023 | Locales, number systems, environment optimization
 0.5.4 | Nun | soon | Dataframes, files management, memory management
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
