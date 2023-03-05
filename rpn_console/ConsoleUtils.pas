@@ -10,6 +10,7 @@ function getHost() : String;
 function getOS() : String;
 function getOSVersion() : String;
 function getOSDistribution() : String;
+function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
 {$IFDEF LINUX}
@@ -239,6 +240,16 @@ begin
     {$IFDEF WINDOWS}
     // https://forum.lazarus.freepascal.org/index.php/topic,32847.msg212007.html#msg212007
     Result := getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
+    {$ELSE}
+    Result := getOSDist('PRETTY_NAME');
+    {$ENDIF}
+end;
+
+function getOSDistributionFull() : String;
+begin
+    {$IFDEF WINDOWS}
+    // https://forum.lazarus.freepascal.org/index.php/topic,32847.msg212007.html#msg212007
+    Result := 'Windows ' + getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
     {$ELSE}
     Result := getOSDist('PRETTY_NAME');
     {$ENDIF}

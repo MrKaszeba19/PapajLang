@@ -3683,6 +3683,12 @@ begin
         'Console.OSDist' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildString(getOSDistribution()));
         end;
+         'Console.OSDistributionFull' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(getOSDistributionFull()));
+        end;
+        'Console.OSDistFull' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(getOSDistributionFull()));
+        end;
         'Console.CPUArchitecture' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUArch()));
         end;

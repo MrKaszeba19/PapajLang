@@ -108,6 +108,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - :greece: Greek (Ελληνικά) – *to be implemented*
 - :slovakia: Slovak (Slovenčina) – *to be implemented*
 - :czech_republic: Czech (Čeština) – *to be implemented*
+- :ukraine: Ukrainian (Українська) – *to be implemented*
 
 
 

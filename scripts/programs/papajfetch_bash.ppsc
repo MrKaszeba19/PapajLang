@@ -1,0 +1,10 @@
+#!/bin/rpn
+@use(Console)
+
+"  .----\\----.  " print   " Username:     " print UserName println
+" ------------- " print    " Hostname:     " print HostName println
+" (  .-.  ___  )" print    " OS:           " print OSName println
+"((  (o)  (o)  |" print    " OS Name:      " print OSDistFull println
+"`|     _\\,    |" print   " Architecture: " print CPUArch println
+"  \\     _.   / " println
+"   ---_____-   " println
