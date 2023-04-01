@@ -84,6 +84,9 @@ function rbeta(a, b : Extended) : Extended;
 function ffischerf(x, d1, d2 : Extended) : Extended;
 function dfischerf(x, d1, d2 : Extended) : Extended;
 function rfischerf(v, w: Extended) : Extended;
+function farcsine(x : Extended) : Extended;
+function darcsine(x : Extended) : Extended;
+function rarcsine() : Extended;
 
 function num_tau(n : Extended) : Extended;
 function num_sigma(n : Extended) : Extended;
@@ -1237,7 +1240,8 @@ end;
 
 function fbeta(x, alpha, beta : Extended) : Extended;
 begin
-    if (abs(x) > 1) then
+    if (abs(x-0.5) >= 0.5) then
+    //if (abs(x) > 1) then
     begin
         Result := NaN;
     end else begin
@@ -1248,7 +1252,9 @@ end;
 
 function dbeta(x, alpha, beta : Extended) : Extended;
 begin
-    if (abs(x) > 1) then
+    //if (abs(x-0.5) >= 0.5) then
+    if (abs(x-0.5) > 0.5) then
+    //if (abs(x) > 1) then
     begin
         Result := NaN;
     end else begin
@@ -1270,7 +1276,37 @@ begin
     end;
 end;
 
+function farcsine(x : Extended) : Extended;
+begin
+    if (abs(x-0.5) >= 0.5) then
+    begin
+        Result := NaN;
+    end else begin
+        Result := 1/(PI * sqrt(x * (1-x)));
+    end;
+end; 
 
+function darcsine(x : Extended) : Extended;
+begin
+    if (abs(x-0.5) > 0.5) then
+    begin
+        Result := NaN;
+    end else begin
+        Result := arcsin(2*x-1)/PI + 0.5;
+    end;
+end;
+
+function rarcsine() : Extended;
+var
+    x, y : Extended;
+begin
+    x := rgengamma(0, 1, 0.5);
+    y := rgengamma(0, 1, 0.5);
+    writeln(x+y);
+    Result := x / (x+y);
+end;
+
+// ------------------------------------------------------------------------
 // ====== NUMBER THEORY
 
 function num_tau(n : Extended) : Extended;

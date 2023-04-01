@@ -1616,6 +1616,32 @@ begin
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
             end;
         end;
+        'Math.funcArcsine' : begin
+			if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            w := farcsine(x);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+        end;
+        'Math.distArcsine' : begin
+			if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            w := darcsine(x);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+        end;
+        'Math.randomArcsine' : begin
+            z := rarcsine();
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.genArcsine' : begin
+			if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            for index := 1 to trunc(x) do
+            begin
+                w := rarcsine();
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+            end;
+        end;
+
         'Math.moment' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             index := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
@@ -2265,6 +2291,41 @@ begin
             HelpTStrings.DelimitedText := StrEbx;
             for StrEax in HelpTStrings do stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEax)); 
             HelpTStrings.Free;
+        end;
+        'String.splitByExpression' : begin
+            if (stack_getback(env.Stack[env.Settings.StackPointer], 2).EntityType = TSTR) then
+            begin
+                if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TEXP, TFUN, i)) then Exit;
+                EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+                if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit; 
+                StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+                StrEbx := '';
+                StrEcx := '';
+                env.Variables.addLayer();
+                if (EntEax.EntityType = TFUN) then
+                begin
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEax[index]));
+                        env.doFunction(trunc(EntEax.Num));
+                        if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
+                            then StrEbx := StrEbx + StrEax[index]
+                            else StrEcx := StrEcx + StrEax[index];
+    		        end;
+                end else begin
+                    for index := 1 to Length(StrEax) do
+                    begin
+                        stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEax[index]));
+                        env.doFunction(trunc(EntEax.Num));
+                        if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
+                            then StrEbx := StrEbx + StrEax[index]
+                            else StrEcx := StrEcx + StrEax[index];
+    		        end;
+                end;
+                env.Variables.removeLayer();
+                stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEbx));
+                stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEcx));
+            end else Found := False;
         end;
         'String.substring' : begin
           	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
@@ -4462,48 +4523,41 @@ begin
             end else Found := False;
         end;
         'Array.splitByExpression' : begin
-            //if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TEXP, i)) then Exit;
-            if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TEXP, TFUN, i)) then Exit;
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
-            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
-            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
-            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
-            env.Variables.addLayer();
-            if (EntEax.EntityType = TFUN) then
+            if (stack_getback(env.Stack[env.Settings.StackPointer], 2).EntityType = TVEC) then
             begin
-                for index := 0 to Length(env.Stack[trunc(ArrEax.Num)].Values)-1 do
+                if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TEXP, TFUN, i)) then Exit;
+                EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+                if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+                ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+                stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+                ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+                stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+                ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+                env.Variables.addLayer();
+                if (EntEax.EntityType = TFUN) then
                 begin
-                    stack_push(env.Stack[env.Settings.StackPointer], env.Stack[trunc(ArrEax.Num)].Values[index]);
-                    env.doFunction(trunc(EntEax.Num));
-                    if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
-                        then stack_push(env.Stack[trunc(ArrEbx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index])
-                        else stack_push(env.Stack[trunc(ArrEcx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index]);
-    		    end;
-            end else begin
-                //StrEax := 'asplt_'+IntToStr(DateTimeToUnix(Now));
-                //for index := 0 to Length(env.Stack[trunc(ArrEax.Num)].Values)-1 do
-                //begin
-                //    env.Variables.setLocalVariable(StrEax, env.Stack[trunc(ArrEax.Num)].Values[index]);
-                //    env.Stack := parseOpen('$' + StrEax + ' ' + EntEax.Str, env.Stack, env.Settings, env.Variables);
-                //    if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
-                //        then stack_push(env.Stack[trunc(ArrEbx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index])
-                //        else stack_push(env.Stack[trunc(ArrEcx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index]);
-    		    //end;
-                for index := 0 to Length(env.Stack[trunc(ArrEax.Num)].Values)-1 do
-                begin
-                    stack_push(env.Stack[env.Settings.StackPointer], env.Stack[trunc(ArrEax.Num)].Values[index]);
-                    env.doFunction(trunc(EntEax.Num));
-                    if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
-                        then stack_push(env.Stack[trunc(ArrEbx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index])
-                        else stack_push(env.Stack[trunc(ArrEcx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index]);
-    		    end;
-            end;
-            env.Variables.removeLayer();
-            stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
-            stack_push(env.Stack[env.Settings.StackPointer], ArrEcx);
+                    for index := 0 to Length(env.Stack[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        stack_push(env.Stack[env.Settings.StackPointer], env.Stack[trunc(ArrEax.Num)].Values[index]);
+                        env.doFunction(trunc(EntEax.Num));
+                        if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
+                            then stack_push(env.Stack[trunc(ArrEbx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index])
+                            else stack_push(env.Stack[trunc(ArrEcx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end else begin
+                    for index := 0 to Length(env.Stack[trunc(ArrEax.Num)].Values)-1 do
+                    begin
+                        stack_push(env.Stack[env.Settings.StackPointer], env.Stack[trunc(ArrEax.Num)].Values[index]);
+                        env.doFunction(trunc(EntEax.Num));
+                        if (trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num) = 0) 
+                            then stack_push(env.Stack[trunc(ArrEbx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index])
+                            else stack_push(env.Stack[trunc(ArrEcx.Num)], env.Stack[trunc(ArrEax.Num)].Values[index]);
+    		        end;
+                end;
+                env.Variables.removeLayer();
+                stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
+                stack_push(env.Stack[env.Settings.StackPointer], ArrEcx);
+            end else Found := False;
         end;
         'Array.unweave' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 

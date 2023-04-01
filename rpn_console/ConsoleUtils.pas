@@ -14,6 +14,9 @@ function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
 {$IFDEF LINUX}
+function getRealCPUArch() : String;
+function getRealCPUBits() : LongInt;
+function getRealCPUThreads() : LongInt;
 function getShell() : String;
 {$ENDIF}
 
@@ -317,7 +320,6 @@ begin
     {$ENDIF}
 end;
 
-
 function getCPUBits() : LongInt;
 begin
     Result := -1;
@@ -379,6 +381,55 @@ end;
 
 
 {$IFDEF LINUX}
+function getRealCPUArch() : String;
+begin
+    Result := UnixSysInfo('architecture');
+end;
+
+function getRealCPUBits() : LongInt;
+begin
+    Result := StrToInt(executeCommand('getconf LONG_BIT', GetEnvironmentVariable('SHELL')));
+end;
+
+function getRealCPUThreads() : LongInt;
+begin
+    Result := StrToInt(executeCommand('nproc --all', GetEnvironmentVariable('SHELL')));
+    //Result := sysconf(83); 
+end;
+
+function getRAMUsageByPID(pid : String) : String;
+var
+    fn : Text;
+    s  : String;
+begin
+    // /proc/PID/status
+    assignfile(fn, '/proc/'+ParamStr(1)+'/status');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        //if (LeftStr(s, 7) = 'VmSize:') then 
+        //begin
+        //    s := TrimLeft(RightStr(s, Length(s)-7));
+        //    break;
+        //end;
+        if (LeftStr(s, 6) = 'VmRSS:') then 
+        begin
+            s := TrimLeft(RightStr(s, Length(s)-6));
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := s;
+end;
+
+// /proc/meminfo - ram
+// /proc/cpuinfo - cpu
+// lscpu - better cpu
+// /proc/uptime
+// /proc/diskstats
+
+
 function getShell() : String;
 begin
     Result := GetEnvironmentVariable('SHELL'); 

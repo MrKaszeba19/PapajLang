@@ -45,6 +45,14 @@ if /i "%processor_architecture%"=="x86" GOTO x86
         goto :compile2
     )
     if %ver% == 3.3.1 (
+        set ver=3.2.4
+        goto :compile2
+    )
+    if %ver% == 3.2.4 (
+        set ver=3.2.2
+        goto :compile2
+    )
+    if %ver% == 3.2.2 (
         set ver=3.2.0
         goto :compile2
     )

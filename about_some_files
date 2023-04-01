@@ -44,10 +44,11 @@ Additional units of rpn_gui
 
 === REPORTED FLAWS AND ISSUES
 – Windows systems' shell usage does not work
-– Non-linear recursion does not work (fix is being tested)
+– Non-linear recursion does not work (fix is currently being tested)
 – Chi-squared generator fails for big sample data when df = 1
+– Gamma and Beta distributions may not work
 
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 03/04/2023
+Paul Lipkowski, 04/01/2023
