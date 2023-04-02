@@ -1613,6 +1613,10 @@ begin
         'French_France.1252' : Result := L_FRA;
         'de_DE.UTF-8' : Result := L_GER;
         'de_DE.utf8' : Result := L_GER;
+        'de_AT.UTF-8' : Result := L_GER;
+        'de_AT.utf8' : Result := L_GER;
+        'de_CH.UTF-8' : Result := L_GER;
+        'de_CH.utf8' : Result := L_GER;
         'German_Germany.1252' : Result := L_GER;
         'German' : Result := L_GER;
         'he_IL.utf8' : Result := L_HBR;

@@ -17,6 +17,18 @@ function getCPUBits() : LongInt;
 function getRealCPUArch() : String;
 function getRealCPUBits() : LongInt;
 function getRealCPUThreads() : LongInt;
+function getCPUName() : String;
+function getUptime() : Extended;
+function getRAMTotal() : Extended;
+function getRAMFree() : Extended;
+function getRAMUsage() : Extended;
+function getRAMAvailable() : Extended;
+function getSwapTotal() : Extended;
+function getSwapFree() : Extended;
+function getSwapUsage() : Extended;
+function getScreenResolution() : String;
+function getScreenWidth() : Extended;
+function getScreenHeight() : Extended;
 function getShell() : String;
 {$ENDIF}
 
@@ -423,11 +435,273 @@ begin
     Result := s;
 end;
 
-// /proc/meminfo - ram
+function getCPUName() : String;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/cpuinfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        //if (LeftStr(s, 7) = 'VmSize:') then 
+        //begin
+        //    s := TrimLeft(RightStr(s, Length(s)-7));
+        //    break;
+        //end;
+        if (LeftStr(s, 10) = 'model name') then 
+        begin
+            s := TrimLeft(RightStr(s, Length(s)-10));
+            s := RightStr(s, Length(s)-2);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := s;
+end;
+
+function getUptime() : Extended;
+var
+    fn : Text;
+    s  : String;
+    t  : Extended;
+    fl : LongInt;
+begin
+    assignfile(fn, '/proc/uptime');
+    reset(fn);
+    readln(fn, s);
+    s := s.Split([' '])[0];
+    closefile(fn);
+    val(s, t, fl);
+    if fl = 0 
+        then Result := t
+        else Result := -1;
+end;
+
+function getRAMTotal() : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 9) = 'MemTotal:') then 
+        begin
+            //writeln(s);
+            s := TrimLeft(RightStr(s, Length(s)-9));
+            s := LeftStr(s, Length(s)-3);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getRAMAvailable() : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 13) = 'MemAvailable:') then 
+        begin
+            //writeln(s);
+            s := TrimLeft(RightStr(s, Length(s)-13));
+            s := LeftStr(s, Length(s)-3);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getRAMUsage() : Extended;
+var
+    fn   : Text;
+    s, t : String;
+    flag : Boolean = False;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 9) = 'MemTotal:') then 
+        begin
+            s := TrimLeft(RightStr(s, Length(s)-9));
+            s := LeftStr(s, Length(s)-3);
+            Flag := True;
+            break;
+        end;
+    end;
+    if Flag then
+        while not eof(fn) do
+        begin
+            readln(fn, t);
+            if (LeftStr(t, 13) = 'MemAvailable:') then 
+            begin
+                t := TrimLeft(RightStr(t, Length(t)-13));
+                t := LeftStr(t, Length(t)-3);
+                break;
+            end;
+        end;
+    closefile(fn);
+    if Flag 
+        then Result := StrToInt(s) - StrToInt(t)
+        else Result := -1;
+end;
+
+
+function getRAMFree() : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 8) = 'MemFree:') then 
+        begin
+            //writeln(s);
+            s := TrimLeft(RightStr(s, Length(s)-8));
+            s := LeftStr(s, Length(s)-3);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getSwapTotal() : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 10) = 'SwapTotal:') then 
+        begin
+            //writeln(s);
+            s := TrimLeft(RightStr(s, Length(s)-10));
+            s := LeftStr(s, Length(s)-3);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getSwapFree() : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 9) = 'SwapFree:') then 
+        begin
+            //writeln(s);
+            s := TrimLeft(RightStr(s, Length(s)-9));
+            s := LeftStr(s, Length(s)-3);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getSwapUsage() : Extended;
+var
+    fn   : Text;
+    s, t : String;
+    flag : Boolean = False;
+begin
+    assignfile(fn, '/proc/meminfo');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 10) = 'SwapTotal:') then 
+        begin
+            s := TrimLeft(RightStr(s, Length(s)-10));
+            s := LeftStr(s, Length(s)-3);
+            Flag := True;
+            break;
+        end;
+    end;
+    if Flag then
+        while not eof(fn) do
+        begin
+            readln(fn, t);
+            if (LeftStr(t, 9) = 'SwapFree:') then 
+            begin
+                t := TrimLeft(RightStr(t, Length(t)-9));
+                t := LeftStr(t, Length(t)-3);
+                break;
+            end;
+        end;
+    closefile(fn);
+    if Flag 
+        then Result := StrToInt(s) - StrToInt(t)
+        else Result := -1;
+end;
+
+function getScreenResolution() : String;
+var
+    s  : String;
+begin
+    s := executeCommand('xrandr | fgrep ''*''', GetEnvironmentVariable('SHELL'));
+    s := TrimLeft(s);
+    s := s.Split([' '])[0];
+    Result := s;
+end;
+
+function getScreenWidth() : Extended;
+var
+    s  : String;
+begin
+    s := executeCommand('xrandr | fgrep ''*''', GetEnvironmentVariable('SHELL'));
+    s := TrimLeft(s);
+    s := s.Split([' '])[0];
+    s := s.Split(['x'])[0];
+    Result := StrToInt(s);
+end;
+
+function getScreenHeight() : Extended;
+var
+    s  : String;
+begin
+    s := executeCommand('xrandr | fgrep ''*''', GetEnvironmentVariable('SHELL'));
+    s := TrimLeft(s);
+    s := s.Split([' '])[0];
+    s := s.Split(['x'])[1];
+    Result := StrToInt(s);
+end;
+
+// /proc/meminfo - ram and swap
 // /proc/cpuinfo - cpu
 // lscpu - better cpu
 // /proc/uptime
 // /proc/diskstats
+
+//SwapTotal:       8299516 kB
+//SwapFree:        8279292 kB
 
 
 function getShell() : String;

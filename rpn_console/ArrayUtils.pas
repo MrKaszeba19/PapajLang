@@ -36,6 +36,8 @@ function table_lcm(tab : TEntities) : Extended;
 function table_moment(tab : TEntities; k : LongInt) : Extended;
 function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
 function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : Extended;
+function table_skewness(tab : TEntities) : Extended;
+function table_kurtosis(tab : TEntities) : Extended;
 
 function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
@@ -503,14 +505,26 @@ begin
     Result := s;
 end;
 
+//function table_moment(tab : TEntities; k : LongInt) : Extended;
+//var
+//	i : Integer;
+//	s : Extended;
+//begin
+//	s := 0.0;
+//    for i := 0 to Length(tab)-1 do
+//        s := s + pow(tab[i].Num, k);
+//    Result := s/Length(tab);
+//end;
+
 function table_moment(tab : TEntities; k : LongInt) : Extended;
 var
 	i : Integer;
-	s : Extended;
+	s : Extended = 0.0;
+    m : Extended = 0.0;
 begin
-	s := 0.0;
+    m := table_avg(tab);
     for i := 0 to Length(tab)-1 do
-        s := s + pow(tab[i].Num, k);
+        s := s + pow(tab[i].Num - m, k);
     Result := s/Length(tab);
 end;
 
@@ -552,6 +566,26 @@ begin
     end else begin 
         Result := tab[Ceil(Length(tab) * num / denom) - 1].Num;
     end;
+end;
+
+function table_skewness(tab : TEntities) : Extended;
+var
+    s : Extended;
+begin
+    s := table_stddev(tab);
+    if s = 0
+        then Result := 0
+        else Result := (table_moment(tab, 3))/(pow(s,3));
+end;
+
+function table_kurtosis(tab : TEntities) : Extended;
+var
+    s : Extended;
+begin
+    s := table_stddev(tab);
+    if s = 0
+        then Result := 0
+        else Result := (table_moment(tab, 4))/(pow(s,4));
 end;
 
 // booleans
