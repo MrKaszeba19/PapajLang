@@ -85,6 +85,8 @@ type PSCmdType2 = (
     _MOD,
     _CIDIV,
     _CMOD,
+    _SHL,
+    _SHR,
     _POW,
     _DEC,
     _INC,
@@ -211,6 +213,7 @@ uses Unit5, MathUtils, Math, DTUtils, ArrayUtils, StringUtils, ConsoleUtils,
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
+    //RPNAbout,
     DateUtils;
 
 var
@@ -363,39 +366,6 @@ begin
     Result := trim(pom);
 end;
 
-//function correctParentheses(input : String) : String;
-//var
-//    pom         : String;
-//    togglequote : Boolean;
-//    i           : LongInt;
-//begin
-//    pom := '';
-//    togglequote := false;
-//    i := 0;
-//    while i <= Length(input) do 
-//    begin
-//        //if (not commentmode) and (input[i] = '"') then togglequote := not (togglequote);
-//        if (input[i] = '"') then 
-//            if (i > 0) and (input[i-1] <> '\')
-//                then togglequote := not (togglequote)
-//                else if (i = 0) then togglequote := not (togglequote);
-//        if (input[i] in [']', '}', ')']) and (input[i+1] <> ' ') then
-//        begin
-//            if togglequote 
-//                then pom := pom + input[i]
-//                else pom := pom + input[i] + ' ';
-//        end else if (input[i] in [';', ':']) and ((input[i+1] <> ' ') or (input[i-1] <> ' ')) then begin
-//            if togglequote 
-//                then pom := pom + input[i]
-//                else pom := pom + ' ' + input[i] + ' ';
-//        end else begin
-//            pom := concat(pom, input[i]);
-//        end;
-//        i := i + 1;
-//    end;
-//    //writeln(pom);
-//    Result := trim(pom);
-//end;
 function correctParentheses(input : String) : String;
 var
     pom         : String;
@@ -414,31 +384,6 @@ begin
                 else if (i = 0) then togglequote := not (togglequote);
         if (not togglequote) then
         begin
-            //if (input[i] = '[') and (input[i+1] = ']') then 
-            //begin
-            //    if (input[i-1] <> ' ') 
-            //        then pom := pom + ' []'
-            //        else pom := pom + '[]';
-            //    if (input[i+2] <> ' ') 
-            //        then pom := pom + ' ';
-            //    i := i + 1;
-            //end else if (input[i] = '(') and (input[i+1] = ')') then 
-            //begin
-            //    if (input[i-1] <> ' ') 
-            //        then pom := pom + ' ()'
-            //        else pom := pom + '()';
-            //    if (input[i+2] <> ' ') 
-            //        then pom := pom + ' ';
-            //    i := i + 1;
-            //end else if (input[i] = '{') and (input[i+1] = '}') then 
-            //begin
-            //    if (input[i-1] <> ' ') 
-            //        then pom := pom + ' {}'
-            //        else pom := pom + '{}';
-            //    if (input[i+2] <> ' ') 
-            //        then pom := pom + ' ';
-            //    i := i + 1;
-            //end else 
             if (input[i] in ['[', '{', '(', ']', '}', ')', ';', ':']) then
             begin
                 if (input[i-1] <> ' ') 
@@ -454,7 +399,6 @@ begin
         end;
         i := i + 1;
     end;
-    //writeln(pom);
     Result := trim(pom);
 end;
 
@@ -672,15 +616,6 @@ begin
     params_assign(params_obtain(startFrom));
 end;
 
-// to remove
-//procedure PSEnvironment.buildCommands(input : String; var db : PSCommandDB);
-//var
-//    L : TStringArray;
-//begin
-//    L := input.Split([' ', #9, #13, #10]);
-//    makeListOfCommands(L, db);
-//end;
-
 // -----------------------------------------------------------------------------------------
 // code execution
 // basic operations
@@ -749,6 +684,7 @@ begin
 end;
 
 procedure doCalcDiv(var env : PSEnvironment);
+const CmdLabel = '/';
 var
     EntEax, EntEbx : Entity;
 begin
@@ -757,7 +693,7 @@ begin
     if (not env.Settings.InfMode) then
     begin
         if isZero(EntEbx)
-            then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero('/'))
+            then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
             else stack_push(env.Stack[env.Settings.StackPointer], EntEax / EntEbx);
     end else begin
         if isNumber(EntEbx) then
@@ -784,6 +720,104 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], EntEax / EntEbx);
         end;
     end;
+end;
+
+procedure doCalcIntegerDiv(var env : PSEnvironment);
+const CmdLabel = 'div';
+var
+    EntEax, EntEbx : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if isZero(EntEbx)
+        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fdiv(EntEax.Num, EntEbx.Num)));
+end;
+
+procedure doCalcMod(var env : PSEnvironment);
+const CmdLabel = 'mod';
+var
+    EntEax, EntEbx : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if isZero(EntEbx)
+        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fmod(EntEax.Num, EntEbx.Num)));
+end;
+
+// TODO
+// add support for real numbers (if possible)
+procedure doCalcIntegerDiv2(var env : PSEnvironment);
+const CmdLabel = 'cdiv';
+var
+    EntEax, EntEbx : Entity;
+begin
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if isZero(EntEbx)
+        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ffloor(EntEax.Num / EntEbx.Num)));
+end;
+
+// TODO
+// add support for real numbers (if possible)
+procedure doCalcMod2(var env : PSEnvironment);
+const CmdLabel = 'cmod';
+var
+    EntEax, EntEbx : Entity;
+    x, y, z        : LongInt;
+begin
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if isZero(EntEbx)
+        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
+        else begin
+            x := trunc(EntEax.Num);
+            y := trunc(EntEbx.Num);
+            if (x > 0) and (y < 0) then begin
+            	z := ((x mod y) + y + y) mod y;
+            end else if (x < 0) and (y > 0) then begin
+            	z := ((x mod y) + y) mod y;
+            end else begin
+            	z := x mod y;
+            end;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+end;
+
+// TODO
+// move everything to 64bit
+procedure doCalcShl(var env : PSEnvironment);
+const CmdLabel = 'shl';
+var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
+begin
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shl y));
+end;
+
+// TODO
+// move everything to 64bit
+procedure doCalcShr(var env : PSEnvironment);
+const CmdLabel = 'shr';
+var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
+begin
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shr y));
 end;
 
 procedure doTestEq(var env : PSEnvironment);
@@ -1257,12 +1291,18 @@ begin
             _CALC : begin
                 //{debug-exec} write(#9, db.Commands[at][i].Name2);
                 case db.Commands[at][i].Name2 of
-                    _ADD : doCalcAdd(Self);
-                    _SUB : doCalcSub(Self);
-                    _INC : doCalcInc(Self);
-                    _DEC : doCalcDec(Self);
-                    _MUL : doCalcMul(Self);
-                    _DIV : doCalcDiv(Self);
+                    _ADD   : doCalcAdd(Self);
+                    _SUB   : doCalcSub(Self);
+                    _INC   : doCalcInc(Self);
+                    _DEC   : doCalcDec(Self);
+                    _MUL   : doCalcMul(Self);
+                    _DIV   : doCalcDiv(Self);
+                    _MOD   : doCalcMod(Self);
+                    _IDIV  : doCalcIntegerDiv(Self);
+                    _SHL   : doCalcShl(Self);
+                    _SHR   : doCalcShr(Self);
+                    _CMOD  : doCalcMod2(Self);
+                    _CIDIV : doCalcIntegerDiv2(Self);
                 end;
             end;
             _TEST : begin

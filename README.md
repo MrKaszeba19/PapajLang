@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-April 2, 2023  
+April 4, 2023  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -72,9 +72,9 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 - `\export:FILE` - export your history to a file (FILE is a relative or absolute path)
 - `\history` - display the previously typed commands
 - `\hclear` - clear all history
-- `\hclear:N` - repeat the N-th command of history (N >= 1)
+- `\hclear:N` - clear the N-th command from history (N >= 1)
 - `\import:FILE` - run a file (FILE is a relative or absolute path)
-- `\!!` - repeat last command
+- `\!!` - repeat the previous command
 - `\!N` - execute an N-th command of `\history` (N >= 1)
 - `\help` - display the help.
 - `\q` or `\quit` - exit the REPL.

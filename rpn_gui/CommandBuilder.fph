@@ -55,17 +55,11 @@ begin
             if checkLevelCharInc(input[cursor]) = 1 then
             begin
                 level := level + 1;
-                //i := i + 1;
-                //SetLength(L, i);
-                //SetLength(L[i], 0);
             end;
             L[i] := '' + input[cursor];
             if checkLevelCharDec(input[cursor]) = 1 then
             begin
                 level := level - 1;
-                //i := i + 1;
-                //SetLength(L, i);
-                //SetLength(L[i], 0);
             end;
         end else begin
             L[i] := '' + input[cursor];
@@ -201,26 +195,12 @@ function getListOfWords(input : String) : TStringArray;
 begin
     Result := makeWords(splitToWords(input));
 end;
-//var
-//    L : TStringArray;
-//    i : String;
-//begin
-//    SetLength(L, 0);
-//    writeln('input: ', input);
-//    L := splitToWords(input);
-//    for i in L do writeln('=> ', i);
-//    L := makeWords(L);
-//    for i in L do writeln('==> ', i);
-//    Result := L;
-//end;
+
 
 // string trimmer
 function trimBraces(input : String) : String;
 begin
     Result := trim(input.Substring(1, input.Length - 2));
-    //StrEax := input;
-    //StrEax := StrEax.Substring(1, StrEax.Length - 2);
-    //StrEax := trim(StrEax);
 end;
 
 // split arguments for FOR loop, treat "strings" as one word
@@ -281,7 +261,7 @@ var
     //M              : TStringArrArray;
     M              : TStringArray = NIL;
     N              : TStringArray = NIL;
-    mode           : PSReaderMode = M_NORM;
+    //mode           : PSReaderMode = M_NORM;
     ConditionBuilt : Boolean = False;
 begin
     x := Length(db.Commands);
@@ -348,12 +328,18 @@ begin
 		    '<'   : db.Commands[x][y] := buildTestLt();
 		    '<='  : db.Commands[x][y] := buildTestLe();
 		    '>='  : db.Commands[x][y] := buildTestGe();
+            'mod' : db.Commands[x][y] := buildCalcMod();
+            'div' : db.Commands[x][y] := buildCalcIntegerDiv();
+            'shl' : db.Commands[x][y] := buildCalcShl();
+            'shr' : db.Commands[x][y] := buildCalcShr();
 		    'and' : db.Commands[x][y] := buildTestAnd();
 		    'or'  : db.Commands[x][y] := buildTestOr();
 		    'xor' : db.Commands[x][y] := buildTestXor();
 		    'not' : db.Commands[x][y] := buildTestNot();
             'inc' : db.Commands[x][y] := buildCalcInc();
             'dec' : db.Commands[x][y] := buildCalcDec();
+            'cmod' : db.Commands[x][y] := buildCalcMod2();
+            'cdiv' : db.Commands[x][y] := buildCalcIntegerDiv2();
             'rem'     : db.Commands[x][y] := buildCmdPop();
             'clone'   : db.Commands[x][y] := buildCmdClone();
             'qshift'  : db.Commands[x][y] := buildCmdQShift();

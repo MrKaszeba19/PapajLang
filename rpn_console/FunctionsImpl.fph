@@ -88,65 +88,6 @@ begin
             z := root(x,y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
-        'mod' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fmod(x,y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'div' : begin
-            //if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := fdiv(x,y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'cdiv' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if x < 0 then begin
-            	z := ffloor(x/y);
-            end else begin
-            	z := ffloor(x/y);
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'cmod' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (x > 0) and (y < 0) then begin
-            	z := ((trunc(x) mod trunc(y)) + trunc(y+y)) mod trunc(y);
-            end else if (x < 0) and (y > 0) then begin
-            	z := ((trunc(x) mod trunc(y)) + trunc(y)) mod trunc(y);
-            end else begin
-            	z := trunc(x) mod trunc(y);
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'shr' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := trunc(x) shr trunc(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'shl' : begin
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := trunc(x) shl trunc(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
         
 
 
@@ -3790,15 +3731,15 @@ begin
             StrEcx := executeCommand(StrEbx, env.Settings.Shell);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEcx));
         end;
-        {$IFDEF LINUX}
-        'Console.UserShell' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
+        'Console.CPUName' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName()));
         end;
         'Console.CPUThreads' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRealCPUThreads()));
         end;
-        'Console.CPUName' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName()));
+        {$IFDEF LINUX}
+        'Console.UserShell' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
         end;
         'Console.CPUUptime' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getUptime()));

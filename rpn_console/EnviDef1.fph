@@ -211,6 +211,42 @@ begin
     Result.Name2 := _DIV;
 end;
 
+function buildCalcIntegerDiv() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _IDIV;
+end;
+
+function buildCalcMod() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _MOD;
+end;
+
+function buildCalcIntegerDiv2() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _CIDIV;
+end;
+
+function buildCalcMod2() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _CMOD;
+end;
+
+function buildCalcShl() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _SHL;
+end;
+
+function buildCalcShr() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _SHR;
+end;
+
 function buildTestEq() : PSCommand;
 begin
     Result.Name  := _TEST;

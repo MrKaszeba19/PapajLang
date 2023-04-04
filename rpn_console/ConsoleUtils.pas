@@ -13,11 +13,11 @@ function getOSDistribution() : String;
 function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
+function getCPUName() : String;
+function getRealCPUThreads() : LongInt;
 {$IFDEF LINUX}
 function getRealCPUArch() : String;
 function getRealCPUBits() : LongInt;
-function getRealCPUThreads() : LongInt;
-function getCPUName() : String;
 function getUptime() : Extended;
 function getRAMTotal() : Extended;
 function getRAMFree() : Extended;
@@ -37,6 +37,7 @@ implementation
 uses 
     {$IFDEF MSWINDOWS}
 		ShellApi, crt, Dos, Windows,
+        registry,
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
@@ -391,6 +392,33 @@ begin
     {$ENDIF}
 end;
 
+{$IFDEF WINDOWS}
+
+function getCPUName() : String;
+var
+    CompileCommand: string='';
+    Registry: TRegistry;
+begin
+    Registry := TRegistry.Create;
+    try
+        // Navigate to proper "directory":
+        Registry.RootKey := HKEY_LOCAL_MACHINE;
+        //if Registry.OpenKeyReadOnly('\SOFTWARE\Classes\InnoSetupScriptFile\shell\Compile\Command') then
+        if Registry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\0') then
+            //CompileCommand:=Registry.ReadString(''); //read the value of the default name
+            CompileCommand:=Registry.ReadString('ProcessorNameString'); //read the value of the default name
+    finally
+        Registry.Free;  // In non-Windows operating systems this flushes the reg.xml file to disk
+    end;
+    Result := CompileCommand;
+end;
+
+function getRealCPUThreads() : LongInt;
+begin
+    Result := GetCPUCount;
+    //Result := sysconf(83); 
+end;
+{$endif}
 
 {$IFDEF LINUX}
 function getRealCPUArch() : String;
@@ -445,11 +473,6 @@ begin
     while not eof(fn) do
     begin
         readln(fn, s);
-        //if (LeftStr(s, 7) = 'VmSize:') then 
-        //begin
-        //    s := TrimLeft(RightStr(s, Length(s)-7));
-        //    break;
-        //end;
         if (LeftStr(s, 10) = 'model name') then 
         begin
             s := TrimLeft(RightStr(s, Length(s)-10));
