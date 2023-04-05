@@ -10,7 +10,6 @@ const RPN_isStable = False;
 const RPN_date = {$I %DATE%};
 const RPN_updated = '';
 const RPN_targetCPU = {$I %FPCTARGETCPU%};
-//const RPN_targetOS = {$I %FPCTARGETOS%};
 {$ifdef WINDOWS}
 const RPN_targetOS = 'Windows';
 {$else}

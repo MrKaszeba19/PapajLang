@@ -1,0 +1,20 @@
+@silent
+@use(Math)
+@use(String)
+@use(Array)
+@use(Number)
+
+"Podaj ilość testów: " print
+scan toNumber trunc -> N 
+
+[ $N genArcsine ] -> sample 
+$sample reduceAvg -> m1
+$sample reduceStddev -> s1
+
+
+"Sample mean:                     " $m1 toString concat println
+"Theoretical mean:                " 1 2 / toString concat println
+"Sample standard deviation:       " $s1 toString concat println
+"Theoretical standard deviation:  " 1 8 / sqrt toString concat println
+
+//$sample println

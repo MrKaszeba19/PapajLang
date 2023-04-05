@@ -1319,8 +1319,8 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
 			if (env.Settings.StrictType) and (assertNotNegativeLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            //z := rgamma1(x, y);
-            z := rgengamma(0, 1/y, x);
+            z := rgamma1(x, y);
+            //z := rgengamma(0, 1/y, x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Math.genGamma' : begin
@@ -1334,8 +1334,8 @@ begin
             begin
                 //checkSIGINT();
                 //w := rgengamma(1/z, y, 1);
-                //w := rgamma1(y, z);
-                w := rgengamma(0, 1/z, y);
+                w := rgamma1(y, z);
+                //{wasgood} w := rgengamma(0, 1/z, y);
                 //w := rgengamma(z, y, 1);
                 // do poprawki
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));

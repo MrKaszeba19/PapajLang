@@ -901,7 +901,7 @@ begin
                 U := random();
                 flag := ln(U) < (0.5*Z*Z + d - d*V + d*ln(V));
             end;
-        until True;
+        until flag = True;
         Result := d*V/b;
     end else begin
         c := rgamma1(a+1, b);
@@ -1048,9 +1048,10 @@ function rchisq(df : Extended) : Extended;
 begin
     if df < 1 
         then Result := NaN
-        else if ftrunc(df) = 1 
-            then Result := rgamma1(df/2, 0.5)
-            else Result := rgengamma(0, 2, df/2);
+        else Result := rgamma1(df/2, 0.5);
+        //else if ftrunc(df) = 1 
+        //    then Result := rgamma1(df/2, 0.5)
+        //    else Result := rgengamma(0, 2, df/2);
 end;
 
 //function rchisq(df: Extended) : Extended;
@@ -1242,13 +1243,21 @@ end;
 
 function fbeta(x, alpha, beta : Extended) : Extended;
 begin
-    if (abs(x-0.5) >= 0.5) then
-    //if (abs(x) > 1) then
+    if (alpha >= 1) or (beta >= 1) then
     begin
-        Result := NaN;
+        if (abs(x-0.5) > 0.5) then
+        begin
+            Result := NaN;
+        end else begin
+            Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+        end;
     end else begin
-        //Result := pow2(x, alpha-1) * pow2(1-x, beta-1) * vgamma(alpha+beta) / (vgamma(alpha) * vgamma(beta));
-        Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+        if (abs(x-0.5) >= 0.5) then
+        begin
+            Result := NaN;
+        end else begin
+            Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+        end;
     end;
 end;
 
@@ -1272,8 +1281,10 @@ begin
     begin
         Result := random();
     end else begin
-        x := rgengamma(0, 1, a);
-        y := rgengamma(0, 1, b);
+        //x := rgengamma(0, 1, a);
+        //y := rgengamma(0, 1, b);
+        x := rgamma1(a, 1);
+        y := rgamma1(b, 1);
         Result := x / (x+y);
     end;
 end;
@@ -1302,10 +1313,10 @@ function rarcsine() : Extended;
 var
     x, y : Extended;
 begin
-    x := rgengamma(0, 1, 0.5);
-    y := rgengamma(0, 1, 0.5);
-    writeln(x+y);
-    Result := x / (x+y);
+    //x := rgengamma(0, 1, 0.5);
+    //y := rgengamma(0, 1, 0.5);
+    //Result := x / (x+y);
+    Result := rbeta(0.5, 0.5);
 end;
 
 // ------------------------------------------------------------------------
