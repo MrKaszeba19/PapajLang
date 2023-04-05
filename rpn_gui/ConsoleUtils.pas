@@ -438,23 +438,21 @@ begin
     Result := CompileCommand;
 end;
 
-function getCPUName(index : LongInt) : String;
+function getCPUBaseFreq(index : LongInt) : Extended;
 var
     CompileCommand: string='';
     Registry: TRegistry;
+    fl : LongInt;
 begin
     Registry := TRegistry.Create;
     try
-        // Navigate to proper "directory":
         Registry.RootKey := HKEY_LOCAL_MACHINE;
-        //if Registry.OpenKeyReadOnly('\SOFTWARE\Classes\InnoSetupScriptFile\shell\Compile\Command') then
         if Registry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\'+IntToStr(index)) then
-            //CompileCommand:=Registry.ReadString(''); //read the value of the default name
-            CompileCommand:=Registry.ReadString('~MHz'); //read the value of the default name
+            fl := Registry.ReadInteger('~MHz');  
     finally
-        Registry.Free;  // In non-Windows operating systems this flushes the reg.xml file to disk
+        Registry.Free; 
     end;
-    Result := CompileCommand;
+    Result := fl;
 end;
 
 function getRealCPUThreads() : LongInt;

@@ -12,7 +12,11 @@ const
     DATE_USA_D = 'mm/dd/yyyy';
     DATE_USA_T = 'hh:nn:ss am/pm';
     DATE_USA_TP = 'hh:nn:ss.zzz am/pm';
-    DATE_USA_DTP = 'mm/dd/yyyy hh:nn:ss.zzz am/pm';
+    DATE_US_DT = 'mm/dd/yyyy hh:nn:ss am/pm';
+    DATE_US_D = 'mm-dd-yyyy';
+    DATE_US_T = 'hh:nn:ss am/pm';
+    DATE_US_TP = 'hh:nn:ss.zzz am/pm';
+    DATE_US_DTP = 'mm-dd-yyyy hh:nn:ss.zzz am/pm';
     DATE_UK_DT = 'dd.mm.yyyy hh:nn:ss am/pm';
     DATE_UK_D = 'dd.mm.yyyy';
     DATE_UK_T = 'hh:nn:ss am/pm';
@@ -30,6 +34,8 @@ const
     DATE_UN_DTP = 'yyyy-mm-dd hh:nn:ss.zzz';
 
 function StringYMDToDateTime(input : String) : TDateTime;
+function StringMDYToDateTime(input : String) : TDateTime;
+function StringDMYToDateTime(input : String) : TDateTime;
 
 function FormatYMD(input : TDateTime) : String;
 
@@ -39,6 +45,7 @@ function TimestampToDateTime(input : Real) : TDateTime;
 function DateTimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
 function DateInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
 function TimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
+
 
 implementation
 
@@ -58,9 +65,31 @@ begin
     Result := StrToDateTime(input, FS);
 end;
 
-function FormatYMD(input : TDateTime) : String;
+function StringMDYToDateTime(input : String) : TDateTime;
 var
     FS: TFormatSettings;
+begin
+    FS := DefaultFormatSettings;
+    FS.ShortDateFormat := DATE_US_D;
+    FS.ShortTimeFormat := DATE_US_TP;
+    FS.DateSeparator := '/';
+    Result := StrToDateTime(input, FS);
+end;
+
+function StringDMYToDateTime(input : String) : TDateTime;
+var
+    FS: TFormatSettings;
+begin
+    FS := DefaultFormatSettings;
+    FS.ShortDateFormat := DATE_UK_D;
+    FS.ShortTimeFormat := DATE_UK_TP;
+    FS.DateSeparator := '.';
+    Result := StrToDateTime(input, FS);
+end;
+
+function FormatYMD(input : TDateTime) : String;
+//var
+//    FS: TFormatSettings;
 begin
     //FS := DefaultFormatSettings;
     ////FS.DateSeparator := '/';

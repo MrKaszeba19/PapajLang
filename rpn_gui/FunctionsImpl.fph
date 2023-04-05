@@ -5608,6 +5608,21 @@ begin
                 //stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(VarToDateTime(StrEax)));
             end;
         end; 
+        'Date.YMDtoDateTime' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringYMDToDateTime(StrEax)));
+        end; 
+        'Date.MDYtoDateTime' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringMDYToDateTime(StrEax)));
+        end; 
+        'Date.DMYtoDateTime' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringDMYToDateTime(StrEax)));
+        end; 
         'Date.toTimestamp' : begin
             //if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
             if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  

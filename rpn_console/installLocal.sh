@@ -53,7 +53,6 @@ else
 		else
 			echo "# Set up a $appname path" >> $HOME/.bashrc
 			echo "export PATH=$HOME/bin:\$PATH" >> $HOME/.bashrc
-			source $HOME/.bashrc 
 			if [ $? -eq 0 ] ; then
 				echo "Installation of $appname to your local \$PATH has been finished with success!"
 				echo "Type '$appexec' in your command prompt to check out the program."
@@ -61,7 +60,6 @@ else
 				echo "Error when setting up \$PATH."
 			fi
 		fi	
-	
 	fi
 fi
 
