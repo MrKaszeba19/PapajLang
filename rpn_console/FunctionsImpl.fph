@@ -3548,6 +3548,7 @@ var
     StrEbx  : String;
     StrEcx  : String;
     a       : Integer;
+    index   : LongInt;
 begin
     Found := true;
     case i of
@@ -3731,11 +3732,35 @@ begin
             StrEcx := executeCommand(StrEbx, env.Settings.Shell);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEcx));
         end;
-        'Console.CPUName' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName()));
+        'Console.CPUNames' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName(index)));
         end;
         'Console.CPUThreads' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRealCPUThreads()));
+        end;
+        'Console.CPUMaxFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMaxFreq(index)));
+        end;
+        'Console.CPUMinFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMinFreq(index)));
+        end;
+        'Console.CPUCurrentFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
+        end;
+        'Console.CPUBaseFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
+        end;
+        'Console.CPUUsages' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage(index)));
+        end;
+        'Console.CPUAllUsage' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage()));
         end;
         {$IFDEF LINUX}
         'Console.UserShell' : begin
@@ -3782,6 +3807,15 @@ begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit; 
             StrEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
             env.Settings.Shell := StrEbx;
+        end;
+        'Console.isUnix' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isUnix()));
+        end;
+        'Console.isLinux' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isLinux()));
+        end;
+        'Console.isWindows' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isWindows()));
         end;
         else begin
             Found := false;
@@ -6314,6 +6348,56 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, 16)));
         end;
 
+        'Number.toUSNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, '.')));
+        end;
+        'Number.toUSNumber2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, '.', ' ')));
+        end;
+        'Number.toUSNumber3' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, '.', ',')));
+        end;
+        'Number.toEUNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',')));
+        end;
+        'Number.toEUNumber2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',', ' ')));
+        end;
+        'Number.toEUNumber3' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',', '.')));
+        end;
+        'Number.toEUNumber4' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',', '''')));
+        end;
+        
+        
+        //Number.toUSNumber2 (,)
+        //Number.toUSNumber ( )
+        //Number.toEUNumber ()
+        //Number.toEUNumber2 (.)
+        //Number.toEUNumber ( )
+        
+        //Number.toUSNumber ()
+        //Number.toUSNumber2 (,)
+        //Number.toUSNumber ( )
+        //Number.toEUNumber ()
+        //Number.toEUNumber2 (.)
+        //Number.toEUNumber ( )
+        //FormatFloat(Settings.Mask, EntEax.Num)
         else begin
             Found := false;
         end;

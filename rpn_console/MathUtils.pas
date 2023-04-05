@@ -106,6 +106,8 @@ function modularInverse(a, m : LongInt) : LongInt;
 function convertDecToBase(a : LongInt; base : Integer) : String;
 function convertBaseToDec(str : String; base : Integer) : LongInt;
 
+function toNumberString(input : Extended; decimal : String; thousand : String = '') : String;
+
 
 implementation
 
@@ -1676,8 +1678,22 @@ begin
 	Result := hex;
 end;
 
+// -------------------------------------------
+// print numbers in strings
 
-
+function toNumberString(input : Extended; decimal : String; thousand : String = '') : String;
+var
+    FS: TFormatSettings;
+begin
+    FS := DefaultFormatSettings;
+    FS.DecimalSeparator := decimal[1];
+    if (thousand = '')
+        then Result := FormatFloat('0.################', input, FS)
+        else begin
+            FS.ThousandSeparator := thousand[1];
+            Result := FormatFloat('#,##0.################', input, FS);
+        end;
+end;
 
 
 end.

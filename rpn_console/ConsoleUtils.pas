@@ -13,8 +13,12 @@ function getOSDistribution() : String;
 function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
-function getCPUName() : String;
+//function getCPUName() : String;
+function getCPUName(index : LongInt) : String;
 function getRealCPUThreads() : LongInt;
+function isUnix() : Boolean;
+function isLinux() : Boolean;
+function isWindows() : Boolean;
 {$IFDEF LINUX}
 function getRealCPUArch() : String;
 function getRealCPUBits() : LongInt;
@@ -30,6 +34,11 @@ function getScreenResolution() : String;
 function getScreenWidth() : Extended;
 function getScreenHeight() : Extended;
 function getShell() : String;
+function getCPUMaxFreq(index : LongInt) : Extended;
+function getCPUMinFreq(index : LongInt) : Extended;
+function getCPUCurFreq(index : LongInt) : Extended;
+function getCPUBaseFreq(index : LongInt) : Extended;
+function getCPUUsage(index : LongInt = -1) : Extended;
 {$ENDIF}
 
 implementation
@@ -41,7 +50,7 @@ uses
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
-    SysUtils, Process;
+    SysUtils, StrUtils, Process;
 
 Function Is64Bit: Boolean;
 Begin
@@ -392,9 +401,25 @@ begin
     {$ENDIF}
 end;
 
+function isUnix() : Boolean;
+begin
+    {$IFDEF UNIX} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
+function isLinux() : Boolean;
+begin
+    {$IFDEF LINUX} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
+function isWindows() : Boolean;
+begin
+    {$IFDEF WINDOWS} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
 {$IFDEF WINDOWS}
 
-function getCPUName() : String;
+//function getCPUName() : String;
+function getCPUName(index : LongInt) : String;
 var
     CompileCommand: string='';
     Registry: TRegistry;
@@ -404,7 +429,7 @@ begin
         // Navigate to proper "directory":
         Registry.RootKey := HKEY_LOCAL_MACHINE;
         //if Registry.OpenKeyReadOnly('\SOFTWARE\Classes\InnoSetupScriptFile\shell\Compile\Command') then
-        if Registry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\0') then
+        if Registry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\'+IntToStr(index)) then
             //CompileCommand:=Registry.ReadString(''); //read the value of the default name
             CompileCommand:=Registry.ReadString('ProcessorNameString'); //read the value of the default name
     finally
@@ -433,7 +458,8 @@ end;
 
 function getRealCPUThreads() : LongInt;
 begin
-    Result := StrToInt(executeCommand('nproc --all', GetEnvironmentVariable('SHELL')));
+    Result := StrToInt(trim(executeCommand('nproc --all', GetEnvironmentVariable('SHELL'))));
+    //Result := GetCPUCount;
     //Result := sysconf(83); 
 end;
 
@@ -463,10 +489,31 @@ begin
     Result := s;
 end;
 
-function getCPUName() : String;
+//function getCPUName() : String;
+//var
+//    fn : Text;
+//    s  : String;
+//begin
+//    assignfile(fn, '/proc/cpuinfo');
+//    reset(fn);
+//    while not eof(fn) do
+//    begin
+//        readln(fn, s);
+//        if (LeftStr(s, 10) = 'model name') then 
+//        begin
+//            s := TrimLeft(RightStr(s, Length(s)-10));
+//            s := RightStr(s, Length(s)-2);
+//            break;
+//        end;
+//    end;
+//    closefile(fn);
+//    Result := s;
+//end;
+function getCPUName(index : LongInt) : String;
 var
     fn : Text;
     s  : String;
+    id : LongInt = 0;
 begin
     assignfile(fn, '/proc/cpuinfo');
     reset(fn);
@@ -475,9 +522,13 @@ begin
         readln(fn, s);
         if (LeftStr(s, 10) = 'model name') then 
         begin
+            if (id < index) then begin
+                id := id + 1;
+                continue;
+            end;
             s := TrimLeft(RightStr(s, Length(s)-10));
             s := RightStr(s, Length(s)-2);
-            break;
+            if (id = index) then break;
         end;
     end;
     closefile(fn);
@@ -731,6 +782,145 @@ function getShell() : String;
 begin
     Result := GetEnvironmentVariable('SHELL'); 
 end;
+
+// /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+function getCPUMaxFreq(index : LongInt) : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/sys/devices/system/cpu/cpu'+IntToStr(index)+'/cpufreq/scaling_max_freq');
+    reset(fn);
+    readln(fn, s);
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getCPUMinFreq(index : LongInt) : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/sys/devices/system/cpu/cpu'+IntToStr(index)+'/cpufreq/scaling_min_freq');
+    reset(fn);
+    readln(fn, s);
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getCPUCurFreq(index : LongInt) : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/sys/devices/system/cpu/cpu'+IntToStr(index)+'/cpufreq/scaling_cur_freq');
+    reset(fn);
+    readln(fn, s);
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getCPUBaseFreq(index : LongInt) : Extended;
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/sys/devices/system/cpu/cpu'+IntToStr(index)+'/cpufreq/base_frequency');
+    reset(fn);
+    readln(fn, s);
+    closefile(fn);
+    Result := StrToInt(s);
+end;
+
+function getCPUUsage(index : LongInt = -1) : Extended;
+var
+    fn   : Text;
+    s    : String;
+    t    : String;
+    t0   : LongInt;
+    ms   : TStringArray;
+    ml   : LongInt;
+    id   : LongInt;
+    st   : array of LongInt; 
+    sum1 : LongInt = 0;
+    idl1 : LongInt = -1;
+    usd1 : LongInt = -1;
+    usg1 : Extended = -1;
+    sum2 : LongInt = 0;
+    idl2 : LongInt = -1;
+    usd2 : LongInt = -1;
+    usg2 : Extended = -1;
+begin
+    if index = -1 then
+    begin
+        t := 'cpu';
+        t0 := 3;
+    end else begin
+        t := 'cpu'+IntToStr(index);
+        t0 := Length(t);
+    end;
+    // test 1
+    assignfile(fn, '/proc/stat');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, t0) = t) then 
+        begin
+            s := Trim(DelSpace1(RightStr(s, Length(s)-t0)));
+            ms := s.Split([' ']);
+            ml := Length(ms);
+            SetLength(st, ml);
+            for id := 0 to ml-1 do st[id] := StrToInt(ms[id]);
+            // sum all 
+            for id := 0 to ml-1 do sum1 := sum1 + st[id];
+            // calc time spent idle
+            idl1 := st[3];
+            // Calc time spent working 
+            usd1 := sum1 - idl1; 
+            // calc ratio
+            usg1 := 1.0*usd1 / sum1;
+            break;
+        end;
+    end;
+    closefile(fn);
+    Delay(50);
+    // test 2
+    assignfile(fn, '/proc/stat');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, t0) = t) then 
+        begin
+            s := Trim(DelSpace1(RightStr(s, Length(s)-t0)));
+            ms := s.Split([' ']);
+            ml := Length(ms);
+            SetLength(st, ml);
+            for id := 0 to ml-1 do st[id] := StrToInt(ms[id]);
+            // sum all and subtract old sum
+            for id := 0 to ml-1 do sum2 := sum2 + st[id];
+            //writeln(sum2);
+            //writeln(sum1);
+            sum2 := sum2 - sum1;
+            // calc time spent idle and subtract old idle
+            idl2 := st[3];
+            idl2 := idl2 - idl1;
+            // Calc time spent working 
+            usd2 := sum2 - idl2; 
+            // calc ratio
+            //writeln(sum2);
+            usg2 := 1.0*usd2 / sum2;
+            break;
+        end;
+    end;
+    closefile(fn);
+    //Result := usg1;
+    Result := usg2;
+    //SetLength(st, 0);
+end;
+
 {$ENDIF}
 
 end.

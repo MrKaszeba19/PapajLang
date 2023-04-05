@@ -353,6 +353,10 @@ begin
     //end;
     //{$ENDIF}
     randomize();
+    DefaultFormatSettings.DecimalSeparator := '.';
+    DefaultFormatSettings.ThousandSeparator := ',';
+    DefaultFormatSettings.DateSeparator := '-';
+    DefaultFormatSettings.TimeSeparator := ':';
 
     if ParamCount = 0 then
     begin
