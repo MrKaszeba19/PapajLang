@@ -16,6 +16,7 @@ function getCPUBits() : LongInt;
 //function getCPUName() : String;
 function getCPUName(index : LongInt) : String;
 function getRealCPUThreads() : LongInt;
+function getCPUBaseFreq(index : LongInt) : Extended;
 function isUnix() : Boolean;
 function isLinux() : Boolean;
 function isWindows() : Boolean;
@@ -37,7 +38,6 @@ function getShell() : String;
 function getCPUMaxFreq(index : LongInt) : Extended;
 function getCPUMinFreq(index : LongInt) : Extended;
 function getCPUCurFreq(index : LongInt) : Extended;
-function getCPUBaseFreq(index : LongInt) : Extended;
 function getCPUUsage(index : LongInt = -1) : Extended;
 {$ENDIF}
 
@@ -438,6 +438,25 @@ begin
     Result := CompileCommand;
 end;
 
+function getCPUName(index : LongInt) : String;
+var
+    CompileCommand: string='';
+    Registry: TRegistry;
+begin
+    Registry := TRegistry.Create;
+    try
+        // Navigate to proper "directory":
+        Registry.RootKey := HKEY_LOCAL_MACHINE;
+        //if Registry.OpenKeyReadOnly('\SOFTWARE\Classes\InnoSetupScriptFile\shell\Compile\Command') then
+        if Registry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\'+IntToStr(index)) then
+            //CompileCommand:=Registry.ReadString(''); //read the value of the default name
+            CompileCommand:=Registry.ReadString('~MHz'); //read the value of the default name
+    finally
+        Registry.Free;  // In non-Windows operating systems this flushes the reg.xml file to disk
+    end;
+    Result := CompileCommand;
+end;
+
 function getRealCPUThreads() : LongInt;
 begin
     Result := GetCPUCount;
@@ -474,11 +493,6 @@ begin
     while not eof(fn) do
     begin
         readln(fn, s);
-        //if (LeftStr(s, 7) = 'VmSize:') then 
-        //begin
-        //    s := TrimLeft(RightStr(s, Length(s)-7));
-        //    break;
-        //end;
         if (LeftStr(s, 6) = 'VmRSS:') then 
         begin
             s := TrimLeft(RightStr(s, Length(s)-6));
@@ -489,26 +503,6 @@ begin
     Result := s;
 end;
 
-//function getCPUName() : String;
-//var
-//    fn : Text;
-//    s  : String;
-//begin
-//    assignfile(fn, '/proc/cpuinfo');
-//    reset(fn);
-//    while not eof(fn) do
-//    begin
-//        readln(fn, s);
-//        if (LeftStr(s, 10) = 'model name') then 
-//        begin
-//            s := TrimLeft(RightStr(s, Length(s)-10));
-//            s := RightStr(s, Length(s)-2);
-//            break;
-//        end;
-//    end;
-//    closefile(fn);
-//    Result := s;
-//end;
 function getCPUName(index : LongInt) : String;
 var
     fn : Text;

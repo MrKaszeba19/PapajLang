@@ -3739,6 +3739,14 @@ begin
         'Console.CPUThreads' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRealCPUThreads()));
         end;
+        'Console.CPUBaseFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
+        end;
+        {$IFDEF LINUX}
+        'Console.UserShell' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
+        end;
         'Console.CPUMaxFreqs' : begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMaxFreq(index)));
@@ -3751,20 +3759,12 @@ begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
         end;
-        'Console.CPUBaseFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
-        end;
         'Console.CPUUsages' : begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage(index)));
         end;
         'Console.CPUAllUsage' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage()));
-        end;
-        {$IFDEF LINUX}
-        'Console.UserShell' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
         end;
         'Console.CPUUptime' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getUptime()));
