@@ -1,7 +1,7 @@
 object Form2: TForm2
-  Left = 547
+  Left = 1473
   Height = 96
-  Top = 217
+  Top = 646
   Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
@@ -11,7 +11,7 @@ object Form2: TForm2
   OnActivate = FormActivate
   OnCreate = FormCreate
   Position = poMainFormCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '2.2.0.4'
   object Label1: TLabel
     Left = 8
     Height = 16
@@ -20,11 +20,10 @@ object Form2: TForm2
     Caption = 'Expression'
     Constraints.MinWidth = 300
     ParentBidiMode = False
-    ParentColor = False
   end
   object Edit1: TEdit
     Left = 8
-    Height = 26
+    Height = 28
     Top = 32
     Width = 304
     TabOrder = 0

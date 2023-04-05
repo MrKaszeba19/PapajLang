@@ -96,13 +96,14 @@ function DetermineLanguage() : Language;
 function GetLocale(lang : Language) : LangMap;
 procedure ApplyLocaleMain(lang : LangMap);
 procedure ApplyLocaleScan(lang : LangMap);
-
+procedure ApplyLocaleAbout(lang : LangMap);
+procedure ApplyLocale(lang : LangMap);
 implementation
 uses 
 {$IFDEF MSWINDOWS}
 Windows,
 {$ENDIF}
-Unit1, Unit4;
+Unit1, Unit4, Unit6;
 
 // NEW LANG ENGINE
 
@@ -1390,9 +1391,9 @@ end;
 
 function langPortuguese() : LangMap;
 begin
-    Result.AreYouSureQuit     := 'Tens certeza que deseja fechar o aplicativo';
-    Result.AreYouSureContSave := 'Tens certeza que deseja continuar sem salvar o arquivo';
-    Result.AreYouSureQuitSave := 'Tens certeza que deseja fechar o aplicativo sem salvar o arquivo';
+    Result.AreYouSureQuit     := 'Tens certeza que desejas fechar o aplicativo';
+    Result.AreYouSureContSave := 'Tens certeza que desejas continuar sem salvar o arquivo';
+    Result.AreYouSureQuitSave := 'Tens certeza que desejas fechar o aplicativo sem salvar o arquivo';
     Result.AutoClearTerminal  := 'Esvazia o terminal antes de executar um script';
     Result.DarkMode           := 'Tema escuro';
     Result.Error              := 'Erro';
@@ -1450,7 +1451,7 @@ end;
 
 function langPortuguese2() : LangMap;
 begin
-    Result.AreYouSureQuit     := 'Tem certeza de que deseja fechar o aplicativo';
+    Result.AreYouSureQuit     := 'Tem certeza que deseja fechar o aplicativo';
     Result.AreYouSureContSave := 'Tem certeza que deseja continuar sem salvar o arquivo';
     Result.AreYouSureQuitSave := 'Tem certeza que deseja fechar o aplicativo sem salvar o arquivo';
     Result.AutoClearTerminal  := 'Esvazie o terminal antes de executar um script';
@@ -1747,6 +1748,7 @@ begin
     Unit1.Form1.MenuRunHere.Caption := lang.RunScriptInt;
     Unit1.Form1.MenuRunExternal.Caption := lang.RunScriptExt;
     Unit1.Form1.MenuRunPause.Caption := lang.PauseAfterExec;
+    Unit1.Form1.MenuAbout.Caption := lang.About;
     Unit1.Form1.Label1.Caption := lang.SampleCaption;
     Unit1.Form1.Button1.Caption := lang.SampleCountIt;
     Unit1.Form1.Edit1.TextHint := lang.SampleHint;
@@ -1782,6 +1784,19 @@ begin
         Unit4.Form2.Label1.BiDiMode := bdLeftToRight;
         Unit4.Form2.Edit1.BiDiMode := bdLeftToRight;
     end;
+end;
+
+procedure ApplyLocaleAbout(lang : LangMap);
+begin
+    Unit6.Form3.Caption := lang.About;
+    Unit6.Form3.Button1.Caption := lang.MenuClose;
+end;
+
+procedure ApplyLocale(lang: LangMap);
+begin
+    ApplyLocaleMain(locale);
+    ApplyLocaleScan(locale);
+    ApplyLocaleAbout(locale);
 end;
 
 end.

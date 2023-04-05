@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, process, FileUtil, UTF8Process, SynEdit, SynHighlighterAny,
   SynCompletion, Forms, Controls, Graphics, Dialogs, StdCtrls, Menus,
-  ShellCtrls, ComCtrls, ExtCtrls, Unit3, UnitEntity;
+  ShellCtrls, ComCtrls, ExtCtrls, Unit3, Unit6, UnitEntity;
 
 type
 
@@ -26,6 +26,7 @@ type
     Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuAbout: TMenuItem;
     MenuLangSRB1: TMenuItem;
     MenuLangSRB2: TMenuItem;
     MenuLangCSB1: TMenuItem;
@@ -73,6 +74,7 @@ type
     SynAutoComplete1: TSynAutoComplete;
     SynEdit1: TSynEdit;
     procedure ButtonTerminalClick(Sender: TObject);
+    procedure MenuAboutClick(Sender: TObject);
     procedure MenuAutoClearClick(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuLangCSB1Click(Sender: TObject);
@@ -177,61 +179,61 @@ end;
 procedure TForm1.MenuLangCSBClick(Sender: TObject);
 begin
     locale := GetLocale(L_CSB);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangGERClick(Sender: TObject);
 begin
     locale := GetLocale(L_GER);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangITAClick(Sender: TObject);
 begin
     locale := GetLocale(L_ITA);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangMKDClick(Sender: TObject);
 begin
     locale := GetLocale(L_MKD);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangNEDClick(Sender: TObject);
 begin
     locale := GetLocale(L_NED);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangSLOClick(Sender: TObject);
 begin
     locale := GetLocale(L_SLO);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangSRB1Click(Sender: TObject);
 begin
     locale := GetLocale(L_SRB);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangSRB2Click(Sender: TObject);
 begin
     locale := GetLocale(L_SRB2);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangSRBClick(Sender: TObject);
 begin
     locale := GetLocale(L_SRB);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangSWEClick(Sender: TObject);
 begin
     locale := GetLocale(L_SWE);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuNewFileClick(Sender: TObject);
@@ -277,19 +279,19 @@ end;
 procedure TForm1.MenuLangCSB2Click(Sender: TObject);
 begin
     locale := GetLocale(L_CSB2);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangFRAClick(Sender: TObject);
 begin
     locale := GetLocale(L_FRA);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangCSB3Click(Sender: TObject);
 begin
     locale := GetLocale(L_CSB3);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 {$IFNDEF WINDOWS}
@@ -416,6 +418,12 @@ begin
     end;
     //DeleteFile(dir+'rpng_temp.ppsc');
 end;
+
+procedure TForm1.MenuAboutClick(Sender: TObject);
+begin
+    Form3.ShowModal;
+end;
+
 {$ENDIF}
 
 procedure TForm1.MenuAutoClearClick(Sender: TObject);
@@ -431,25 +439,25 @@ end;
 procedure TForm1.MenuLangCSB1Click(Sender: TObject);
 begin
     locale := GetLocale(L_CSB);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangNOR1Click(Sender: TObject);
 begin
     locale := GetLocale(L_NOR);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangCROClick(Sender: TObject);
 begin
     locale := GetLocale(L_CRO);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangNOR2Click(Sender: TObject);
 begin
     locale := GetLocale(L_NOR2);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangNORClick(Sender: TObject);
@@ -460,13 +468,13 @@ end;
 procedure TForm1.MenuLangPOR1Click(Sender: TObject);
 begin
     locale := GetLocale(L_POR);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangPOR2Click(Sender: TObject);
 begin
     locale := GetLocale(L_POR2);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangPORClick(Sender: TObject);
@@ -477,13 +485,13 @@ end;
 procedure TForm1.MenuLangRUSClick(Sender: TObject);
 begin
     locale := GetLocale(L_RUS);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangAFRClick(Sender: TObject);
 begin
     locale := GetLocale(L_AFR);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 { TForm1 }
@@ -575,25 +583,25 @@ end;
 procedure TForm1.MenuLangENGClick(Sender: TObject);
 begin
     locale := GetLocale(L_ENG);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangPOLClick(Sender: TObject);
 begin
     locale := GetLocale(L_POL);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangDENClick(Sender: TObject);
 begin
     locale := GetLocale(L_DEN);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLangHBRClick(Sender: TObject);
 begin
     locale := GetLocale(L_HBR);
-    ApplyLocaleMain(locale);
+    ApplyLocale(locale);
 end;
 
 procedure TForm1.MenuLoadClick(Sender: TObject);

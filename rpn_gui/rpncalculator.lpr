@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, crt, // this includes the LCL widgetset
   SysUtils, 
-  Forms, Unit1, Unit2, Unit3, Unit4, Unit5, RPNAbout
+  Forms, Unit1, Unit2, Unit3, Unit4, Unit5, RPNAbout, Unit6
   { you can add units after this };
 
 function convertToMDY(date : String) : String;
@@ -56,6 +56,7 @@ begin
     Application.CreateForm(TForm2, Form2);
     writeln('Done.');
     write('Running...');
+    Application.CreateForm(TForm3, Form3);
     Application.Run;
     writeln('Done.');
 end.

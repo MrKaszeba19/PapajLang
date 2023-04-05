@@ -12,10 +12,10 @@ object Form1: TForm1
   OnCreate = FormCreate
   ParentBiDiMode = False
   Position = poMainFormCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '2.2.0.4'
   object Edit1: TEdit
     Left = 8
-    Height = 26
+    Height = 28
     Top = 29
     Width = 576
     Anchors = [akTop, akLeft, akRight]
@@ -40,11 +40,10 @@ object Form1: TForm1
     Width = 576
     Anchors = [akTop, akLeft, akRight]
     Caption = 'PapajScript command box'
-    ParentColor = False
   end
   object Edit2: TEdit
     Left = 8
-    Height = 26
+    Height = 28
     Top = 60
     Width = 576
     Anchors = [akTop, akLeft, akRight]
@@ -71,7 +70,6 @@ object Form1: TForm1
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
     Caption = 'PapajScript code'
-    ParentColor = False
   end
   object CodePanel: TPanel
     Left = 8
@@ -625,7 +623,6 @@ object Form1: TForm1
       Width = 560
       Anchors = [akTop, akLeft, akRight]
       Caption = 'Untitled.ppsc'
-      ParentColor = False
     end
   end
   object ButtonTerminal: TButton
@@ -640,8 +637,8 @@ object Form1: TForm1
     TabOrder = 5
   end
   object MainMenu1: TMainMenu
-    left = 752
-    top = 370
+    Left = 752
+    Top = 370
     object MenuItem1: TMenuItem
       Caption = 'Application'
       object MenuNewFile: TMenuItem
@@ -807,6 +804,10 @@ object Form1: TForm1
         OnClick = MenuLangHBRClick
       end
     end
+    object MenuAbout: TMenuItem
+      Caption = 'About'
+      OnClick = MenuAboutClick
+    end
   end
   object SynAnySyn1: TSynAnySyn
     Enabled = False
@@ -843,8 +844,8 @@ object Form1: TForm1
     Entity = False
     DollarVariables = True
     ActiveDot = False
-    left = 752
-    top = 338
+    Left = 752
+    Top = 338
   end
   object SynAutoComplete1: TSynAutoComplete
     AutoCompleteList.Strings = (
@@ -857,19 +858,19 @@ object Form1: TForm1
     ShortCut = 16416
     ExecCommandID = ecSynAutoCompletionExecute
     Editor = SynEdit1
-    left = 752
-    top = 306
+    Left = 752
+    Top = 306
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.ppsc'
-    left = 752
-    top = 272
+    Left = 752
+    Top = 272
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = '.ppsc'
     FileName = 'Unititled.ppsc'
-    left = 752
-    top = 240
+    Left = 752
+    Top = 240
   end
   object ProcessExt: TProcessUTF8
     Active = False
@@ -884,7 +885,7 @@ object Form1: TForm1
     WindowTop = 0
     WindowWidth = 0
     FillAttribute = 0
-    left = 752
-    top = 200
+    Left = 752
+    Top = 200
   end
 end

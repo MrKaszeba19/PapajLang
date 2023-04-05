@@ -26,6 +26,7 @@ Additional units of rpn_gui
 – Unit1.pas (the GUI application code)
 – Unit3.pas (the language files)
 – Unit4.pas (an additional unit to support Unit5.pas, i.e. the connector between GUI and PS language)
+– Unit6.pas (the GUI app info window code)
 
 
 === REQUIREMENTS TO COMPILE THE PROJECT AND BUILDING RPN CALCULATOR
