@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-April 5, 2023  
+April 7, 2023  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since 11/24/2017, proudly written in FreePascal. :smile:
@@ -41,14 +41,15 @@ Since 11/24/2017, proudly written in FreePascal. :smile:
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
-    then simply run `compile.sh` (in Unix/Linux systems) or `compile.bat` (in Windows systems) to compile the project
+    then simply run `compile.sh` (in Linux systems) or `compile.bat` (in Windows systems) to compile the project
     * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
-    then you may compile the **console app** project using `compileWithFPC.sh` (Unix/Linux) or `compileWithFPC.bat` (Windows)
-- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Unix/Linux) or `installREPL.bat` (Windows)
-- (for Unix/Linux users) If you want to have `rpn` available in your bash shell, you can either
+    then you may compile the **console app** project using `compileWithFPC.sh` (Linux) or `compileWithFPC.bat` (Windows)
+- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Linux) or `installREPL.bat` (Windows)
+- (for Linux users) If you want to have `rpn` available in your bash shell, you can either
     * modify your $PATH
     * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
     * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed.
+- Unix support is planned
 
 ## PapajScript:
 

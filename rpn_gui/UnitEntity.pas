@@ -111,8 +111,8 @@ function buildException(val : String) : Entity;
 function raiseException(val : String) : Entity;
 function buildDateTime(val : TDateTime) : Entity;
 function buildDateTime(val : Extended) : Entity;
-function buildDate(val : TDateTime) : Entity;
-function buildTime(val : TDateTime) : Entity;
+//function buildDate(val : TDateTime) : Entity;
+//function buildTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
 
 function raiseExceptionUnknownCommand(operand : String) : Entity;
@@ -424,46 +424,50 @@ end;
 function buildDateTime(val : TDateTime) : Entity;
 var
 	pom : Entity;
+    tmp : TTimeStamp;
 begin
+    tmp := DateTimeToTimestamp(val);
 	pom.EntityType := TDAT;
 	pom.Str := FormatYMD(val);
-	pom.Num := DateTimeToTimestamp(val);
-    pom.Num2 := 0;
+	pom.Num := tmp.Date;
+    pom.Num2 := tmp.Time;
 	Result := pom;
 end;
 
 function buildDateTime(val : Extended) : Entity;
 var
 	pom : Entity;
+    tmp : TTimeStamp;
 begin
+    tmp := MSecsToTimestamp(val*1000);
 	pom.EntityType := TDAT;
-	pom.Str := FormatYMD(TimestampToDateTime(val));
-	pom.Num := val;
-    pom.Num2 := 0;
+	pom.Str := FormatYMD(TimestampToDateTime(tmp));
+	pom.Num := tmp.Date;
+    pom.Num2 := tmp.Time;
 	Result := pom;
 end;
 
-function buildDate(val : TDateTime) : Entity;
-var
-	pom : Entity;
-begin
-	pom.EntityType := TDAY;
-	pom.Str := FormatYMD(val);
-	pom.Num := DateTimeToUnix(DateOf(val));
-    pom.Num2 := 0;
-	Result := pom;
-end;
-
-function buildTime(val : TDateTime) : Entity;
-var
-	pom : Entity;
-begin
-	pom.EntityType := TTIM;
-	pom.Str := FormatYMD(val);
-	pom.Num := DateTimeToUnix(val);
-    pom.Num2 := 0;
-	Result := pom;
-end;
+//function buildDate(val : TDateTime) : Entity;
+//var
+//	pom : Entity;
+//begin
+//	pom.EntityType := TDAY;
+//	pom.Str := FormatYMD(val);
+//	pom.Num := DateTimeToUnix(DateOf(val));
+//    pom.Num2 := 0;
+//	Result := pom;
+//end;
+//
+//function buildTime(val : TDateTime) : Entity;
+//var
+//	pom : Entity;
+//begin
+//	pom.EntityType := TTIM;
+//	pom.Str := FormatYMD(val);
+//	pom.Num := DateTimeToUnix(val);
+//    pom.Num2 := 0;
+//	Result := pom;
+//end;
 
 // =============================================================================
 // exceptions

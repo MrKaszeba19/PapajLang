@@ -38,9 +38,10 @@ Additional units of rpn_gui
     a) if you have Lazarus IDE and you use the GUI app, 
        then compile it by clicking "Run" or "Compile"
     b) if you have Lazarus IDE and you are on a command shell or you don't use the GUI app, 
-       then simply run compile.sh (in Unix/Linux systems) or compile.bat (in Windows systems) to compile the project
-    c) if you don't have Lazarus IDE, then you may compile the console app project using either compileWithFPC.sh (Unix/Linux) or compileWithFPC.bat (Windows)
-– You can make a Desktop shortcut to a RPN REPL by running installREPL.sh (Unix/Linux) or installREPL.bat (Windows)
+       then simply run compile.sh (in Linux systems) or compile.bat (in Windows systems) to compile the project
+    c) if you don't have Lazarus IDE, then you may compile the console app project using either compileWithFPC.sh (Linux) or compileWithFPC.bat (Windows)
+– You can make a Desktop shortcut to a RPN REPL by running installREPL.sh (Linux) or installREPL.bat (Windows)
+– Unix support is planned
 
 
 === REPORTED FLAWS AND ISSUES
@@ -51,4 +52,4 @@ Additional units of rpn_gui
 
 ===========================================
 RPN Calculator – PapajScript Interpreter
-Paul Lipkowski, 2023-04-06
+Paul Lipkowski, 2023-04-07

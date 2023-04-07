@@ -5591,7 +5591,8 @@ var
 	Found                  : Boolean;
     StrEax                 : String; 
     IntEax                 : LongInt;
-    ExtEax, ExtEbx, ExtEcx : Extended;
+    ExtEax                 : Extended;
+    EntEax, EntEbx, EntEcx : Entity;
     DatEax, DatEbx, DatEcx : TDateTime;
 begin
 	Found := true;
@@ -5600,12 +5601,10 @@ begin
             if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TNUM) then
             begin
                 ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-        	    //stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(TimestampToDateTime(ExtEax)));
-                stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(ExtEax));
+                stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(UnixTSToDateTime(ExtEax)));
             end else begin
                 StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
                 stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringYMDToDateTime(StrEax)));
-                //stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(VarToDateTime(StrEax)));
             end;
         end; 
         'Date.YMDtoDateTime' : begin
@@ -5624,15 +5623,11 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringDMYToDateTime(StrEax)));
         end; 
         'Date.toTimestamp' : begin
-            //if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TNUM) or (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TDAT) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(stack_pop(env.Stack[env.Settings.StackPointer]).Num));
-            end else if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TSTR) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DateTimeToUnix(StringYMDToDateTime(stack_pop(env.Stack[env.Settings.StackPointer]).Str))));
-            end;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
+            //stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DateTimeToUnix(stack_pop(env.Stack[env.Settings.StackPointer]).Num)));
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DateTimeToUnixTS(DatEax)));
         end; 
         'Date.now' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(Now));
@@ -5647,107 +5642,93 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(Tomorrow));
         end; 
         'Date.unixEpoch' : begin
-            ExtEax := 0;
-            stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(ExtEax));
+            stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(UnixTSToDateTime(0)));
         end; 
         'Date.truncDate' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
             //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
             //StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
             //DatEax := StringYMDToDateTime(StrEax));
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(DateOf(DatEax)));
         end;
         'Date.truncTime' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(TimeOf(DatEax)));
         end;
         'Date.getYear' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(YearOf(DatEax)));
         end;
         'Date.getMonth' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;  
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MonthOf(DatEax)));
         end;
         'Date.getDay' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DayOf(DatEax)));
         end;
         'Date.getHour' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(HourOf(DatEax)));
         end;
         'Date.getHour24' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(HourOf(DatEax)));
         end;
         'Date.getHour12' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(((HourOf(DatEax))-1) mod 12 + 1));
         end;
         'Date.getMinute' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MinuteOf(DatEax)));
         end;
         'Date.getSecond' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(SecondOf(DatEax)));
         end;
         'Date.getMillisecond' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MillisecondOf(DatEax)));
         end;
         'Date.getWeekDay' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DayOfTheWeek(DatEax)));
         end;
         'Date.getYearDay' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DayOfTheYear(DatEax)));
         end;
         'Date.isPM' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(IsPM(DatEax)));
         end;
         'Date.isLeapYear' : begin
@@ -5757,359 +5738,355 @@ begin
         end;
         'Date.isInLeapYear' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(IsInLeapYear(DatEax)));
         end;
         'Date.setYear' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeYear(DatEax, IntEax)));
         end;
         'Date.setMonth' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeMonth(DatEax, IntEax)));
         end;
         'Date.setDay' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeDay(DatEax, IntEax)));
         end;
         'Date.setHour' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeHour(DatEax, IntEax)));
         end;
         'Date.setMinute' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeMinute(DatEax, IntEax)));
         end;
         'Date.setSecond' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeSecond(DatEax, IntEax)));
         end;
         'Date.setMillisecond' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(RecodeMillisecond(DatEax, IntEax)));
         end;
         'Date.addYear' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncYear(DatEax, IntEax)));
         end;
         'Date.addMonth' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncMonth(DatEax, IntEax)));
         end;
         'Date.addDay' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncDay(DatEax, IntEax)));
         end;
         'Date.addHour' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncHour(DatEax, IntEax)));
         end;
         'Date.addMinute' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncMinute(DatEax, IntEax)));
         end;
         'Date.addSecond' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncSecond(DatEax, IntEax)));
         end;
         'Date.addWeek' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncDay(DatEax, IntEax*7)));
         end;
         'Date.addMillisecond' : begin
             if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(IncMillisecond(DatEax, IntEax)));
         end;
         'Date.diffYear' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(YearsBetween(DatEax, DatEbx)));
         end;
         'Date.diffMonth' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MonthsBetween(DatEax, DatEbx)));
         end;
         'Date.diffDay' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DaysBetween(DatEax, DatEbx)));
         end;
         'Date.diffHour' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(HoursBetween(DatEax, DatEbx)));
         end;
         'Date.diffMinute' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MinutesBetween(DatEax, DatEbx)));
         end;
         'Date.diffSecond' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(SecondsBetween(DatEax, DatEbx)));
         end;
         'Date.diffMillisecond' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MillisecondsBetween(DatEax, DatEbx)));
         end;
         'Date.spanYear' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(YearSpan(DatEax, DatEbx)));
         end;
         'Date.spanMonth' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MonthSpan(DatEax, DatEbx)));
         end;
         'Date.spanDay' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(DaySpan(DatEax, DatEbx)));
         end;
         'Date.spanHour' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(HourSpan(DatEax, DatEbx)));
         end;
         'Date.spanMinute' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MinuteSpan(DatEax, DatEbx)));
         end;
         'Date.spanSecond' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(SecondSpan(DatEax, DatEbx)));
         end;
         'Date.spanMillisecond' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(MillisecondSpan(DatEax, DatEbx)));
         end;
         'Date.diffWeek' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WeeksBetween(DatEax, DatEbx)));
         end;
         'Date.spanWeek' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WeekSpan(DatEax, DatEbx)));
         end;
         'Date.compare' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(CompareDateTime(DatEbx, DatEax)));
         end;
         'Date.compareDate' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(CompareDate(DatEbx, DatEax)));
         end;
         'Date.compareTime' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(CompareTime(DatEbx, DatEax)));
         end;
         'Date.isInRange' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEcx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
-            DatEcx := TimestampToDateTime(ExtEcx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
+            DatEcx := TSToDateTime(EntEcx.Num, EntEcx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(DateTimeInRange(DatEax, DatEbx, DatEcx)));
         end;
         'Date.isDateInRange' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEcx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
-            DatEcx := TimestampToDateTime(ExtEcx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
+            DatEcx := TSToDateTime(EntEcx.Num, EntEcx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(DateInRange(DatEax, DatEbx, DatEcx)));
         end;
         'Date.isTimeInRange' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEcx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEbx := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit; 
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
-            DatEbx := TimestampToDateTime(ExtEbx);
-            DatEcx := TimestampToDateTime(ExtEcx);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
+            DatEbx := TSToDateTime(EntEbx.Num, EntEbx.Num2);
+            DatEcx := TSToDateTime(EntEcx.Num, EntEcx.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(TimeInRange(DatEax, DatEbx, DatEcx)));
         end;
         'Date.getYearWeek' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WeekOfTheYear(DatEax)));
         end;
         'Date.getMonthWeek' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WeekOfTheMonth(DatEax)));
         end;
         'Date.format' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;
             StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            ExtEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            DatEax := TimestampToDateTime(ExtEax);
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(FormatDateTime(StrEax, DatEax)));
         end;
         else begin

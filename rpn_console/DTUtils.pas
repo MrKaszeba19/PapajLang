@@ -39,8 +39,14 @@ function StringDMYToDateTime(input : String) : TDateTime;
 
 function FormatYMD(input : TDateTime) : String;
 
-function DateTimeToTimestamp(input : TDateTime) : Real;
-function TimestampToDateTime(input : Real) : TDateTime;
+function DateTimeToRealTimestamp(input : TDateTime) : Extended;
+function RealTimestampToDateTime(input : Extended) : TDateTime;
+
+function TSToDateTime(idate, itime : Extended) : TDateTime;
+function DateTimeToTS(input : TDateTime) : Extended;
+
+function UnixTSToDateTime(input : Extended) : TDateTime;
+function DateTimeToUnixTS(input : TDateTime) : Extended;
 
 function DateTimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
 function DateInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
@@ -103,7 +109,7 @@ begin
     Result := FormatDateTime(DATE_UN_DTP, input);
 end;
 
-function DateTimeToTimestamp(input : TDateTime) : Real;
+function DateTimeToRealTimestamp(input : TDateTime) : Extended;
 var
     ts : LongInt;
     ms : Word;
@@ -115,12 +121,56 @@ begin
     Result := rs;
 end;
 
-function TimestampToDateTime(input : Real) : TDateTime;
+function RealTimestampToDateTime(input : Extended) : TDateTime;
 begin
     if (input = int(input)) 
         then Result := UnixToDateTime(trunc(input))
         else Result := IncMillisecond(UnixToDateTime(trunc(input)), trunc(frac(input)*1000));
 end;
+
+// -----------------------------------------------
+// 1 AD Timestamp
+
+function TSToDateTime(idate, itime : Extended) : TDateTime;
+var
+    t : TTimeStamp;
+begin
+    t.Date := trunc(idate);
+    t.Time := trunc(itime);
+    Result := TimestampToDateTime(t);
+end;
+
+function DateTimeToTS(input : TDateTime) : Extended;
+var
+    t : TTimeStamp;
+begin
+    t := DateTimeToTimestamp(input);
+    Result := TimeStampToMSecs(t)/1000.0;
+end;
+// -----------------------------------------------
+
+// -----------------------------------------------
+// 1970 Unix epoch
+// TODO
+// check if it works on 32 bit
+function UnixTSToDateTime(input : Extended) : TDateTime;
+var
+    t : TTimeStamp;
+begin
+    t := MSecsToTimestamp(trunc(input*1000));
+    t.Date := t.Date + 719163;
+    Result := TimestampToDateTime(t);
+end;
+function DateTimeToUnixTS(input : TDateTime) : Extended;
+var
+    t : TTimeStamp;
+begin
+    t := DateTimeToTimestamp(input);
+    t.Date := t.Date - 719163;
+    Result := TimeStampToMSecs(t)/1000.0;
+end;
+
+// ------------------------------------------
 
 function DateTimeInRange(date, dstart, dend : TDateTime; Inclusive : Boolean = True) : Boolean;
 begin
