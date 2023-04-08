@@ -1146,7 +1146,6 @@ begin
             end else if (input[1] in ['$', '>', '-', '~', '@', '?']) then
             begin
                 if not lib_directives(input, Self, db) then
-                if not lib_logics(input, Self, db) then
                 if not lib_variables(input, Self, db) then
                 if not lib_ultravanilla(input, Self, db) then
                     Found := False;
@@ -1155,7 +1154,6 @@ begin
                     Found := False;
             end else begin
     	        if not lib_constants(input, Self, db) then
-    	        if not lib_logics(input, Self, db) then
                 if not lib_ultravanilla(input, Self, db) then
                 if not lib_exceptions(input, Self, db) then
                 if not searchThroughNamespacesImplicit(input, Self, db) then 

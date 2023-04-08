@@ -452,7 +452,7 @@ begin
     finally
         Registry.Free; 
     end;
-    Result := fl;
+    Result := fl*1000;
 end;
 
 function getRealCPUThreads() : LongInt;

@@ -12,7 +12,6 @@ function lib_strings(i : String; var env : PSEnvironment; var db : PSCommandDB) 
 function lib_directives(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_constants(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_variables(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
-function lib_logics(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_consolemanipulators(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_exceptions(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_arrays(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;

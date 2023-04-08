@@ -340,6 +340,7 @@ begin
             'dec' : db.Commands[x][y] := buildCalcDec();
             'cmod' : db.Commands[x][y] := buildCalcMod2();
             'cdiv' : db.Commands[x][y] := buildCalcIntegerDiv2();
+            // command
             'rem'     : db.Commands[x][y] := buildCmdPop();
             'clone'   : db.Commands[x][y] := buildCmdClone();
             'qshift'  : db.Commands[x][y] := buildCmdQShift();

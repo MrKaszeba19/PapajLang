@@ -3458,88 +3458,6 @@ begin
     Result := Found;
 end;
 
-// to trash
-function lib_logics(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
-var
-	Found                  : Boolean;
-	EntEax, EntEbx         : Entity;
-	LogEax, LogEbx, LogEcx : Boolean;
-begin
-	Found := true;
-	case i of
-		'=' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := (EntEax.Str = EntEbx.Str) and (EntEax.Num = EntEbx.Num);
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'!=' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := not ((EntEax.Str = EntEbx.Str) and (EntEax.Num = EntEbx.Num));
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'>' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := EntEax.Num > EntEbx.Num;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'<' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := EntEax.Num < EntEbx.Num;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'<=' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := EntEax.Num <= EntEbx.Num;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'>=' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		LogEax := EntEax.Num >= EntEbx.Num;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-		end;
-		'and' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		if EntEax.Num = 0 then LogEax := true else LogEax := false;
-    		if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    		LogEcx := LogEax and LogEbx;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-		end;
-		'or' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		if EntEax.Num = 0 then LogEax := true else LogEax := false;
-    		if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    		LogEcx := LogEax or LogEbx;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-		end;
-		'xor' : begin
-    		EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		if EntEax.Num = 0 then LogEax := true else LogEax := false;
-    		if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    		LogEcx := LogEax xor LogEbx;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-		end;
-		'not' : begin
-    		EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    		if EntEax.Num = 0 then LogEax := true else LogEax := false;
-    		LogEcx := not LogEax;
-    		stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-		end;
-		else begin
-        	Found := false;
-       	end;
-    end;
-    lib_logics := Found;
-end;
-
 function lib_consolemanipulators(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 var
     Found   : Boolean;
@@ -5646,9 +5564,6 @@ begin
         end; 
         'Date.truncDate' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, i)) then Exit;
-            //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TDAT, TSTR, i)) then Exit;  
-            //StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
-            //DatEax := StringYMDToDateTime(StrEax));
             EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
             DatEax := TSToDateTime(EntEax.Num, EntEax.Num2);
             stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(DateOf(DatEax)));
