@@ -439,7 +439,7 @@ var
 	pom : Entity;
     tmp : TTimeStamp;
 begin
-    tmp := MSecsToTimestamp(val*1000);
+    tmp := MSecsToTimestamp(trunc(val*1000));
 	pom.EntityType := TDAT;
 	pom.Str := FormatYMD(TimestampToDateTime(tmp));
 	pom.Num := tmp.Date;

@@ -21,12 +21,12 @@ begin
     writeln('RPN CALCULATOR - PapajScript Interpreter.');
     writeln('GUI Application.'); 
     if (RPN_update <= 0) 
-        then write('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetCPU+'.')
-        else write('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetCPU+'.');
+        then writeln('Version '+RPN_version+' ('+RPN_codename+') for '+RPN_targetOS+' '+RPN_targetCPU+'.')
+        else writeln('Version '+RPN_version+' ('+RPN_codename+'), update #'+IntToStr(RPN_update)+' for '+RPN_targetOS+' '+RPN_targetCPU+'.');
     //if (RPN_isStable)
     //    then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
     //    else writeln(' May be more unstable than usual. 3:)');
-    if (not RPN_isStable) then writeln(' May be more unstable than usual. 3:)');
+    if (not RPN_isStable) then writeln(' May be more unstable than usual. 3:)') else writeln();
     writeln('by Paul Lipkowski & his fiancee Rosie. ');
     //if (RPN_updated = '')
     //    then writeln('Released on '+RPN_date+'.')

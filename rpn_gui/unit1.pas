@@ -419,12 +419,12 @@ begin
     //DeleteFile(dir+'rpng_temp.ppsc');
 end;
 
+{$ENDIF}
+
 procedure TForm1.MenuAboutClick(Sender: TObject);
 begin
     Form3.ShowModal;
 end;
-
-{$ENDIF}
 
 procedure TForm1.MenuAutoClearClick(Sender: TObject);
 begin
