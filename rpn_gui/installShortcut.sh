@@ -8,7 +8,7 @@
 # flags:
 #    - (none)  : Just install RPN GUI App to your Desktop
 #    - v       : Do it verbosely (print every step)
-#    - m       : Install REPL to Apllications Menu
+#    - m       : Install GUI App to Apllications Menu
 #
 # ======================================================
 # =====================|SCRIPT|=========================
@@ -62,7 +62,6 @@ then
     if [ $verbose -eq 1 ] ;
     then
         echo Copying GUI App to your Applications Menu. 
-        #echo It is a sudo comand. You might be asked for your password.
     fi
     cp "$path/RPNG.desktop" "$HOME/.local/share/applications/RPNG.desktop"
     if [[ $? -eq 0 && $verbose -eq 1 ]] ;

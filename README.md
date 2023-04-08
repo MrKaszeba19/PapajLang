@@ -5,9 +5,9 @@ Version X.X.X (Leviathan)
 April 8, 2023  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
-Since 11/24/2017, proudly written in FreePascal. :smile:
+Since November 24, 2017 written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.2**, nickname Lamed) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.3**, nickname Mem) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
 
 ## How to use it
 
@@ -117,18 +117,18 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPN
 
 Version | Version Name | Date of Release | Improvements
 ------- | ------------ |:---------------:| ------------
-0.1.0 | Aleph | 11/24/2017 | Basic version
-0.2.0 | Bet | 11/27/2017 | Improved computing power of integer values
-0.2.1 | Gimel | 12/10/2017 | Unary operands
-0.3.0 | Dalet | 01/12/2018 | Detect system language (GUI, Linux), fix bugs, stack operations
-0.3.1 | Hey | 01/24/2018 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
-0.4.0 | Vav | 04/26/2018 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
-0.4.1 | Zain | 11/08/2018 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
-0.4.2 | Chet | 05/16/2019 | postfix calls, further code reconstruction
-0.4.3 | Tet | 05/15/2020 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
-0.5.0 | Yod | 08/14/2020 | New generation code, more packages and more
-0.5.1 | Khaf | 03/21/2021 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
-0.5.2 | Lamed | 12/18/2021 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
-0.5.3 | Mem | probably in 2023 | Locales, number systems, environment optimization
-0.5.4 | Nun | soon | Dataframes, files management, memory management
+0.1.0 | Aleph | 2017-11-24 | Basic version
+0.2.0 | Bet | 2017-11-27 | Improved computing power of integer values
+0.2.1 | Gimel | 2017-12-10 | Unary operands
+0.3.0 | Dalet | 2018-01-12 | Detect system language (GUI, Linux), fix bugs, stack operations
+0.3.1 | Hey | 2018-01-24 | More operands (e.g. GCD, LCM, more stack operations), Danish language for GUI
+0.4.0 | Vav | 2018-04-26 | Core improvements for console app, blocks of instructions, parsing script files, string and numbers management, more stack commands and other various abilities *and more*
+0.4.1 | Zain | 2018-11-08 | Reconstruction and optimization, RPN logo, creating own functions, REPL, variables, more string functions
+0.4.2 | Chet | 2019-05-16 | postfix calls, further code reconstruction
+0.4.3 | Tet | 2020-05-15 | Hebrew language for GUI, syntax changes, Arrays, Packages and more
+0.5.0 | Yod | 2020-08-14 | New generation code, more packages and more
+0.5.1 | Khaf | 2021-03-21 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
+0.5.2 | Lamed | 2021-12-18 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
+0.5.3 | Mem | 2023-04-08 | Locales, number systems, environment optimization
+0.5.4 | Nun | soon | Dataframes, polynomials, files management, memory management
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
