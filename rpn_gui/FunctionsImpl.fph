@@ -6340,6 +6340,11 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(convertBaseToDec(StrEax, 16)));
         end;
 
+        'Number.toDotNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, '.')));
+        end;
         'Number.toUSNumber' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -6354,6 +6359,11 @@ begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, '.', ',')));
+        end;
+        'Number.toCommaNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',')));
         end;
         'Number.toEUNumber' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
@@ -6375,21 +6385,26 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             stack_push(env.Stack[env.Settings.StackPointer], buildString(toNumberString(y, ',', '''')));
         end;
-        
-        
-        //Number.toUSNumber2 (,)
-        //Number.toUSNumber ( )
-        //Number.toEUNumber ()
-        //Number.toEUNumber2 (.)
-        //Number.toEUNumber ( )
-        
-        //Number.toUSNumber ()
-        //Number.toUSNumber2 (,)
-        //Number.toUSNumber ( )
-        //Number.toEUNumber ()
-        //Number.toEUNumber2 (.)
-        //Number.toEUNumber ( )
-        //FormatFloat(Settings.Mask, EntEax.Num)
+        'Number.valueCommaNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getNumberFromNumberString(StrEax, ',', '.')));
+        end;
+        'Number.valueDotNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getNumberFromNumberString(StrEax, '.', ',')));
+        end;
+        'Number.valueEUNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getNumberFromNumberString(StrEax, ',', '.')));
+        end;
+        'Number.valueUSNumber' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;  
+            StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getNumberFromNumberString(StrEax, '.', ',')));
+        end;
         else begin
             Found := false;
         end;

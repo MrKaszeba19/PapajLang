@@ -7,8 +7,6 @@ interface
 uses
 	Classes, SysUtils;
 
-//const charbase : String = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 procedure swapNumbers(var e1 : Extended; var e2 : Extended);
 function pow(x, y : Extended) : Extended;
 function pow2(x, y : Extended) : Extended;
@@ -107,6 +105,7 @@ function convertDecToBase(a : LongInt; base : Integer) : String;
 function convertBaseToDec(str : String; base : Integer) : LongInt;
 
 function toNumberString(input : Extended; decimal : String; thousand : String = '') : String;
+function getNumberFromNumberString(input : String; decimal : String; thousand : String = '') : Extended;
 
 
 implementation
@@ -1706,6 +1705,24 @@ begin
         end;
 end;
 
+function getNumberFromNumberString(input : String; decimal : String; thousand : String = '') : Extended;
+var
+    t  : Extended;
+    fl : LongInt;
+begin
+    input := StringReplace(input, '''', '', [rfReplaceAll]);
+    input := StringReplace(input, ' ', '', [rfReplaceAll]);
+    if thousand <> '' then
+        input := StringReplace(input, thousand[1], '', [rfReplaceAll]);
+    if decimal[1] = ',' then
+    begin
+        input := StringReplace(input, ',', '.', [rfReplaceAll]);
+    end;
+    val(input, t, fl);
+    if fl = 0 
+        then Result := t
+        else Result := NaN;
+end;
 
 end.
 
