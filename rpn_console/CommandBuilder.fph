@@ -187,13 +187,19 @@ begin
             M[s] := L[i];
         end;
     end;
+    // remove empty strings in the end
+    //writeln(M[Length(M)-1]);
+    //writeln(Length(M[Length(M)-1]));
+    while Length(M[Length(M)-1]) = 0 do SetLength(M, Length(M)-1); 
     Result := M;
 end;
 
 // function that does all above in once
 function getListOfWords(input : String) : TStringArray;
 begin
-    Result := makeWords(splitToWords(input));
+    if Length(input) = 0 
+        then Result := Default(TStringArray)
+        else Result := makeWords(splitToWords(input));
 end;
 
 
@@ -270,6 +276,7 @@ begin
     SetLength(db.Commands, x+1);
     if Length(Args) > 0 then
     begin
+        //{debug-ifargs} writeln('args');
         //{debug-makelist} writeln('args ', #9, Length(Args));
         if (Length(Args[0]) > 0) and (Args[0][1] = '(') then Args[0] := RightStr(Args[0], Length(Args[0])-1); 
         for index := Length(Args)-1 downto 0 do
@@ -285,6 +292,8 @@ begin
             end; 
             y := y+1;
         end;
+    //{debug-ifargs} end else begin
+    //{debug-ifargs}     writeln('no args');
     end;
     index := 0;
     //{debug-makelist} writeln('length ', #9, x, #9, Length(L));
@@ -292,7 +301,6 @@ begin
 	begin
         if (L[index] = '') then
 		begin
-            writeln('pass');
 			Inc(index);
 			continue;
 		end;
@@ -340,6 +348,7 @@ begin
             'dec' : db.Commands[x][y] := buildCalcDec();
             'cmod' : db.Commands[x][y] := buildCalcMod2();
             'cdiv' : db.Commands[x][y] := buildCalcIntegerDiv2();
+            // command
             'rem'     : db.Commands[x][y] := buildCmdPop();
             'clone'   : db.Commands[x][y] := buildCmdClone();
             'qshift'  : db.Commands[x][y] := buildCmdQShift();
@@ -773,6 +782,8 @@ begin
                     Scripts[z] := makeListOfCommands(getListOfWords(StrEax), Scripts[z]);
                     SetLength(db.Commands[x], y+1);
                     db.Commands[x][y] := buildCreateFunction(z);
+                    SetLength(N, 0);
+                    while (L[index] = '') do index := index + 1;
                 end else begin
                     Val(L[index], Num, Code);
                     if Code <> 0 then

@@ -1146,7 +1146,6 @@ begin
             end else if (input[1] in ['$', '>', '-', '~', '@', '?']) then
             begin
                 if not lib_directives(input, Self, db) then
-                if not lib_logics(input, Self, db) then
                 if not lib_variables(input, Self, db) then
                 if not lib_ultravanilla(input, Self, db) then
                     Found := False;
@@ -1155,7 +1154,6 @@ begin
                     Found := False;
             end else begin
     	        if not lib_constants(input, Self, db) then
-    	        if not lib_logics(input, Self, db) then
                 if not lib_ultravanilla(input, Self, db) then
                 if not lib_exceptions(input, Self, db) then
                 if not searchThroughNamespacesImplicit(input, Self, db) then 
@@ -1194,6 +1192,7 @@ begin
         case db.Commands[at][i].Name of
             _EVAL : begin
                 //{debug-exec} write(#9, db.Commands[at][i].StrParam);
+                if db.Commands[at][i].StrParam <> '' then
                 evaluate(db, db.Commands[at][i].StrParam);
             end;
             _PUSH : begin
@@ -1212,6 +1211,7 @@ begin
                         wrapArray(db, db.Commands[at][i].IntParam);
                     end;
                     _FUNC : begin
+                        //{debug-exec-func} write(#9, db.Commands[at][i].IntParam);
                         stack_push(Stack[Settings.StackPointer], buildFunction(db.Commands[at][i].IntParam));
                     end;
                 end;
@@ -1389,16 +1389,18 @@ var
 //   cmds : PSCommandDB;
     index : LongInt;
 begin
-    index := Length(Scripts);
-    SetLength(Scripts, index+1);
-    //{debug-adjust} writeln('adjusted code:', #13#10, input); 
-    //{debug-adjust} writeln('Done.'); 
-    //{debug-build} writeln('2 - COMMANDS CONSTRUCTION'); 
-    {build} Scripts[index] := buildCommands(input, Scripts[index]);
-    //{debug-build} writeln('Done.'); 
-    //{debug-exec} writeln('3 - COMMANDS EXECUTION'); 
-    {exec} executeCommands(Scripts[index]);
-    // xd
+    if (input <> '') then
+    begin
+        index := Length(Scripts);
+        SetLength(Scripts, index+1);
+        //{debug-adjust} writeln('adjusted code:', #13#10, input); 
+        //{debug-adjust} writeln('Done.'); 
+        //{debug-build} writeln('2 - COMMANDS CONSTRUCTION'); 
+        {build} Scripts[index] := buildCommands(input, Scripts[index]);
+        //{debug-build} writeln('Done.'); 
+        //{debug-exec} writeln('3 - COMMANDS EXECUTION'); 
+        {exec} executeCommands(Scripts[index]);
+    end;
 end;
 
 procedure PSEnvironment.runFromString(input : String);

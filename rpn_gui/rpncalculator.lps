@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="10"/>
+    <Version Value="12"/>
     <BuildModes Active="Default"/>
     <Units Count="21">
       <Unit0>
@@ -175,7 +175,7 @@
         <UsageCount Value="20"/>
       </Unit20>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="unit1.pas"/>
         <Caret Line="373" Column="34" TopLine="344"/>
@@ -291,10 +291,10 @@
         <Filename Value="unit4.pas"/>
         <Caret Line="55" Column="6" TopLine="26"/>
       </Position29>
-      <Position30>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="77" Column="15" TopLine="498"/>
-      </Position30>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
 </CONFIG>

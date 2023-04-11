@@ -3,12 +3,13 @@ unit RPNAbout;
 interface
 
 const RPN_version = '0.5.3';
-const RPN_update = 0;
+const RPN_update = 1;
 const RPN_codename = 'Mem';
 const RPN_generation = 3;
 const RPN_isStable = True;
-const RPN_date = {$I %DATE%};
-const RPN_updated = '';
+//const RPN_date = {$I %DATE%};
+const RPN_date = '2023-04-08';
+const RPN_updated = '2023-04-11';
 const RPN_targetCPU = {$I %FPCTARGETCPU%};
 {$ifdef WINDOWS}
 const RPN_targetOS = 'Windows';
