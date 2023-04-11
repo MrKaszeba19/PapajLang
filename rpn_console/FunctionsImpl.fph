@@ -3032,7 +3032,7 @@ begin
         '@silent(FALSE)' : begin
            env.Settings.Prevent := false;
         end;
-        '@autoclear(true)' : begin
+        '@autoclear(true)' : begin // obsolete since v053
            env.Settings.Autoclear := true;
         end;
         '@autoclear(false)' : begin
@@ -3418,19 +3418,6 @@ begin
      	end;
      	else begin
             case LeftStr(i, 2) of
-                //'@@' : begin 
-                //    if (RightStr(i, Length(i)-2) <> '') then begin
-                //        StrEax := RightStr(i, Length(i)-2);
-                //        EntEax := env.Variables.getVariable(StrEax);
-                //        if LeftStr(StrEax, 7) = 'global.' 
-                //            then EntEax := env.Variables.getGlobalVariable(StrEax)
-                //            else EntEax := env.Variables.getVariable(StrEax);
-                //        if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], EntEax, TFUN, i)) then Exit;   
-                //        doFunctionOld(EntEax, env.Stack, env.Settings, env.Variables);
-                //    end else begin
-                //        stack_push(env.Stack[env.Settings.StackPointer], raiseGetUnnamedVariable());
-                //    end;
-                //end;
                 '->' : begin 
      		        if (RightStr(i, Length(i)-2) <> '') then begin
                 		StrEax := RightStr(i, Length(i)-2);

@@ -1,0 +1,13 @@
+@use(Math)
+@use(Array)
+
+function (item) {
+	"" -> $s
+	if ($item 3 mod 0 =) { $s "Fizz" + -> $s }
+	if ($item 5 mod 0 =) { $s "Buzz" + -> $s }
+	if ($s "" =) { $item -> $s }
+	$s
+} -> eval
+
+
+[1 1 500 seq] $eval map println

@@ -7,10 +7,10 @@ function { sin } -> g
 
 function ( f g k ) {
 	[ $k genNaturalDivisors ] 
-		fun{ >i 
-                      $i f $k $i div g * 
-		} map
-		reduceSum
+	function (i) { 
+        $i f $k $i div g * 
+	} map
+	reduceSum
 } -> DirichletConvolve
 
 scan toNumber -> $n
