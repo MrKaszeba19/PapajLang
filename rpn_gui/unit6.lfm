@@ -2,10 +2,10 @@ object Form3: TForm3
   Left = 1465
   Height = 240
   Top = 334
-  Width = 320
+  Width = 400
   Caption = 'Info'
   ClientHeight = 240
-  ClientWidth = 320
+  ClientWidth = 400
   OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '2.2.0.4'
@@ -13,7 +13,7 @@ object Form3: TForm3
     Left = 123
     Height = 25
     Top = 193
-    Width = 75
+    Width = 155
     Anchors = [akLeft, akRight, akBottom]
     Caption = 'Close'
     OnClick = Button1Click
@@ -42,8 +42,8 @@ object Form3: TForm3
     Left = 8
     Height = 16
     Top = 88
-    Width = 212
-    Caption = 'by Paul Lipkowski & his fiancée Rosie'
+    Width = 235
+    Caption = 'by Paul Lipkowski and his fiancée Rosie'
   end
   object Label4: TLabel
     Left = 8

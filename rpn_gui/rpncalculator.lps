@@ -53,7 +53,7 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="26"/>
-        <CursorPos X="6" Y="55"/>
+        <CursorPos X="94" Y="46"/>
         <UsageCount Value="37"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -135,35 +135,10 @@
         <UsageCount Value="27"/>
       </Unit15>
       <Unit16>
-        <Filename Value="UnitFunctions.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1412"/>
-        <CursorPos X="18" Y="1465"/>
-        <UsageCount Value="30"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="ConsoleUtils.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="18"/>
-        <UsageCount Value="23"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3254"/>
-        <CursorPos Y="3271"/>
-        <UsageCount Value="10"/>
-      </Unit18>
-      <Unit19>
-        <Filename Value="UnitREPL.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="14"/>
-        <UsageCount Value="20"/>
-      </Unit19>
-      <Unit20>
         <Filename Value="unit6.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit6"/>
         <EditorIndex Value="7"/>
@@ -172,6 +147,32 @@
         <UsageCount Value="22"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="UnitFunctions.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1412"/>
+        <CursorPos X="18" Y="1465"/>
+        <UsageCount Value="30"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="ConsoleUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="18"/>
+        <UsageCount Value="23"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3254"/>
+        <CursorPos Y="3271"/>
+        <UsageCount Value="10"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="UnitREPL.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14"/>
+        <UsageCount Value="20"/>
       </Unit20>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
