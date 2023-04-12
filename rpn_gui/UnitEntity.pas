@@ -178,24 +178,29 @@ end;
 function default_settings(LoadAll : Boolean = False) : TSettings;
 var pom : TSettings;
 begin
-  pom.Prevent := false;
-  pom.Autoclear := true;
-  pom.Mask := '0.################';
-  pom.SortType := 1;
-  pom.StrictType := true;
-  pom.CaseSensitive := true;
-  pom.StackPointer := 0;
-  pom.KeepWorking := 2;
-  pom.Packages := default_packages(LoadAll);
-  pom.InfMode := false;
-  pom.StringStart := 0;
-  pom.StringMode := MCLIKE;
-  {$IFDEF MSWINDOWS}
-  pom.Shell := SHELL_CMD;
-  {$ELSE}
-  pom.Shell := SHELL_BASH;
-  {$ENDIF}
-  default_settings := pom;
+    pom.Prevent := false;
+    pom.Autoclear := true;
+    pom.Mask := '0.################';
+    pom.SortType := 1;
+    pom.StrictType := true;
+    pom.CaseSensitive := true;
+    pom.StackPointer := 0;
+    pom.KeepWorking := 2;
+    pom.Packages := default_packages(LoadAll);
+    pom.InfMode := false;
+    pom.StringStart := 0;
+    pom.StringMode := MCLIKE;
+    {$IFDEF MSWINDOWS}
+    pom.Shell := SHELL_CMD;
+    {$ENDIF}
+    {$IFDEF UNIX}
+        {$IFDEF LINUX}
+        pom.Shell := SHELL_BASH;
+        {$ELSE}
+        pom.Shell := SHELL_SH;
+        {$ENDIF}
+    {$ENDIF}
+    Result := pom;
 end;
 
 procedure raiserror(Const msg : string);  

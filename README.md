@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-April 11, 2023  
+April 12, 2023  
 by Paul Lipkowski (RooiGevaar19) & his fiancée Rosie (rozirogal) :heart: 
 
 Since November 24, 2017 written in FreePascal. :smile:
@@ -32,6 +32,10 @@ Since November 24, 2017 written in FreePascal. :smile:
     * Windows users are required to have `rpn` console app in the same directory as the GUI app
 
 ## Requirements and installation
+- Supported systems:
+    * **Linux** (32 and 64 bit)
+    * **Windows** (32 and 64 bit) – full support for both GUI and console apps is provided for Windows 2000 and newer OSes. 
+    * **FreeBSD** (64 bit) – *planned*
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) for Console app only
@@ -49,7 +53,6 @@ Since November 24, 2017 written in FreePascal. :smile:
     * modify your $PATH
     * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
     * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed.
-- Unix support is planned
 
 ## PapajScript:
 

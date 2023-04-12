@@ -13,7 +13,6 @@ function getOSDistribution() : String;
 function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
-//function getCPUName() : String;
 function getCPUName(index : LongInt) : String;
 function getRealCPUThreads() : LongInt;
 function getCPUBaseFreq(index : LongInt) : Extended;
@@ -454,15 +453,15 @@ begin
     end;
     Result := fl*1000;
 end;
+{$endif}
 
 function getRealCPUThreads() : LongInt;
 begin
     Result := GetCPUCount;
     //Result := sysconf(83); 
 end;
-{$endif}
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 function getRealCPUArch() : String;
 begin
     Result := UnixSysInfo('architecture');
@@ -473,13 +472,15 @@ begin
     Result := StrToInt(executeCommand('getconf LONG_BIT', GetEnvironmentVariable('SHELL')));
 end;
 
-function getRealCPUThreads() : LongInt;
-begin
-    Result := StrToInt(trim(executeCommand('nproc --all', GetEnvironmentVariable('SHELL'))));
-    //Result := GetCPUCount;
-    //Result := sysconf(83); 
-end;
+//function getRealCPUThreads() : LongInt;
+//begin
+//    Result := StrToInt(trim(executeCommand('nproc --all', GetEnvironmentVariable('SHELL'))));
+//    //Result := GetCPUCount;
+//    //Result := sysconf(83); 
+//end;
+{$ENDIF}
 
+{$IFDEF LINUX}
 function getRAMUsageByPID(pid : String) : String;
 var
     fn : Text;
@@ -912,7 +913,12 @@ begin
     Result := usg2;
     //SetLength(st, 0);
 end;
+{$ENDIF}
 
+{$IFDEF FreeBSD}
+//function getCPUName(index : LongInt) : String;
+//function getRealCPUThreads() : LongInt;
+//function getCPUBaseFreq(index : LongInt) : Extended;
 {$ENDIF}
 
 end.
