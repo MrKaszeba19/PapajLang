@@ -1,5 +1,6 @@
 @use(Math)
 @use(Array)
+@use(Number)
 
 [ 1 1 20 seq ] 
 	fun{ factorial } map

@@ -625,7 +625,7 @@ begin
     if (Settings.StrictType) and (stack_searchException(Stack[Settings.StackPointer])) then
     begin
         //SetLength(db, 0);
-        SetLength(Scripts, 0);
+        //SetLength(Scripts, 0);
 		raiserror(stack_pop(Stack[Settings.StackPointer]).Str);
 	end;
 end;
