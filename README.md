@@ -47,7 +47,7 @@ Since November 24, 2017 written in FreePascal. :smile:
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
     then simply run `compile.sh` (in Linux and FreeBSD) or `compile.bat` (in Windows) to compile the project
     * if you don't have Lazarus IDE,  
-    then you may compile the **console app** project using `compileWithFPC.sh` (Linux with Bash shell) or `compileWithFPC.bat` (Windows). 
+    then you may compile the **console app** project using `compileWithFPC.sh` (Linux or FreeBSD with Bash shell) or `compileWithFPC.bat` (Windows). 
 - You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Linux, FreeBSD) or `installREPL.bat` (Windows)
 - (for Linux/FreeBSD users) If you want to have `rpn` available in your shell, you can either
     * modify your shell $PATH
