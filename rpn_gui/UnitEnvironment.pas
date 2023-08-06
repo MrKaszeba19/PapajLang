@@ -103,6 +103,13 @@ type PSCmdType2 = (
     _LN
 );
 
+type PSRunningState = (
+    STAT_OK,
+    STAT_CONTINUE,
+    STAT_BREAK,
+    STAT_EXC
+);
+
 type TStringArrArray = array of TStringArray;
 
 type PSCommand = record
@@ -156,6 +163,7 @@ type TParams = array of String;
 type PSEnvironment = object
     private
         Scripts : array of PSCommandDB;
+        Status  : PSRunningState;
         procedure checkExceptions(var db : PSCommandDB);
         procedure params_assign(Params : TParams = Default(TParams));   
         //procedure makeListOfCommands(L : TStringArray; var db : PSCommandDB; Args : TStringArray = Default(TStringArray));
@@ -544,6 +552,7 @@ begin
 	Self.Settings := default_settings(LoadAll);
     Self.Variables.Create;
     Self.AutoReset := False;
+    Self.Status := STAT_OK;
 end;
 
 constructor PSEnvironment.Create(sets : TSettings);
@@ -554,6 +563,7 @@ begin
 	Self.Settings := sets;
     Self.Variables.Create;
     Self.AutoReset := False;
+    Self.Status := STAT_OK;
 end;
 
 destructor PSEnvironment.Destroy;
