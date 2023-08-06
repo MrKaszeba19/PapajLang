@@ -29,7 +29,8 @@ then
     echo Starting...
 fi
 
-if ! command -v xdg-user-dir &> /dev/null then
+#if ! command -v xdg-user-dir &> /dev/null then
+if ! type xdg-user-dir &> /dev/null then
 then
     echo "Warning: xdg-user-dir not installed on this computer."
     echo "Using explicit ~/Desktop as the Desktop path. This path might not exist on non-English OSes."

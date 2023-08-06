@@ -35,24 +35,24 @@ Since November 24, 2017 written in FreePascal. :smile:
 - Supported systems:
     * **Linux** (32 and 64 bit)
     * **Windows** (32 and 64 bit) – full support for both GUI and console apps is provided for Windows 2000 and newer OSes. 
-    * **FreeBSD** (64 bit) – *planned*
+    * **FreeBSD** (64 bit)
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
-    * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) for Console app only
+    * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) in order ot compile just Console app
     * if you use a non-Debian-like Linux, then **xterm** *might be recommended* 
-    * **bash** shell, if you use Linux (zsh and sh support is planned)
+    * **bash** shell, if you use Linux or FreeBSD
 - There are three ways to build RPN Calculator
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
-    then simply run `compile.sh` (in Linux systems) or `compile.bat` (in Windows systems) to compile the project
-    * if you don't have Lazarus IDE and you use a Unix/Linux-like system,  
-    then you may compile the **console app** project using `compileWithFPC.sh` (Linux) or `compileWithFPC.bat` (Windows)
-- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Linux) or `installREPL.bat` (Windows)
-- (for Linux users) If you want to have `rpn` available in your bash shell, you can either
-    * modify your $PATH
-    * run `installLocal.sh` to add `rpn` executable to your local **$PATH** automatically
-    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed.
+    then simply run `compile.sh` (in Linux and FreeBSD) or `compile.bat` (in Windows) to compile the project
+    * if you don't have Lazarus IDE,  
+    then you may compile the **console app** project using `compileWithFPC.sh` (Linux with Bash shell) or `compileWithFPC.bat` (Windows). 
+- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Linux, FreeBSD) or `installREPL.bat` (Windows)
+- (for Linux/FreeBSD users) If you want to have `rpn` available in your shell, you can either
+    * modify your shell $PATH
+    * run `installLocal.sh` to add `rpn` executable to your local bash **$PATH** automatically
+    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed. It requires bash shell to be executed, but the RPN app can be accessed via any shell afterwards.
 
 ## PapajScript:
 

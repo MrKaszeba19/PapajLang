@@ -464,7 +464,7 @@ begin
 end;
 {$endif}
 
-{$ifndef freebsd}
+//{$ifndef freebsd}
 function getRealCPUThreads() : LongInt;
 begin
     Result := GetCPUCount;
@@ -472,7 +472,7 @@ begin
     //Result := sysconf(83); 
     //{$ENDIF}
 end;
-{$endif}
+//{$endif}
 
 {$IFDEF UNIX}
 function getRealCPUArch() : String;
@@ -928,8 +928,8 @@ begin
 end;
 {$ENDIF}
 
-//{$IFDEF FreeBSD}
-{$IFDEF UNIX}
+{$IFDEF FreeBSD}
+//{$IFDEF UNIX}
 
 function getShell() : String;
 begin
@@ -971,16 +971,16 @@ begin
 end;
 
 
-function getRealCPUThreads() : LongInt;
-var
-    s  : String;
-begin
-    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-    s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-    s := Trim(s);
-    //s := s.Split([' '])[0];
-    Result := StrToInt(s);
-end;
+//function getRealCPUThreads() : LongInt;
+//var
+//    s  : String;
+//begin
+//    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+//    s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+//    s := Trim(s);
+//    //s := s.Split([' '])[0];
+//    Result := StrToInt(s);
+//end;
 
 function getCPUBaseFreq(index : LongInt) : Extended;
 var
