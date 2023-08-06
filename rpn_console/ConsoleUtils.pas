@@ -18,6 +18,7 @@ function getRealCPUThreads() : LongInt;
 function getCPUBaseFreq(index : LongInt) : Extended;
 function isUnix() : Boolean;
 function isLinux() : Boolean;
+function isFreeBSD() : Boolean;
 function isWindows() : Boolean;
 {$IFDEF LINUX}
 function getRealCPUArch() : String;
@@ -48,6 +49,9 @@ uses
         registry,
     {$ELSE}
         UnixCrt,
+ 	{$ENDIF}
+ 	{$IFDEF FreeBSD}
+ 	unix, sysctl,
  	{$ENDIF}
     SysUtils, StrUtils, Process;
 
@@ -415,6 +419,11 @@ begin
     {$IFDEF WINDOWS} Result := True; {$ELSE} Result := False; {$ENDIF}
 end;
 
+function isFreeBSD() : Boolean;
+begin
+    {$IFDEF FreeBSD} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
 {$IFDEF WINDOWS}
 
 //function getCPUName() : String;
@@ -455,11 +464,15 @@ begin
 end;
 {$endif}
 
+{$ifndef freebsd}
 function getRealCPUThreads() : LongInt;
 begin
     Result := GetCPUCount;
+    //{$IFDEF FreeBSD}
     //Result := sysconf(83); 
+    //{$ENDIF}
 end;
+{$endif}
 
 {$IFDEF UNIX}
 function getRealCPUArch() : String;
@@ -915,10 +928,73 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF FreeBSD}
-//function getCPUName(index : LongInt) : String;
-//function getRealCPUThreads() : LongInt;
-//function getCPUBaseFreq(index : LongInt) : Extended;
+//{$IFDEF FreeBSD}
+{$IFDEF UNIX}
+
+function getShell() : String;
+begin
+    Result := GetEnvironmentVariable('SHELL'); 
+end;
+
+function getCPUName(index : LongInt) : String;
+{*
+var
+    fn : Text;
+    s  : String;
+begin
+    assignfile(fn, '/var/run/dmesg.boot');
+    reset(fn);
+    while not eof(fn) do
+    begin
+        readln(fn, s);
+        if (LeftStr(s, 5) = 'CPU: ') then 
+        begin
+            //writeln(s);
+            //s := TrimLeft(RightStr(s, Length(s)-9));
+            //s := LeftStr(s, Length(s)-3);
+            s := RightStr(s, Length(s)-5);
+            break;
+        end;
+    end;
+    closefile(fn);
+    Result := s;
+end;
+*}
+var
+    s  : String;
+begin
+    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+    s := executeCommand('sysctl -n hw.model', GetEnvironmentVariable('SHELL'));
+    s := Trim(s);
+    //s := s.Split([' '])[0];
+    Result := s;
+end;
+
+
+function getRealCPUThreads() : LongInt;
+var
+    s  : String;
+begin
+    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+    s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+    s := Trim(s);
+    //s := s.Split([' '])[0];
+    Result := StrToInt(s);
+end;
+
+function getCPUBaseFreq(index : LongInt) : Extended;
+var
+    s  : String;
+begin
+    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
+    s := executeCommand('sysctl -n hw.clockrate', GetEnvironmentVariable('SHELL'));
+    s := Trim(s);
+    //s := s.Split([' '])[0];
+    Result := StrToInt(s)*1000;
+end;
+
+
+
 {$ENDIF}
 
 end.
