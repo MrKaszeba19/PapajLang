@@ -306,3 +306,15 @@ begin
     Result.Name  := _TEST;
     Result.Name2 := _NOT;
 end;
+
+function buildCmdBreak() : PSCommand;
+begin
+    Result.Name     := _SIGNAL;
+    Result.Name2    := _BREAK;
+end;
+
+function buildCmdContinue() : PSCommand;
+begin
+    Result.Name     := _SIGNAL;
+    Result.Name2    := _CONTINUE;
+end;

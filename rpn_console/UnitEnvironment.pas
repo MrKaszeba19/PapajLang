@@ -49,8 +49,6 @@ type PSCmdType = (
     _GET,
     _KILL,
     _CREATE,
-    _BREAK,
-    _CONT,
     _CAST,
     _CALC,
     _TEST,
@@ -59,6 +57,7 @@ type PSCmdType = (
     _QSHIFT,
     _PRINT,
     _SIZE,
+    _SIGNAL,
     _EXIT
 );
 
@@ -66,6 +65,9 @@ type PSCmdType2 = (
     _NONE,
     _LVAR,
     _GVAR,
+    _CONTINUE,
+    _BREAK,
+    _EXC,
     _ARRAY,
     _FUNC,
     _EXPR,
@@ -970,8 +972,10 @@ begin
     i := 1;
     while (i <= n) do
     begin
-        executeSet(db, at);
         i := i+1;
+        executeSet(db, at);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
     end;
 end;
 
@@ -982,6 +986,8 @@ begin
     begin
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
         executeSet(db, inst);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
     end;
 end;
@@ -991,6 +997,8 @@ begin
     while True do
     begin
         executeSet(db, inst);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
     end;
@@ -1003,6 +1011,8 @@ begin
     begin
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) = 0) then break;
         executeSet(db, inst);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
     end;
 end;
@@ -1012,6 +1022,8 @@ begin
     while True do
     begin
         executeSet(db, inst);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) = 0) then break;
     end;
@@ -1025,6 +1037,8 @@ begin
     begin
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
         executeSet(db, inst);
+        if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+        if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, incr);
         executeSet(db, cond);
     end;
@@ -1056,6 +1070,8 @@ begin
             Variables.setLocalVariable(item, Stack[location].Values[index]);
             executeSet(db, inst);
             if alter then Stack[location].Values[index] := Variables.getLocalVariable(item);
+            if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+            if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         end;
     end else begin
         for index := 0 to Length(Stack[location].Values)-1 do
@@ -1064,6 +1080,8 @@ begin
             Variables.setLocalVariable(item, Stack[location].Values[index]);
             executeSet(db, inst);
             if alter then Stack[location].Values[index] := Variables.getLocalVariable(item);
+            if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
+            if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         end;
     end;
     Variables.removeLayer();
@@ -1112,6 +1130,8 @@ procedure PSEnvironment.doFunction(at : LongInt);
 begin
     Variables.addLayer();
     executeCommands(Scripts[at]);
+    if (Status = STAT_BREAK) then begin Status := STAT_OK; end;
+    if (Status = STAT_CONTINUE) then begin Status := STAT_OK; end;
     Variables.removeLayer();
 end;
 
@@ -1198,6 +1218,8 @@ begin
     //{debug-exec} writeln('commands to do: ', Length(db.Commands[at]));
     for i := 0 to Length(db.Commands[at])-1 do
     begin
+        if (Status = STAT_BREAK) then break;
+        if (Status = STAT_CONTINUE) then break;
         //{debug-exec} write('doing ', #9, db.Commands[at][i].Name);
         case db.Commands[at][i].Name of
             _EVAL : begin
@@ -1362,6 +1384,22 @@ begin
             end;
             _SIZE : begin
           	    stack_push(Stack[Settings.StackPointer], buildNumber(stack_size(Stack[Settings.StackPointer])));
+            end;
+            _SIGNAL : begin
+                //{debug-exec} write(#9, db.Commands[at][i].Name2);
+                case db.Commands[at][i].Name2 of
+                    _BREAK : begin
+                        Self.Status := STAT_BREAK;
+                        break;
+                        //wrapArray(db, db.Commands[at][i].IntParam);
+                    end;
+                    _CONTINUE : begin
+                        Self.Status := STAT_CONTINUE;
+                        break;
+                        //{debug-exec-func} write(#9, db.Commands[at][i].IntParam);
+                        //stack_push(Stack[Settings.StackPointer], buildFunction(db.Commands[at][i].IntParam));
+                    end;
+                end;
             end;
         end;
         checkExceptions(db);

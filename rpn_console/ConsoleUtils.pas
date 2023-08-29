@@ -50,7 +50,10 @@ uses
     {$ELSE}
         UnixCrt,
  	{$ENDIF}
- 	{$IFDEF FreeBSD}
+ 	{$IFDEF Linux}
+ 	unix, linux,
+ 	{$ENDIF}
+    {$IFDEF FreeBSD}
  	unix, sysctl,
  	{$ENDIF}
     SysUtils, StrUtils, Process;

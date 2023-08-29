@@ -349,15 +349,17 @@ begin
             'cmod' : db.Commands[x][y] := buildCalcMod2();
             'cdiv' : db.Commands[x][y] := buildCalcIntegerDiv2();
             // command
-            'rem'     : db.Commands[x][y] := buildCmdPop();
-            'clone'   : db.Commands[x][y] := buildCmdClone();
-            'qshift'  : db.Commands[x][y] := buildCmdQShift();
-            'print'   : db.Commands[x][y] := buildCmdPrint();
-            'println' : db.Commands[x][y] := buildCmdPrintLn();
-            'scan'    : db.Commands[x][y] := buildCmdScan();
-            'size'    : db.Commands[x][y] := buildCmdSize();
-            'all'     : db.Commands[x][y] := buildCmdSize();
-            'call'    : db.Commands[x][y] := buildCallFunction();
+            'rem'      : db.Commands[x][y] := buildCmdPop();
+            'clone'    : db.Commands[x][y] := buildCmdClone();
+            'qshift'   : db.Commands[x][y] := buildCmdQShift();
+            'print'    : db.Commands[x][y] := buildCmdPrint();
+            'println'  : db.Commands[x][y] := buildCmdPrintLn();
+            'scan'     : db.Commands[x][y] := buildCmdScan();
+            'size'     : db.Commands[x][y] := buildCmdSize();
+            'all'      : db.Commands[x][y] := buildCmdSize();
+            'call'     : db.Commands[x][y] := buildCallFunction();
+            'break'    : db.Commands[x][y] := buildCmdBreak();
+            'continue' : db.Commands[x][y] := buildCmdContinue();
             else begin
                 if ((LeftStr(L[index], 1) = '"') and (RightStr(L[index], 1) = '"')) then begin
                     StrEax := L[index];

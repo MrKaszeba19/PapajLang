@@ -1,0 +1,43 @@
+@silent
+"Test break" println
+0 -> $i
+1 1 10 seq count times {
+	if ($i 6 =) break
+	$i
+	$i ++ -> i
+}
+statusln clear
+
+"Test continue 1" println
+0 -> $i
+1 1 10 seq count times {
+	if ($i 6 =) continue
+	$i
+	$i ++ -> i
+}
+statusln clear
+
+"Test continue 2" println
+0 -> $i
+1 1 10 seq count times {
+	$i
+	if ($i 6 =) continue
+	$i ++ -> i
+}
+statusln clear
+
+"Test continue 3" println
+
+for ($i : [0 1 10 seq]) {
+	if ($i 6 =) continue
+	$i
+}
+statusln clear
+
+"Test continue 4" println
+
+for ($i : [0 1 30 seq]) {
+	if ($i 3 mod) continue
+	$i
+}
+statusln clear
