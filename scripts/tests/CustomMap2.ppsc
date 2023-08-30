@@ -15,7 +15,7 @@ function ($T $func) {
 	$T
 } -> map
 
-[1 1 5 seq] -> T
+[1 1 $n seq] -> T
 function (x) { x x * } -> f
 
 $T $f map println

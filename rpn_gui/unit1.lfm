@@ -819,14 +819,24 @@ object Form1: TForm1
     VariableAttri.Foreground = clFuchsia
     KeyWords.Strings = (
       'ALL'
+      'AND'
+      'BREAK'
+      'CONTINUE'
+      'DIV'
       'DO'
       'FOR'
       'FUN'
       'FUNCTION'
       'IF'
+      'MOD'
+      'NOT'
+      'OR'
+      'SHL'
+      'SHR'
       'TIMES'
       'UNTIL'
       'WHILE'
+      'XOR'
     )
     Constants.Strings = (
       'EM'

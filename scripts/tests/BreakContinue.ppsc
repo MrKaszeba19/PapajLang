@@ -36,8 +36,35 @@ statusln clear
 
 "Test continue 4" println
 
+-1 -> $i 
+while ($i 10 <) {
+	$i ++ -> $i
+	if ($i 6 =) continue
+	$i
+}
+statusln clear
+
+"Test continue 5" println
+
 for ($i : [0 1 30 seq]) {
 	if ($i 3 mod) continue
 	$i
 }
 statusln clear
+
+"Test continue-break" println
+
+0 -> $i 
+while ($i 30 <=) {
+	$i ++ -> $i
+	if ($i 3 mod 0 =) continue
+	if ($i 15 mod 14 =) break
+	0 -> $j
+	do {
+		$j ++ -> $j
+		if ($j 4 mod) continue
+		$j print 
+		" " print
+	} while ($j $i <=)
+	newln
+}

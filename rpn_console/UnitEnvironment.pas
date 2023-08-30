@@ -981,14 +981,15 @@ end;
 
 procedure PSEnvironment.doWhile(var db : PSCommandDB; cond : LongInt; inst : LongInt);
 begin
-    executeSet(db, cond);
+    //executeSet(db, cond);
     while True do
     begin
+        executeSet(db, cond);
         if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
         executeSet(db, inst);
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
-        executeSet(db, cond);
+        //executeSet(db, cond);
     end;
 end;
 
@@ -1218,8 +1219,7 @@ begin
     //{debug-exec} writeln('commands to do: ', Length(db.Commands[at]));
     for i := 0 to Length(db.Commands[at])-1 do
     begin
-        if (Status = STAT_BREAK) then break;
-        if (Status = STAT_CONTINUE) then break;
+        if (Status <> STAT_OK) then break;
         //{debug-exec} write('doing ', #9, db.Commands[at][i].Name);
         case db.Commands[at][i].Name of
             _EVAL : begin
