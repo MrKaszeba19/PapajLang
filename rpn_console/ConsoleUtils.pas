@@ -14,10 +14,13 @@ function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
 //function getCPUName() : String;
+{$ifndef FreeBSD}
 function getCPUName(index : LongInt) : String;
 function getRealCPUThreads() : LongInt;
 function getCPUBaseFreq(index : LongInt) : Extended;
+{$endif}
 function isUnix() : Boolean;
+function isFreeBSD() : Boolean;
 function isLinux() : Boolean;
 function isWindows() : Boolean;
 {$IFDEF LINUX}
@@ -406,6 +409,11 @@ begin
     {$IFDEF UNIX} Result := True; {$ELSE} Result := False; {$ENDIF}
 end;
 
+function isFreeBSD() : Boolean;
+begin
+    {$IFDEF FreeBSD} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
 function isLinux() : Boolean;
 begin
     {$IFDEF LINUX} Result := True; {$ELSE} Result := False; {$ENDIF}
@@ -452,7 +460,7 @@ begin
     finally
         Registry.Free; 
     end;
-    Result := fl*1000;
+    Result := fl;
 end;
 
 function getRealCPUThreads() : LongInt;

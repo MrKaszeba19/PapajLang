@@ -3732,6 +3732,7 @@ begin
             StrEcx := executeCommand(StrEbx, env.Settings.Shell);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEcx));
         end;
+        {$ifndef FreeBSD}
         'Console.CPUNames' : begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName(index)));
@@ -3743,6 +3744,7 @@ begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
         end;
+        {$endif}
         {$IFDEF LINUX}
         'Console.UserShell' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
