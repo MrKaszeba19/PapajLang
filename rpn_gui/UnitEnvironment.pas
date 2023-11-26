@@ -279,8 +279,8 @@ begin
     Result := False;
     case getPackage(i) of
         'Array'   : if (env.Settings.Packages.UseArray)   then Result := lib_arrays(i, env, db);
-        'Console' : if (env.Settings.Packages.UseConsole) then Result := lib_datetime(i, env, db);
-        'Date'    : if (env.Settings.Packages.UseDate)    then Result := lib_consolemanipulators(i, env, db);
+        'Console' : if (env.Settings.Packages.UseConsole) then Result := lib_consolemanipulators(i, env, db);
+        'Date'    : if (env.Settings.Packages.UseDate)    then Result := lib_datetime(i, env, db);
         'Math'    : if (env.Settings.Packages.UseMath)    then Result := lib_math(i, env, db);
         'Number'  : if (env.Settings.Packages.UseNumber)  then Result := lib_numbers(i, env, db);
         'String'  : if (env.Settings.Packages.UseString)  then Result := lib_strings(i, env, db);
