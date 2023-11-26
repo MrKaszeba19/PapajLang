@@ -846,7 +846,7 @@ object Form1: TForm1
       'NULL'
       'PI'
     )
-    NumberAttri.Foreground = clTeal
+    NumberAttri.Foreground = clAqua
     PreprocessorAttri.Style = [fsItalic]
     StringAttri.Foreground = clRed
     StringDelim = sdDoubleQuote

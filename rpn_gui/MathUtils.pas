@@ -664,7 +664,16 @@ begin
     //checkSIGINT();
 	eps := 0.00001;
 	limit := 10;
-	if (x < -limit) then 
+    // add +/- infinity and increase precision
+	if (x = -Infinity) then 
+	begin 
+		Result := 0 
+	end 
+    else if (x = Infinity) then 
+	begin 
+		Result := 1 
+	end
+    else if (x < -limit) then 
 	begin 
 		Result := 0.0000000000000001 
 	end

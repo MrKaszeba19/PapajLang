@@ -57,7 +57,7 @@ begin
     //if (RPN_isStable)
     //    then writeln(' Gen'+IntToStr(RPN_generation)+' build.')
     //    else writeln(' May be more unstable than usual. 3:)');
-    writeln('by Paul Lipkowski & his fiancee Rosie. ');
+    writeln('by Paul Lipkowski. ');
     //if (RPN_updated = '')
     //    then writeln('Released on '+RPN_date+'.')
     //    else writeln('Released on '+RPN_date+', updated on '+RPN_updated+'.');
