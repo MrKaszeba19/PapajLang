@@ -2,9 +2,9 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version 0.5.3 (Mem).  
-Released on April 8, 2023. 
-Update #2 of November 26, 2023 
-by Paul Lipkowski (RooiGevaar19).
+Released on April 8, 2023.  
+Update #2 of November 26, 2023  
+by Paul Lipkowski (RooiGevaar19).  
 
 Since November 24, 2017 written in FreePascal. :smile:
 
