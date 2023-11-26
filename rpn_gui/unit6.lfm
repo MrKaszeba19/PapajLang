@@ -42,8 +42,8 @@ object Form3: TForm3
     Left = 8
     Height = 16
     Top = 88
-    Width = 212
-    Caption = 'by Paul Lipkowski & his fiancée Rosie'
+    Width = 107
+    Caption = 'by Paul Lipkowski'
   end
   object Label4: TLabel
     Left = 8
