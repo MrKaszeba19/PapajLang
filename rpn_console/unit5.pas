@@ -5,7 +5,8 @@ unit Unit5;
 interface
 
 uses
-  Classes, SysUtils, Unit2, UnitEntity;
+  Classes, SysUtils, 
+  RPNAbout, ComplexNumbers, Unit2, UnitEntity;
 
 function scan_value() : Entity;
 function scan_number() : Entity;
@@ -20,8 +21,8 @@ implementation
 function scan_value() : Entity;
 var
 	x : String;
-	dummyNumber:Extended; 
- 	posError:integer; 
+	dummyNumber : ComplexType; 
+ 	posError : ShortInt; 
 begin
     readln(x);
  	val(x, dummyNumber, posError); 

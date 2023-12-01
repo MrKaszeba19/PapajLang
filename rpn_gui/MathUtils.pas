@@ -5,12 +5,13 @@ unit MathUtils;
 interface
 
 uses
+    //ComplexNumbers,
 	Classes, SysUtils;
 
 procedure swapNumbers(var e1 : Extended; var e2 : Extended);
-function pow(x, y : Extended) : Extended;
-function pow2(x, y : Extended) : Extended;
-function root(x, y : Extended) : Extended;
+//function pow(x, y : Extended) : Extended;
+//function pow2(x, y : Extended) : Extended;
+//function root(x, y : Extended) : Extended;
 function fmod(x, y : Extended) : Extended;
 function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
@@ -29,7 +30,7 @@ function randomIntRange(x, y : Extended) : Extended;
 function randomRealRange(x, y : Extended) : Extended;
 
 function isPrime(x : Extended) : Boolean;
-function isInteger(x : Extended) : Boolean;
+//function isInteger(x : Extended) : Boolean;
 function divides(x, y : Extended) : Boolean;
 
 function newton_int(n, k : Extended) : Extended;
@@ -122,6 +123,11 @@ begin
 end;
 
 // MATHEMATICAL FUNCTIONS
+
+function isInteger(x : Extended) : Boolean;
+begin
+    Result := (x = int(x));
+end;
 
 function pow(x, y : Extended) : Extended;
 var
@@ -377,11 +383,6 @@ begin
             end;
             Result := s;
         end;
-end;
-
-function isInteger(x : Extended) : Boolean;
-begin
-    Result := (x = int(x));
 end;
 
 function divides(x, y : Extended) : Boolean;

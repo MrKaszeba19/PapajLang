@@ -262,8 +262,8 @@ var
     z2, z3 : LongInt;
     s1, s2 : String;
     StrEax : String;
-    Num    : Extended;
-    Code   : Longint;
+    Num    : ComplexType;
+    Code   : SHortInt;
     //M              : TStringArrArray;
     M              : TStringArray = NIL;
     N              : TStringArray = NIL;
@@ -788,6 +788,7 @@ begin
                     while (L[index] = '') do index := index + 1;
                 end else begin
                     Val(L[index], Num, Code);
+                    //writeln('code ', Code);
                     if Code <> 0 then
                     begin
                         db.Commands[x][y] := buildCmdEval(L[index]);

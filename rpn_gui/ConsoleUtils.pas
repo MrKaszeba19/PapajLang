@@ -13,12 +13,15 @@ function getOSDistribution() : String;
 function getOSDistributionFull() : String;
 function getCPUArch() : String;
 function getCPUBits() : LongInt;
+//function getCPUName() : String;
+{$ifndef FreeBSD}
 function getCPUName(index : LongInt) : String;
 function getRealCPUThreads() : LongInt;
 function getCPUBaseFreq(index : LongInt) : Extended;
+{$endif}
 function isUnix() : Boolean;
-function isLinux() : Boolean;
 function isFreeBSD() : Boolean;
+function isLinux() : Boolean;
 function isWindows() : Boolean;
 {$IFDEF LINUX}
 function getRealCPUArch() : String;
@@ -49,12 +52,6 @@ uses
         registry,
     {$ELSE}
         UnixCrt,
- 	{$ENDIF}
- 	{$IFDEF Linux}
- 	unix, linux,
- 	{$ENDIF}
-    {$IFDEF FreeBSD}
- 	unix, sysctl,
  	{$ENDIF}
     SysUtils, StrUtils, Process;
 
@@ -412,6 +409,11 @@ begin
     {$IFDEF UNIX} Result := True; {$ELSE} Result := False; {$ENDIF}
 end;
 
+function isFreeBSD() : Boolean;
+begin
+    {$IFDEF FreeBSD} Result := True; {$ELSE} Result := False; {$ENDIF}
+end;
+
 function isLinux() : Boolean;
 begin
     {$IFDEF LINUX} Result := True; {$ELSE} Result := False; {$ENDIF}
@@ -420,11 +422,6 @@ end;
 function isWindows() : Boolean;
 begin
     {$IFDEF WINDOWS} Result := True; {$ELSE} Result := False; {$ENDIF}
-end;
-
-function isFreeBSD() : Boolean;
-begin
-    {$IFDEF FreeBSD} Result := True; {$ELSE} Result := False; {$ENDIF}
 end;
 
 {$IFDEF WINDOWS}
@@ -463,21 +460,17 @@ begin
     finally
         Registry.Free; 
     end;
-    Result := fl*1000;
+    Result := fl;
 end;
-{$endif}
 
-//{$ifndef freebsd}
 function getRealCPUThreads() : LongInt;
 begin
     Result := GetCPUCount;
-    //{$IFDEF FreeBSD}
     //Result := sysconf(83); 
-    //{$ENDIF}
 end;
-//{$endif}
+{$endif}
 
-{$IFDEF UNIX}
+{$IFDEF LINUX}
 function getRealCPUArch() : String;
 begin
     Result := UnixSysInfo('architecture');
@@ -488,15 +481,13 @@ begin
     Result := StrToInt(executeCommand('getconf LONG_BIT', GetEnvironmentVariable('SHELL')));
 end;
 
-//function getRealCPUThreads() : LongInt;
-//begin
-//    Result := StrToInt(trim(executeCommand('nproc --all', GetEnvironmentVariable('SHELL'))));
-//    //Result := GetCPUCount;
-//    //Result := sysconf(83); 
-//end;
-{$ENDIF}
+function getRealCPUThreads() : LongInt;
+begin
+    Result := StrToInt(trim(executeCommand('nproc --all', GetEnvironmentVariable('SHELL'))));
+    //Result := GetCPUCount;
+    //Result := sysconf(83); 
+end;
 
-{$IFDEF LINUX}
 function getRAMUsageByPID(pid : String) : String;
 var
     fn : Text;
@@ -929,74 +920,6 @@ begin
     Result := usg2;
     //SetLength(st, 0);
 end;
-{$ENDIF}
-
-{$IFDEF FreeBSD}
-//{$IFDEF UNIX}
-
-function getShell() : String;
-begin
-    Result := GetEnvironmentVariable('SHELL'); 
-end;
-
-function getCPUName(index : LongInt) : String;
-{*
-var
-    fn : Text;
-    s  : String;
-begin
-    assignfile(fn, '/var/run/dmesg.boot');
-    reset(fn);
-    while not eof(fn) do
-    begin
-        readln(fn, s);
-        if (LeftStr(s, 5) = 'CPU: ') then 
-        begin
-            //writeln(s);
-            //s := TrimLeft(RightStr(s, Length(s)-9));
-            //s := LeftStr(s, Length(s)-3);
-            s := RightStr(s, Length(s)-5);
-            break;
-        end;
-    end;
-    closefile(fn);
-    Result := s;
-end;
-*}
-var
-    s  : String;
-begin
-    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-    s := executeCommand('sysctl -n hw.model', GetEnvironmentVariable('SHELL'));
-    s := Trim(s);
-    //s := s.Split([' '])[0];
-    Result := s;
-end;
-
-
-//function getRealCPUThreads() : LongInt;
-//var
-//    s  : String;
-//begin
-//    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-//    s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-//    s := Trim(s);
-//    //s := s.Split([' '])[0];
-//    Result := StrToInt(s);
-//end;
-
-function getCPUBaseFreq(index : LongInt) : Extended;
-var
-    s  : String;
-begin
-    //s := executeCommand('sysctl -n hw.ncpu', GetEnvironmentVariable('SHELL'));
-    s := executeCommand('sysctl -n hw.clockrate', GetEnvironmentVariable('SHELL'));
-    s := Trim(s);
-    //s := s.Split([' '])[0];
-    Result := StrToInt(s)*1000;
-end;
-
-
 
 {$ENDIF}
 

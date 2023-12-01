@@ -6,6 +6,7 @@ interface
 
 uses
   Classes, SysUtils, StrUtils, 
+  ComplexNumbers,
   UnitEntity, UnitStack, UnitVariables;
 
 
@@ -217,7 +218,9 @@ function checkParentheses(input : String) : ShortInt;
 implementation
 
 //uses Unit5, DateUtils, StringUtils, Math;
-uses Unit5, MathUtils, Math, DTUtils, ArrayUtils, StringUtils, ConsoleUtils,
+uses Unit5, MathUtils, 
+     Math, 
+     DTUtils, ArrayUtils, StringUtils, ConsoleUtils,
     {$IFDEF MSWINDOWS}
 		ShellApi, crt,
     {$ELSE}
@@ -265,7 +268,7 @@ begin
     EntEax := Variables.getVariable(guess);
     if (EntEax.EntityType = TFUN) then
     begin
-        doFunction(trunc(EntEax.Num));
+        doFunction(EntEax.Num2);
     end else begin
         stack_push(Stack[Settings.StackPointer], EntEax);
     end;
@@ -611,7 +614,7 @@ begin
         stack_push(Stack[Settings.StackPointer], buildNewEmptyArray(Stack, Settings));
         ArrEcx := stack_pop(Stack[Settings.StackPointer]);
         stk := Settings.StackPointer;
-        Settings.StackPointer := trunc(ArrEcx.Num);
+        Settings.StackPointer := ArrEcx.Num2;
         for i := 0 to Length(Params)-1 do
         begin
             stack_push(Stack[Settings.StackPointer], buildString(string_fromC(Params[i])));
@@ -739,13 +742,14 @@ const CmdLabel = 'div';
 var
     EntEax, EntEbx : Entity;
 begin
-    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    // todo: do it for complex ones maybe
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
     if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fdiv(EntEax.Num, EntEbx.Num)));
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fdiv(Real(EntEax.Num), Real(EntEbx.Num))));
 end;
 
 procedure doCalcMod(var env : PSEnvironment);
@@ -753,13 +757,13 @@ const CmdLabel = 'mod';
 var
     EntEax, EntEbx : Entity;
 begin
-    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
     if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fmod(EntEax.Num, EntEbx.Num)));
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fmod(Real(EntEax.Num), Real(EntEbx.Num))));
 end;
 
 // TODO
@@ -769,13 +773,13 @@ const CmdLabel = 'cdiv';
 var
     EntEax, EntEbx : Entity;
 begin
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
+    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
     if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ffloor(EntEax.Num / EntEbx.Num)));
+        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ffloor(Real(EntEax.Num / EntEbx.Num))));
 end;
 
 // TODO
@@ -793,8 +797,8 @@ begin
     if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
         else begin
-            x := trunc(EntEax.Num);
-            y := trunc(EntEbx.Num);
+            x := Int(EntEax.Num);
+            y := Int(EntEbx.Num);
             if (x > 0) and (y < 0) then begin
             	z := ((x mod y) + y + y) mod y;
             end else if (x < 0) and (y > 0) then begin
@@ -813,9 +817,9 @@ const CmdLabel = 'shl';
 var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
 begin
     if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
     if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
     stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shl y));
 end;
 
@@ -826,9 +830,9 @@ const CmdLabel = 'shr';
 var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
 begin
     if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
     if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
     stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shr y));
 end;
 
@@ -854,6 +858,7 @@ begin
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
 end;
 
+// todo: make exception for complex numbers
 procedure doTestGt(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;
@@ -861,7 +866,7 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num > EntEbx.Num;
+	LogEax := EntEax.Num.Re > EntEbx.Num.Re;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
 end;
 
@@ -872,7 +877,7 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num < EntEbx.Num;
+	LogEax := EntEax.Num.Re < EntEbx.Num.Re;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
 end;
 
@@ -883,7 +888,7 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num <= EntEbx.Num;
+	LogEax := EntEax.Num.Re <= EntEbx.Num.Re;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
 end;
 
@@ -894,7 +899,7 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num >= EntEbx.Num;
+	LogEax := EntEax.Num.Re >= EntEbx.Num.Re;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
 end;
 
@@ -958,7 +963,7 @@ begin
     stk := Settings.StackPointer;
     stack_push(Stack[Settings.StackPointer], buildNewEmptyArray(Stack, Settings));
     ArrEcx := stack_pop(Stack[Settings.StackPointer]);
-    Settings.StackPointer := trunc(ArrEcx.Num);
+    Settings.StackPointer := ArrEcx.Num2;
     executeSet(db, at);
     //writeln(stack_size(Stack[Settings.StackPointer]));
     Settings.StackPointer := stk;
@@ -985,7 +990,7 @@ begin
     while True do
     begin
         executeSet(db, cond);
-        if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
+        if (stack_pop(Stack[Settings.StackPointer]).Num <> 0) then break;
         executeSet(db, inst);
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
@@ -1001,7 +1006,7 @@ begin
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
-        if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
+        if (stack_pop(Stack[Settings.StackPointer]).Num <> 0) then break;
     end;
 end;
 
@@ -1010,7 +1015,7 @@ begin
     executeSet(db, cond);
     while True do
     begin
-        if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) = 0) then break;
+        if (stack_pop(Stack[Settings.StackPointer]).Num = 0) then break;
         executeSet(db, inst);
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
@@ -1026,7 +1031,7 @@ begin
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
         executeSet(db, cond);
-        if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) = 0) then break;
+        if (stack_pop(Stack[Settings.StackPointer]).Num = 0) then break;
     end;
 end;
 
@@ -1036,7 +1041,7 @@ begin
     executeSet(db, cond);
     while True do
     begin
-        if (trunc(stack_pop(Stack[Settings.StackPointer]).Num) <> 0) then break;
+        if (stack_pop(Stack[Settings.StackPointer]).Num <> 0) then break;
         executeSet(db, inst);
         if (Status = STAT_BREAK) then begin Status := STAT_OK; break; end;
         if (Status = STAT_CONTINUE) then begin Status := STAT_OK; continue; end;
@@ -1061,7 +1066,7 @@ begin
         ((db.Commands[arry][0].Name = _GET) and (db.Commands[arry][0].Name2 in [_LVAR, _GVAR]))
         or (db.Commands[arry][0].Name = _EVAL)
         ) then usesvar := True;
-    location := trunc(ArrEax.Num);
+    location := ArrEax.Num2;
     Variables.addLayer();
     if init = 'const' then alter := False;
     if indx = '' then
@@ -1145,7 +1150,7 @@ begin
     EntEax := Variables.getVariable(guess);
     if (EntEax.EntityType = TFUN) then
     begin
-        doFunction(trunc(EntEax.Num));
+        doFunction(EntEax.Num2);
     end else begin
         stack_push(Stack[Settings.StackPointer], EntEax);
     end;
@@ -1153,8 +1158,8 @@ end;
 
 procedure PSEnvironment.evaluate(var db : PSCommandDB; input : String);
 var
-    Im     : Extended;
-    Code   : Longint;
+    Im     : ComplexType;
+    Code   : SHortInt;
     StrEcx : String;
     Found  : Boolean = True;
 begin
@@ -1253,7 +1258,7 @@ begin
                 case db.Commands[at][i].Name2 of
                     _TIMES : begin
                         if (Settings.StrictType) and (assertNaturalLocated(Stack[Settings.StackPointer], stack_get(Stack[Settings.StackPointer]), 'times')) then Exit; 
-                        doTimes(db, db.Commands[at][i].IntParam, trunc(stack_pop(Stack[Settings.StackPointer]).Num));
+                        doTimes(db, db.Commands[at][i].IntParam, trunc(stack_pop(Stack[Settings.StackPointer]).Num.Re));
                     end;
                     _IF : begin
                         doIf(db, db.Commands[at][i].IntParam);
@@ -1294,7 +1299,7 @@ begin
                         // new exception
                         if (Settings.StrictType) and (assertEntityLocated(Stack[Settings.StackPointer], stack_get(Stack[Settings.StackPointer]), TFUN, '')) then Exit; 
                         EntEax := stack_pop(Stack[Settings.StackPointer]);
-                        doFunction(trunc(EntEax.Num));
+                        doFunction(EntEax.Num2);
                     end;
                 end;
             end;
@@ -1367,16 +1372,16 @@ begin
                     _NONE : begin
                         EntEax := stack_pop(Stack[Settings.StackPointer]);
                         case EntEax.EntityType of
-                            TNUM : writeOnConsole(FormatFloat(Settings.Mask, EntEax.Num));
-                            TVEC : writeOnConsole(stack_showArrayPS(Stack[trunc(EntEax.Num)], Stack, Settings.Mask));
+                            TNUM : writeOnConsole(toStringFormat(EntEax.Num, Settings.Mask));
+                            TVEC : writeOnConsole(stack_showArrayPS(Stack[EntEax.Num2], Stack, Settings.Mask));
                             else   writeOnConsole(EntEax.Str);
                         end;
                     end;
                     _LN : begin
                         EntEax := stack_pop(Stack[Settings.StackPointer]);
                         case EntEax.EntityType of
-                            TNUM : writelnOnConsole(FormatFloat(Settings.Mask, EntEax.Num));
-                            TVEC : writelnOnConsole(stack_showArrayPS(Stack[trunc(EntEax.Num)], Stack, Settings.Mask));
+                            TNUM : writelnOnConsole(toStringFormat(EntEax.Num, Settings.Mask));
+                            TVEC : writelnOnConsole(stack_showArrayPS(Stack[EntEax.Num2], Stack, Settings.Mask));
                             else   writelnOnConsole(EntEax.Str);
                         end;
                     end;

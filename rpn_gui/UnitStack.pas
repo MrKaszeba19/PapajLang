@@ -5,7 +5,8 @@ unit UnitStack;
 
 interface
 
-uses UnitEntity, Classes, SysUtils;
+uses UnitEntity, ComplexNumbers, 
+     Classes, SysUtils;
 
 type TStack = record
   Values : TEntities;
@@ -57,8 +58,12 @@ function assertEntity(var stack : TStack; val : Entity; const wtype : TEntityTyp
 function assertEntityLocated(var stack : TStack; val : Entity; const wtype : TEntityType; operand : String) : Boolean;
 function assertEitherLocated(var stack : TStack; val : Entity; const wtype1 : TEntityType; const wtype2 : TEntityType; operand : String) : Boolean;
 function assertNotNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertNotNegativeRealLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertNotRealNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertIntegerLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertRealLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+function assertComplexLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
@@ -152,7 +157,7 @@ begin
     z := '';
     for i in poc.Values do
     begin
-        if (i.EntityType = TNUM) then z := z + FormatFloat(mask, i.Num) + ' ';
+        if (i.EntityType = TNUM) then z := z + toStringFormat(i.Num, mask) + ' ';
         if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
         if (i.EntityType = TNIL) then z := z + i.Str + ' ';
         if (i.EntityType = TBOO) then z := z + i.Str + ' ';
@@ -177,7 +182,7 @@ begin
     col := find_maxStrlen(poc.Values)+1;
     for i in poc.Values do
     begin
-        if (i.EntityType = TNUM) then z := z + PadLeft(FormatFloat(mask, i.Num), col) + ' ';
+        if (i.EntityType = TNUM) then z := z + PadLeft(toStringFormat(i.Num, mask), col) + ' ';
         if (i.EntityType = TSTR) then z := z + '"' + PadLeft(i.Str, col) + '" ';
         if (i.EntityType = TNIL) then z := z + PadLeft(i.Str, col) + ' ';
         if (i.EntityType = TBOO) then z := z + PadLeft(i.Str, col) + ' ';
@@ -192,12 +197,12 @@ var
   z : String;
 begin
     z := '';
-    if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num);
+    if (x.EntityType = TNUM) then z := toStringFormat(x.Num, mask);
     if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
     if (x.EntityType = TDAT) then z := '"' + x.Str + '"';
     if (x.EntityType = TNIL) then z := x.Str;
     if (x.EntityType = TBOO) then z := x.Str;
-    if (x.EntityType = TVEC) then z := stack_showArrayPS(db[trunc(x.Num)], db, mask);
+    if (x.EntityType = TVEC) then z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask);
     if (x.EntityType = TOBJ) then z := '<Object>';
     if (x.EntityType = TFUN) then z := '<Function>'; 
     if (x.EntityType = TEXC) then z := '<Exception>'; 
@@ -457,11 +462,38 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
         assertNotNegativeLocated := true;    
-    end else if (val.Num < 0) then
+    end else if not (val.Num.Re >= 0) then
     begin 
         stack_push(stack, raiseException('EConstraint:CNonNegative: a positive real number or zero expected at "'+operand+'".'));
         assertNotNegativeLocated := true;
     end else assertNotNegativeLocated := false;
+end;
+
+function assertNotNegativeRealLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
+        Result := true;    
+    end else if not ((isReal(val.Num)) and (val.Num.Re >= 0)) then
+    begin 
+        stack_push(stack, raiseException('EConstraint:CNonNegative: a positive real number or zero expected at "'+operand+'".'));
+        Result := true;
+    end else Result := false;
+end;
+
+// check for everything except for negative reals
+function assertNotRealNegativeLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
+        Result := true;    
+    end else if ((isReal(val.Num)) and (val.Num.Re < 0)) then
+    begin 
+        stack_push(stack, raiseException('EConstraint:CNonNegative: number not being negative real expected at "'+operand+'".'));
+        Result := true;
+    end else Result := false;
 end;
 
 function assertIntegerLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
@@ -470,11 +502,37 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
         assertIntegerLocated := true;
-    end else if (val.Num <> ftrunc(val.Num)) then 
+    end else if (not isReal(val.Num)) or (val.Num.Re <> ftrunc(val.Num.Re)) then 
     begin
-        stack_push(stack, raiseException('EConstraint:CInteger: an integer expected, got a real number at "'+operand+'".'));
+        stack_push(stack, raiseException('EConstraint:CInteger: an integer expected at "'+operand+'".'));
         assertIntegerLocated := true;
     end else assertIntegerLocated := false;
+end;
+
+function assertRealLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
+        Result := true;
+    end else if (not isReal(val.Num)) then 
+    begin
+        stack_push(stack, raiseException('EConstraint:CInteger: an integer expected at "'+operand+'".'));
+        Result := true;
+    end else Result := false;
+end;
+
+function assertComplexLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
+begin
+    if (val.EntityType <> TNUM) then 
+    begin
+        stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));
+        Result := true;
+    end else if (not isComplex(val.Num)) then 
+    begin
+        stack_push(stack, raiseException('EConstraint:CInteger: an integer expected at "'+operand+'".'));
+        Result := true;
+    end else Result := false;
 end;
 
 function assertNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
@@ -483,7 +541,7 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));  
         assertNaturalLocated := true;
-    end else if (val.Num < 0) or (val.Num <> ftrunc(val.Num)) then 
+    end else if (val.Num.Re < 0) or (not isReal(val.Num)) or (val.Num.Re <> ftrunc(val.Num.Re)) then 
     begin
         stack_push(stack, raiseException('EConstraint:CNonNegativeInteger: a positive integer or zero expected at "'+operand+'".'));
         assertNaturalLocated := true;
@@ -496,7 +554,7 @@ begin
     begin
         stack_push(stack, raiseException('EType:C'+getEntityTypeName(TNUM)+': <'+getEntityTypeName(TNUM)+'> expected, got '+getEntitySpec(val)+' at "'+operand+'".'));  
         assertPositiveNaturalLocated := true;
-    end else if (val.Num <= 0) or (val.Num <> trunc(val.Num)) then 
+    end else if (val.Num.Re <= 0) or (not isReal(val.Num)) or (val.Num.Re <> ftrunc(val.Num.Re))  then 
     begin
         stack_push(stack, raiseException('EConstraint:CPositiveInteger: a positive integer expected at "'+operand+'".'));
         assertPositiveNaturalLocated := true;
@@ -544,7 +602,7 @@ begin
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(count);
-	ent.Num := memsize;
+	ent.Num2 := memsize;
 	buildNewArray := ent;
 end;
 
@@ -559,7 +617,7 @@ begin
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(Length(pom));
-	ent.Num := memsize;
+	ent.Num2 := memsize;
 	buildNewArray := ent;
 end;
 
@@ -576,7 +634,7 @@ begin
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(count);
-	ent.Num := memsize;
+	ent.Num2 := memsize;
 	Result := ent;
 end;
 

@@ -6,6 +6,7 @@ interface
 
 uses
     Classes, SysUtils,
+    ComplexNumbers,
     UnitStack, UnitEntity;
 
 procedure bubblesort(var tab : TEntities);
@@ -15,29 +16,29 @@ procedure bogosort(var tab : TEntities);
 procedure strings_sort(var tab : TEntities);
 
 procedure table_reverse(var tab : TEntities);
-function table_sum(tab : TEntities) : Extended;
-function table_product(tab : TEntities) : Extended;
-function table_avg(tab : TEntities) : Extended;
-function table_avg2(tab : TEntities) : Extended;
-function table_avg_geom(tab : TEntities) : Extended;
-function table_min(tab : TEntities) : Extended;
-function table_max(tab : TEntities) : Extended;
+function table_sum(tab : TEntities) : ComplexType;
+function table_product(tab : TEntities) : ComplexType;
+function table_avg(tab : TEntities) : ComplexType;
+function table_avg2(tab : TEntities) : ComplexType;
+function table_avg_geom(tab : TEntities) : ComplexType;
+function table_min(tab : TEntities) : ComplexType;
+function table_max(tab : TEntities) : ComplexType;
 function table_min2(tab : TEntities) : LongInt;
 function table_max2(tab : TEntities) : LongInt;
-function table_avg_power(tab : TEntities; factor : Extended) : Extended;
-function table_median(tab : TEntities) : Extended;
+function table_avg_power(tab : TEntities; factor : Extended) : ComplexType;
+function table_median(tab : TEntities) : ComplexType;
 function table_mode(tab : TEntities) : Entity;
 function table_modeStr(tab : TEntities) : Entity;
-function table_abs(tab : TEntities) : Extended;
-function table_variance(tab : TEntities) : Extended;
-function table_stddev(tab : TEntities) : Extended;
+function table_abs(tab : TEntities) : ComplexType;
+function table_variance(tab : TEntities) : ComplexType;
+function table_stddev(tab : TEntities) : ComplexType;
 function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
-function table_moment(tab : TEntities; k : LongInt) : Extended;
-function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
-function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : Extended;
-function table_skewness(tab : TEntities) : Extended;
-function table_kurtosis(tab : TEntities) : Extended;
+function table_moment(tab : TEntities; k : LongInt) : ComplexType;
+function table_quantile(tab : TEntities; factor : Extended = 0.5) : ComplexType;
+function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : ComplexType;
+function table_skewness(tab : TEntities) : ComplexType;
+function table_kurtosis(tab : TEntities) : ComplexType;
 
 function itemHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 function numberHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
@@ -59,7 +60,7 @@ var
 begin
 	for j := Length(tab)-1 downto 1 do
 		for i := 0 to j-1 do 
-			if (tab[i].Num > tab[i+1].Num) then begin
+			if (tab[i].Num.Re > tab[i+1].Num.Re) then begin
 				pom := tab[i];
 				tab[i] := tab[i+1];
 				tab[i+1] := pom;
@@ -75,9 +76,9 @@ begin
 	Hi := AHi;
 	Pivot := AI[(Lo + Hi) div 2];
 	repeat
-		while AI[Lo].Num < Pivot.Num do
+		while AI[Lo].Num.Re < Pivot.Num.Re do
 			Inc(Lo) ;
-		while AI[Hi].Num > Pivot.Num do
+		while AI[Hi].Num.Re > Pivot.Num.Re do
 			Dec(Hi) ;
 		if Lo <= Hi then
 		begin
@@ -110,7 +111,7 @@ begin
 	SetLength(c,r-l+1+y-x+1);
 	while (l<=r) and (x<=y) do
 	begin
-		if a[l].Num < a[x].Num then
+		if a[l].Num.Re < a[x].Num.Re then
 		begin
 			c[k] := a[l];
 			inc(l);
@@ -165,7 +166,7 @@ var
 begin
 	res := true;
 	for count := Length(data)-1 downto 1 do
-		if (data[count].Num < data[count - 1].Num) then res := false;
+		if (data[count].Num.Re < data[count - 1].Num.Re) then res := false;
 	bs_isSorted := res;
 end;
 
@@ -240,10 +241,10 @@ begin
 	SetLength(pom, 0);
 end;
 
-function table_sum(tab : TEntities) : Extended;
+function table_sum(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 0.0;
   for i := 0 to Length(tab)-1 do
@@ -251,10 +252,10 @@ begin
   table_sum := s;
 end;
 
-function table_product(tab : TEntities) : Extended;
+function table_product(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 1.0;
   for i := 0 to Length(tab)-1 do
@@ -262,10 +263,10 @@ begin
   table_product := s;
 end;
 
-function table_avg(tab : TEntities) : Extended;
+function table_avg(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 0.0;
     for i := 0 to Length(tab)-1 do
@@ -273,10 +274,10 @@ begin
     table_avg := s/Length(tab);
 end;
 
-function table_avg2(tab : TEntities) : Extended;
+function table_avg2(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 0.0;
     for i := 0 to Length(tab)-1 do
@@ -284,36 +285,36 @@ begin
     table_avg2 := sqrt(s/Length(tab));
 end;
 
-function table_avg_geom(tab : TEntities) : Extended;
+function table_avg_geom(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 1.0;
     for i := 0 to Length(tab)-1 do
         s := s * tab[i].Num;
-    table_avg_geom := pow2(s, 1/Length(tab));
+    table_avg_geom := ComplexNumbers.pow(s, Inv(Length(tab)));
 end;
 
-function table_min(tab : TEntities) : Extended;
+function table_min(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := tab[0].Num;
   for i := 1 to Length(tab)-1 do
-  	if (tab[i].Num < s) then s := tab[i].Num;
+  	if (tab[i].Num.Re < s.Re) then s := tab[i].Num;
   table_min := s;
 end;
 
-function table_max(tab : TEntities) : Extended;
+function table_max(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := tab[0].Num;
   for i := 1 to Length(tab)-1 do
-  	if (tab[i].Num > s) then begin
+  	if (tab[i].Num.Re > s.Re) then begin
   		s := tab[i].Num;
   	end; 
   table_max := s;
@@ -326,7 +327,7 @@ var
 begin
 	s := 0;
     for i := 1 to Length(tab)-1 do
-        if (tab[i].Num < tab[s].Num) then s := i;
+        if (tab[i].Num.Re < tab[s].Num.Re) then s := i;
     table_min2 := s;
 end;
 
@@ -337,14 +338,14 @@ var
 begin
 	s := 0;
     for i := 1 to Length(tab)-1 do
-        if (tab[i].Num > tab[s].Num) then s := i;
+        if (tab[i].Num.Re > tab[s].Num.Re) then s := i;
     table_max2 := s;
 end;
 
-function table_avg_power(tab : TEntities; factor : Extended) : Extended;
+function table_avg_power(tab : TEntities; factor : Extended) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
     if factor = 0 then begin
         table_avg_power := table_avg_geom(tab);
@@ -358,19 +359,13 @@ begin
         table_avg_power := table_min(tab);
     end else begin
         s := 0.0;
-        if (factor = trunc(factor)) then
-        begin
-            for i := 0 to Length(tab)-1 do
-  	            s := s + pow(tab[i].Num, factor);
-        end else begin
-            for i := 0 to Length(tab)-1 do
-  	            s := s + pow2(tab[i].Num, factor);
-        end;
-        table_avg_power := pow2(s/Length(tab), 1/factor);
+        for i := 0 to Length(tab)-1 do
+  	        s := s + pow(tab[i].Num, factor);
+        table_avg_power := pow(s/Length(tab), 1/factor);
     end;
 end;
 
-function table_median(tab : TEntities) : Extended;
+function table_median(tab : TEntities) : ComplexType;
 begin
 	quicksort(tab);
 	if (Length(tab) mod 2 = 0) then table_median := 0.5*(tab[Length(tab) div 2 - 1].Num + tab[Length(tab) div 2].Num)
@@ -390,7 +385,7 @@ begin
         table_mode := buildNull();
     end else begin
         quicksort(tab);
-        //writeln('chuj');
+        //todo: do it properly for complex numbers
         maxval := tab[0];
         maxcombo := 1;
         curval := tab[0];
@@ -454,10 +449,10 @@ begin
 end;
 
 
-function table_abs(tab : TEntities) : Extended;
+function table_abs(tab : TEntities) : ComplexType;
 var
 	i : Integer;
-	s : Extended;
+	s : ComplexType;
 begin
 	s := 0.0;
   for i := 0 to Length(tab)-1 do
@@ -465,11 +460,11 @@ begin
   table_abs := sqrt(s);
 end;
 
-function table_variance(tab : TEntities) : Extended;
+function table_variance(tab : TEntities) : ComplexType;
 var
 	i    : Integer;
-	s    : Extended;
-	mean : Extended;
+	s    : ComplexType;
+	mean : ComplexType;
 begin
   mean := table_avg(tab);
   s := 0.0;
@@ -478,7 +473,7 @@ begin
   table_variance := s/Length(tab);
 end;
 
-function table_stddev(tab : TEntities) : Extended;
+function table_stddev(tab : TEntities) : ComplexType;
 begin
 	table_stddev := sqrt(table_variance(tab));
 end;
@@ -488,9 +483,9 @@ var
 	i    : Integer;
 	s    : Extended;
 begin
-    s := tab[0].Num;
+    s := tab[0].Num.Re;
     for i := 1 to Length(tab)-1 do
-        s := gcd(s, tab[i].Num);
+        s := gcd(s, tab[i].Num.Re);
     Result := s;
 end;
 
@@ -499,9 +494,9 @@ var
 	i    : Integer;
 	s    : Extended;
 begin
-    s := tab[0].Num;
+    s := tab[0].Num.Re;
     for i := 1 to Length(tab)-1 do
-        s := lcm(s, tab[i].Num);
+        s := lcm(s, tab[i].Num.Re);
     Result := s;
 end;
 
@@ -516,19 +511,20 @@ end;
 //    Result := s/Length(tab);
 //end;
 
-function table_moment(tab : TEntities; k : LongInt) : Extended;
+function table_moment(tab : TEntities; k : LongInt) : ComplexType;
 var
 	i : Integer;
-	s : Extended = 0.0;
-    m : Extended = 0.0;
+	s : ComplexType;
+    m : ComplexType;
 begin
+    s := 0.0;
     m := table_avg(tab);
     for i := 0 to Length(tab)-1 do
         s := s + pow(tab[i].Num - m, k);
     Result := s/Length(tab);
 end;
 
-function table_quantile(tab : TEntities; factor : Extended = 0.5) : Extended;
+function table_quantile(tab : TEntities; factor : Extended = 0.5) : ComplexType;
 begin
 	quicksort(tab);
     if (factor = 0) then
@@ -546,7 +542,7 @@ begin
     end;
 end;
 
-function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : Extended;
+function table_quantile2(tab : TEntities; num : Extended; denom : Extended) : ComplexType;
 begin
 	quicksort(tab);
     if (num = 0) then
@@ -568,9 +564,9 @@ begin
     end;
 end;
 
-function table_skewness(tab : TEntities) : Extended;
+function table_skewness(tab : TEntities) : ComplexType;
 var
-    s : Extended;
+    s : ComplexType;
 begin
     s := table_stddev(tab);
     if s = 0
@@ -578,9 +574,9 @@ begin
         else Result := (table_moment(tab, 3))/(pow(s,3));
 end;
 
-function table_kurtosis(tab : TEntities) : Extended;
+function table_kurtosis(tab : TEntities) : ComplexType;
 var
-    s : Extended;
+    s : ComplexType;
 begin
     s := table_stddev(tab);
     if s = 0

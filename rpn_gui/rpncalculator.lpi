@@ -49,7 +49,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="17">
+    <Units Count="18">
       <Unit0>
         <Filename Value="rpncalculator.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -133,6 +133,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit6"/>
       </Unit16>
+      <Unit17>
+        <Filename Value="complexnumbers.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ComplexNumbers"/>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

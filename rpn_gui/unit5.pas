@@ -5,7 +5,9 @@ unit Unit5;
 interface
 
 uses
-  Classes, SysUtils, Unit2, UnitEntity;
+  Classes, SysUtils, 
+  ComplexNumbers, RPNAbout,
+  Unit2, UnitEntity;
 
 var
    arax : String;
@@ -21,26 +23,32 @@ uses Unit4, Unit1;
 
 function scan_value() : Entity;
 var
-   dummyNumber:Extended;
-   posError:integer;
+	dummyNumber : ComplexType; 
+ 	posError : ShortInt; 
 begin
-     arax := '';
-     Form2.ShowModal;
-     val(arax, dummyNumber, posError);
-     if (posError = 0) then begin
-        scan_value := buildNumber(dummyNumber);
-     end else begin
-         scan_value := buildString(arax);
-     end;
+    arax := '';
+    Form2.ShowModal;
+    val(arax, dummyNumber, posError); 
+ 	if (posError = 0) then begin
+ 		Result := buildNumber(dummyNumber);
+ 	end else begin
+ 		Result := buildString(arax);
+ 	end;
 end;
 
 function scan_number() : Entity;
 var
-	x : Extended;
+	dummyNumber : ComplexType; 
+ 	posError : ShortInt; 
 begin
     arax := '';
     Form2.ShowModal;
-    scan_number := buildNumber(StrToFloat(arax));
+    val(arax, dummyNumber, posError); 
+ 	if (posError = 0) then begin
+ 		Result := buildNumber(dummyNumber);
+ 	end else begin
+ 		Result := buildString(arax);
+ 	end;
     Form1.Memo1.Text := Form1.Memo1.Text + #13#10;
 end;
 

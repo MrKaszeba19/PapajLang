@@ -6,7 +6,9 @@ unit UnitEntity;
 interface
 
 uses
-    Classes, SysUtils, DateUtils, DTUtils;
+    Classes, SysUtils, 
+    ComplexNumbers,
+    DateUtils, DTUtils;
 
 
 const
@@ -73,8 +75,8 @@ end;
 type Entity = record
 	EntityType : TEntityType;
     //EntityType : Integer;
-	Num        : Extended;
-    Num2       : Extended;
+	Num        : ComplexType;
+    Num2       : LongInt;
 	Str        : String;
     Str2       : String;
 end;
@@ -101,10 +103,10 @@ function printEntityValue(x : Entity; mask : String) : String;
 procedure swapEntities(var e1 : Entity; var e2 : Entity);
 
 function buildNumberFormattted(val : Extended; sets : TSettings) : Entity;
-function buildNumber(val : Extended) : Entity;
+function buildNumber(val : ComplexType) : Entity;
 function buildString(val : String) : Entity;
 function buildBoolean(val : Boolean) : Entity;
-function buildFunction(val : String; args : String = '') : Entity;
+//function buildFunction(val : String; args : String = '') : Entity;
 function buildFunction(val : LongInt) : Entity;
 function buildExpression(val : String) : Entity;
 function buildException(val : String) : Entity;
@@ -245,7 +247,7 @@ function getEntitySpec(x : Entity) : String;
 begin
     case x.EntityType of
         TNIL : getEntitySpec := '<Null>';
-        TNUM : getEntitySpec := FormatFloat('0.###############', x.Num) + ' : <Number>';
+        TNUM : getEntitySpec := toStringFormat(x.Num) + ' : <Number>';
         TSTR : getEntitySpec := '"' + x.Str + '" : <String>';
         TVEC : getEntitySpec := '<Array>';
         TBOO : getEntitySpec := x.Str + ' : <Boolean>';
@@ -263,7 +265,7 @@ var
   z : String;
 begin
     z := '';
-         if (x.EntityType = TNUM) then z := FormatFloat(mask, x.Num)
+         if (x.EntityType = TNUM) then z := toStringFormat(x.Num, mask)
     else if (x.EntityType = TSTR) then z := '"' + x.Str + '"'
     else if (x.EntityType = TNIL) then z := x.Str
     else if (x.EntityType = TBOO) then z := x.Str
@@ -303,7 +305,7 @@ begin
 	buildNumberFormattted := pom;
 end;
 
-function buildNumber(val : Extended) : Entity;
+function buildNumber(val : ComplexType) : Entity;
 var
   pom : Entity;
 begin
@@ -311,7 +313,7 @@ begin
 	pom.EntityType := TNUM;
 	pom.Num := val;
     pom.Num2 := 0;
-	pom.Str := '' + FormatFloat('0.###############' ,val);
+	pom.Str := '' + toStringFormat(val);
 	//pom.EArray := nil;
 	buildNumber := pom;
 end;
@@ -370,8 +372,8 @@ begin
 	//pom := New(Entity);
 	pom.EntityType := TFUN;
 	pom.Str := '';
-	pom.Num := val;
-    pom.Num2 := 0;
+	pom.Num := 0;
+    pom.Num2 := val;
 	//pom.EArray := nil;
 	buildFunction := pom;
 end;
@@ -638,7 +640,7 @@ begin
         res := buildString(a.Str - b.Str);
     end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then
     begin
-        res := buildString(a.Str - trunc(b.Num));
+        res := buildString(a.Str - trunc(b.Num.Re));
     end else begin
         res := raiseImpossibleArithmetics(a, b, '-');
     end;
@@ -651,10 +653,10 @@ begin
         res := buildNumber(a.Num * b.Num);
     end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then 
     begin
-        res := buildString(a.Str * trunc(b.Num));
+        res := buildString(a.Str * trunc(b.Num.Re));
     end else if (a.EntityType = TNUM) and (b.EntityType = TSTR) then 
     begin
-        res := buildString(b.Str * trunc(a.Num));
+        res := buildString(b.Str * trunc(a.Num.Re));
     end else begin
         res := raiseImpossibleArithmetics(a, b, '*');
     end;
@@ -670,7 +672,7 @@ begin
         res := buildString(a.Str / b.Str);
     end else if (a.EntityType = TSTR) and (b.EntityType = TNUM) then
     begin
-        res := buildString(a.Str / trunc(b.Num));
+        res := buildString(a.Str / trunc(b.Num.Re));
     end else begin
         res := raiseImpossibleArithmetics(a, b, '/');
     end;

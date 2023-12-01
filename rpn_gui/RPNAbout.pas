@@ -19,8 +19,12 @@ const RPN_apptype = 'GUI';
 const RPN_isGUI = true;
 
 {$IFDEF cpu64}
-type LongInt = Int64;
+type LongInt = type Int64;
+type IntegerType = type Int64;
+{$ELSE}
+type IntegerType = type LongInt;
 {$ENDIF}
+type RealType = type Extended;
 
 implementation
 
