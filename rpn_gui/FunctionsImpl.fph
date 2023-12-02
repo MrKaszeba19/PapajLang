@@ -51,7 +51,7 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ComplexNumbers.pow(x,y);
+            z := pow(x,y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'pow' : begin
@@ -59,7 +59,7 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ComplexNumbers.pow(x,y);
+            z := pow(x,y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'log' : begin
@@ -96,7 +96,7 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ComplexNumbers.root(x,y);
+            z := root(x,y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'root' : begin
@@ -106,7 +106,7 @@ begin
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (isReal(x) and isReal(y))
             then z := realroot(x.Re,y.Re)
-            else z := ComplexNumbers.root(x,y);
+            else z := root(x,y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'abs' : begin
@@ -3645,6 +3645,10 @@ begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
         end;
+        'Console.CPUCurFreqs' : begin
+            for index := 0 to getRealCPUThreads()-1 do
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
+        end;
         'Console.CPUUsages' : begin
             for index := 0 to getRealCPUThreads()-1 do
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage(index)));
@@ -6040,9 +6044,9 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.cbrt' : begin
-          	if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+          	if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := RealRoot(Real(y),3);
+            z := Root(y,3);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.sign' : begin
@@ -6195,7 +6199,7 @@ begin
         'Number.isInteger' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(ComplexNumbers.isInteger(y)));
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isInteger(y)));
         end;
         'Number.isNatural' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;

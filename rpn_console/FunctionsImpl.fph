@@ -6044,9 +6044,9 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.cbrt' : begin
-          	if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+          	if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := RealRoot(Real(y),3);
+            z := Root(y,3);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.sign' : begin

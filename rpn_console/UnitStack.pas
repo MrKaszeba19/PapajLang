@@ -517,7 +517,7 @@ begin
         Result := true;
     end else if (not isReal(val.Num)) then 
     begin
-        stack_push(stack, raiseException('EConstraint:CInteger: an integer expected at "'+operand+'".'));
+        stack_push(stack, raiseException('EConstraint:CInteger: an real number expected at "'+operand+'".'));
         Result := true;
     end else Result := false;
 end;
