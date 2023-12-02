@@ -27,9 +27,7 @@ operator := (a : ComplexType) res : String;
 function toString(a : ComplexType) : String;
 function toStringFormat(a : ComplexType) : String;
 function toStringFormat(a : ComplexType; mask : String) : String;
-//procedure Val(x : String; var num : ComplexType; var posError : IntegerType);
 procedure Val(x : String; var num : ComplexType; var posError : ShortInt);
-//procedure Val(x : String; var num : ComplexType; var posError : LongInt);
 operator Explicit(a : ComplexType) : String;
 
 operator Explicit(a : RealType) res : ComplexType;
@@ -38,7 +36,6 @@ operator Explicit(a : Real) res : ComplexType;
 operator Explicit(a : IntegerType) res : ComplexType;
 operator Explicit(a : LongInt) res : ComplexType;
 operator Explicit(a : Int64) res : ComplexType;
-//operator Explicit(a : Integer) res : ComplexType;
 operator Explicit(a : ShortInt) res : ComplexType;
 
 function Int(z : ComplexType) : IntegerType;
@@ -140,6 +137,7 @@ function Erfc(z : ComplexType) : ComplexType;
 function Erfi(z : ComplexType) : ComplexType;
 function LowerGamma(s, x : ComplexType) : ComplexType;
 function UpperGamma(s, x : ComplexType) : ComplexType;
+function LowerRegGamma(s, x : ComplexType) : ComplexType;
 function Beta(x, y : ComplexType) : ComplexType;
 function IncBeta(x, a, b : ComplexType) : ComplexType;
 function RegIncBeta(x, a, b : ComplexType) : ComplexType;
@@ -320,11 +318,17 @@ begin
             i := 2;
             while (i <= Length(x)) do
             begin
-                if (x[i] in ['+', '-']) then break;
+                if (x[i] in ['+', '-', 'i', 'j']) then break;
                 x1 := x1 + x[i];
                 i := i+1;
             end;
             posError := 1;
+            if (x[i] in ['i', 'j']) then
+            begin
+                system.val(x1, rea, posError);   
+                if (posError = 0) then num := ComplexNum(0, rea);
+                exit; 
+            end;
             system.val(x1, rea, posError);
             if (posError = 0) then
             begin
@@ -680,20 +684,12 @@ end;
 
 function Pow(a,b : ComplexType) : ComplexType;
 begin
-    //if (isInteger(b))
-    //then begin
-    //    Result := IntPow(a, trunc(b.Re));
-    //end else begin
-    //    Result := Exp(b * Ln(a));
-    //end;
     if (isInteger(b))
     then begin
-        //if (Abs(a) = 1)
         if (a*a*a*a = 1)
             then Result := unitcirclepowTo(a,b)
             else Result := IntPow(a, trunc(b.Re));
     end else begin
-        //if (Abs(a) = 1)
         if (a*a*a*a = 1)
             then Result := unitcirclepowTo(a,b)
             else Result := Exp(b * Ln(a));
@@ -702,8 +698,6 @@ end;
 
 function Sqrt(a : ComplexType) : ComplexType;
 begin
-    // to improve
-    //Result := Exp(Ln(a)/2);
     if (a.Im = 0) and (a.Re >= 0) then
     begin
         Result := system.sqrt(a.Re);
@@ -755,15 +749,6 @@ end;
 
 function MinusOneTo(z : ComplexType) : ComplexType;
 begin
-    //if (isInteger(z))
-    //    then if (Int(z.Re) mod 2 = 0)
-    //             then Result := 1
-    //             else Result := -1
-    //    else if (isInteger(2*z))
-    //             then if (Int(2*z.Re) mod 2 = 0)
-    //                      then Result := Imag
-    //                      else Result := -Imag
-    //             else Result := Exp(z * Imag * Pi);
     Result := ImagTo(2*z);
 end;
 
@@ -1224,13 +1209,15 @@ end;
 
 // error functions
 
-function Erf(z : ComplexType) : ComplexType;
+//{*
+function Erf2(z : ComplexType) : ComplexType;
 var
     limit, n : IntegerType;
     s1, s, p : ComplexType;
 	epsilon  : RealType;
     k        : IntegerType;
 begin
+    //writeln('erf');
     if z = 0 then
     begin
         Result := 0;
@@ -1259,9 +1246,33 @@ begin
 end;
 
 function Erfc(z : ComplexType) : ComplexType;
+var
+    sum : ComplexType;
+    n   : IntegerType = 500;
 begin
-    Result := 1.0 - Erf(z);
+    if z.Re < 0 then
+        Result := 2 - Erfc(-z)
+    else if z = 0 then
+        Result := 1
+    else if z.Re = 0 then
+    begin
+        Result := 1-Erf2(z);
+    end else begin
+        sum := (4*n+1) + 2*Sqr(z) - ((2*n+1)*(2*n+2));
+        while (n > 0) do
+        begin
+            sum := (4*n-3) + 2*Sqr(z) - ((2*n-1)*(2*n))/sum;
+            n := n-1;
+        end;
+        Result := (C_2DSQPI * z * Exp(-Sqr(z)))/sum;
+    end;
 end;
+
+function Erf(z : ComplexType) : ComplexType;
+begin
+    Result := 1.0 - Erfc(z);
+end;
+
 
 function Erfi(z : ComplexType) : ComplexType;
 begin
@@ -1307,6 +1318,7 @@ begin
     else
     if (s = 1) then
     begin
+        writeln('hello');
         Result := 1.0 - Exp(-x);
     end else if (x = 0) then begin
         Result := 0;
@@ -1315,6 +1327,11 @@ begin
     end else begin
         Result := Gamma(s) - UpperGamma(s,x);
     end;
+end;
+
+function LowerRegGamma(s, x : ComplexType) : ComplexType;
+begin
+    Result := LowerGamma(s,x)/Gamma(s);
 end;
 
 // beta function with some help

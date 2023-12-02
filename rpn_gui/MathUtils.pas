@@ -5,7 +5,7 @@ unit MathUtils;
 interface
 
 uses
-    //ComplexNumbers,
+    ComplexNumbers,
 	Classes, SysUtils;
 
 procedure swapNumbers(var e1 : Extended; var e2 : Extended);
@@ -33,18 +33,16 @@ function isPrime(x : Extended) : Boolean;
 //function isInteger(x : Extended) : Boolean;
 function divides(x, y : Extended) : Boolean;
 
-function newton_int(n, k : Extended) : Extended;
-function newton_real(n, k : Extended) : Extended;
+//function newton_int(n, k : Extended) : Extended;
+//function newton_real(n, k : Extended) : Extended;
 function gcd(a, b : Extended) : Extended;
 function lcm(a, b : Extended) : Extended;
 function gcdExtended(a, b : LongInt; var x : LongInt; var y : LongInt) : LongInt;
 function fib(n: Extended) : Extended;
 
-function LogGamma(x : Extended) : Extended;
-function vgamma(x : Extended) : Extended;
-function vlowergamma(s, x : Extended) : Extended;
-function ferf(x : Extended) : Extended;
-function ferfc(x : Extended) : Extended;
+//function LogGamma(x : Extended) : Extended;
+//function vgamma(x : Extended) : Extended;
+//function vlowergamma(s, x : Extended) : Extended;
 
 function dstdnorm(x : Extended) : Extended;
 function dnorm(x, mu, si : Extended) : Extended;
@@ -71,9 +69,9 @@ function rchisq(df : Extended) : Extended;
 function ferlang(x, k, l : Extended) : Extended;
 function derlang(x, k, l : Extended) : Extended;
 function rerlang(k, l : Extended) : Extended;
-function vbeta(x, y : Extended) : Extended;
-function vinbeta(x, a, b : Extended) : Extended;
-function vrinbeta(x, a, b : Extended) : Extended;
+//function vbeta(x, y : Extended) : Extended;
+//function vinbeta(x, a, b : Extended) : Extended;
+//function vrinbeta(x, a, b : Extended) : Extended;
 function fstudentt(x, nu : Extended) : Extended;
 function dstudentt(x, nu : Extended) : Extended;
 function rstudentt(df: Extended) : Extended;
@@ -129,6 +127,7 @@ begin
     Result := (x = int(x));
 end;
 
+{*
 function pow(x, y : Extended) : Extended;
 var
     s : Extended;
@@ -186,6 +185,7 @@ begin
         end else Result := pow2(x,1/y); 
     end else Result := pow2(x,1/y);
 end;
+*}
 
 function fmod(x, y : Extended) : Extended;
 begin
@@ -401,6 +401,7 @@ end;
 //     else newton_int := newton_int(n-1, k-1) + newton_int(n-1, k);
 //end;
 
+{*
 function newton_int(n, k : Extended) : Extended;
 begin
     if (k > n) then 
@@ -430,6 +431,7 @@ begin
     	Result := s;
   	end;
 end;
+*}
 
 function gcd(a, b : Extended) : Extended;
 var
@@ -511,6 +513,7 @@ end;
 
 // ====== STATISTICS
 
+{*
 function LogGamma(x : Extended) : Extended;
 { Log of Gamma(x), exponentiate this to get Gamma(x), x! =
 Gamma(x+1),
@@ -581,89 +584,20 @@ begin
         end;
     end;
 end;
-
-function fgamma2(x : Extended) : Extended;
-var
-	limit, n : Integer;
-	s, s1    : Extended;
-	epsilon  : Extended;
-begin
-	if (isInteger(x)) then Result := fact(x-1) 
-    else if (x = 0.5) then
-    begin
-        Result := sqrt(PI);
-    end else if (x > 0) and (fmod(x,1) = 0.5) then
-    begin
-        Result := (x-1)*fgamma2(x-1);
-    end else begin
-		if (x > 100) 
-            then limit := trunc(100000*x)+1
-		    else limit := trunc(1000000*x)+1;
-		n := 1;
-		s := 1.0;
-		epsilon := 50.0;
-		while (n < limit) and (epsilon > 0.0000001) do
-		//while (epsilon > 0.0000001) do
-		begin
-            //checkSIGINT();
-			s1 := s;
-			s := s * ((pow2(1+1/n, x))/(1+x/n));
-			//writeln(s, #9, epsilon);
-			epsilon := abs(s-s1);
-			n := n + 1;
-		end;
-		Result := s/x;
-
-		//s := exp(-EM*x)/x;
-		//for n := 1 to 1000000*trunc(x)+1 do 
-		//begin
-		//	s1 := s;
-		//	s := s * (1/(1 + x/n) * exp(x/n));
-		//	if (abs(s1-s) < 0.000001) then break;
-		//end;
-		//fgamma := s;
-	end;
-end;
-
-function ferf(x : Extended) : Extended;
-var
-    t, sum  : Extended;
-	epsilon : Extended;
-begin
-    if x = 0 then
-    begin
-        Result := 0;
-    end else if x < 0 then
-    begin
-        Result := ferf(-x);
-    end else begin
-        epsilon := 0.0001*trunc(x+1);
-        sum := 0;
-        t := 0;
-        while (t <= x) do
-        begin
-            sum := sum + epsilon*(exp(-(t*t)));
-            t := t + epsilon;
-        end;
-        sum := sum * 1.1283791670955125;
-        Result := sum;
-    end;
-end;
-
-function ferfc(x : Extended) : Extended;
-begin
-    Result := 1 - ferf(x);
-end;
+*}
 
 function dstdnorm(x : Extended) : Extended;
-var
-	sum    : Extended;
+//var
+	//sum    : Extended;
 	//sum1   : Extended;
-	t, eps : Extended;
-	limit  : Extended;
+	//t, eps : Extended;
+	//limit  : Extended;
 begin
+    //writeln('dnorm');
+    Result := 0.5 * (1 + Real(Erf(x*sqrt(2)/2)));
     //checkSIGINT();
-	eps := 0.00001;
+	{*
+    eps := 0.00001;
 	limit := 10;
     // add +/- infinity and increase precision
 	if (x = -Infinity) then 
@@ -738,6 +672,7 @@ begin
 		end; 
 		Result := 1 - sum/sqrt(2*PI)*(2/3);
 	end;
+    *}
 end;
 
 // 0.841344746068543
@@ -750,7 +685,7 @@ end;
 
 function fnorm(x, mu, si : Extended) : Extended;
 begin
-    Result := 1/(si*sqrt(2*PI))*exp(-0.5*sqr((x-mu)/si));
+    Result := Real(Inv(si*Sqrt(2*PI))*Exp(-0.5*Sqr((x-mu)/si)));
 end;
 
 //function rnorm(mean, sd: Extended) : Extended;
@@ -764,7 +699,8 @@ end;
 
 function fbinom(n : LongInt; k : LongInt; p : Extended) : Extended;
 begin
-    Result := newton_int(n, k)*pow(p, k)*pow(1-p, n-k);
+    //Result := newton_int(n, k)*pow(p, k)*pow(1-p, n-k);
+    Result := Real(Newton(n, k)*pow(p, k)*pow(1-p, n-k));
 end;
 
 function dbinom(n, k : LongInt; p : Extended) : Extended;
@@ -797,12 +733,12 @@ end;
 
 function fgeom(k : LongInt; p : Extended) : Extended;
 begin
-    Result := pow(1-p, k-1)*p;
+    Result := Real(pow(1-p, k-1)*p);
 end;
 
 function dgeom(k : LongInt; p : Extended) : Extended;
 begin
-    Result := 1 - pow(1-p, k);
+    Result := Real(1 - pow(1-p, k));
 end;
 
 function rgeom(p : Extended) : Extended;
@@ -822,22 +758,22 @@ end;
 
 function fexp(x : Extended; lambda : Extended) : Extended;
 begin
-    Result := lambda * exp(-x*lambda);
+    Result := lambda * system.exp(-x*lambda);
 end;
 
 function dexp(x : Extended; lambda : Extended) : Extended;
 begin
-    Result := 1 - exp(-x*lambda);
+    Result := 1 - system.exp(-x*lambda);
 end;
 
 function rexp(lambda : Extended) : Extended;
 begin
-    Result := -ln(random)/lambda;
+    Result := -system.ln(random)/lambda;
 end;
 
 function fpoisson(x, lambda : Extended): Extended;
 begin
-    Result := exp(-lambda)*pow(lambda, x)/fact(x);
+    Result := Real(exp(-lambda)*pow(lambda, x))/fact(x);
 end;
 
 function dpoisson(x, lambda : Extended): Extended;
@@ -862,7 +798,7 @@ begin
     //assert(mean > 0, 'mean < 1');
     k := 0;
     b := 1;
-    l := exp(-mean);
+    l := system.exp(-mean);
     while b > l do
     begin
         k := k + 1;
@@ -877,7 +813,7 @@ begin
         then Result := fexp(x, beta)
         else if isInteger(alpha) 
             then Result := ferlang(x, alpha, beta)
-            else Result := (pow2(beta, alpha)*pow2(x, alpha-1)*exp(-beta*x))/vgamma(alpha);
+            else Result := Real((Pow(beta, alpha)*Pow(x, alpha-1)*Exp(-beta*x))/Gamma(alpha));
 end;
 
 function dgamma(x, alpha, beta : Extended) : Extended;
@@ -888,7 +824,8 @@ begin
         then Result := 0.0
         else if isInteger(alpha) 
             then Result := derlang(x, alpha, beta)
-            else Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
+            //else Result := vlowergamma(alpha, beta*x)/vgamma(alpha);
+            else Result := Real(LowerGamma(alpha, beta*x)/Gamma(alpha));
 end;
 
 function rgamma1(a, b : Extended) : Extended;
@@ -900,21 +837,21 @@ begin
     if (a >= 1) then
     begin
         d := a - 1.0/3; 
-        c := 1.0/sqrt(9*d); 
+        c := 1.0/system.sqrt(9*d); 
         flag := False;
         repeat
             Z := randg(0, 1);
-            V := pow((1+c*Z), 3); 
+            V := Real(pow((1+c*Z), 3)); 
             if Z > -1.0/c then
             begin
                 U := random();
-                flag := ln(U) < (0.5*Z*Z + d - d*V + d*ln(V));
+                flag := system.ln(U) < (0.5*Z*Z + d - d*V + d*system.ln(V));
             end;
         until flag = True;
         Result := d*V/b;
     end else begin
         c := rgamma1(a+1, b);
-        c := c * pow2(random(), (1/a));
+        c := c * Real(pow(random(), (1/a)));
         Result := c;
     end;
 end;
@@ -929,22 +866,22 @@ begin
     if (a > 1) then
     begin
         d := a - 1.0/3; 
-        c := 1.0/sqrt(9*d); 
+        c := 1.0/system.sqrt(9*d); 
         flag := True;
         while flag do
         begin
             Z := randg(0,1);
             if Z > -1/c then
             begin
-                V := pow((1+c*Z), 3); 
+                V := Real(pow((1+c*Z), 3)); 
                 U := random;
-                flag := ln(U) > (0.5*Z*Z + d - d*V + d*ln(V));
+                flag := system.ln(U) > (0.5*Z*Z + d - d*V + d*system.ln(V));
             end;
         end;
         Result := d*V/b;
     end else begin
         c := rgamma2(a+1, b);
-        c := c * pow2(random(), (1/a));
+        c := c * Real(pow(random(), (1/a)));
         Result := c;
     end;
 end;
@@ -962,7 +899,7 @@ begin
     repeat
       unif := random(RESOLUTION) / RESOLUTION;
     until unif <> 0;
-    randomExp := a - rate * ln(unif);
+    randomExp := a - rate * system.ln(unif);
   end;
 end;
 
@@ -970,17 +907,17 @@ function rgengamma(a, b, c: Extended): Extended;
 const
     RESOLUTION = 1000;
     T = 4.5;
-    D = 1 + ln(T);
+    D = 1 + system.ln(T);
 var
     unif: Extended;
     A2, B2, C2, Q, p, y: Extended;
     p1, p2, v, w, z: Extended;
     found: boolean;
 begin
-    A2 := 1 / sqrt(2 * c - 1);
-    B2 := c - ln(4);
+    A2 := 1 / system.sqrt(2 * c - 1);
+    B2 := c - system.ln(4);
     Q := c + 1 / A2;
-    C2 := 1 + c / exp(1);
+    C2 := 1 + c / system.exp(1);
     found := False;
     if c < 1 then
     begin
@@ -994,7 +931,7 @@ begin
                 repeat
                     unif := random(RESOLUTION) / RESOLUTION;
                 until unif > 0;
-                y := -ln((C2 - p) / c);
+                y := -system.ln((C2 - p) / c);
                 if unif <= power(y, c - 1) then
                 begin
                     Result := a + b * y;
@@ -1002,7 +939,7 @@ begin
                 end;
             end else begin
                 y := power(p, 1 / c);
-                if unif <= exp(-y) then
+                if unif <= system.exp(-y) then
                 begin
                     Result := a + b * y;
                     found := True;
@@ -1022,11 +959,11 @@ begin
             repeat
                 p2 := random(RESOLUTION) / RESOLUTION;
             until p2 > 0;
-                v := A2 * ln(p1 / (1 - p1));
-                y := c * exp(v);
+                v := A2 * system.ln(p1 / (1 - p1));
+                y := c * system.exp(v);
                 z := p1 * p1 * p2;
                 w := B2 + Q * v - y;
-            if (w + D - T * z >= 0) or (w >= ln(z)) then
+            if (w + D - T * z >= 0) or (w >= system.ln(z)) then
             begin
                 Result := a + b * y;
                 found := True;
@@ -1040,7 +977,11 @@ begin
     //Result := (pow2(x, v/2.0-1.0)*exp(-x/2))/(pow2(2, v/2)*vgamma(v/2.0));
     case v of
         2 : Result := fexp(x, 1/2);
-        else Result := fgamma(x, v/2, 0.5);
+        else begin
+                 if (v = 1) and (x = 0) then Result := infinity
+            else if (x = 0) then Result := 0
+            else Result := fgamma(x, v/2, 0.5);
+        end;
     end;
 end;
 
@@ -1049,7 +990,11 @@ begin
     //Result := vlowergamma(v/2.0, x/2.0)/vgamma(v/2.0);
     case v of
         2 : Result := dexp(x, 1/2);
-        else Result := dgamma(x, v/2, 0.5);
+        else begin
+            if (x = 0) 
+            then Result := 0 
+            else Result := dgamma(x, v/2, 0.5);
+        end;
     end;
 end;
 
@@ -1073,7 +1018,7 @@ end;
 
 function ferlang(x, k, l : Extended) : Extended;
 begin
-    Result := (pow(l, k)*pow(x, k-1)*exp(-l*x))/fact(k-1); 
+    Result := Real(pow(l, k)*pow(x, k-1)*exp(-l*x))/fact(k-1); 
 end;
 
 function derlang(x, k, l : Extended) : Extended;
@@ -1083,7 +1028,7 @@ var
 begin
     s := 0;
     for i := 0 to trunc(k)-1 
-        do s := s + (exp(-l*x)*pow(l*x, i)/fact(i));
+        do s := s + (Real(exp(-l*x)*pow(l*x, i))/fact(i));
     Result := 1 - s;
 end;
 
@@ -1106,10 +1051,11 @@ begin
             until unif <> 0;
             prod := prod * unif;
         end;
-        Result := -1.0/l * ln(prod);
+        Result := -1.0/l * system.ln(prod);
     end;
 end;
 
+{*
 function vbeta(x, y : Extended) : Extended;
 //var
 //    eps  : Extended;
@@ -1161,14 +1107,15 @@ begin
     else Result := vinbeta(x, a, b)/vbeta(a, b);
     //Result := vinbeta(x, a, b)/vbeta(a, b);
 end;
+*}
 
 function gammat(nu : Extended) : Extended;
 var
     s : Extended;
 begin
     if (fmod(nu, 2) = 0) 
-        then s := 1/(2*sqrt(nu))
-        else s := 1/(PI*sqrt(nu));
+        then s := 1/(2*system.sqrt(nu))
+        else s := 1/(PI*system.sqrt(nu));
     nu := nu - 1;
     while (nu >= 2) do
     begin
@@ -1183,20 +1130,20 @@ begin
     if nu = Infinity then Result := fnorm(x, 0, 1)
     else if isInteger(nu) then
     begin
-             if nu = 1 then Result := 1/(PI*(x*x+1))
-        else if nu = 2 then Result := 1/(2*sqrt(2)*sqrt(pow(x*x/2+1, 3)))
-        else if nu = 3 then Result := 2/(PI*sqrt(3)*pow(x*x/3+1, 2))
-        else if nu = 4 then Result := 3/(8*sqrt(pow(x*x/4+1, 5)))
-        else if nu = 5 then Result := 8/(3*PI*sqrt(5)*pow(x*x/5+1, 3))
+             if nu = 1 then Result := Real(1/(PI*(x*x+1)))
+        else if nu = 2 then Result := Real(1/(2*sqrt(2)*sqrt(pow(x*x/2+1, 3))))
+        else if nu = 3 then Result := Real(2/(PI*sqrt(3)*pow(x*x/3+1, 2)))
+        else if nu = 4 then Result := Real(3/(8*sqrt(pow(x*x/4+1, 5))))
+        else if nu = 5 then Result := Real(8/(3*PI*sqrt(5)*pow(x*x/5+1, 3)))
         else if nu > 0 then 
         begin
              if (nu > 1) 
-                then Result := gammat(nu)/sqrt(pow(x*x/nu+1, nu+1))
-                else Result := 1/(sqrt(nu)*vbeta(0.5, nu/2))/sqrt(pow(x*x/nu+1, nu+1));
+                then Result := gammat(nu)/Real(sqrt(pow(x*x/nu+1, nu+1)))
+                else Result := Real(Inv(sqrt(nu)*Beta(0.5, nu/2))/sqrt(pow(x*x/nu+1, nu+1)));
         end 
         else Result := NaN;
     end
-    else if nu > 0 then Result := 1/(sqrt(nu)*vbeta(0.5, nu/2))*pow2(x*x/nu+1, -(nu+1)/2)
+    else if nu > 0 then Result := Real(1/(sqrt(nu)*Beta(0.5, nu/2))*pow(x*x/nu+1, -(nu+1)/2))
     else Result := NaN;
 end;
 
@@ -1204,17 +1151,17 @@ function dstudentt(x, nu : Extended) : Extended;
 begin
     //writeln(nu/(x*x+nu):2:5);
          if nu = Infinity then Result := dstdnorm(x)
-    else if nu = 1 then Result := 0.5 + arctan(x)/PI
-    else if nu = 2 then Result := 0.5 + x/(2*sqrt(2*(x*x*0.5+1)))
-    else if nu = 3 then Result := 0.5 + (x/(sqrt(3)*(x*x/3+1)) + arctan(x/sqrt(3)))/PI
-    else if nu = 4 then Result := 0.5 + 3/8*(x/sqrt(x*x/4+1))*(1-1/12*((x*x)/(x*x/4+1)))
-    else if nu = 5 then Result := 0.5 + (x/(sqrt(5)*(x*x/5+1)) * (1 + (2/(3*(x*x/5+1)))) + arctan(x/sqrt(5)))/PI
+    else if nu = 1 then Result := 0.5 + system.arctan(x)/PI
+    else if nu = 2 then Result := 0.5 + Real(x/(2*sqrt(2*(x*x*0.5+1))))
+    else if nu = 3 then Result := 0.5 + Real((x/(sqrt(3)*(x*x/3+1)) + arctan(x/sqrt(3)))/PI)
+    else if nu = 4 then Result := 0.5 + Real(3/8*(x/sqrt(x*x/4+1))*(1-1/12*((x*x)/(x*x/4+1))))
+    else if nu = 5 then Result := 0.5 + Real((x/(sqrt(5)*(x*x/5+1)) * (1 + (2/(3*(x*x/5+1)))) + arctan(x/sqrt(5)))/PI)
     else if nu > 0 then begin
         if x < 0 then
         begin
             Result := 1 - dstudentt(-x, nu);
         end else begin
-            Result := 1 - 0.5*vrinbeta(nu/(x*x+nu), nu/2, 0.5);
+            Result := 1 - 0.5*Real(RegIncBeta(nu/(x*x+nu), nu/2, 0.5));
         end;
     end else Result := NaN;
 end;
@@ -1226,20 +1173,20 @@ begin
     else if df < 1 then 
         Result := NaN
     else if df = 1 then
-        Result := randg(0, 1) / sqrt(rchisq(1))
+        Result := randg(0, 1) / system.sqrt(rchisq(1))
     else begin
-        Result := randg(0, 1) / sqrt(rchisq(df) / df);
+        Result := randg(0, 1) / system.sqrt(rchisq(df) / df);
     end;
 end;
 
 function ffischerf(x, d1, d2 : Extended) : Extended;
 begin
-    Result := sqrt((pow(d1 * x, d1) * pow(d2, d2)) / (pow(d1*x + d2, d1+d2)))/(x * vbeta(d1/2, d2/2));
+    Result := Real(sqrt((pow(d1 * x, d1) * pow(d2, d2)) / (pow(d1*x + d2, d1+d2)))/(x * Beta(d1/2, d2/2)));
 end;
 
 function dfischerf(x, d1, d2 : Extended) : Extended;
 begin
-    Result := vrinbeta((d1*x)/(d1*x+d2), d1/2, d2/2);
+    Result := Real(RegIncBeta((d1*x)/(d1*x+d2), d1/2, d2/2));
 end;
 
 function rfischerf(v, w: Extended) : Extended;
@@ -1258,14 +1205,14 @@ begin
         begin
             Result := NaN;
         end else begin
-            Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+            Result := Real(pow(x, alpha-1) * pow(1-x, beta-1) / ComplexNumbers.Beta(alpha, beta));
         end;
     end else begin
         if (abs(x-0.5) >= 0.5) then
         begin
             Result := NaN;
         end else begin
-            Result := pow2(x, alpha-1) * pow2(1-x, beta-1) / vbeta(alpha, beta);
+            Result := Real(pow(x, alpha-1) * pow(1-x, beta-1) / ComplexNumbers.Beta(alpha, beta));
         end;
     end;
 end;
@@ -1273,12 +1220,12 @@ end;
 function dbeta(x, alpha, beta : Extended) : Extended;
 begin
     //if (abs(x-0.5) >= 0.5) then
-    if (abs(x-0.5) > 0.5) then
+    if (system.abs(x-0.5) > 0.5) then
     //if (abs(x) > 1) then
     begin
         Result := NaN;
     end else begin
-        Result := vrinbeta(x, alpha, beta);
+        Result := Real(RegIncBeta(x, alpha, beta));
     end;
 end;
 
@@ -1304,7 +1251,7 @@ begin
     begin
         Result := NaN;
     end else begin
-        Result := 1/(PI * sqrt(x * (1-x)));
+        Result := 1/(PI * system.sqrt(x * (1-x)));
     end;
 end; 
 
@@ -1314,7 +1261,7 @@ begin
     begin
         Result := NaN;
     end else begin
-        Result := arcsin(2*x-1)/PI + 0.5;
+        Result := Math.arcsin(2*x-1)/PI + 0.5;
     end;
 end;
 
@@ -1664,13 +1611,13 @@ begin
 	begin
 		for i := length(str) downto 2 do
         begin
-            s := s - getBaseValue(str[i])*pow_int(base, f);
+            s := s - getBaseValue(str[i])*Int(pow(base, f));
             inc(f);
         end;
 	end else begin
 		for i := length(str) downto 1 do
         begin
-            s := s + getBaseValue(str[i])*pow_int(base, f);
+            s := s + getBaseValue(str[i])*Int(pow(base, f));
             inc(f);
         end;
 	end;
@@ -1682,7 +1629,7 @@ var
 	temp, liczba : longint;
 	hex 		 : String;
 begin
-	liczba := abs(a);
+	liczba := system.abs(a);
 	hex := ''; 
     if (base = 1) then 
     begin
@@ -1728,7 +1675,7 @@ begin
     begin
         input := StringReplace(input, ',', '.', [rfReplaceAll]);
     end;
-    val(input, t, fl);
+    system.val(input, t, fl);
     if fl = 0 
         then Result := t
         else Result := NaN;

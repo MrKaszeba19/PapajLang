@@ -1362,8 +1362,8 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
 			if (env.Settings.StrictType) and (assertNotNegativeRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            w := fgamma(Real(x), Real(y)/2, 0.5);
-            //w := fchisq(x, trunc(y));
+            //w := fgamma(Real(x), Real(y)/2, 0.5);
+            w := fchisq(Real(x), Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
         end;
         'Math.distChiSq' : begin
@@ -1371,8 +1371,8 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
 			if (env.Settings.StrictType) and (assertNotNegativeRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            w := dgamma(Real(x), Real(y)/2, 0.5);
-            //w := dchisq(x, trunc(y));
+            //w := dgamma(Real(x), Real(y)/2, 0.5);
+            w := dchisq(Real(x), Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
         end;
         'Math.randomChiSq' : begin
@@ -1892,6 +1892,12 @@ begin
 			if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             w := Erfc(x);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+        end;
+        'Math.erfi' : begin
+			if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            w := Erfi(x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
         end;
         'Math.fomega' : begin
@@ -6046,7 +6052,7 @@ begin
         'Number.cbrt' : begin
           	if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := Root(y,3);
+            if (isReal(y)) then z := RealRoot(Real(y),3) else z := Root(y,3);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.sign' : begin

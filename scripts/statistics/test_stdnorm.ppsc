@@ -1,0 +1,19 @@
+@use(Math)
+@use(Array)
+
+[ -100 1 100 seq ] fun{ 10 / } map -> T
+
+"Array of X: " print 
+@real
+T println
+
+"\nx\tf(x)\tF(x)" println
+for ( $item : T ) {
+	@real
+	$item print
+	//@milli
+	"\t" print	
+	$item funcNormStd print
+	"\t" print
+	$item distNormStd println
+}
