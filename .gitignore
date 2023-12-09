@@ -8,14 +8,14 @@
 *.exe
 plans.md
 trash/
-rpn_console/rpn
-rpn_console/backup/
-rpn_console/countlines.sh
-rpn_gui/backup/
-rpn_gui/rpncalculator
-rpn_gui/rpncalculator.exe
-rpn_gui/temp.ppsc
-rpn_gui/rpn
-rpn_gui/rpn.exe
+papaj_cli/papaj
+papaj_cli/backup/
+papaj_cli/countlines.sh
+papaj_gui/backup/
+papaj_gui/papaj_gui
+papaj_gui/papaj_gui.exe
+papaj_gui/temp.ppsc
+papaj_gui/papaj
+papaj_gui/papaj.exe
 *.test.ppsc
 
