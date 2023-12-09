@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, crt, // this includes the LCL widgetset
-  SysUtils, 
-  Forms, Unit1, Unit2, Unit3, Unit4, Unit5, RPNAbout, Unit6
+  SysUtils, Forms, Unit1, Unit2, Unit3, Unit4, Unit5, RPNAbout, Unit6,
+  ComplexNumbers, PolyUtils
   { you can add units after this };
 
 function convertToMDY(date : String) : String;

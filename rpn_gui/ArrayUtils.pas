@@ -47,6 +47,10 @@ function stringHappenedBefore(tab : TEntities; position : LongInt) : Boolean;
 procedure array_cutNulls(var tab : TEntities);
 function array_randomFrom(tab : TEntities) : Entity;
 
+function table_distinct(tab : TEntities) : TEntities;
+function table_distinctNumbers(tab : TEntities) : TEntities;
+function table_distinctStrings(tab : TEntities) : TEntities;
+
 implementation
 
 uses MathUtils, Math;
@@ -665,6 +669,63 @@ end;
 function array_randomFrom(tab : TEntities) : Entity;
 begin
     Result := tab[random(Length(tab))];
+end;
+
+function table_distinct(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if not (itemHappenedBefore(tab, index)) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
+end;
+
+function table_distinctNumbers(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if not (numberHappenedBefore(tab, index)) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
+end;
+
+function table_distinctStrings(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if not (stringHappenedBefore(tab, index)) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
 end;
 
 

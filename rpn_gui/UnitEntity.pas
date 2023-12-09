@@ -35,6 +35,9 @@ type TEntityType = (
 	TFUN,   // function
 	TEXC,   // exception
     TDAT,   // datetime
+    TPLY,   // polynomial
+    TMAT,   // matrix
+    TDTF,   // dataframe
     TDAY,   // date
     TTIM   // time
 );

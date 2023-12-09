@@ -220,7 +220,7 @@ implementation
 //uses Unit5, DateUtils, StringUtils, Math;
 uses Unit5, MathUtils, 
      Math, 
-     DTUtils, ArrayUtils, StringUtils, ConsoleUtils,
+     DTUtils, ArrayUtils, PolyUtils, StringUtils, ConsoleUtils,
     {$IFDEF MSWINDOWS}
 		ShellApi, crt,
     {$ELSE}

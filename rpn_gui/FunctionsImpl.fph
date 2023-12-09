@@ -458,7 +458,7 @@ begin
             if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TVEC) then
             begin
                 //IntEax := trunc(stack_get(env.Stack[env.Settings.StackPointer]).Num);
-                IntEax := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+                IntEax := stack_pop(env.Stack[env.Settings.StackPointer]).Num2;
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(stack_size(env.Stack[IntEax])));
             end else begin
                 //StrEbx := stack_get(env.Stack[env.Settings.StackPointer]).Str;
@@ -4048,7 +4048,7 @@ begin
             //if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, TVEC, i)) then Exit; 
             if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TVEC) then
             begin
-                IntEax := Int(stack_get(env.Stack[env.Settings.StackPointer]).Num);
+                IntEax := stack_get(env.Stack[env.Settings.StackPointer]).Num2;
                 if (env.Settings.Autoclear) then stack_pop(env.Stack[env.Settings.StackPointer]);
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(stack_size(env.Stack[IntEax])));
             end else Found := False;
@@ -4780,11 +4780,7 @@ begin
                 ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
                 stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
                 ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-                for index := 0 to Length(env.Stack[ArrEax.Num2].Values)-1 do
-                begin
-                    if not (itemHappenedBefore(env.Stack[ArrEax.Num2].Values, index)) then
-                        stack_push(env.Stack[ArrEbx.Num2], env.Stack[ArrEax.Num2].Values[index]);
-    		    end;
+                env.Stack[ArrEbx.Num2].Values := table_distinct(env.Stack[ArrEax.Num2].Values);
                 stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
             end else Found := False;
         end;
@@ -4795,11 +4791,7 @@ begin
                 ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
                 stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
                 ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-                for index := 0 to Length(env.Stack[ArrEax.Num2].Values)-1 do
-                begin
-                    if not (stringHappenedBefore(env.Stack[ArrEax.Num2].Values, index)) then
-                        stack_push(env.Stack[ArrEbx.Num2], env.Stack[ArrEax.Num2].Values[index]);
-    		    end;
+                env.Stack[ArrEbx.Num2].Values := table_distinctNumbers(env.Stack[ArrEax.Num2].Values);
                 stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
             end else Found := False;
         end;
@@ -4810,11 +4802,7 @@ begin
                 ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
                 stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
                 ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-                for index := 0 to Length(env.Stack[ArrEax.Num2].Values)-1 do
-                begin
-                    if not (stringHappenedBefore(env.Stack[ArrEax.Num2].Values, index)) then
-                        stack_push(env.Stack[ArrEbx.Num2], env.Stack[ArrEax.Num2].Values[index]);
-    		    end;
+                env.Stack[ArrEbx.Num2].Values := table_distinctStrings(env.Stack[ArrEax.Num2].Values);
                 stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
             end else Found := False;
         end;
@@ -5448,6 +5436,87 @@ begin
                 //while EntEax = stack_getFront(env.Stack[ArrEbx.Num2])) do stack_popFront(env.Stack[ArrEbx.Num2]);
                 stack_push(env.Stack[env.Settings.StackPointer], ArrEbx);
             end else Found := False;
+        end;
+        // polynomials
+        // todo: move it to separate unit
+        // poly val, degree, add, subtract, times, divide, mod, roots, realroots, power, factor
+        'Array.polyval' : begin
+            if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(polynomial_value(env.Stack[ArrEcx.Num2].Values, EntEax.Num)));
+        end;
+        'Array.polydeg' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(polynomial_degree(env.Stack[ArrEcx.Num2].Values)));
+        end;
+        'Array.polysum' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_sum(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        'Array.polydiff' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_diff(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        'Array.polymul' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        'Array.polydiv' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_div(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        'Array.polymod' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_mod(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        'Array.polyroots' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            env.Stack[ArrEax.Num2].Values := polynomial_roots(env.Stack[ArrEcx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
         end;
         else begin
             Found := false;

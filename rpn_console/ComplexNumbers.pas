@@ -684,7 +684,11 @@ end;
 
 function Pow(a,b : ComplexType) : ComplexType;
 begin
-    if (isInteger(b))
+    if (a = 0) then begin
+        if (b.Re <= 0) 
+            then Result := NaN
+            else Result := 0;
+    end else if (isInteger(b))
     then begin
         if (a*a*a*a = 1)
             then Result := unitcirclepowTo(a,b)
@@ -722,7 +726,9 @@ begin
         Result := Inv(RealRoot(a,b));
     end else if (a < 0) and (isInteger(b)) and (trunc(b) mod 2 = 1)
         then Result := -Pow(system.abs(a),Inv(b))
-        else Result := Pow(a,Inv(b));
+        else begin
+            Result := Pow(a,Inv(b));
+        end;
 end;
 
 function Root(a,b : ComplexType) : ComplexType;
@@ -735,10 +741,11 @@ begin
     end else if (isReal(b)) then begin
         if (b.Re < 0) then begin
             Result := Inv(Root(a,-b.Re));
-        end else if isInteger(b) then
-        begin
-            Result := ComplexNumPolar(RealRoot(Abs(a), b.Re).Re, Arg(a)/b.Re);
-            //Result := Pow(a,Inv(b.Re));
+        //end else if isInteger(b) then
+        //begin
+        //    writeln('hello');
+        //    Result := ComplexNumPolar(RealRoot(Abs(a), b.Re).Re, Arg(a)/b.Re);
+        //    //Result := Pow(a,Inv(b.Re));
         end else begin
             Result := Pow(a,Inv(b.Re));
         end;
