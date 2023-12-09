@@ -1,4 +1,4 @@
-# RPN Calculator
+# Papaj
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
@@ -7,29 +7,29 @@ by Paul Lipkowski (RooiGevaar19)
 
 Since November 24, 2017 written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of RPN Calculator (**v.0.5.3**, nickname Mem) [here](https://github.com/RooiGevaar19/RPNCalculator/releases).
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of Papaj (**v.0.5.3**, nickname Mem) [here](https://github.com/RooiGevaar19/PapajLang/releases).
 
 ## How to use it
 
 ### Console application
-- Execute a command **rpn do** with a quoted PS expression (e.g. `rpn do "2 3 + 4 *"`). More info about expressions in `rpn expression` and `rpn functions`.
+- Execute a command **rpn do** with a quoted PS expression (e.g. `papaj do "2 3 + 4 *"`). More info about expressions in `papaj expression` and `papaj functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- If you need help, you can type `rpn help`, `rpn -h` or `rpn --help`.
-- If you want to run an PS script file, then execute `rpn FILENAME` or `rpn run FILENAME`. 
-- If you want to include some input parameters, then provide them after the FILENAME delimited by space, e.g. `rpn run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `rpn run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
-- If you want to run a REPL of PapajScript, then execute `rpn repl`.
-- If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `rpn do '2 PI * sin' -L` or `rpn repl --load-all`
-- If you want to pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `rpn do '2 2 +' -P` or `rpn script.ppsc --pause`.
-- If you need app version, you can type `rpn version`, `rpn -v` or `rpn --version`.
+- If you need help, you can type `papaj help`, `rpn -h` or `papaj --help`.
+- If you want to run an PS script file, then execute `papaj FILENAME` or `papaj run FILENAME`. 
+- If you want to include some input parameters, then provide them after the FILENAME delimited by space, e.g. `papaj run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `papaj run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
+- If you want to run a REPL of PapajScript, then execute `papaj repl`.
+- If you want to load all pre-built packages on application start, then use flag `-L` or `--load-all`, e.g. `papaj do '2 PI * sin' -L` or `papaj repl --load-all`
+- If you want to pause the application after script execution in order to exit manually, then use flag `-P` or `--pause`, e.g. `papaj do '2 2 +' -P` or `papaj script.ppsc --pause`.
+- If you need app version, you can type `papaj version`, `papaj -v` or `papaj --version`.
 
 ### GUI Application
 - Open an app executable.
-- In order to compute an PS expression, just type it in the upper text box and click the "Count it!"-button. The result appears in the result box below.
+- In order to compute an PS expression, just type it in the upper text box and click the "Count it!" button. The result appears in the result box below.
 - There is also a simple script running engine – just paste your PS script or load it from file and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - There is a possibility of executing the PS script in an external terminal window (it is an experimental feature)
-    * Linux users are required to have `rpn` console app in the **$PATH** or the same directory as the GUI app. It is recommended to have `xterm` installed, if the external terminal window does not appear (unless you use a Debian-like system, or any other Linux that uses Xfce, GNOME/Cinnamon or KDE desktop).
-    * Windows users are required to have `rpn` console app in the same directory as the GUI app
+    * Linux users are required to have `papaj` console app in the **$PATH** or the same directory as the GUI app. It is recommended to have `xterm` installed, if the external terminal window does not appear (unless you use a Debian-like system, or any other Linux that uses Xfce, GNOME/Cinnamon or KDE desktop).
+    * Windows users are required to have `papaj` console app in the same directory as the GUI app
 
 ## Requirements and installation
 - Supported systems:
@@ -41,32 +41,37 @@ Since November 24, 2017 written in FreePascal. :smile:
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) in order ot compile just Console app
     * if you use a non-Debian-like Linux, then **xterm** *might be recommended* 
     * **bash** shell, if you use Linux or FreeBSD
-- There are three ways to build RPN Calculator
+- There are three ways to build papaj Calculator
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
     then simply run `compile.sh` (in Linux and FreeBSD) or `compile.bat` (in Windows) to compile the project
     * if you don't have Lazarus IDE,  
     then you may compile the **console app** project using `compileWithFPC.sh` (Linux or FreeBSD with Bash shell) or `compileWithFPC.bat` (Windows). 
-- You can make a Desktop shortcut to a RPN REPL by running `installREPL.sh` (Linux, FreeBSD) or `installREPL.bat` (Windows)
-- (for Linux/FreeBSD users) If you want to have `rpn` available in your shell, you can either
+- You can make a Desktop shortcut to a Papaj REPL by running `installREPL.sh` (Linux, FreeBSD) or `installREPL.bat` (Windows)
+- (for Linux/FreeBSD users) If you want to have `papaj` available in your shell, you can either
     * modify your shell $PATH
-    * run `installLocal.sh` to add `rpn` executable to your local bash **$PATH** automatically
-    * run `installGlobal.sh` to add `rpn` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/rpn` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed. It requires bash shell to be executed, but the RPN app can be accessed via any shell afterwards.
+    * run `installLocal.sh` to add `papaj` executable to your local bash **$PATH** automatically
+    * run `installGlobal.sh` to add `papaj` executable to your global path (`/bin`). Then you are able to execute PS scripts directly (you must provide a `#!/bin/papaj` shebang at the beginning of your script file). The `installGlobal.sh` script requires root privileges to be executed. It requires bash shell to be executed, but the papaj app can be accessed via any shell afterwards.
 
 ## PapajScript:
 
 ### About the language
-**PapajScript** (PS) is an interpreted language being used in RPN Calculator. It has been developed while working on RPN Calculator. The PS's code aims to be compact and easily appendable.  
-Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. Therefore all the operations are being done on the stack. The PS's semi-stack is an extended version of a classic stack, as we can get an indirect access to the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
+**PapajScript** (PS) is an interpreted programming language. It was being developed while working on a RPN calculator project. 
+The PS's code aims to be compact and easily appendable.  
+Its structure is based mostly on Reverse Polish Notation (with a handful of exceptions), which uses a stack when computing values. 
+Therefore all the operations are being done on the stack. 
+The PS's semi-stack is an extended version of a classic stack, 
+as we can get an indirect access to the entities not being on the top of the semi-stack and we can programme it like this semi-stack can simulate the behavior of a queue. 
+The entities are put on the stack and may be used from the semi-stack, however we can also store them in the named variables.  
 Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions, functions, arrays or exceptions.  
-The future enhancements of the language include an introduction of objects and better file management.
+The future enhancements of the language include an introduction of OOP and better file management.
 
-Find more about the language in this [wiki](https://github.com/RooiGevaar19/RPNCalculator/wiki).
+Find more about the language in this [wiki](https://github.com/RooiGevaar19/PapajLang/wiki).
 
-Find basic functions [here](https://github.com/RooiGevaar19/RPNCalculator/wiki/Vanilla).
+Find basic functions [here](https://github.com/RooiGevaar19/PapajLang/wiki/Vanilla).
 
-Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/RPNCalculator/tree/leviathan/scripts).
+Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/PapajLang/tree/leviathan/scripts).
 
 ## REPL Commands
 - `\` at the very end of the input line allows for multi-line commands 
@@ -133,5 +138,5 @@ Version | Version Name | Date of Release | Improvements
 0.5.1 | Khaf | 2021-03-21 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | 2021-12-18 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
 0.5.3 | Mem | 2023-04-08 | Locales, number systems, environment optimization
-0.5.4 | Nun | soon | Dataframes, complex numbers, polynomials, files management, memory management
+0.5.4 | Nun | soon | Dataframes, complex numbers, polynomials, files management, memory management, new name
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable

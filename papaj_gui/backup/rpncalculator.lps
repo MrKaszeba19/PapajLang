@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units Count="23">
+      <Unit0>
+        <Filename Value="rpncalculator.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="11"/>
+        <CursorPos X="60" Y="11"/>
+        <UsageCount Value="40"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <TopLine Value="587"/>
+        <CursorPos X="16" Y="182"/>
+        <UsageCount Value="40"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="unit2.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit2"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="10" Y="23"/>
+        <UsageCount Value="40"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="unit3.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit3"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="1761"/>
+        <CursorPos X="21" Y="1799"/>
+        <UsageCount Value="39"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="unit4.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit4"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="26"/>
+        <CursorPos X="94" Y="46"/>
+        <UsageCount Value="37"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="unit5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Unit5"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="29"/>
+        <CursorPos X="121" Y="33"/>
+        <UsageCount Value="37"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="UnitStack.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="32"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="UnitEntity.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="32"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="UnitEnvironment.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="433"/>
+        <CursorPos X="16" Y="452"/>
+        <UsageCount Value="32"/>
+        <Loaded Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="UnixCrt.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="27"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="UnitVariables.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="19"/>
+        <UsageCount Value="30"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="MathUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="15"/>
+        <UsageCount Value="30"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="DTUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="13"/>
+        <UsageCount Value="30"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="ArrayUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="565"/>
+        <CursorPos X="66" Y="584"/>
+        <UsageCount Value="29"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="RPNAbout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="5"/>
+        <CursorPos Y="21"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="StringUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="27"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="unit6.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit6"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="29"/>
+        <CursorPos X="5" Y="63"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="UnitFunctions.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1412"/>
+        <CursorPos X="18" Y="1465"/>
+        <UsageCount Value="30"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="ConsoleUtils.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="18"/>
+        <UsageCount Value="23"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3254"/>
+        <CursorPos Y="3271"/>
+        <UsageCount Value="10"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="UnitREPL.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="14"/>
+        <UsageCount Value="20"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="complexnumbers.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ComplexNumbers"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="1418"/>
+        <CursorPos Y="1516"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="FunctionsImpl.fph"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="6179"/>
+        <CursorPos X="90" Y="6198"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit22>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="288" Column="45" TopLine="265"/>
+      </Position1>
+      <Position2>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="287" Column="45" TopLine="264"/>
+      </Position2>
+      <Position3>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="282" Column="5" TopLine="264"/>
+      </Position3>
+      <Position4>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="271" Column="5" TopLine="265"/>
+      </Position4>
+      <Position5>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="430" Column="35" TopLine="426"/>
+      </Position5>
+      <Position6>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="431" Column="35" TopLine="427"/>
+      </Position6>
+      <Position7>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="432" Column="35" TopLine="428"/>
+      </Position7>
+      <Position8>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="431" Column="35" TopLine="427"/>
+      </Position8>
+      <Position9>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="220" Column="5" TopLine="204"/>
+      </Position9>
+      <Position10>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="215" Column="54" TopLine="204"/>
+      </Position10>
+      <Position11>
+        <Filename Value="unit6.pas"/>
+      </Position11>
+      <Position12>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="217" Column="54" TopLine="206"/>
+      </Position12>
+      <Position13>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="424" Column="21" TopLine="402"/>
+      </Position13>
+      <Position14>
+        <Filename Value="unit6.pas"/>
+        <Caret Line="37"/>
+      </Position14>
+      <Position15>
+        <Filename Value="unit6.pas"/>
+        <Caret Line="42" Column="13" TopLine="7"/>
+      </Position15>
+      <Position16>
+        <Filename Value="unit6.pas"/>
+        <Caret Line="56" Column="54" TopLine="22"/>
+      </Position16>
+      <Position17>
+        <Filename Value="unit3.pas"/>
+        <Caret Line="1790" Column="17" TopLine="1755"/>
+      </Position17>
+      <Position18>
+        <Filename Value="unit3.pas"/>
+        <Caret Line="1791" Column="50" TopLine="1756"/>
+      </Position18>
+      <Position19>
+        <Filename Value="complexnumbers.pas"/>
+        <Caret Line="1516" TopLine="1418"/>
+      </Position19>
+      <Position20>
+        <Filename Value="ArrayUtils.pas"/>
+        <Caret Line="296" Column="38" TopLine="277"/>
+      </Position20>
+      <Position21>
+        <Filename Value="ArrayUtils.pas"/>
+        <Caret Line="364" Column="43" TopLine="344"/>
+      </Position21>
+      <Position22>
+        <Filename Value="ArrayUtils.pas"/>
+        <Caret Line="523" Column="33" TopLine="504"/>
+      </Position22>
+      <Position23>
+        <Filename Value="ArrayUtils.pas"/>
+        <Caret Line="574" Column="57" TopLine="555"/>
+      </Position23>
+      <Position24>
+        <Filename Value="ArrayUtils.pas"/>
+        <Caret Line="584" Column="66" TopLine="565"/>
+      </Position24>
+      <Position25>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="54" Column="33" TopLine="35"/>
+      </Position25>
+      <Position26>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="6321" Column="5" TopLine="6283"/>
+      </Position26>
+      <Position27>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="62" Column="33" TopLine="43"/>
+      </Position27>
+      <Position28>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="99" Column="27" TopLine="80"/>
+      </Position28>
+      <Position29>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="109" Column="38" TopLine="90"/>
+      </Position29>
+      <Position30>
+        <Filename Value="FunctionsImpl.fph"/>
+        <Caret Line="6198" Column="90" TopLine="6179"/>
+      </Position30>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default"/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

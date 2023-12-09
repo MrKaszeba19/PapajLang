@@ -1,0 +1,4 @@
+moze przerzucic to na pliki zrodlowe
+
+scripts = functions
+makelistofcommands : procedure -> function

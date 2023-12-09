@@ -1,0 +1,7 @@
+@use(Array)
+
+$Params 0 getAt toNumber -> $n
+
+function (x) { $x 2 + } -> f
+
+$n f
