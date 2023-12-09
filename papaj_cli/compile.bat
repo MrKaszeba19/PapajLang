@@ -1,6 +1,6 @@
 @echo off
 echo Starting...
-"C:\lazarus\lazbuild.exe" rpn.lpi
+"C:\lazarus\lazbuild.exe" papaj.lpi
 if %ERRORLEVEL% == 0 goto :next
 goto :end
 

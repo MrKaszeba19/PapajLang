@@ -306,9 +306,9 @@ var
     s : String;
 begin
 	s := '';
-	if FileExists(GetUserDir()+'bin/rpn') then s := GetUserDir()+'bin/rpn';
-	if (s = '') and (FileExists(GetUserDir()+'rpn')) then s := GetUserDir()+'rpn';
-	if s = '' then s := FindDefaultExecutablePath('rpn');
+	if FileExists(GetUserDir()+'bin/papaj') then s := GetUserDir()+'bin/papaj';
+	if (s = '') and (FileExists(GetUserDir()+'papaj')) then s := GetUserDir()+'papaj';
+	if s = '' then s := FindDefaultExecutablePath('papaj');
 	Result := s;
 end;
 
@@ -350,9 +350,9 @@ begin
     if (MenuRunPause.Checked) 
         then Pause := ' -P'
         else Pause := '';
-    if FileExists('rpn.exe') then
+    if FileExists('papaj.exe') then
     begin
-        if ShellExecute(0,nil, PChar('cmd'),PChar('/c rpn.exe temp.ppsc'+Pause),nil,1) = 0 then;
+        if ShellExecute(0,nil, PChar('cmd'),PChar('/c papaj.exe temp.ppsc'+Pause),nil,1) = 0 then;
     end else begin
         writeln('No RPN console app found.'+#13#10+'Add RPN Calculator console app to directory where the GUI app is located.');
         ShowMessage(locale.NoAppFound+#13#10+locale.AddAppDir);
@@ -391,7 +391,7 @@ begin
     if FileExists('./rpn') then
     begin
         writeln('Attempting to run RPN Calculator console app from GUI app local directory.');
-        command := './rpn '+dir+'rpng_temp.ppsc'+Pause;
+        command := './papaj '+dir+'rpng_temp.ppsc'+Pause;
         writeln('Command:    ', command);
         if (terminal = 'xdg-terminal') 
             then RunCommand(terminal, [command], out)
@@ -550,12 +550,12 @@ begin
     write(' - Setting up fonts... ');
     {$IFDEF MSWINDOWS}
     Memo1.Font.Name := 'Consolas';
-    ProcessExt.CommandLine := 'rpn.exe "2 2 +"';
+    ProcessExt.CommandLine := 'papaj.exe "2 2 +"';
     //{$ENDIF}
     //{$IFDEF UNIX}
     {$ELSE}
     Memo1.Font.Name := 'Monospace';
-    ProcessExt.CommandLine := 'rpn "2 2 +"';
+    ProcessExt.CommandLine := 'papaj "2 2 +"';
     {$ENDIF}
     writeln('Done.');
     write(' - Setting up text... ');

@@ -269,59 +269,59 @@ end;
 
 function table_avg(tab : TEntities) : ComplexType;
 var
-	i : Integer;
-	s : ComplexType;
+	i   : LongInt;
+	sum : ComplexType;
 begin
-	s := 0.0;
+	sum := 0.0;
     for i := 0 to Length(tab)-1 do
-        s := s + tab[i].Num;
-    table_avg := s/Length(tab);
+        sum := sum + tab[i].Num;
+    Result := sum * Inv(Length(tab));
 end;
 
 function table_avg2(tab : TEntities) : ComplexType;
 var
-	i : Integer;
-	s : ComplexType;
+	i   : LongInt;
+	sum : ComplexType;
 begin
-	s := 0.0;
+	sum := 0.0;
     for i := 0 to Length(tab)-1 do
-        s := s + tab[i].Num * tab[i].Num;
-    table_avg2 := sqrt(s/Length(tab));
+        sum := sum + tab[i].Num * tab[i].Num;
+    Result := sqrt(sum * Inv(Length(tab)));
 end;
 
 function table_avg_geom(tab : TEntities) : ComplexType;
 var
-	i : Integer;
-	s : ComplexType;
+	i   : LongInt;
+	sum : ComplexType;
 begin
-	s := 1.0;
+	sum := 1.0;
     for i := 0 to Length(tab)-1 do
-        s := s * tab[i].Num;
-    table_avg_geom := ComplexNumbers.pow(s, Inv(Length(tab)));
+        sum := sum * tab[i].Num;
+    Result := ComplexNumbers.pow(sum, Inv(Length(tab)));
 end;
 
 function table_min(tab : TEntities) : ComplexType;
 var
-	i : Integer;
-	s : ComplexType;
+	i   : LongInt;
+	sum : ComplexType;
 begin
-	s := tab[0].Num;
-  for i := 1 to Length(tab)-1 do
-  	if (tab[i].Num.Re < s.Re) then s := tab[i].Num;
-  table_min := s;
+	sum := tab[0].Num;
+    for i := 1 to Length(tab)-1 do
+        if (tab[i].Num.Re < sum.Re) 
+            then sum := tab[i].Num;
+    Result := sum;
 end;
 
 function table_max(tab : TEntities) : ComplexType;
 var
-	i : Integer;
-	s : ComplexType;
+	i   : LongInt;
+	sum : ComplexType;
 begin
-	s := tab[0].Num;
-  for i := 1 to Length(tab)-1 do
-  	if (tab[i].Num.Re > s.Re) then begin
-  		s := tab[i].Num;
-  	end; 
-  table_max := s;
+	sum := tab[0].Num;
+    for i := 1 to Length(tab)-1 do
+  	    if (tab[i].Num.Re > sum.Re) 
+            then sum := tab[i].Num;
+    Result := sum;
 end;
 
 function table_min2(tab : TEntities) : LongInt;
@@ -365,14 +365,15 @@ begin
         s := 0.0;
         for i := 0 to Length(tab)-1 do
   	        s := s + pow(tab[i].Num, factor);
-        table_avg_power := pow(s/Length(tab), 1/factor);
+        table_avg_power := pow(s * Inv(Length(tab)), 1/factor);
     end;
 end;
 
 function table_median(tab : TEntities) : ComplexType;
 begin
 	quicksort(tab);
-	if (Length(tab) mod 2 = 0) then table_median := 0.5*(tab[Length(tab) div 2 - 1].Num + tab[Length(tab) div 2].Num)
+	if (Length(tab) mod 2 = 0) 
+    then table_median := 0.5*(tab[Length(tab) div 2 - 1].Num + tab[Length(tab) div 2].Num)
 	else table_median := tab[Length(tab) div 2].Num;
 end;
 
@@ -473,8 +474,8 @@ begin
   mean := table_avg(tab);
   s := 0.0;
   for i := 0 to Length(tab)-1 do
-    s := s + sqr(tab[i].Num - mean);
-  table_variance := s/Length(tab);
+    s := s + sqr(tab[i].Num - mean); //
+  table_variance := s * Inv(Length(tab));
 end;
 
 function table_stddev(tab : TEntities) : ComplexType;
@@ -524,8 +525,8 @@ begin
     s := 0.0;
     m := table_avg(tab);
     for i := 0 to Length(tab)-1 do
-        s := s + pow(tab[i].Num - m, k);
-    Result := s/Length(tab);
+        s := s + pow(tab[i].Num - m, k); //
+    Result := s * Inv(Length(tab));
 end;
 
 function table_quantile(tab : TEntities; factor : Extended = 0.5) : ComplexType;

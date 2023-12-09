@@ -1,6 +1,6 @@
 @echo off
 echo Starting...
-"C:\lazarus\lazbuild.exe" rpncalculator.lpi
+"C:\lazarus\lazbuild.exe" papaj_gui.lpi
 echo.
 echo.
 echo ================================================================ 
