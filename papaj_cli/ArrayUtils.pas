@@ -31,7 +31,9 @@ function table_mode(tab : TEntities) : Entity;
 function table_modeStr(tab : TEntities) : Entity;
 function table_abs(tab : TEntities) : ComplexType;
 function table_variance(tab : TEntities) : ComplexType;
+function table_variance2(tab : TEntities) : ComplexType;
 function table_stddev(tab : TEntities) : ComplexType;
+function table_stddev2(tab : TEntities) : ComplexType;
 function table_gcd(tab : TEntities) : Extended;
 function table_lcm(tab : TEntities) : Extended;
 function table_moment(tab : TEntities; k : LongInt) : ComplexType;
@@ -460,9 +462,9 @@ var
 	s : ComplexType;
 begin
 	s := 0.0;
-  for i := 0 to Length(tab)-1 do
-  	s := s + tab[i].Num * tab[i].Num;
-  table_abs := sqrt(s);
+    for i := 0 to Length(tab)-1 do
+    	s := s + tab[i].Num * tab[i].Num;
+    Result := sqrt(s);
 end;
 
 function table_variance(tab : TEntities) : ComplexType;
@@ -471,17 +473,38 @@ var
 	s    : ComplexType;
 	mean : ComplexType;
 begin
-  mean := table_avg(tab);
-  s := 0.0;
-  for i := 0 to Length(tab)-1 do
-    s := s + sqr(tab[i].Num - mean); //
-  table_variance := s * Inv(Length(tab));
+    mean := table_avg(tab);
+    s := 0.0;
+    for i := 0 to Length(tab)-1 do
+        s := s + sqr(tab[i].Num - mean); //
+    Result := s * Inv(Length(tab));
+    //Result := s / Length(tab);
+end;
+
+function table_variance2(tab : TEntities) : ComplexType;
+var
+	i    : Integer;
+	s    : ComplexType;
+	mean : ComplexType;
+begin
+    mean := table_avg(tab);
+    s := 0.0;
+    for i := 0 to Length(tab)-1 do
+        s := s + sqr(tab[i].Num - mean); //
+    Result := s * Inv(Length(tab)-1);
+    //Result := s / Length(tab);
 end;
 
 function table_stddev(tab : TEntities) : ComplexType;
 begin
-	table_stddev := sqrt(table_variance(tab));
+	Result := sqrt(table_variance(tab));
 end;
+
+function table_stddev2(tab : TEntities) : ComplexType;
+begin
+	Result := sqrt(table_variance2(tab));
+end;
+
 
 function table_gcd(tab : TEntities) : Extended;
 var

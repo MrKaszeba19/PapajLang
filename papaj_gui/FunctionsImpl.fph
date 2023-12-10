@@ -767,12 +767,40 @@ begin
                 SetLength(HelpETable, size);
                 HelpETable := stack_popCollection(env.Stack[env.Settings.StackPointer], size);
                 ExtEax := table_stddev(HelpETable);
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(sqrt(ExtEax)));
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ExtEax));
                 SetLength(HelpETable, 0);
             end else begin
                 stack_push(env.Stack[env.Settings.StackPointer], buildNull());
             end;
-          end;
+        end;
+        'variance2' : begin
+          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            size := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                HelpETable := stack_popCollection(env.Stack[env.Settings.StackPointer], size);
+                ExtEax := table_variance2(HelpETable);
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(env.Stack[env.Settings.StackPointer], buildNull());
+            end;
+        end;
+        'stddev2' : begin
+          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            size := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+            if (size >= 0) then
+            begin
+                SetLength(HelpETable, size);
+                HelpETable := stack_popCollection(env.Stack[env.Settings.StackPointer], size);
+                ExtEax := table_stddev2(HelpETable);
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ExtEax));
+                SetLength(HelpETable, 0);
+            end else begin
+                stack_push(env.Stack[env.Settings.StackPointer], buildNull());
+            end;
+        end;
              
         // stack creators
         // todo: improve for complex numbers
@@ -4119,6 +4147,21 @@ begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
             ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(table_stddev(env.Stack[ArrEax.Num2].Values)));
+        end;
+        'Array.reduceVariance2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(table_variance2(env.Stack[ArrEax.Num2].Values)));
+        end;
+        'Array.reduceStddev2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(table_stddev2(env.Stack[ArrEax.Num2].Values)));
+        end;
+        'Array.reduceStdDev2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(table_stddev2(env.Stack[ArrEax.Num2].Values)));
         end;
         'Array.reduceMedian' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
