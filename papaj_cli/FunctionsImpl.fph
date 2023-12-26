@@ -3573,22 +3573,6 @@ begin
             a := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             Delay(a);
         end;
-        {$IFDEF MSWINDOWS}
-        'Console.whereX' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WhereX()));
-        end;
-        'Console.whereY' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WhereY()));
-        end;
-        'Console.startSound' : begin
-            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            a := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
-            Sound(a);
-        end;
-        'Console.stopSound' : begin
-            NoSound();
-        end;
-        {$ENDIF}
         'Console.gotoXY' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             y := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
@@ -3650,80 +3634,6 @@ begin
             StrEcx := executeCommand(StrEbx, env.Settings.Shell);
             stack_push(env.Stack[env.Settings.StackPointer], buildString(StrEcx));
         end;
-        {$ifndef FreeBSD}
-        'Console.CPUNames' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName(index)));
-        end;
-        'Console.CPUThreads' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRealCPUThreads()));
-        end;
-        'Console.CPUBaseFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
-        end;
-        {$endif}
-        {$IFDEF LINUX}
-        'Console.UserShell' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getShell()));
-        end;
-        'Console.CPUMaxFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMaxFreq(index)));
-        end;
-        'Console.CPUMinFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMinFreq(index)));
-        end;
-        'Console.CPUCurrentFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
-        end;
-        'Console.CPUCurFreqs' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
-        end;
-        'Console.CPUUsages' : begin
-            for index := 0 to getRealCPUThreads()-1 do
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage(index)));
-        end;
-        'Console.CPUAllUsage' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUUsage()));
-        end;
-        'Console.CPUUptime' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getUptime()));
-        end;
-        'Console.RAMTotal' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRAMTotal()));
-        end;
-        'Console.RAMUsage' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRAMUsage()));
-        end;
-        'Console.RAMFree' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRAMFree()));
-        end;
-        'Console.RAMAvailable' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRAMAvailable()));
-        end;
-        'Console.SwapTotal' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getSwapTotal()));
-        end;
-        'Console.SwapUsage' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getSwapUsage()));
-        end;
-        'Console.SwapFree' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getSwapFree()));
-        end;
-        'Console.ScreenResolution' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildString(getScreenResolution()));
-        end;
-        'Console.ScreenWidth' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getScreenWidth()));
-        end;
-        'Console.ScreenHeight' : begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getScreenHeight()));
-        end;
-        {$ENDIF}
         'Console.getShell' : begin
            stack_push(env.Stack[env.Settings.StackPointer], buildString(env.Settings.Shell));
         end;
@@ -3738,12 +3648,21 @@ begin
         'Console.isFreeBSD' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isFreeBSD()));
         end;
+        'Console.isMacOS' : begin
+            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isMacOS()));
+        end;
         'Console.isLinux' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isLinux()));
         end;
         'Console.isWindows' : begin
             stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(isWindows()));
         end;
+        {$IFDEF LINUX}
+        {$I ConsoleLinuxFunc.fph}
+        {$ENDIF}
+        {$IFDEF MSWINDOWS}
+        {$I ConsoleWindowsFunc.fph}
+        {$ENDIF}
         else begin
             Found := false;
         end;

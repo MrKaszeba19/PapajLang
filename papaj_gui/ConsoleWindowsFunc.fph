@@ -1,0 +1,25 @@
+'Console.whereX' : begin
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WhereX()));
+end;
+'Console.whereY' : begin
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(WhereY()));
+end;
+'Console.startSound' : begin
+    if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+    a := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
+    Sound(a);
+end;
+'Console.stopSound' : begin
+    NoSound();
+end;
+'Console.CPUNames' : begin
+    for index := 0 to getRealCPUThreads()-1 do
+        stack_push(env.Stack[env.Settings.StackPointer], buildString(getCPUName(index)));
+end;
+'Console.CPUThreads' : begin
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getRealCPUThreads()));
+end;
+'Console.CPUBaseFreqs' : begin
+    for index := 0 to getRealCPUThreads()-1 do
+        stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUBaseFreq(index)));
+end;
