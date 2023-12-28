@@ -18,4 +18,7 @@ papaj_gui/temp.ppsc
 papaj_gui/papaj
 papaj_gui/papaj.exe
 *.test.ppsc
-
+.DS_Store
+papaj_cli/.DS_Store
+papaj_gui/.DS_Store
+papaj_gui/papaj_gui.app/

@@ -7,6 +7,8 @@ interface
 function executeCommand(input, Shell : String) : String;
 function getUser() : String;
 function getHost() : String;
+function getKernelName() : String;
+function getKernelVersion() : String;
 function getOS() : String;
 function getOSVersion() : String;
 function getOSDistribution() : String;
@@ -121,15 +123,15 @@ begin
         '2.10' : Result := '2.10';
         '2.11' : Result := '2.11';
         '3.0'  : Result := '3.0';
-        '3.10' : Result := '3.1 or Windows NT 3.1';
+        '3.10' : Result := '3.1 or NT 3.1';
         '3.11' : Result := 'for Workgroups 3.11';
         '3.2'  : Result := '3.2';
         '3.50' : Result := 'NT 3.5';
         '3.51' : Result := 'NT 3.51';
-        '4.0'  : Result := '95 or Windows NT 4.0';
+        '4.0'  : Result := '95 or NT 4.0';
         '4.10' : Result := '98';
-        '5.0'  : Result := '2000';
         '4.90' : Result := 'ME';
+        '5.0'  : Result := '2000';
         '5.1'  : Result := 'XP';
         '5.2'  : Result := 'XP Professional x64';
         '6.0'  : Result := 'Vista';
@@ -202,6 +204,12 @@ begin
     {$IFDEF LINUX}
     Result := 'Linux';
     {$ENDIF}
+    {$ifdef BSD}
+    Result := 'BSD';
+    {$endif}
+    {$ifdef OpenBSD}
+    Result := 'OpenBSD';
+    {$endif}
     {$ifdef FreeBSD}
     Result := 'FreeBSD';
     {$endif}
@@ -221,7 +229,10 @@ begin
     Result := 'Amiga';
     {$ENDIF}
     {$IFDEF MACOS}
-    Result := 'MacOS';
+    Result := 'Macintosh';
+    {$ENDIF}
+    {$IFDEF Darwin}
+    Result := trim(executeCommand('sw_vers -productName','/bin/sh'));
     {$ENDIF}
     {$IFDEF DOS}
     Result := 'DOS';
@@ -234,32 +245,138 @@ begin
     {$ENDIF}
 end;
 
-function getOSVersion() : String;
+function getKernelName() : String;
 begin
+    Result := '';
+    {$IFDEF DOS}
+    Result := 'DOS';
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := 'MS-DOS';
+    {$ENDIF}
     {$IFDEF WINDOWS}
+    Result := 'NT';
+    {$ENDIF}
+    {$IFDEF Win16}
+    Result := 'MS-DOS';
+    {$ENDIF}
+    {$IFDEF Unix}
+    Result := UnixSysInfo('kernel-name');
+    {$ENDIF}
+end;
+
+function getKernelVersion() : String;
+begin
+    Result := '';
+    {$IFDEF DOS}
     // https://forum.lazarus.freepascal.org/index.php/topic,32847.msg212007.html#msg212007
     Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
-    {$ELSE}
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF WINDOWS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF Win16}
+    // fix it for proper doses
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF Unix}
     Result := UnixSysInfo('kernel-release');
+    {$ENDIF}
+end;
+
+function getOSVersion() : String;
+begin
+    Result := '';
+    {$IFDEF WINDOWS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF DOS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF Unix}
+    Result := UnixSysInfo('kernel-release');
+    {$ENDIF}
+    {$IFDEF MacOS}
+    Result := trim(executeCommand('sw_vers -productVersion','/bin/sh'));
+    {$ENDIF}
+    {$IFDEF Darwin}
+    Result := trim(executeCommand('sw_vers -productVersion','/bin/sh'));
+    {$ENDIF}
+    {$IFDEF FreeBSD}
+    Result := getOSDist('VERSION');
+    {$ENDIF}
+    {$IFDEF Linux}
+    Result := getOSDist('VERSION');
     {$ENDIF}
 end;
 
 function getOSDistribution() : String;
 begin
+    Result := '';
+    {$IFDEF DOS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
     {$IFDEF WINDOWS}
-    // https://forum.lazarus.freepascal.org/index.php/topic,32847.msg212007.html#msg212007
     Result := getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
-    {$ELSE}
+    {$ENDIF}
+    {$IFDEF Unix}
+    Result := UnixSysInfo('os');
+    {$ENDIF}
+    {$IFDEF MacOS}
+    // unsure
+    Result := executeCommand('sw_vers -productVersion','/bin/sh');
+    {$ENDIF}
+    {$IFDEF Darwin}
+    Result := trim(executeCommand('sw_vers -productName','/bin/sh'))+' '+trim(executeCommand('sw_vers -productVersion','/bin/sh'));
+    {$ENDIF}
+    {$IFDEF FreeBSD}
+    Result := getOSDist('PRETTY_NAME');
+    {$ENDIF}
+    {$IFDEF Linux}
     Result := getOSDist('PRETTY_NAME');
     {$ENDIF}
 end;
 
 function getOSDistributionFull() : String;
 begin
+    //{$IFDEF WINDOWS}
+    //Result := 'Windows ' + getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
+    //{$ELSE}
+    //Result := getOSDist('PRETTY_NAME');
+    //{$ENDIF}
+    Result := '';
+    {$IFDEF DOS}
+    Result := 'DOS '+IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
+    {$IFDEF MSDOS}
+    Result := 'MS-DOS '+IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion));
+    {$ENDIF}
     {$IFDEF WINDOWS}
-    // https://forum.lazarus.freepascal.org/index.php/topic,32847.msg212007.html#msg212007
-    Result := 'Windows ' + getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
-    {$ELSE}
+    Result := 'Windows '+getOSNickname(IntToStr(Lo(DosVersion))+ '.'+IntToStr(Hi(DosVersion)));
+    {$ENDIF}
+    {$IFDEF Unix}
+    Result := UnixSysInfo('os');
+    {$ENDIF}
+    {$IFDEF MacOS}
+    // unsure
+    Result := 'Macintosh '+executeCommand('sw_vers -productVersion','/bin/sh');
+    {$ENDIF}
+    {$IFDEF Darwin}
+    Result := trim(executeCommand('sw_vers -productName','/bin/sh'))+' '+trim(executeCommand('sw_vers -productVersion','/bin/sh'));
+    {$ENDIF}
+    {$IFDEF FreeBSD}
+    Result := getOSDist('PRETTY_NAME');
+    {$ENDIF}
+    {$IFDEF Linux}
     Result := getOSDist('PRETTY_NAME');
     {$ENDIF}
 end;
