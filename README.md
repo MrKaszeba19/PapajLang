@@ -12,7 +12,7 @@ Since November 24, 2017 written in FreePascal. :smile:
 ## How to use it
 
 ### Console application
-- Execute a command **rpn do** with a quoted PS expression (e.g. `papaj do "2 3 + 4 *"`). More info about expressions in `papaj expression` and `papaj functions`.
+- Execute a command **papaj do** with a quoted PS expression (e.g. `papaj do "2 3 + 4 *"`). More info about expressions in `papaj expression` and `papaj functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `papaj help`, `rpn -h` or `papaj --help`.
 - If you want to run an PS script file, then execute `papaj FILENAME` or `papaj run FILENAME`. 
@@ -36,6 +36,7 @@ Since November 24, 2017 written in FreePascal. :smile:
     * **Linux** (32 and 64 bit)
     * **Windows** (32 and 64 bit) – full support for both GUI and console apps is provided for Windows 2000 and newer OSes. 
     * **FreeBSD** (64 bit)
+    * **MacOS** (64 bit)
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) in order ot compile just Console app
