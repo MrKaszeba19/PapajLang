@@ -142,6 +142,16 @@ uses Unit2;
 
 {$R *.lfm}
 
+function IsDarkTheme: boolean;
+const
+    cMax = $A0;
+var
+    N: TColor;
+begin
+    N := ColorToRGB(clWindow);
+    Result := (Red(N)<cMax) and (Green(N)<cMax) and (Blue(N)<cMax);
+end;
+
 procedure TForm1.OpenOfflineFile();
 var fn : String;
 begin
@@ -562,6 +572,19 @@ begin
     SynEdit1.Text := '3 2 + times {'+#13#10+'  "Hello world!" println '+#13#10+'}'+#13#10+'10 times rand'+#13#10+'all sum';
     Memo1.Text := '';
     writeln('Done.');
+    write(' - Checking for dark theme... ');
+    if IsDarkTheme then
+    begin
+        SynAnySyn1.NumberAttri.Foreground := clAqua;
+        SynAnySyn1.CommentAttri.Foreground := clLime;
+        SynAnySyn1.KeyAttri.Foreground := clSkyBlue;
+    end else begin
+        SynAnySyn1.NumberAttri.Foreground := clTeal;
+        SynAnySyn1.CommentAttri.Foreground := clGreen;
+        SynAnySyn1.KeyAttri.Foreground := clBlue;
+    end;
+    writeln('Done.');
+    //if IsDarkTheme then ShowMessage('dark') else ShowMessage('bright');
 end;
 
 procedure TForm1.MenuQuitClick(Sender: TObject);

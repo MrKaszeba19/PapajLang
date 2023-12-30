@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="12"/>
+    <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="26">
+    <Units Count="25">
       <Unit0>
         <Filename Value="papaj_gui.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -16,8 +16,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <TopLine Value="182"/>
-        <CursorPos X="16" Y="182"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="568"/>
+        <CursorPos X="52" Y="578"/>
         <UsageCount Value="40"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -139,7 +140,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit6"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
         <TopLine Value="29"/>
         <CursorPos X="71" Y="61"/>
@@ -151,9 +151,8 @@
         <Filename Value="ComplexNumbers.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
+        <TopLine Value="1418"/>
+        <CursorPos Y="1516"/>
         <UsageCount Value="20"/>
       </Unit17>
       <Unit18>
@@ -172,40 +171,32 @@
         <UsageCount Value="40"/>
       </Unit19>
       <Unit20>
-        <Filename Value="complexnumbers.pas"/>
-        <UnitName Value="ComplexNumbers"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1418"/>
-        <CursorPos Y="1516"/>
-        <UsageCount Value="20"/>
-      </Unit20>
-      <Unit21>
         <Filename Value="UnitFunctions.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1412"/>
         <CursorPos X="18" Y="1465"/>
         <UsageCount Value="30"/>
-      </Unit21>
-      <Unit22>
+      </Unit20>
+      <Unit21>
         <Filename Value="ConsoleUtils.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="18"/>
         <UsageCount Value="23"/>
-      </Unit22>
-      <Unit23>
+      </Unit21>
+      <Unit22>
         <Filename Value="/usr/lib/lazarus/1.6/lcl/include/control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3254"/>
         <CursorPos Y="3271"/>
         <UsageCount Value="10"/>
-      </Unit23>
-      <Unit24>
+      </Unit22>
+      <Unit23>
         <Filename Value="UnitREPL.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="14"/>
         <UsageCount Value="20"/>
-      </Unit24>
-      <Unit25>
+      </Unit23>
+      <Unit24>
         <Filename Value="FunctionsImpl.fph"/>
         <EditorIndex Value="9"/>
         <TopLine Value="6179"/>
@@ -213,7 +204,7 @@
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="None"/>
-      </Unit25>
+      </Unit24>
     </Units>
     <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
@@ -332,9 +323,5 @@
         <Caret Line="6198" Column="90" TopLine="6179"/>
       </Position29>
     </JumpHistory>
-    <RunParams>
-      <FormatVersion Value="2"/>
-      <Modes ActiveMode="default"/>
-    </RunParams>
   </ProjectSession>
 </CONFIG>
