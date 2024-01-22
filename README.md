@@ -14,7 +14,7 @@ Since November 24, 2017 written in FreePascal. :smile:
 ### Console application
 - Execute a command **papaj do** with a quoted PS expression (e.g. `papaj do "2 3 + 4 *"`). More info about expressions in `papaj expression` and `papaj functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
-- If you need help, you can type `papaj help`, `rpn -h` or `papaj --help`.
+- If you need help, you can type `papaj help`, `papaj -h` or `papaj --help`.
 - If you want to run an PS script file, then execute `papaj FILENAME` or `papaj run FILENAME`. 
 - If you want to include some input parameters, then provide them after the FILENAME delimited by space, e.g. `papaj run FILENAME param1 param2 param3`. All these params are treated as PS strings. For example `papaj run script.ppsc 2 3 4` executes *script.ppsc* with input parameters of `2 3 4` being strings wrapped into the array called `Params`. 
 - If you want to run a REPL of PapajScript, then execute `papaj repl`.
