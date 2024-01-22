@@ -26,6 +26,9 @@ function isWindows() : Boolean;
 {$IFDEF WINDOWS}
 {$I ConsoleWindowsHeaders.fph}
 {$ENDIF}
+{$IFDEF DARWIN}
+{$I ConsoleMacHeaders.fph}
+{$ENDIF}
 
 implementation
 
@@ -514,7 +517,7 @@ end;
 
 function isMacOS() : Boolean;
 begin
-    {$IFDEF MacOS} Result := True; {$ELSE} Result := False; {$ENDIF}
+    {$IFDEF Darwin} Result := True; {$ELSE} Result := False; {$ENDIF}
 end;
 
 function isLinux() : Boolean;
@@ -533,6 +536,10 @@ end;
 
 {$IFDEF LINUX}
 {$I ConsoleLinuxImpl.fph}
+{$ENDIF}
+
+{$IFDEF DARWIN}
+{$I ConsoleMacImpl.fph}
 {$ENDIF}
 
 end.

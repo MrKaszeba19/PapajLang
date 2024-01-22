@@ -1,0 +1,3 @@
+function getDarwinVersion() : String;
+function getDarwinDistribution() : String;
+function getDarwinDistributionFull() : String;

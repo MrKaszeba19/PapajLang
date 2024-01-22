@@ -1,0 +1,14 @@
+function getDarwinVersion() : String;
+begin
+    Result := UnixSysInfo('kernel-release');
+end;
+
+function getDarwinDistribution() : String;
+begin
+    Result := UnixSysInfo('os');
+end;
+
+function getDarwinDistributionFull() : String;
+begin
+    Result := UnixSysInfo('os')+' '+UnixSysInfo('kernel-release');
+end;
