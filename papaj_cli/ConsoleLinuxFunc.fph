@@ -20,10 +20,7 @@ end;
     for index := 0 to getRealCPUThreads()-1 do
         stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUMinFreq(index)));
 end;
-'Console.CPUCurrentFreqs' : begin
-    for index := 0 to getRealCPUThreads()-1 do
-        stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
-end;
+'Console.CPUCurrentFreqs',
 'Console.CPUCurFreqs' : begin
     for index := 0 to getRealCPUThreads()-1 do
         stack_push(env.Stack[env.Settings.StackPointer], buildNumber(getCPUCurFreq(index)));
