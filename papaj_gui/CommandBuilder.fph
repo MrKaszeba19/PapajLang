@@ -264,10 +264,8 @@ var
     StrEax : String;
     Num    : ComplexType;
     Code   : SHortInt;
-    //M              : TStringArrArray;
     M              : TStringArray = NIL;
     N              : TStringArray = NIL;
-    //mode           : PSReaderMode = M_NORM;
     ConditionBuilt : Boolean = False;
 begin
     x := Length(db.Commands);

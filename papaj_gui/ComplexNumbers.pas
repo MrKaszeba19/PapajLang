@@ -322,13 +322,27 @@ begin
                 x1 := x1 + x[i];
                 i := i+1;
             end;
-            posError := 1;
             if (x[i] in ['i', 'j']) then
             begin
-                system.val(x1, rea, posError);   
-                if (posError = 0) then num := ComplexNum(0, rea);
+                if (Length(x1) = 0) 
+                    then num := ComplexNum(0, 1)
+                else if (x1 = '-') 
+                    then num := ComplexNum(0, -1) 
+                else if (Length(x1) = 1) and (x1[1] in ['0'..'9']) 
+                        then num := ComplexNum(0, Ord(x1[1])-48)
+                else if (x1 = '+') 
+                    then num := ComplexNum(0, 1)
+                else if (x1 = '.') or (x1 = '-.') or (x1 = '+.')
+                    then posError := 1
+                else begin
+                    posError := 1;
+                    system.val(x1, rea, posError);   
+                    if (posError = 0) then num := ComplexNum(0, rea);
+                end;
+                if (RightStr(x, Length(x)-i) <> '') then posError := 1;
                 exit; 
             end;
+            posError := 1;
             system.val(x1, rea, posError);
             if (posError = 0) then
             begin
@@ -340,10 +354,19 @@ begin
                     if (x[i] in ['i', 'j']) then break;
                     x2 := x2 + x[i];
                 end;
-                posError := 1;
-                //writeln(x2);
-                system.val(x2, ima, posError);
-                if (posError = 0) then num := ComplexNum(rea, ima);
+                if (x2 = '-') 
+                    then num := ComplexNum(rea, -1) 
+                else if (x2 = '+') 
+                    then num := ComplexNum(rea, 1)
+                else if (x2 = '-.') or (x2 = '+.')
+                    then posError := 1
+                else begin
+                    posError := 1;
+                    system.val(x2, ima, posError);   
+                    if (posError = 0) then num := ComplexNum(rea, ima);
+                end;
+                if (RightStr(x, Length(x)-i) <> '') then posError := 1;
+                exit; 
             end;
         end else begin
             posError := 1;
