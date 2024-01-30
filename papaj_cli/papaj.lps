@@ -3,13 +3,11 @@
   <ProjectSession>
     <Version Value="12"/>
     <BuildModes Active="Default"/>
-    <Units Count="20">
+    <Units Count="21">
       <Unit0>
-        <Filename Value="rpn.lpr"/>
+        <Filename Value="papaj.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="22" Y="11"/>
-        <UsageCount Value="21"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="20"/>
       </Unit0>
       <Unit1>
         <Filename Value="UnitStack.pas"/>
@@ -19,132 +17,137 @@
       <Unit2>
         <Filename Value="UnitEntity.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="320"/>
         <CursorPos X="5" Y="355"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="UnitFunctions.pas"/>
-        <UsageCount Value="20"/>
-      </Unit3>
-      <Unit4>
         <Filename Value="UnitEnvironment.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="8"/>
         <CursorPos X="37" Y="30"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
-      </Unit4>
-      <Unit5>
+      </Unit3>
+      <Unit4>
         <Filename Value="UnixCrt.pas"/>
         <IsPartOfProject Value="True"/>
         <UsageCount Value="20"/>
-      </Unit5>
-      <Unit6>
+      </Unit4>
+      <Unit5>
         <Filename Value="UnitREPL.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="14"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="UnitVariables.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="19"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="UnitVariables.pas"/>
+        <Filename Value="MathUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
-        <CursorPos X="19"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="15"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="MathUtils.pas"/>
+        <Filename Value="DTUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="15"/>
+        <CursorPos X="26" Y="19"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="DTUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <CursorPos X="26" Y="19"/>
-        <UsageCount Value="20"/>
-        <Loaded Value="True"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="ArrayUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <UsageCount Value="20"/>
-      </Unit10>
-      <Unit11>
+      </Unit9>
+      <Unit10>
         <Filename Value="RPNAbout.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="1"/>
         <CursorPos Y="20"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
-      </Unit11>
-      <Unit12>
+      </Unit10>
+      <Unit11>
         <Filename Value="StringUtils.pas"/>
         <IsPartOfProject Value="True"/>
         <UsageCount Value="20"/>
-      </Unit12>
-      <Unit13>
+      </Unit11>
+      <Unit12>
         <Filename Value="ConsoleUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="5"/>
         <CursorPos X="18"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="rpn.lpr"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="22" Y="11"/>
+        <UsageCount Value="21"/>
       </Unit13>
       <Unit14>
+        <Filename Value="UnitFunctions.pas"/>
+        <UsageCount Value="20"/>
+      </Unit14>
+      <Unit15>
         <Filename Value="unitStack.pas"/>
         <UnitName Value="UnitStack"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="11"/>
         <UsageCount Value="20"/>
-      </Unit14>
-      <Unit15>
+      </Unit15>
+      <Unit16>
         <Filename Value="unitEntity.pas"/>
         <UnitName Value="UnitEntity"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="11"/>
         <UsageCount Value="20"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="unit2.pas"/>
-        <UnitName Value="Unit2"/>
-        <EditorIndex Value="7"/>
-        <CursorPos X="43" Y="4"/>
-        <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="unit5.pas"/>
-        <UnitName Value="Unit5"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="10"/>
+        <Filename Value="unit2.pas"/>
+        <UnitName Value="Unit2"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="43" Y="4"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
+        <Filename Value="unit5.pas"/>
+        <UnitName Value="Unit5"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit18>
+      <Unit19>
         <Filename Value="unitFunctions.pas"/>
         <UnitName Value="UnitFunctions"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1108"/>
         <CursorPos X="79" Y="1175"/>
         <UsageCount Value="20"/>
-      </Unit18>
-      <Unit19>
+      </Unit19>
+      <Unit20>
         <Filename Value="arrayutils.pas"/>
         <UnitName Value="ArrayUtils"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="11"/>
         <UsageCount Value="20"/>
-      </Unit19>
+      </Unit20>
     </Units>
     <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
@@ -164,5 +167,14 @@
       <FormatVersion Value="2"/>
       <Modes ActiveMode="default"/>
     </RunParams>
+    <HistoryLists Count="3">
+      <List0 Name="WorkingDirectory" Type="File" Count="1"/>
+      <List1 Name="LaunchingApplication" Type="File" Count="2">
+        <Item2 Value="/usr/bin/gnome-terminal -t &apos;Lazarus Run Output&apos; -e &apos;$(LazarusDir)/tools/runwait.sh $(TargetCmdLine)&apos;"/>
+      </List1>
+      <List2 Name="CommandLineParameters" Count="2">
+        <Item1 Value="do &apos;[2 7 9 5 1] polyroots println&apos; -L"/>
+      </List2>
+    </HistoryLists>
   </ProjectSession>
 </CONFIG>

@@ -535,8 +535,4 @@ begin
     App.Title := 'Papaj CLI app - PapajScript Interpreter';
     App.Run;
     App.Free;
-    //{$IFDEF MSWINDOWS}
-    //Sleep(500);
-    //{$ENDIF}
-    //readln();
 end.

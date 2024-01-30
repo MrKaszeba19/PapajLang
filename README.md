@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-January 27, 2024  
+January 30, 2024  
 by Paul Lipkowski (RooiGevaar19)
 
 Since November 24, 2017 written in FreePascal. :smile:
@@ -36,7 +36,7 @@ Since November 24, 2017 written in FreePascal. :smile:
     * **Linux** (32 and 64 bit)
     * **Windows** (32 and 64 bit) – full support for both GUI and console apps is provided for Windows 2000 and newer OSes. 
     * **FreeBSD** (64 bit)
-    * **MacOS** (64 bit)
+    * **MacOS** (64 bit) - partial GUI app support
 - Have installed
     * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) in order ot compile just Console app

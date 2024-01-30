@@ -21,6 +21,7 @@ echo "Starting..."
 savetemps=0
 assembler=0
 optimize=""
+debug=""
 if [[ ${BASH_ARGV[0]} =~ s ]] ; 
 then
 	echo "Note: Save-temps level 1 activated";
@@ -45,6 +46,12 @@ then
 	optimize="-O3";
 fi
 
+if [[ ${BASH_ARGV[0]} =~ D ]] ; 
+then
+	echo "Note: Debug mode";
+	debug="-glh";
+fi
+
 # ====== COMPILATION
 # ------ Preparation
 
@@ -54,9 +61,9 @@ echo "Compiling..."
 mv papaj.lpr papaj.pas
 
 if [[ $assembler -lt 1 ]] ; then
-	fpc papaj.pas -o"papaj" $opt
+	fpc papaj.pas -o"papaj" $optimize $debug
 else
-	fpc papaj.pas -o"papaj" -a $opt
+	fpc papaj.pas -o"papaj" -a $optimize $debug
 fi
 
 # ------ If compiled
