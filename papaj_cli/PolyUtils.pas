@@ -23,7 +23,8 @@ function polynomial_diff(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_mul(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_div(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_mod(poly1 : TEntities; poly2 : TEntities) : TEntities;
-//function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
+function polynomial_mul(poly : TEntities; x : ComplexType) : TEntities;
+function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
 
 //function polynomial_roots(poly : TEntities; distinct : Boolean = True; realonly : Boolean = False) : TEntities;
 procedure polynomial_roots(var poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
@@ -355,7 +356,20 @@ begin
     Result := r;
 end;
 
-{*
+function polynomial_mul(poly : TEntities; x : ComplexType) : TEntities;
+var
+    res  : TEntities;
+    i, n : LongInt;
+begin
+    n := polynomial_degree(poly);
+    SetLength(res, n+1);
+    for i := 0 to n do
+    begin
+        res[i] := buildNumber(poly[i].Num * x);
+    end;
+    Result := res;
+end;
+
 function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
 var
     res  : TEntities;
@@ -368,7 +382,6 @@ begin
         res[i] := buildNumber(res[i+1].Num*x+poly[i+1].Num);
     Result := res;
 end;
-*}
 
 // assume P(x) is divisible by (x-x0)
 procedure polynomial_hornerdiv(var poly : TEntities; x : ComplexType);
@@ -645,6 +658,12 @@ begin
 end;
 *}
 
+// toadd:
+// 1+x+x^2+x^3... maybe
+// newton coefficients
+// cardano 
+// quartic
+
 procedure polynomial_roots(var poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
 //procedure polynomial_roots(poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
 var
@@ -697,37 +716,33 @@ begin
                 res[size+1] := buildNumber((-poly[1].Num+Sqrt(delta))/(2*poly[2].Num));
             //end;
         end;
-        //3 : begin
-        //    // https://pl.wikipedia.org/wiki/R%C3%B3wnanie_sze%C5%9Bcienne
-        //    // work it out later
-        //    // move it to other cases
-        //    if (poly[3].Num = 1) and (poly[2].Num = 0) then
-        //    begin
-        //        p := poly[1].Num;
-        //        q := poly[0].Num;
-        //    end else begin
-        //        p := poly[1].Num/poly[3].Num + Sqr(poly[2].Num)/(3*Sqr(poly[3].Num));
-        //        q := (2*Cub(poly[2].Num))/(27*Cub(poly[3].Num)) + poly[0].Num/poly[3].Num - (poly[2].Num*poly[1].Num)/(3*Sqr(poly[3].Num));
-        //    end;
-        //    //writeln(ANsiString(p));
-        //    //writeln(ANsiString(q));
-        //    delta := Sqr(q)/4 + Cub(p)/27;
-        //    u := Root(Sqrt(delta)-0.5*q, 3);
-        //    v := Root(-Sqrt(delta)-0.5*q, 3);
-        //    e := ComplexNum(-0.5, -system.sqrt(3)/2);
-        //    f := ComplexNum(-0.5, system.sqrt(3)/2);
-        //    SetLength(res, 3);
-        //    res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
-        //    res[1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
-        //    res[2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
-        //    //e := ComplexNum(-0.5, system.sqrt(3)/2);
-        //    //SetLength(res, 3);
-        //    //res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
-        //    //res[1] := buildNumber(u*e+v/e -poly[2].Num/(3*poly[3].Num));
-        //    //res[2] := buildNumber(u/e+v*e -poly[2].Num/(3*poly[3].Num));
-        //    if (distinct) then
-        //        res := table_distinct(res);
-        //end;
+        3 : begin
+            // todo: make a general cubic formula for complex coefs
+            // todo: https://en.wikipedia.org/wiki/Cubic_equation
+            if (poly[3].Num = 1) and (poly[2].Num = 0) then
+            begin
+                p := poly[1].Num;
+                q := poly[0].Num;
+            end else begin
+                p := poly[1].Num/poly[3].Num - Sqr(poly[2].Num)/(3*Sqr(poly[3].Num));
+                q := (2*Cub(poly[2].Num))/(27*Cub(poly[3].Num)) + poly[0].Num/poly[3].Num - (poly[2].Num*poly[1].Num)/(3*Sqr(poly[3].Num));
+            end;
+            delta := Sqr(q)/4 + Cub(p)/27;
+            if (isReal(p)) and (isReal(q)) and (Real(delta) >= 0)
+            then begin
+                u := RealRoot(Real(Sqrt(delta)-0.5*q), 3);
+                v := RealRoot(Real(-Sqrt(delta)-0.5*q), 3);
+            end else begin
+                u := Root(Sqrt(delta)-0.5*q, 3);
+                v := Root(-Sqrt(delta)-0.5*q, 3);
+            end;
+            e := ComplexNum(-0.5, -system.sqrt(3)/2);
+            f := ComplexNum(-0.5, system.sqrt(3)/2);
+            SetLength(res, 3);
+            res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
+            res[1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
+            res[2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
+        end;
         else begin
             // work it out later
             SetLength(res, size);
@@ -840,10 +855,10 @@ begin
                     size := size+1;
                 end;
             end;
-            if (Length(res) > 0) and (distinct) then
-                res := table_distinct(res); 
         end;
     end;
+    if (Length(res) > 0) and (distinct) then
+        res := table_distinct(res); 
 end;
 
 function polynomial_derivative(poly : TEntities; grade : LongInt = 1) : TEntities;
