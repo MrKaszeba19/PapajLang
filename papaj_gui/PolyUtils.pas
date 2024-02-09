@@ -384,7 +384,7 @@ begin
 end;
 
 // assume P(x) is divisible by (x-x0)
-procedure polynomial_hornerdiv(var poly : TEntities; x : ComplexType);
+procedure polynomial_phornerdiv(var poly : TEntities; x : ComplexType);
 var
     i, n : LongInt;
 begin
@@ -397,269 +397,7 @@ begin
 end;
 
 
-{*
-function polynomial_roots(poly : TEntities; distinct : Boolean = True; realonly : Boolean = False) : TEntities;
-var
-    res     : TEntities;
-    x, y, d : TEntities;
-    a, b    : TEntities;
-    delta   : ComplexType;
-    p, q    : ComplexType;
-    u, v    : ComplexType;
-    e, f    : ComplexType;
-    n, i, j : LongInt;
-    size    : LongInt;
-    flag    : Boolean;
-begin
-    case polynomial_degree(poly) of
-        -1 : begin
-            // all complex numbers
-            SetLength(res, 1);
-            res[0] := buildNumber(NaN);
-        end;
-        0 : begin
-            writeln('constant');
-            // no solutions
-            SetLength(res, 0);
-        end;
-        1 : begin
-            // all complex numbers
-            SetLength(res, 1);
-            res[0] := buildNumber(-poly[0].Num/poly[1].Num);
-        end;
-        2 : begin
-            writeln('quadratic');
-            writeln(AnsiString(poly[2].Num));
-            writeln(AnsiString(poly[1].Num));
-            writeln(AnsiString(poly[0].Num));
-            delta := Sqr(poly[1].Num) - 4 * poly[2].Num * poly[0].Num;
-            if (realonly) and (isReal(delta)) and (Real(delta) < 0) then
-            begin
-                SetLength(res, 0);
-            end else if (delta = 0) and (distinct) then
-            begin
-                writeln('one solution');
-                SetLength(res, 1);
-                res[0] := buildNumber(-poly[1].Num/(2*poly[2].Num));
-            end else begin
-                writeln('two solutions');
-                SetLength(res, 2);
-                res[0] := buildNumber((-poly[1].Num-Sqrt(delta))/(2*poly[2].Num));
-                res[1] := buildNumber((-poly[1].Num+Sqrt(delta))/(2*poly[2].Num));
-                writeln(AnsiString(res[0].Num));
-                writeln(AnsiString(res[1].Num));
-            end;
-        end;
-        //3 : begin
-        //    // https://pl.wikipedia.org/wiki/R%C3%B3wnanie_sze%C5%9Bcienne
-        //    // work it out later
-        //    // move it to other cases
-        //    if (poly[3].Num = 1) and (poly[2].Num = 0) then
-        //    begin
-        //        p := poly[1].Num;
-        //        q := poly[0].Num;
-        //    end else begin
-        //        p := poly[1].Num/poly[3].Num + Sqr(poly[2].Num)/(3*Sqr(poly[3].Num));
-        //        q := (2*Cub(poly[2].Num))/(27*Cub(poly[3].Num)) + poly[0].Num/poly[3].Num - (poly[2].Num*poly[1].Num)/(3*Sqr(poly[3].Num));
-        //    end;
-        //    //writeln(ANsiString(p));
-        //    //writeln(ANsiString(q));
-        //    delta := Sqr(q)/4 + Cub(p)/27;
-        //    u := Root(Sqrt(delta)-0.5*q, 3);
-        //    v := Root(-Sqrt(delta)-0.5*q, 3);
-        //    e := ComplexNum(-0.5, -system.sqrt(3)/2);
-        //    f := ComplexNum(-0.5, system.sqrt(3)/2);
-        //    SetLength(res, 3);
-        //    res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
-        //    res[1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
-        //    res[2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
-        //    //e := ComplexNum(-0.5, system.sqrt(3)/2);
-        //    //SetLength(res, 3);
-        //    //res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
-        //    //res[1] := buildNumber(u*e+v/e -poly[2].Num/(3*poly[3].Num));
-        //    //res[2] := buildNumber(u/e+v*e -poly[2].Num/(3*poly[3].Num));
-        //    if (distinct) then
-        //        res := table_distinct(res);
-        //end;
-        else begin
-            // work it out later
-            SetLength(res, 0);
-            writeln('other polynomial');
-
-            if (poly[0].Num = 0) then
-            begin
-                // todo: make it iterative
-                SetLength(res, 1);
-                res[0] := buildNumber(0);
-                a := buildLinearPoly(0);
-                b := polynomial_roots(polynomial_div(poly, a), distinct, realonly);
-                n := Length(b);
-                SetLength(res, n+1);
-                for i := 1 to n do
-                    res[i] := b[i-1];  
-                //for i := 0 to Length(res)-1 do writeln(AnsiString(res[i].Num));
-            end else if (polynomial_isTrivial(poly)) then
-            begin
-                n := polynomial_degree(poly);
-                SetLength(res, n);
-                if (isReal(poly[0].Num)) and (isReal(poly[n].Num))
-                    then res[0] := buildNumber(RealRoot(-Real(poly[0].Num)/Real(poly[n].Num), n))
-                    else res[0] := buildNumber(Root(-poly[0].Num/poly[n].Num, n));
-                e := ComplexNumPolar(1, 2*C_PI/n);
-                for i := 2 to n do
-                begin
-                    res[i-1] := buildNumber(res[i-2].Num * e);
-                end;
-            end else if (polynomial_isofIntegerCoefs(poly)) then begin
-                // fix it
-                writeln('integer coefs');
-                // check case of a_0 = 0
-                n := polynomial_degree(poly);
-                //if isInteger(poly[n].Num)
-                p := poly[0].Num; 
-                q := poly[n].Num;
-                //writeln('divisors');
-                SetLength(x, 0);
-                SetLength(y, 0);
-                // -----------------------------------------------------------------
-                //x := generateIntegerDivisors(p);
-                //writeln('x done');
-                //y := generateIntegerDivisors(q);
-                //writeln('y done');
-                //flag := True;
-                //size := 0;
-                //e := 0;
-                //i := 0; 
-                //while flag and (i < Length(x)) do
-                //begin
-                //    j := 0;
-                //    while flag and (j < Length(y)) do
-                //    begin
-                //        e := x[i].Num/y[j].Num;
-                //        if (polynomial_value(poly, e) = 0) then
-                //        begin
-                //            SetLength(res, size+1);
-                //            res[size] := buildNumber(e);
-                //            flag := False;
-                //            size := size+1;
-                //            break;
-                //        end;
-                //        j := j+1;
-                //    end;
-                //    i := i+1;
-                //end;
-                // -----------------------------------------------------------------
-                x := generateIntegerDivisors(p*q);
-                writeln('x done');
-                flag := True;
-                size := 0;
-                e := 0;
-                i := 0; 
-                while flag and (i < Length(x)) do
-                begin
-                    j := 0;
-                    while flag and (j < Length(x)) do
-                    begin
-                        e := x[i].Num/x[j].Num;
-                        if (polynomial_value(poly, e) = 0) then
-                        begin
-                            flag := False;
-                            break;
-                        end;
-                        j := j+1;
-                    end;
-                    i := i+1;
-                end;
-                // -----------------------------------------------------------------
-                // writeln(AnsiString(e));
-                // writeln('build');
-                // a := buildLinearPoly(-e);
-                // writeln('built');
-                // while (polynomial_value(polynomial_div(poly, a), e) = 0) do
-                // begin
-                //     SetLength(res, size+1);
-                //     res[size] := buildNumber(e);
-                //     poly := polynomial_div(poly, a);
-                //     size := size+1;
-                // end;
-                // b := polynomial_roots(polynomial_div(poly, a), distinct, realonly);
-                // -----------------------------------------------------------------
-                //writeln(AnsiString(e));
-                //writeln('build');
-                //while (polynomial_value(polynomial_div(poly, buildLinearPoly(-e)), e) = 0) do
-                //begin
-                //    writeln('size');
-                //    SetLength(res, size+1);
-                //    writeln('set '+AnsiString(e));
-                //    res[size] := buildNumber(e);
-                //    writeln('div');
-                //    poly := polynomial_div(poly, buildLinearPoly(-e));
-                //    size := size+1;
-                //end;
-                //b := polynomial_roots(polynomial_div(poly, buildLinearPoly(-e)), distinct, realonly);
-                // -----------------------------------------------------------------
-                //writeln('build');
-                //writeln(AnsiString(e));
-                //writeln(AnsiString(polynomial_value(polynomial_hornerdiv(poly, e), e)));
-                //while (polynomial_value(poly, e) = 0) do
-                //begin
-                //    writeln('size');
-                //    SetLength(res, size+1);
-                //    writeln('set '+AnsiString(e));
-                //    res[size] := buildNumber(e);
-                //    writeln('div');
-                //    poly := polynomial_hornerdiv(poly, e);
-                //    writeln('next ', polynomial_degree(poly));
-                //    size := size+1;
-                //end;
-                //writeln('go');
-                //b := polynomial_roots(poly, distinct, realonly);
-                // -----------------------------------------------------------------
-                writeln('build');
-                repeat
-                    writeln('div');
-                    poly := polynomial_hornerdiv(poly, e);
-                    SetLength(res, size+1);
-                    res[size] := buildNumber(e);
-                    writeln('next ', polynomial_degree(poly));
-                    size := size+1;
-                until (polynomial_value(poly, e) <> 0) or (polynomial_degree(poly) = 2);
-                writeln('go');
-                poly := polynomial_roots(poly, distinct, realonly);
-                // -----------------------------------------------------------------
-                // writeln(AnsiString(e));
-                // writeln('build');
-                // // todo: try to divide multiplicity roots
-                // while (polynomial_value(polynomial_div(poly, buildLinearPoly(-e)), e) = 0) do
-                // begin
-                //     SetLength(res, size+1);
-                //     res[size] := buildNumber(e);
-                //     poly := polynomial_div(poly, buildLinearPoly(-e));
-                //     size := size+1;
-                // end;
-                // b := polynomial_roots(poly, distinct, realonly);
-                // -----------------------------------------------------------------
-                writeln('more');
-                n := Length(poly);
-                writeln(n);
-                SetLength(res, n+size);
-                for i := 0 to n-1 do
-                begin
-                    writeln(AnsiString(poly[i].Num));
-                    res[i+size] := poly[i];
-                end;
-            end;
-
-            if (Length(res) > 0) and (distinct) then
-                res := table_distinct(res); 
-        end;
-    end;
-    Result := res;
-end;
-*}
-
 // toadd:
-// 1+x+x^2+x^3... maybe
 // newton coefficients
 // cardano 
 // quartic
@@ -699,49 +437,60 @@ begin
         end;
         2 : begin
             delta := Sqr(poly[1].Num) - 4 * poly[2].Num * poly[0].Num;
-            //if 
-            //(realonly) and 
-            //(isReal(delta)) and (Real(delta) < 0) then
-            //begin
-            //    SetLength(res, size);
-            //end else if (delta = 0) 
-            //and (distinct) 
-            //then
-            //begin
-            //    SetLength(res, size+1);
-            //    res[size] := buildNumber(-poly[1].Num/(2*poly[2].Num));
-            //end else begin
-                SetLength(res, size+2);
-                res[size] := buildNumber((-poly[1].Num-Sqrt(delta))/(2*poly[2].Num));
-                res[size+1] := buildNumber((-poly[1].Num+Sqrt(delta))/(2*poly[2].Num));
-            //end;
+            SetLength(res, size+2);
+            res[size] := buildNumber((-poly[1].Num-Sqrt(delta))/(2*poly[2].Num));
+            res[size+1] := buildNumber((-poly[1].Num+Sqrt(delta))/(2*poly[2].Num));
         end;
         3 : begin
-            // todo: make a general cubic formula for complex coefs
-            // todo: https://en.wikipedia.org/wiki/Cubic_equation
-            if (poly[3].Num = 1) and (poly[2].Num = 0) then
+            if (isReal(poly[0].Num)) and (isReal(poly[1].Num))
+            and (isReal(poly[2].Num)) and (isReal(poly[3].Num)) then
             begin
-                p := poly[1].Num;
-                q := poly[0].Num;
+                if (poly[3].Num = 1) and (poly[2].Num = 0) then
+                begin
+                    p := poly[1].Num;
+                    q := poly[0].Num;
+                end else begin
+                    p := poly[1].Num/poly[3].Num - Sqr(poly[2].Num)/(3*Sqr(poly[3].Num));
+                    q := (2*Cub(poly[2].Num))/(27*Cub(poly[3].Num)) + poly[0].Num/poly[3].Num - (poly[2].Num*poly[1].Num)/(3*Sqr(poly[3].Num));
+                end;
+                delta := Sqr(q)/4 + Cub(p)/27;
+                if 
+                //(isReal(p)) and (isReal(q)) and 
+                (Real(delta) >= 0)
+                then begin
+                    u := RealRoot(Real(Sqrt(delta)-0.5*q), 3);
+                    v := RealRoot(Real(-Sqrt(delta)-0.5*q), 3);
+                end else begin
+                    u := Root(Sqrt(delta)-0.5*q, 3);
+                    v := Root(-Sqrt(delta)-0.5*q, 3);
+                end;
+                e := ComplexNum(-0.5, -system.sqrt(3)/2);
+                f := ComplexNum(-0.5, system.sqrt(3)/2);
+                SetLength(res, size+3);
+                res[size]   := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
+                res[size+1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
+                res[size+2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
             end else begin
-                p := poly[1].Num/poly[3].Num - Sqr(poly[2].Num)/(3*Sqr(poly[3].Num));
-                q := (2*Cub(poly[2].Num))/(27*Cub(poly[3].Num)) + poly[0].Num/poly[3].Num - (poly[2].Num*poly[1].Num)/(3*Sqr(poly[3].Num));
+                e := Sqr(poly[2].Num) - 3*poly[3].Num*poly[1].Num; // delta_0
+                f := 2*Cub(poly[2].Num) - 9*poly[3].Num*poly[2].Num*poly[1].Num + 27*Cub(poly[3].Num)*poly[0].Num; // delta_1
+                if (e = 0) and (f = 0) 
+                then begin
+                    u := -poly[2].Num/(3*poly[3].Num);
+                end else begin
+                    delta := Root((f + Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
+                    if delta = 0 then delta := Root((f - Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
+                    u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                end;
+                SetLength(res, size+3);
+                res[size]   := buildNumber(u);
+                v := ComplexNum(-0.5, system.sqrt(3)/2);
+                delta := delta*v;
+                u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                res[size+1] := buildNumber(u);
+                delta := delta*v;
+                u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                res[size+2] := buildNumber(u);
             end;
-            delta := Sqr(q)/4 + Cub(p)/27;
-            if (isReal(p)) and (isReal(q)) and (Real(delta) >= 0)
-            then begin
-                u := RealRoot(Real(Sqrt(delta)-0.5*q), 3);
-                v := RealRoot(Real(-Sqrt(delta)-0.5*q), 3);
-            end else begin
-                u := Root(Sqrt(delta)-0.5*q, 3);
-                v := Root(-Sqrt(delta)-0.5*q, 3);
-            end;
-            e := ComplexNum(-0.5, -system.sqrt(3)/2);
-            f := ComplexNum(-0.5, system.sqrt(3)/2);
-            SetLength(res, 3);
-            res[0] := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
-            res[1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
-            res[2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
         end;
         else begin
             // work it out later
@@ -838,7 +587,7 @@ begin
                 if not Flag then
                 begin
                     repeat
-                        polynomial_hornerdiv(poly, e);
+                        polynomial_phornerdiv(poly, e);
                         SetLength(res, size+1);
                         res[size] := buildNumber(e);
                         size := size+1;
