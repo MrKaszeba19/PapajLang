@@ -419,12 +419,19 @@ var
     flag  : Boolean;
 begin
     size := Length(res);
+    // todo: consider
+    //       scale polynomials
+    //       newton-pascal coefs polynomials
+    //       approximate root finding when nothing is found
+    // todo: improve searching through integer divisors
     case polynomial_degree(poly) of
         -1 : begin
             // all complex numbers
             SetLength(res, size+1);
             //res[size] := buildNumber(NaN);
-            res[size] := buildString('complex_numbers');
+            if realonly 
+                then res[size] := buildString('real_numbers')
+                else res[size] := buildString('complex_numbers');
             size := size+1;
         end;
         0 : begin
@@ -472,7 +479,7 @@ begin
                 res[size+2] := buildNumber(u*f+v*e -poly[2].Num/(3*poly[3].Num));
             end else begin
                 e := Sqr(poly[2].Num) - 3*poly[3].Num*poly[1].Num; // delta_0
-                f := 2*Cub(poly[2].Num) - 9*poly[3].Num*poly[2].Num*poly[1].Num + 27*Cub(poly[3].Num)*poly[0].Num; // delta_1
+                f := 2*Cub(poly[2].Num) - 9*poly[3].Num*poly[2].Num*poly[1].Num + 27*Sqr(poly[3].Num)*poly[0].Num; // delta_1
                 if (e = 0) and (f = 0) 
                 then begin
                     u := -poly[2].Num/(3*poly[3].Num);
@@ -485,6 +492,7 @@ begin
                     if delta = 0 then delta := ComplexNumbers.Root((f - ComplexNumbers.Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
                     u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
                     SetLength(res, size+3);
+                    // todo: try best to find real roots
                     res[size]   := buildNumber(u);
                     v := ComplexNum(-0.5, system.sqrt(3)/2);
                     delta := delta*v;
@@ -598,7 +606,7 @@ begin
                         res[size] := buildNumber(e);
                         size := size+1;
                     until (polynomial_value(poly, e) <> 0) or (polynomial_degree(poly) = 2);
-                    polynomial_roots(poly, res, distinct, realonly);
+                    polynomial_roots(poly, res, false, false);
                     Flag := True;
                 end else begin
                     //for i := 0 to Length(poly)-1 do
