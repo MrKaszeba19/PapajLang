@@ -476,22 +476,28 @@ begin
                 if (e = 0) and (f = 0) 
                 then begin
                     u := -poly[2].Num/(3*poly[3].Num);
+                    SetLength(res, size+3);
+                    res[size]   := buildNumber(u);
+                    res[size+1] := buildNumber(u);
+                    res[size+2] := buildNumber(u);
                 end else begin
-                    delta := Root((f + Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
-                    if delta = 0 then delta := Root((f - Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
+                    delta := ComplexNumbers.Root((f + ComplexNumbers.Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
+                    if delta = 0 then delta := ComplexNumbers.Root((f - ComplexNumbers.Sqrt(Sqr(f) - 4*Cub(e)))/2, 3);
                     u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                    SetLength(res, size+3);
+                    res[size]   := buildNumber(u);
+                    v := ComplexNum(-0.5, system.sqrt(3)/2);
+                    delta := delta*v;
+                    u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                    res[size+1] := buildNumber(u);
+                    delta := delta*v;
+                    u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
+                    res[size+2] := buildNumber(u);
                 end;
-                SetLength(res, size+3);
-                res[size]   := buildNumber(u);
-                v := ComplexNum(-0.5, system.sqrt(3)/2);
-                delta := delta*v;
-                u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
-                res[size+1] := buildNumber(u);
-                delta := delta*v;
-                u := -Inv(3*poly[3].Num)*(poly[2].Num + delta + e/delta);
-                res[size+2] := buildNumber(u);
             end;
         end;
+        //4 : begin
+        //end;
         else begin
             // work it out later
             SetLength(res, size);
