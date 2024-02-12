@@ -370,6 +370,49 @@ begin
     Result := res;
 end;
 
+// finding roots
+
+function getClosestToZero(a : TEntities) : LongInt;
+var
+    res, i : LongInt;
+begin
+    res := 0;
+    for i := 1 to Length(a)-1 do
+        if (Abs(a[i].Num) > 0) and (Abs(a[i].Num) < Abs(a[res].Num)) then
+            res := i;
+    Result := res;
+end;
+
+function isComplexDivisible(x, y : ComplexType) : Boolean;
+begin
+    Result := x/y = Int(x/y);
+end;
+
+// todo: improve it
+function getPolyGCD(poly : TEntities) : ComplexType;
+var
+    res : ComplexType;
+    i   : LongInt;
+begin
+    res := poly[getClosestToZero(poly)].Num;
+    //if res = 0 then 
+    //begin
+    //    Result := 1;
+    //end else begin
+        for i := 0 to Length(poly)-1 do
+        begin
+            //writeln(AnsiString(poly[i].Num)+' / '+AnsiString(res));
+            if (poly[i].Num = 0) then continue;
+            if (not isComplexDivisible(poly[i].Num, res))
+            then begin
+                res := 1;
+                break;
+            end;
+        end;
+        Result := res;
+    //end;
+end;
+
 function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
 var
     res  : TEntities;
@@ -424,6 +467,134 @@ begin
     //       newton-pascal coefs polynomials
     //       approximate root finding when nothing is found
     // todo: improve searching through integer divisors
+
+    //for i := 0 to Length(poly)-1 do
+    //    write(AnsiString(poly[i].Num)+' ');
+    //writeln();
+
+    if (polynomial_degree(poly) >= 2) and (poly[0].Num = 0) then
+    begin
+        // todo: make it iterative
+        SetLength(res, size+1);
+        res[size] := buildNumber(0);
+        a := buildLinearPoly(0);
+        poly := polynomial_div(poly, a);
+        polynomial_roots(poly, res, distinct, realonly); 
+        //for i := 0 to Length(res)-1 do writeln(AnsiString(res[i].Num));
+        Exit;
+    end else if (polynomial_degree(poly) >= 3) and (polynomial_isTrivial(poly)) then
+    begin
+        n := polynomial_degree(poly);
+        SetLength(res, size+n);
+        if (isReal(poly[0].Num)) and (isReal(poly[n].Num))
+            then res[size] := buildNumber(RealRoot(-Real(poly[0].Num)/Real(poly[n].Num), n))
+            else res[size] := buildNumber(Root(-poly[0].Num/poly[n].Num, n));
+        e := ComplexNumPolar(1, 2*C_PI/n);
+        for i := 2 to n do
+        begin
+            res[size+i-1] := buildNumber(res[size+i-2].Num * e);
+        end;
+        Exit;
+    // move it to 3rd grade and 4th grade
+    end else if (polynomial_degree(poly) >= 1) and (getPolyGCD(poly) <> 1) then begin
+        p := getPolyGCD(poly);
+        poly := polynomial_mul(poly, Inv(p));
+        polynomial_roots(poly, res, distinct, realonly); 
+        Exit;
+    end else if (polynomial_degree(poly) >= 4) and (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPowerOfPoly(poly) > -1) then begin
+        n := polynomial_isPowerOfPoly(poly);
+        poly[0] := buildNumber(poly[0].Num);
+        poly[1] := buildNumber(poly[n].Num);
+        poly[2] := buildNumber(poly[2*n].Num);
+        for i := 3 to 2*n do
+            poly[i] := buildNumber(0);
+        polynomial_truncate(poly);
+        //polynomial_roots(poly, res, False, False);
+        polynomial_roots(poly, res, distinct, realonly); 
+        size := Length(res);
+        SetLength(res, size+2*n-2);
+        //res[size-2] := buildNumber(Sqrt(res[size-2].Num));
+        //res[size-1] := buildNumber(Sqrt(res[size-1].Num));
+        if (isReal(poly[0].Num)) and (isReal(poly[1].Num)) and (isReal(poly[2].Num)) then 
+        begin
+            res[size-2] := buildNumber(RealRoot(Real(res[size-2].Num), n));
+            res[size-1] := buildNumber(RealRoot(Real(res[size-1].Num), n));
+        end else begin 
+            res[size-2] := buildNumber(Root(res[size-2].Num, n));
+            res[size-1] := buildNumber(Root(res[size-1].Num, n));
+        end;
+        e := ComplexNumPolar(1, 2*C_PI/n);
+        for i := 1 to n-1 do
+        begin
+            res[size+2*i-2] := buildNumber(res[size+2*i-4].Num * e);
+            res[size+2*i-1] := buildNumber(res[size+2*i-3].Num * e);
+        end;
+        Exit;
+    end else if (polynomial_degree(poly) >= 3) and (polynomial_isofIntegerCoefs(poly)) then begin
+        //writeln('integer coefs');
+        // todo: fix it
+        n := polynomial_degree(poly);
+        p := poly[0].Num; 
+        q := poly[n].Num;
+        SetLength(x, 0);
+        genIntegerDivisors(x, Abs(p*q));
+        flag := True;
+        e := 0;
+        f := 1;
+        i := 0; 
+        k := 0;
+        // todo: do something if nothing is found
+        while flag and (k < n) do
+        begin
+            while flag and (i < Length(x)) do
+            begin
+                j := 0;
+                while flag and (j < Length(x)) do
+                begin
+                    if (x[j].Num = 0) then
+                    begin
+                        j := j+1;
+                        continue;
+                    end;
+                    e := x[i].Num/x[j].Num * f;
+                    if (polynomial_value(poly, e) = 0) then
+                    begin
+                        flag := False;
+                        break;
+                    end;
+                    j := j+1;
+                end;
+                i := i+1;
+            end;
+            f := f * ComplexNumPolar(1, 2*C_PI/n);
+            k := k+1;
+        end;
+        SetLength(x, 0);
+        // -----------------------------------------------------------------
+        if not Flag then
+        begin
+            repeat
+                polynomial_phornerdiv(poly, e);
+                SetLength(res, size+1);
+                res[size] := buildNumber(e);
+                size := size+1;
+            until (polynomial_value(poly, e) <> 0) or (polynomial_degree(poly) = 2);
+            //polynomial_roots(poly, res, false, false);
+            polynomial_roots(poly, res, distinct, realonly); 
+            Flag := True;
+        end else begin
+            //for i := 0 to Length(poly)-1 do
+            //    write(AnsiString(poly[i].Num)+' ');
+            //writeln('no other root found');
+            SetLength(res, size+1);
+            //res[size] := buildNumber(NaN);
+            res[size] := buildString('unknown_roots');
+            size := size+1;
+        end;
+    end;
+
+    //size := Length(res);
+
     case polynomial_degree(poly) of
         -1 : begin
             // all complex numbers
@@ -473,6 +644,8 @@ begin
                 end;
                 e := ComplexNum(-0.5, -system.sqrt(3)/2);
                 f := ComplexNum(-0.5, system.sqrt(3)/2);
+                //e := ComplexNumPolar(1, 2*C_PI/3);
+                //f := ComplexNumPolar(1, -2*C_PI/3);
                 SetLength(res, size+3);
                 res[size]   := buildNumber(u+v     -poly[2].Num/(3*poly[3].Num));
                 res[size+1] := buildNumber(u*e+v*f -poly[2].Num/(3*poly[3].Num));
@@ -508,116 +681,11 @@ begin
         //end;
         else begin
             // work it out later
-            SetLength(res, size);
-
-            if (poly[0].Num = 0) then
-            begin
-                // todo: make it iterative
-                SetLength(res, size+1);
-                res[size] := buildNumber(0);
-                a := buildLinearPoly(0);
-                poly := polynomial_div(poly, a);
-                polynomial_roots(poly, res, distinct, realonly); 
-                //for i := 0 to Length(res)-1 do writeln(AnsiString(res[i].Num));
-            end else if (polynomial_isTrivial(poly)) then
-            begin
-                n := polynomial_degree(poly);
-                SetLength(res, size+n);
-                if (isReal(poly[0].Num)) and (isReal(poly[n].Num))
-                    then res[size] := buildNumber(RealRoot(-Real(poly[0].Num)/Real(poly[n].Num), n))
-                    else res[size] := buildNumber(Root(-poly[0].Num/poly[n].Num, n));
-                e := ComplexNumPolar(1, 2*C_PI/n);
-                for i := 2 to n do
-                begin
-                    res[size+i-1] := buildNumber(res[size+i-2].Num * e);
-                end;
-            end else if (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPowerOfPoly(poly) > -1) then begin
-                n := polynomial_isPowerOfPoly(poly);
-                poly[0] := buildNumber(poly[0].Num);
-                poly[1] := buildNumber(poly[n].Num);
-                poly[2] := buildNumber(poly[2*n].Num);
-                for i := 3 to 2*n do
-                    poly[i] := buildNumber(0);
-                polynomial_truncate(poly);
-                polynomial_roots(poly, res, False, False);
-                size := Length(res);
-                SetLength(res, size+2*n-2);
-                //res[size-2] := buildNumber(Sqrt(res[size-2].Num));
-                //res[size-1] := buildNumber(Sqrt(res[size-1].Num));
-                if (isReal(poly[0].Num)) and (isReal(poly[1].Num)) and (isReal(poly[2].Num)) then 
-                begin
-                    res[size-2] := buildNumber(RealRoot(Real(res[size-2].Num), n));
-                    res[size-1] := buildNumber(RealRoot(Real(res[size-1].Num), n));
-                end else begin 
-                    res[size-2] := buildNumber(Root(res[size-2].Num, n));
-                    res[size-1] := buildNumber(Root(res[size-1].Num, n));
-                end;
-                e := ComplexNumPolar(1, 2*C_PI/n);
-                for i := 1 to n-1 do
-                begin
-                    res[size+2*i-2] := buildNumber(res[size+2*i-4].Num * e);
-                    res[size+2*i-1] := buildNumber(res[size+2*i-3].Num * e);
-                end;
-            end else if (polynomial_isofIntegerCoefs(poly)) then begin
-                // todo: fix it
-                n := polynomial_degree(poly);
-                p := poly[0].Num; 
-                q := poly[n].Num;
-                SetLength(x, 0);
-                genIntegerDivisors(x, Abs(p*q));
-                flag := True;
-                e := 0;
-                f := 1;
-                i := 0; 
-                k := 0;
-                // todo: do something if nothing is found
-                while flag and (k < n) do
-                begin
-                    while flag and (i < Length(x)) do
-                    begin
-                        j := 0;
-                        while flag and (j < Length(x)) do
-                        begin
-                            if (x[j].Num = 0) then
-                            begin
-                                j := j+1;
-                                continue;
-                            end;
-                            e := x[i].Num/x[j].Num * f;
-                            if (polynomial_value(poly, e) = 0) then
-                            begin
-                                flag := False;
-                                break;
-                            end;
-                            j := j+1;
-                        end;
-                        i := i+1;
-                    end;
-                    f := f * ComplexNumPolar(1, 2*C_PI/n);
-                    k := k+1;
-                end;
-                SetLength(x, 0);
-                // -----------------------------------------------------------------
-                if not Flag then
-                begin
-                    repeat
-                        polynomial_phornerdiv(poly, e);
-                        SetLength(res, size+1);
-                        res[size] := buildNumber(e);
-                        size := size+1;
-                    until (polynomial_value(poly, e) <> 0) or (polynomial_degree(poly) = 2);
-                    polynomial_roots(poly, res, false, false);
-                    Flag := True;
-                end else begin
-                    //for i := 0 to Length(poly)-1 do
-                    //    write(AnsiString(poly[i].Num)+' ');
-                    //writeln('no other root found');
-                    SetLength(res, size+1);
-                    //res[size] := buildNumber(NaN);
-                    res[size] := buildString('unknown_roots');
-                    size := size+1;
-                end;
-            end;
+            //SetLength(res, size);
+            SetLength(res, size+1);
+            //res[size] := buildNumber(NaN);
+            res[size] := buildString('unknown_roots');
+            size := size+1;
         end;
     end;
     if (Length(res) > 0) and (distinct) then
