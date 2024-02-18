@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-February 12, 2024  
+February 18, 2024  
 by Paul Lipkowski (RooiGevaar19)
 
 Since November 24, 2017 written in FreePascal. :smile:
