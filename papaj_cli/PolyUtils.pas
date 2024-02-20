@@ -242,6 +242,38 @@ begin
     end;
 end;
 
+function getMaxCoef(tab : TEntities) : ComplexType;
+var
+	i   : LongInt;
+	sum : ComplexType;
+begin
+	sum := tab[0].Num;
+    for i := 1 to Length(tab)-1 do
+  	    if (Abs(tab[i].Num) > Abs(sum)) 
+            then sum := tab[i].Num;
+    Result := sum;
+end;
+
+// can be scaled to integers
+function polynomial_scalableToIntegers(poly : TEntities) : LongInt;
+var
+    res    : LongInt;
+    maxi   : ComplexType;
+begin
+    res := 0;
+    maxi := getMaxCoef(poly);
+    while (not (polynomial_isofIntegerCoefs(poly))) 
+    //or (maxi < Hi(RealType))
+    and (Abs(maxi) <= 1000000000) 
+    // todo: scale it to fit maximum possible root (vide cauchy bound in https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots)
+    do begin
+        poly := polynomial_mul(poly, 10);
+        res := res + 1;
+        maxi := maxi * 10;
+    end;
+    Result := res;
+end;
+
 // check if w(x) = (x - b/n*a)^n
 function isSingleMultiRootPoly(poly : TEntities) : Boolean;
 var
@@ -518,11 +550,35 @@ begin
     // todo: improve searching through integer divisors
 
     //writePoly(poly);
+    //writeln(polynomial_scalableToIntegers(poly));
     //writeln(AnsiString(getPolyGCD(poly)));
+
+    // todo: multiply 10x until you get integers (if possible)
+
+
+    //if (polynomial_degree(poly) >= 1) and (getPolyGCD(poly) <> 1) then begin
+    //    p := getPolyGCD(poly);
+    //    poly := polynomial_mul(poly, Inv(p));
+    //    //polynomial_roots(poly, res, distinct, realonly); 
+    //    //Exit;
+    //end;
+
+    if (polynomial_degree(poly) >= 2) then begin
+        n := polynomial_scalableToIntegers(poly);
+        if (n > 0) then
+        begin
+            poly := polynomial_mul(poly, Pow(10, n));
+            //writePoly(poly);
+        end;
+        if (getPolyGCD(poly) <> 1) then
+        begin
+            p := getPolyGCD(poly);
+            poly := polynomial_mul(poly, Inv(p));
+        end;
+    end;
 
     if (polynomial_degree(poly) >= 2) and (poly[0].Num = 0) then
     begin
-        // todo: make it iterative
         repeat
             SetLength(res, size+1);
             res[size] := buildNumber(0);
@@ -544,12 +600,6 @@ begin
         begin
             res[size+i-1] := buildNumber(res[size+i-2].Num * e);
         end;
-        Exit;
-    // move it to 3rd grade and 4th grade
-    end else if (polynomial_degree(poly) >= 1) and (getPolyGCD(poly) <> 1) then begin
-        p := getPolyGCD(poly);
-        poly := polynomial_mul(poly, Inv(p));
-        polynomial_roots(poly, res, distinct, realonly); 
         Exit;
     end else if (polynomial_degree(poly) >= 4) and (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPowerOfPoly(poly) > -1) then begin
         n := polynomial_isPowerOfPoly(poly);
@@ -581,7 +631,9 @@ begin
         end;
         Exit;
     // todo: maybe scale polynomials to integers, e.g. 2.5x^2 + x + 126 to 5x^2 + 2x + 252 
-    end else if (polynomial_degree(poly) >= 3) and (polynomial_isofIntegerCoefs(poly)) then begin
+    end else if (polynomial_degree(poly) >= 3) 
+    //and (polynomial_isofIntegerCoefs(poly)) 
+    then begin
         //writeln('integer coefs');
         // todo: fix it
         n := polynomial_degree(poly);
