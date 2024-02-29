@@ -93,6 +93,7 @@ function isReal(z : ComplexType) : Boolean;
 function isNotReal(z : ComplexType) : Boolean;
 function isImaginary(z : ComplexType) : Boolean;
 function isComplex(z : ComplexType) : Boolean;
+function isIntegerComplex(z : ComplexType) : Boolean;
 
 function Sqr(z : ComplexType) : ComplexType;
 function Cub(z : ComplexType) : ComplexType;
@@ -644,6 +645,11 @@ end;
 function isComplex(z : ComplexType) : Boolean;
 begin
     Result := True;
+end;
+
+function isIntegerComplex(z : ComplexType) : Boolean;
+begin
+    Result := (z.Re = Int(z.Re)) and (z.Im = Int(z.Im));
 end;
 
 

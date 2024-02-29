@@ -15,6 +15,7 @@ function polynomial_value(poly : TEntities; x : ComplexType) : ComplexType;
 function polynomial_degree(poly : TEntities) : LongInt;
 procedure polynomial_truncate(var poly : TEntities);
 function polynomial_isofIntegerCoefs(poly : TEntities) : Boolean;
+function polynomial_isofIntegerComplexCoefs(poly : TEntities) : Boolean;
 function polynomial_isTrivial(poly : TEntities) : Boolean;
 function polynomial_isPowerOfPoly(poly : TEntities) : LongInt;
 
@@ -205,6 +206,19 @@ begin
         end;
 end;
 
+function polynomial_isofIntegerComplexCoefs(poly : TEntities) : Boolean;
+var
+    i   : LongInt;
+begin
+    Result := True;
+    for i := 0 to polynomial_degree(poly) do
+        if not (isIntegerComplex(poly[i].Num)) then 
+        begin
+            Result := False;
+            break;
+        end;
+end;
+
 // is like ax^n + b
 function polynomial_isTrivial(poly : TEntities) : Boolean;
 var
@@ -262,7 +276,8 @@ var
 begin
     res := 0;
     maxi := getMaxCoef(poly);
-    while (not (polynomial_isofIntegerCoefs(poly))) 
+    //while (not (polynomial_isofIntegerCoefs(poly))) 
+    while (not (polynomial_isofIntegerComplexCoefs(poly))) 
     //or (maxi < Hi(RealType))
     and (Abs(maxi) <= 1000000000) 
     // todo: scale it to fit maximum possible root (vide cauchy bound in https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots)
@@ -633,6 +648,7 @@ begin
     // todo: maybe scale polynomials to integers, e.g. 2.5x^2 + x + 126 to 5x^2 + 2x + 252 
     end else if (polynomial_degree(poly) >= 3) 
     //and (polynomial_isofIntegerCoefs(poly)) 
+    and (polynomial_isofIntegerComplexCoefs(poly)) 
     then begin
         //writeln('integer coefs');
         // todo: fix it
@@ -797,15 +813,8 @@ begin
             end;
         end;
         4 : begin
-            //SetLength(res, size+1);
-            ////res[size] := buildNumber(NaN);
-            //res[size] := buildString('unknown_roots');
-            //size := size+1;
-            //writeln('quartic');
             e := Sqr(poly[2].Num) - 3*poly[1].Num*poly[3].Num + 12 * poly[4].Num*poly[0].Num; // delta_0
             f := 2*Cub(poly[2].Num) - 9*poly[3].Num*poly[2].Num*poly[1].Num + 27*Sqr(poly[3].Num)*poly[0].Num + 27*poly[4].Num*Sqr(poly[1].Num) - 72*poly[4].Num*poly[2].Num*poly[0].Num; // delta_1
-            //writeln(AnsiString(e));
-            //writeln(AnsiString(f));
             // check if w(x) = (x - b/4a)^4
             // todo: maybe move it to general cases
             if (isSingleMultiRootPoly(poly)) then
@@ -820,16 +829,7 @@ begin
             end else 
             if (-(Sqr(f) - 4*Cub(e))/27 = 0) and (e = 0) then
             begin
-                //writeln('hhh');
-                //writeln(AnsiString(f));
-                //SetLength(a, 3);
-                //a[0] := buildNumber(2*poly[2].Num);
-                //a[1] := buildNumber(6*poly[3].Num);
-                //a[2] := buildNumber(12*poly[4].Num);
                 a := polynomial_derivative(poly, 2);
-                //writePoly(a);
-                //writePoly(polynomial_div(poly, a));
-                //writePoly(polynomial_mod(poly, a));
                 if polynomial_degree(polynomial_mod(poly, a)) = -1 then
                 begin
                     b := polynomial_div(poly, a);
@@ -868,6 +868,7 @@ begin
             end;
         end;
         else begin
+            n := polynomial_degree(poly);
             // work it out later
             //SetLength(res, size);
             SetLength(res, size+1);
@@ -878,6 +879,7 @@ begin
     end;
     if (Length(res) > 0) and (distinct) then
         res := table_distinct(res); 
+    // todo: if realonly, then filter reals
 end;
 
 function polynomial_derivative(poly : TEntities; grade : LongInt = 1) : TEntities;
