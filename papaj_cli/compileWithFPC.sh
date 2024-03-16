@@ -11,6 +11,7 @@
 #    - S       : Compile, save the compilation files, along with assembler code
 #    - a       : Save assembler code
 #    - O       : Use optimization level 3
+#    - D       : Use debug mode
 #
 # ======================================================
 # =====================|SCRIPT|=========================

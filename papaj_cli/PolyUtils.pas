@@ -38,6 +38,8 @@ implementation
 
 uses MathUtils, Math;
 
+const C_EPS15 = 0.000000000000001;
+
 //function generateIntegerDivisors(x : ComplexType) : TEntities;
 //var
 //    res  : TEntities;
@@ -200,6 +202,19 @@ begin
     Result := True;
     for i := 0 to polynomial_degree(poly) do
         if not (isInteger(poly[i].Num)) then 
+        begin
+            Result := False;
+            break;
+        end;
+end;
+
+function polynomial_isofRealCoefs(poly : TEntities) : Boolean;
+var
+    i   : LongInt;
+begin
+    Result := True;
+    for i := 0 to polynomial_degree(poly) do
+        if not (isReal(poly[i].Num)) then 
         begin
             Result := False;
             break;
@@ -473,7 +488,10 @@ var
 begin
     res := 0;
     for i := 1 to Length(a)-1 do
-        if (Abs(a[i].Num) > 0) and (Abs(a[i].Num) < Abs(a[res].Num)) then
+        if 
+        //(Abs(a[i].Num) > 0) 
+        (Abs(a[i].Num) > C_EPS15)
+        and (Abs(a[i].Num) < Abs(a[res].Num)) then
             res := i;
     Result := res;
 end;
@@ -497,8 +515,12 @@ begin
         for i := 0 to Length(poly)-1 do
         begin
             //writeln(AnsiString(poly[i].Num)+' / '+AnsiString(res));
-            if (poly[i].Num = 0) then continue;
-            if (not isComplexDivisible(poly[i].Num, res))
+            //writeln(AnsiString(poly[i].Num/res));
+            if (poly[i].Num = 0) 
+            //or (Abs(poly[i].Num) < C_EPS15) 
+            then continue;
+            //writeln(AnsiString(poly[i].Num));
+            if (Abs(poly[i].Num/res) > 1000000000) or (not isComplexDivisible(poly[i].Num, res))
             then begin
                 res := 1;
                 break;
@@ -506,6 +528,21 @@ begin
         end;
         Result := res;
     //end;
+end;
+
+// Cauchy bound for roots
+function getRootsBound(poly : TEntities) : ComplexType;
+var
+    res : ComplexType;
+    i   : LongInt;
+    n   : LongInt;
+begin
+    res := 0;
+    n := polynomial_degree(poly);
+    for i := 0 to n-1 do
+        if (Abs(poly[i].Num/poly[n].Num) > Real(res)) 
+            then res := Abs(poly[i].Num/poly[n].Num);
+    Result := 1+res;
 end;
 
 function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
@@ -535,10 +572,16 @@ begin
 end;
 
 
-// toadd:
-// newton coefficients
-// cardano 
-// quartic
+//procedure polynomial_tryFindNewtonRoots(var poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
+//var
+//    size  : LongInt;
+//    bound : ComplexType;
+//    limit : LongInt;
+//begin
+//    size := Length(res);
+//    bound := getRootsBound(poly);
+//    limit := polynomial_degree(poly);
+//end;
 
 procedure polynomial_roots(var poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
 //procedure polynomial_roots(poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
@@ -565,8 +608,8 @@ begin
     // todo: improve searching through integer divisors
 
     //writePoly(poly);
-    //writeln(polynomial_scalableToIntegers(poly));
-    //writeln(AnsiString(getPolyGCD(poly)));
+    //writeln('scale: ', polynomial_scalableToIntegers(poly));
+    //writeln('gcd  : ', AnsiString(getPolyGCD(poly)));
 
     // todo: multiply 10x until you get integers (if possible)
 
@@ -869,12 +912,63 @@ begin
         end;
         else begin
             n := polynomial_degree(poly);
-            // work it out later
-            //SetLength(res, size);
-            SetLength(res, size+1);
-            //res[size] := buildNumber(NaN);
-            res[size] := buildString('unknown_roots');
-            size := size+1;
+            v := getRootsBound(poly);
+            if (polynomial_isofRealCoefs(poly)) 
+                and ((n mod 2 = 1) or 
+                (Real(poly[0].Num) * Real(poly[n].Num) < 0) 
+                or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,v)) < 0)
+                or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,0)) < 0)
+                or (Real(polynomial_value(poly, 0)) * Real(polynomial_value(poly,v)) < 0)
+                ) 
+                then
+            begin
+                a := polynomial_derivative(poly);
+                flag := False;
+                u := 0;
+                for i in [0, 1, -1] do
+                begin
+                    u := i*v;
+                    f := u*1000;
+                    j := 1;
+                    while (not (polynomial_value(poly, u) = 0)) and (j < 1000) 
+                    and (Abs(u-f) > C_EPS15) 
+                    do
+                    begin
+                        f := u;
+                        u := u - polynomial_value(poly, u)/polynomial_value(a, u);
+                        if (polynomial_value(poly, u) = 0) or ((Abs(u-f) < C_EPS15) 
+                        //and (Abs(polynomial_value(poly, u)) < C_EPS15)
+                        ) 
+                        then
+                        begin
+                            flag := True;
+                            break;
+                        end;
+                        j := j+1;
+                    end;
+                    if flag then break;
+                end;
+                if Flag then
+                begin
+                    repeat
+                        polynomial_phornerdiv(poly, u);
+                        SetLength(res, size+1);
+                        res[size] := buildNumber(u);
+                        size := size+1;
+                    until (polynomial_value(poly, u) <> 0) or (polynomial_degree(poly) <= 2);
+                    polynomial_roots(poly, res, distinct, realonly);
+                end else begin
+                    SetLength(res, size+1);
+                    res[size] := buildString('unknown_roots');
+                    size := size+1;
+                end;
+            end else begin
+                //writeln('nothing');
+                SetLength(res, size+1);
+                res[size] := buildString('unknown_roots');
+                size := size+1;
+            end;
+
         end;
     end;
     if (Length(res) > 0) and (distinct) then
