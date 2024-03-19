@@ -913,38 +913,46 @@ begin
         else begin
             n := polynomial_degree(poly);
             v := getRootsBound(poly);
-            if (polynomial_isofRealCoefs(poly)) 
-                and ((n mod 2 = 1) or 
-                (Real(poly[0].Num) * Real(poly[n].Num) < 0) 
-                or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,v)) < 0)
-                or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,0)) < 0)
-                or (Real(polynomial_value(poly, 0)) * Real(polynomial_value(poly,v)) < 0)
-                ) 
+            if 
+                True
+                //(polynomial_isofRealCoefs(poly)) 
+                //and ((n mod 2 = 1) or 
+                //(Real(poly[0].Num) * Real(poly[n].Num) < 0) 
+                //or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,v)) < 0)
+                //or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,0)) < 0)
+                //or (Real(polynomial_value(poly, 0)) * Real(polynomial_value(poly,v)) < 0)
+                //) 
                 then
             begin
                 a := polynomial_derivative(poly);
                 flag := False;
                 u := 0;
-                for i in [0, 1, -1] do
+                for k := 0 to n-1 do
                 begin
-                    u := i*v;
-                    f := u*1000;
-                    j := 1;
-                    while (not (polynomial_value(poly, u) = 0)) and (j < 1000) 
-                    and (Abs(u-f) > C_EPS15) 
-                    do
+                    for i in [0, 1, -1] do
                     begin
-                        f := u;
-                        u := u - polynomial_value(poly, u)/polynomial_value(a, u);
-                        if (polynomial_value(poly, u) = 0) or ((Abs(u-f) < C_EPS15) 
-                        //and (Abs(polynomial_value(poly, u)) < C_EPS15)
-                        ) 
-                        then
+                        if (i = 0) and (k <> 0) then continue;
+                        u := i*v * ComplexNumPolar(1, k*2*C_PI/n);
+                        f := u*1000;
+                        j := 1;
+                        while (not (polynomial_value(poly, u) = 0)) and (j < 1000) 
+                        and (Abs(u-f) > C_EPS15) 
+                        and (Abs(u) < 2*Abs(v))
+                        do
                         begin
-                            flag := True;
-                            break;
+                            f := u;
+                            u := u - polynomial_value(poly, u)/polynomial_value(a, u);
+                            if (polynomial_value(poly, u) = 0) or ((Abs(u-f) < C_EPS15) 
+                            //and (Abs(polynomial_value(poly, u)) < C_EPS15)
+                            ) 
+                            then
+                            begin
+                                flag := True;
+                                break;
+                            end;
+                            j := j+1;
                         end;
-                        j := j+1;
+                        if flag then break;
                     end;
                     if flag then break;
                 end;
