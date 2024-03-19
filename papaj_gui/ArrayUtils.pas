@@ -53,6 +53,10 @@ function table_distinct(tab : TEntities) : TEntities;
 function table_distinctNumbers(tab : TEntities) : TEntities;
 function table_distinctStrings(tab : TEntities) : TEntities;
 
+function table_filterNumbers(tab : TEntities) : TEntities;
+function table_filterReals(tab : TEntities) : TEntities;
+function table_filterStrings(tab : TEntities) : TEntities;
+
 implementation
 
 uses MathUtils, Math;
@@ -743,6 +747,63 @@ begin
     for index := 0 to Length(tab)-1 do
     begin
         if not (stringHappenedBefore(tab, index)) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
+end;
+
+function table_filterNumbers(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if (isNumber(tab[index])) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
+end;
+
+function table_filterReals(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if (isNumber(tab[index])) and (isReal(tab[index].Num)) then
+        begin
+            SetLength(res, size+1);
+            res[size] := tab[index];
+            size := size + 1;
+        end;
+    end;
+    Result := res;
+end;
+
+function table_filterStrings(tab : TEntities) : TEntities;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    SetLength(res, 0);
+    for index := 0 to Length(tab)-1 do
+    begin
+        if (isString(tab[index])) then
         begin
             SetLength(res, size+1);
             res[size] := tab[index];

@@ -5222,6 +5222,24 @@ begin
             stack_clear(env.Stack[ArrEbx.Num2]);
             stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
         end;
+        'Array.polyrealroots' : begin
+            // make assert for array of numbers
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 
+            ArrEcx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            //env.Stack[ArrEax.Num2].Values := polynomial_roots(env.Stack[ArrEcx.Num2].Values);
+            //env.Stack[ArrEax.Num2].Values := polynomial_roots(env.Stack[ArrEcx.Num2].Values, False, False);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewEmptyArray(env.Stack, env.Settings, 0));
+            ArrEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+            for index := 0 to Length(env.Stack[ArrEcx.Num2].Values)-1 do
+            begin
+                stack_push(env.Stack[ArrEbx.Num2], env.Stack[ArrEcx.Num2].Values[index]);
+    		end;
+            polynomial_roots(env.Stack[ArrEbx.Num2].Values, env.Stack[ArrEax.Num2].Values, False, True);
+            stack_clear(env.Stack[ArrEbx.Num2]);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
         'Array.polyderivative' : begin
             // make assert for array of numbers
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TVEC, i)) then Exit; 

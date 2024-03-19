@@ -157,19 +157,33 @@ begin
     z := '';
     for i in poc.Values do
     begin
-        if (i.EntityType = TNUM) then z := z + toStringFormat(i.Num, mask) + ' ';
-        if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
-        if (i.EntityType = TNIL) then z := z + i.Str + ' ';
-        if (i.EntityType = TBOO) then z := z + i.Str + ' ';
-        if (i.EntityType = TDAT) then z := z + '"' + i.Str + '" ';
-        if (i.EntityType = TVEC) then z := z + '<Array> ';
-        if (i.EntityType = TOBJ) then z := z + '<Object> ';
-        if (i.EntityType = TFUN) then z := z + '<Function> '; 
-        if (i.EntityType = TEXC) then z := z + '<Exception> '; 
-        if (i.EntityType = TEXP) then z := z + '<LogicalExpression> '; 
+        case i.EntityType of
+            TNUM : z := z + toStringFormat(i.Num, mask) + ' ';
+            TSTR : z := z + '"' + i.Str + '" ';
+            TNIL : z := z + i.Str + ' ';
+            TBOO : z := z + i.Str + ' ';
+            TDAT : z := z + '"' + i.Str + '" ';
+            TVEC : z := z + '<Array> ';
+            TOBJ : z := z + '<Object> ';
+            TFUN : z := z + '<Function> '; 
+            TEXC : z := z + '<Exception> '; 
+            TEXP : z := z + '<LogicalExpression> '; 
+            TPLY : z := z + '<Polynomial> '; 
+            else z := z + '<Unknown> ';
+        end; 
+        //if (i.EntityType = TNUM) then z := z + toStringFormat(i.Num, mask) + ' ';
+        //if (i.EntityType = TSTR) then z := z + '"' + i.Str + '" ';
+        //if (i.EntityType = TNIL) then z := z + i.Str + ' ';
+        //if (i.EntityType = TBOO) then z := z + i.Str + ' ';
+        //if (i.EntityType = TDAT) then z := z + '"' + i.Str + '" ';
+        //if (i.EntityType = TVEC) then z := z + '<Array> ';
+        //if (i.EntityType = TOBJ) then z := z + '<Object> ';
+        //if (i.EntityType = TFUN) then z := z + '<Function> '; 
+        //if (i.EntityType = TEXC) then z := z + '<Exception> '; 
+        //if (i.EntityType = TEXP) then z := z + '<LogicalExpression> '; 
     end;
     z := LeftStr(z, Length(z)-1);
-    stack_show := z;
+    Result := z;
 end;
 
 function stack_showBeautiful(poc : TStack; mask : String) : String;
@@ -197,17 +211,21 @@ var
   z : String;
 begin
     z := '';
-    if (x.EntityType = TNUM) then z := toStringFormat(x.Num, mask);
-    if (x.EntityType = TSTR) then z := '"' + x.Str + '"';
-    if (x.EntityType = TDAT) then z := '"' + x.Str + '"';
-    if (x.EntityType = TNIL) then z := x.Str;
-    if (x.EntityType = TBOO) then z := x.Str;
-    if (x.EntityType = TVEC) then z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask);
-    if (x.EntityType = TOBJ) then z := '<Object>';
-    if (x.EntityType = TFUN) then z := '<Function>'; 
-    if (x.EntityType = TEXC) then z := '<Exception>'; 
-    if (x.EntityType = TEXP) then z := '<LogicalExpression>'; 
-    printEntityValueFull := z;
+    case x.EntityType of 
+        TNUM : z := toStringFormat(x.Num, mask);
+        TSTR : z := '"' + x.Str + '"';
+        TDAT : z := '"' + x.Str + '"';
+        TNIL : z := x.Str;
+        TBOO : z := x.Str;
+        TVEC : z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask);
+        TOBJ : z := '<Object>';
+        TFUN : z := '<Function>'; 
+        TEXC : z := '<Exception>'; 
+        TEXP : z := '<LogicalExpression>'; 
+        TPLY : z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask); // todo: change to polynomial output
+        else z := '<Unknown>';
+    end;
+    Result := z;
 end;
 
 function stack_showArray(poc : TStack; mask : String) : String;

@@ -114,9 +114,7 @@ begin
     end;
 end;
 
-
 // polynomials
-// move it to separate file
 
 procedure writePoly(poly : TEntities);
 var
@@ -644,7 +642,6 @@ begin
             poly := polynomial_div(poly, a);
         until (poly[0].Num <> 0);
         polynomial_roots(poly, res, distinct, realonly); 
-        //for i := 0 to Length(res)-1 do writeln(AnsiString(res[i].Num));
         Exit;
     end else if (polynomial_degree(poly) >= 3) and (polynomial_isTrivial(poly)) then
     begin
@@ -658,6 +655,10 @@ begin
         begin
             res[size+i-1] := buildNumber(res[size+i-2].Num * e);
         end;
+        if (Length(res) > 0) and (distinct) then
+            res := table_distinct(res); 
+        if (Length(res) > 0) and (realonly) then
+            res := table_filterReals(res); 
         Exit;
     end else if (polynomial_degree(poly) >= 4) and (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPowerOfPoly(poly) > -1) then begin
         n := polynomial_isPowerOfPoly(poly);
@@ -667,8 +668,8 @@ begin
         for i := 3 to 2*n do
             poly[i] := buildNumber(0);
         polynomial_truncate(poly);
-        //polynomial_roots(poly, res, False, False);
-        polynomial_roots(poly, res, distinct, realonly); 
+        polynomial_roots(poly, res, False, False);
+        //polynomial_roots(poly, res, distinct, realonly); 
         size := Length(res);
         SetLength(res, size+2*n-2);
         //res[size-2] := buildNumber(Sqrt(res[size-2].Num));
@@ -687,6 +688,10 @@ begin
             res[size+2*i-2] := buildNumber(res[size+2*i-4].Num * e);
             res[size+2*i-1] := buildNumber(res[size+2*i-3].Num * e);
         end;
+        if (Length(res) > 0) and (distinct) then
+            res := table_distinct(res); 
+        if (Length(res) > 0) and (realonly) then
+            res := table_filterReals(res); 
         Exit;
     // todo: maybe scale polynomials to integers, e.g. 2.5x^2 + x + 126 to 5x^2 + 2x + 252 
     end else if (polynomial_degree(poly) >= 3) 
@@ -758,15 +763,11 @@ begin
             //polynomial_roots(poly, res, false, false);
             polynomial_roots(poly, res, distinct, realonly); 
             Flag := True;
+            if (Length(res) > 0) and (distinct) then
+                res := table_distinct(res); 
+            if (Length(res) > 0) and (realonly) then
+                res := table_filterReals(res); 
             Exit;
-        end else begin
-            //for i := 0 to Length(poly)-1 do
-            //    write(AnsiString(poly[i].Num)+' ');
-            //writeln('no other root found');
-            //SetLength(res, size+1);
-            //res[size] := buildNumber(NaN);
-            //res[size] := buildString('unknown_roots2');
-            //size := size+1;
         end;
     end;
 
@@ -913,75 +914,58 @@ begin
         else begin
             n := polynomial_degree(poly);
             v := getRootsBound(poly);
-            if 
-                True
-                //(polynomial_isofRealCoefs(poly)) 
-                //and ((n mod 2 = 1) or 
-                //(Real(poly[0].Num) * Real(poly[n].Num) < 0) 
-                //or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,v)) < 0)
-                //or (Real(polynomial_value(poly,-v)) * Real(polynomial_value(poly,0)) < 0)
-                //or (Real(polynomial_value(poly, 0)) * Real(polynomial_value(poly,v)) < 0)
-                //) 
-                then
+            a := polynomial_derivative(poly);
+            flag := False;
+            u := 0;
+            for k := 0 to n-1 do
             begin
-                a := polynomial_derivative(poly);
-                flag := False;
-                u := 0;
-                for k := 0 to n-1 do
+                for i in [0, 1, -1] do
                 begin
-                    for i in [0, 1, -1] do
+                    if (i = 0) and (k <> 0) then continue;
+                    u := i*v * ComplexNumPolar(1, k*2*C_PI/n);
+                    f := u*1000;
+                    j := 1;
+                    while (not (polynomial_value(poly, u) = 0)) and (j < 1000) 
+                    and (Abs(u-f) > C_EPS15) 
+                    and (Abs(u) < 2*Abs(v))
+                    do
                     begin
-                        if (i = 0) and (k <> 0) then continue;
-                        u := i*v * ComplexNumPolar(1, k*2*C_PI/n);
-                        f := u*1000;
-                        j := 1;
-                        while (not (polynomial_value(poly, u) = 0)) and (j < 1000) 
-                        and (Abs(u-f) > C_EPS15) 
-                        and (Abs(u) < 2*Abs(v))
-                        do
+                        f := u;
+                        u := u - polynomial_value(poly, u)/polynomial_value(a, u);
+                        if (polynomial_value(poly, u) = 0) or ((Abs(u-f) < C_EPS15) 
+                        //and (Abs(polynomial_value(poly, u)) < C_EPS15)
+                        ) 
+                        then
                         begin
-                            f := u;
-                            u := u - polynomial_value(poly, u)/polynomial_value(a, u);
-                            if (polynomial_value(poly, u) = 0) or ((Abs(u-f) < C_EPS15) 
-                            //and (Abs(polynomial_value(poly, u)) < C_EPS15)
-                            ) 
-                            then
-                            begin
-                                flag := True;
-                                break;
-                            end;
-                            j := j+1;
+                            flag := True;
+                            break;
                         end;
-                        if flag then break;
+                        j := j+1;
                     end;
                     if flag then break;
                 end;
-                if Flag then
-                begin
-                    repeat
-                        polynomial_phornerdiv(poly, u);
-                        SetLength(res, size+1);
-                        res[size] := buildNumber(u);
-                        size := size+1;
-                    until (polynomial_value(poly, u) <> 0) or (polynomial_degree(poly) <= 2);
-                    polynomial_roots(poly, res, distinct, realonly);
-                end else begin
+                if flag then break;
+            end;
+            if Flag then
+            begin
+                repeat
+                    polynomial_phornerdiv(poly, u);
                     SetLength(res, size+1);
-                    res[size] := buildString('unknown_roots');
+                    res[size] := buildNumber(u);
                     size := size+1;
-                end;
+                until (polynomial_value(poly, u) <> 0) or (polynomial_degree(poly) <= 2);
+                polynomial_roots(poly, res, distinct, realonly);
             end else begin
-                //writeln('nothing');
                 SetLength(res, size+1);
                 res[size] := buildString('unknown_roots');
                 size := size+1;
             end;
-
         end;
     end;
     if (Length(res) > 0) and (distinct) then
         res := table_distinct(res); 
-    // todo: if realonly, then filter reals
+    if (Length(res) > 0) and (realonly) then
+        res := table_filterReals(res); 
 end;
 
 function polynomial_derivative(poly : TEntities; grade : LongInt = 1) : TEntities;

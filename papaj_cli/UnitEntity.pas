@@ -138,6 +138,7 @@ function isPosInfinity(e : Entity) : Boolean;
 function isNegInfinity(e : Entity) : Boolean;
 function isNull(e : Entity) : Boolean;
 function isEmptyString(e : Entity) : Boolean;
+function isString(e : Entity) : Boolean;
 
 operator - (a : String; b : String) s : String; 
 operator - (a : String; b : LongInt) s : String; 
@@ -215,51 +216,40 @@ begin
   get_caller_frame(get_frame);  
 end; 
 
-
-{*
-procedure checkSIGINT();
-begin
-    if KeyPressed then         
-        if ReadKey = ^C then
-        begin
-            writeln('Halted!');
-            Halt(1);
-        end;
-end;
-*}
-
 function getEntityTypeName(const x : TEntityType) : String;
 begin
     case x of
-        TNIL : getEntityTypeName := 'Null';
-        TNUM : getEntityTypeName := 'Number';
-        TSTR : getEntityTypeName := 'String';
-        TVEC : getEntityTypeName := 'Array';
-        TBOO : getEntityTypeName := 'Boolean';
-        TOBJ : getEntityTypeName := 'Object';
-        TFUN : getEntityTypeName := 'Function';
-        TEXC : getEntityTypeName := 'Exception';
-        TEXP : getEntityTypeName := 'LogicalExpression';
-        TFIL : getEntityTypeName := 'File';
-        TDAT : getEntityTypeName := 'DateTime';
-        else getEntityTypeName := 'Unknown';
+        TNIL : Result := 'Null';
+        TNUM : Result := 'Number';
+        TSTR : Result := 'String';
+        TVEC : Result := 'Array';
+        TBOO : Result := 'Boolean';
+        TOBJ : Result := 'Object';
+        TFUN : Result := 'Function';
+        TEXC : Result := 'Exception';
+        TEXP : Result := 'LogicalExpression';
+        TFIL : Result := 'File';
+        TDAT : Result := 'DateTime';
+        TPLY : Result := 'Polynomial';
+        else Result := 'Unknown';
     end;
 end;
 
 function getEntitySpec(x : Entity) : String;
 begin
     case x.EntityType of
-        TNIL : getEntitySpec := '<Null>';
-        TNUM : getEntitySpec := toStringFormat(x.Num) + ' : <Number>';
-        TSTR : getEntitySpec := '"' + x.Str + '" : <String>';
-        TVEC : getEntitySpec := '<Array>';
-        TBOO : getEntitySpec := x.Str + ' : <Boolean>';
-        TOBJ : getEntitySpec := '<Object>';
-        TFUN : getEntitySpec := '<Function>';
-        TEXP : getEntitySpec := '<LogicalExpression>';
-        TFIL : getEntitySpec := '<File>';
-        TDAT : getEntitySpec := '"' + x.Str + '" : <DateTime>';
-        else getEntitySpec := '<Unknown>';
+        TNIL : Result := '<Null>';
+        TNUM : Result := toStringFormat(x.Num) + ' : <Number>';
+        TSTR : Result := '"' + x.Str + '" : <String>';
+        TVEC : Result := '<Array>';
+        TBOO : Result := x.Str + ' : <Boolean>';
+        TOBJ : Result := '<Object>';
+        TFUN : Result := '<Function>';
+        TEXP : Result := '<LogicalExpression>';
+        TFIL : Result := '<File>';
+        TDAT : Result := '"' + x.Str + '" : <DateTime>';
+        TPLY : Result := '<Polynomial>';
+        else Result := '<Unknown>';
     end;
 end;
 
@@ -268,19 +258,22 @@ var
   z : String;
 begin
     z := '';
-         if (x.EntityType = TNUM) then z := toStringFormat(x.Num, mask)
-    else if (x.EntityType = TSTR) then z := '"' + x.Str + '"'
-    else if (x.EntityType = TNIL) then z := x.Str
-    else if (x.EntityType = TBOO) then z := x.Str
-    else if (x.EntityType = TVEC) then z := '<Array>'
-    else if (x.EntityType = TOBJ) then z := '<Object>'
-    else if (x.EntityType = TFUN) then z := '<Function>'
-    else if (x.EntityType = TEXC) then z := '<Exception>' 
-    else if (x.EntityType = TFIL) then z := '<File>' 
-    else if (x.EntityType = TEXP) then z := '<LogicalExpression>'
-    else if (x.EntityType = TDAT) then z := x.Str
-    else z := '<Unknown>'; 
-    printEntityValue := z;
+    case x.EntityType of
+        TNUM : z := toStringFormat(x.Num, mask);
+        TSTR : z := '"' + x.Str + '"';
+        TNIL : z := x.Str;
+        TBOO : z := x.Str;
+        TVEC : z := '<Array>';
+        TOBJ : z := '<Object>';
+        TFUN : z := '<Function>';
+        TEXC : z := '<Exception>'; 
+        TFIL : z := '<File>';
+        TEXP : z := '<LogicalExpression>';
+        TDAT : z := x.Str;
+        TPLY : z := '<Polynomial>';
+        else z := '<Unknown>'; 
+    end;
+    Result := z;
 end;
 
 procedure swapEntities(var e1 : Entity; var e2 : Entity);
@@ -577,6 +570,11 @@ end;
 function isEmptyString(e : Entity) : Boolean;
 begin
     Result := (e.EntityType = TSTR) and (e.Str = '');
+end;
+
+function isString(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TSTR);
 end;
 
 // =============================================================================
