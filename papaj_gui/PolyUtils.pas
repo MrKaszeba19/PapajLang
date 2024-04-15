@@ -984,8 +984,16 @@ begin
         n := polynomial_degree(poly);
         SetLength(res, n);
         for i := n-1 downto 0 do
-            res[i] := buildNumber(poly[i+1].Num*(i+1));
-        poly := res;
+        {$IF defined(UNIX) and defined(CPU32)}
+            res[i] := buildNumber(poly[i+1].Num * ComplexNum(i+1, 0));
+        {$ELSE}
+        // for some unknown reason FPC compiler for i386 Linux (32-bit) 
+        // doesn't understand the arithmetics in this loop
+        // as it appears to treat i+1 as an AnsiString... :o
+        // so I made a tiny workaround above
+        // but other compilers do understand the following lines perfectly
+            res[i] := buildNumber(poly[i+1].Num * (i+1));
+        {$ENDIF}
         grade := grade - 1;
     end;
     polynomial_truncate(res);
