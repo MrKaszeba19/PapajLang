@@ -599,17 +599,18 @@ var
     flag  : Boolean;
 begin
     size := Length(res);
-    // todo: consider
-    //       scale polynomials
-    //       newton-pascal coefs polynomials
-    //       approximate root finding when nothing is found
-    // todo: improve searching through integer divisors
+    // todo: check access violation
+    // tested on mac
+    // % ./papaj do '[ -176.77669529663689 -18.933982822017867 53.786796564403573 -13.585786437626904 1] polyroots println' -L
+    // [ 4.9999731813895716 -1.4142135623730967 5.0000134093052147+0.0000232259347495i 5.0000134093052147-0.0000232259347495i ]
+    // % ./papaj do '[-5 1] [-5 1] [-5 1] [2 sqrt 1] 3 times polymul println' -L                                              
+    // [ -176.77669529663689 -18.933982822017867 53.786796564403573 -13.585786437626904 1 ]
+    // % ./papaj do '[-5 1] [-5 1] [-5 1] [2 sqrt 1] 3 times polymul polyroots println' -L                                    
+    // EAccessViolation: Access violation
 
     //writePoly(poly);
     //writeln('scale: ', polynomial_scalableToIntegers(poly));
     //writeln('gcd  : ', AnsiString(getPolyGCD(poly)));
-
-    // todo: multiply 10x until you get integers (if possible)
 
 
     //if (polynomial_degree(poly) >= 1) and (getPolyGCD(poly) <> 1) then begin
@@ -856,7 +857,7 @@ begin
                 end;
             end;
         end;
-        4 : begin
+        4 : begin 
             e := Sqr(poly[2].Num) - 3*poly[1].Num*poly[3].Num + 12 * poly[4].Num*poly[0].Num; // delta_0
             f := 2*Cub(poly[2].Num) - 9*poly[3].Num*poly[2].Num*poly[1].Num + 27*Sqr(poly[3].Num)*poly[0].Num + 27*poly[4].Num*Sqr(poly[1].Num) - 72*poly[4].Num*poly[2].Num*poly[0].Num; // delta_1
             // check if w(x) = (x - b/4a)^4
@@ -979,21 +980,19 @@ begin
         Result := res;
         Exit;
     end;
+    n := polynomial_degree(poly);
+    SetLength(res, n+1);
+    for i := n downto 0 do
+        res[i] := poly[i];
     while (grade >= 1) do
     begin
-        n := polynomial_degree(poly);
+        i := 1;
+        while (i <= n) do
+        begin
+            res[i-1] := buildNumber(res[i].Num * ComplexNum(i, 0));
+            i := i + 1;
+        end;
         SetLength(res, n);
-        for i := n-1 downto 0 do
-        {$IF defined(UNIX) and defined(CPU32)}
-            res[i] := buildNumber(poly[i+1].Num * ComplexNum(i+1, 0));
-        {$ELSE}
-        // for some unknown reason FPC compiler for i386 Linux (32-bit) 
-        // doesn't understand the arithmetics in this loop
-        // as it appears to treat i+1 as an AnsiString... :o
-        // so I made a tiny workaround above
-        // but other compilers do understand the following lines perfectly
-            res[i] := buildNumber(poly[i+1].Num * (i+1));
-        {$ENDIF}
         grade := grade - 1;
     end;
     polynomial_truncate(res);
