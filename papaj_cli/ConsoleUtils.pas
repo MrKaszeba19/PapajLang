@@ -115,6 +115,7 @@ begin
 end;
 {$ENDIF}
 {$IFDEF WINDOWS}
+// todo: improve it to detect server OSes and windows 11
 function getOSNickname(Release : String) : String;
 begin
     case Release of

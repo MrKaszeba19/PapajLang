@@ -599,14 +599,6 @@ var
     flag  : Boolean;
 begin
     size := Length(res);
-    // todo: check access violation
-    // tested on mac
-    // % ./papaj do '[ -176.77669529663689 -18.933982822017867 53.786796564403573 -13.585786437626904 1] polyroots println' -L
-    // [ 4.9999731813895716 -1.4142135623730967 5.0000134093052147+0.0000232259347495i 5.0000134093052147-0.0000232259347495i ]
-    // % ./papaj do '[-5 1] [-5 1] [-5 1] [2 sqrt 1] 3 times polymul println' -L                                              
-    // [ -176.77669529663689 -18.933982822017867 53.786796564403573 -13.585786437626904 1 ]
-    // % ./papaj do '[-5 1] [-5 1] [-5 1] [2 sqrt 1] 3 times polymul polyroots println' -L                                    
-    // EAccessViolation: Access violation
 
     //writePoly(poly);
     //writeln('scale: ', polynomial_scalableToIntegers(poly));
