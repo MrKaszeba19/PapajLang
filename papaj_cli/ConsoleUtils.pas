@@ -32,6 +32,11 @@ function isWindows() : Boolean;
 
 implementation
 
+// todo: check those units for unix
+//       https://www.freepascal.org/daily/packages/ncurses/ncrt/index-5.html
+//       https://www.freepascal.org/daily/packages/ncurses/ncurses/index.html
+//       https://www.freepascal.org/daily/packages/ncurses/index.html
+
 uses 
     {$IFDEF MSWINDOWS}
 		ShellApi, crt, Dos, Windows,

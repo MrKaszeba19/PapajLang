@@ -133,9 +133,9 @@ begin
     writeln('Page 7: Conditionals and custom functions');
 	writeln('Page 8: Other');
 	writeln;
-	writeln('Type ''rpn functions PAGE'' to obtain info about specific functions, e.g. ''rpn functions 1''');
-	writeln('Type ''rpn functions all'' to print all pages at once.');
-    writeln('Type ''rpn packages'' to check the packages for PapajScript');
+	writeln('Type ''papaj functions PAGE'' to obtain info about specific functions [PAGE=1-8]');
+	writeln('Type ''papaj functions all'' to print all pages at once.');
+    writeln('Type ''papaj packages'' to check the packages for PapajScript');
 end;
 
 // binary
@@ -295,6 +295,7 @@ begin
 	writeln('substring  system    trim trimLeft   trimRight');
 end;
 
+// todo: adjust to OSes
 procedure show_packages4();
 begin
     writeln('Console package functions:');
@@ -366,7 +367,7 @@ begin
     if ParamCount = 0 then
     begin
         show_version();
-     	writeln('No arguments provided - run ''rpn help'', ''rpn -h'' or ''rpn --help''');
+     	writeln('No arguments provided - run ''papaj help'', ''papaj -h'' or ''papaj --help''');
     end else if HasOption('v', 'version') then 
     begin
         show_version_short();

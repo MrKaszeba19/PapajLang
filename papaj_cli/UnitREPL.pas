@@ -229,7 +229,7 @@ begin
                 end else begin
                     maxdisp := Trunc(Im);
                     TextColor(th.ColorGood);
-                    writeln('The limit of max stack display is set to ',maxdisp,' successfully.');
+                    writeln('The limit of max stack display has been set to ',maxdisp,' successfully.');
                     TextColor(th.ColorReset);
                 end else begin
                 
@@ -244,7 +244,7 @@ begin
                 else fname := '';
                 if (fname = '') then begin
                     TextColor(th.ColorWarn);
-                    writeln('REPL Warning: No valid filepath specified - importing from a "export.ppsc" file.');
+                    writeln('REPL Warning: No valid filepath specified - importing from "export.ppsc" file.');
                     TextColor(th.ColorReset);
                     fname := 'export.ppsc';
                 end;
@@ -267,7 +267,7 @@ begin
             input := '';
             if (fname = '') then begin
                 TextColor(th.ColorWarn);
-                writeln('REPL Warning: No valid filepath specified - exporting to a "export.ppsc" file.');
+                writeln('REPL Warning: No valid filepath specified - exporting to "export.ppsc" file.');
                 TextColor(th.ColorReset);
                 fname := 'export.ppsc';
             end;
@@ -328,19 +328,26 @@ begin
             end;
             '\comamrobic' : begin
                 randomize;
-                fun := Random(10);
+                fun := Random(17);
                 TextColor(th.ColorRzulta1);
                 case fun of
-                    0 : writeln('Tak jak pan Jezus powiedzial.');
-                    1 : writeln('Badzmy lagodni.'); 
-                    2 : writeln('Nie lekajcie sie.'); 
-                    3 : writeln('Podazajcie z entuzjazmem.');
-                    4 : writeln('Tolerancja jest mozliwa.');
-                    5 : writeln('Nie wiem.'); 
-                    6 : writeln('Trwajcie mocno w Chrystusie.');
-                    7 : writeln('Niech zstapi Duch Twoj.'); 
-                    8 : writeln('Jestem z Wami');
-                    9 : writeln('Wyplywajcie na glebie.');
+                     0 : writeln('Tak jak pan Jezus powiedzial.');
+                     1 : writeln('Badzmy lagodni.'); 
+                     2 : writeln('Nie lekajcie sie.'); 
+                     3 : writeln('Podazajcie z entuzjazmem.');
+                     4 : writeln('Tolerancja jest mozliwa.');
+                     5 : writeln('Nie wiem.'); 
+                     6 : writeln('Trwajcie mocno w Chrystusie.');
+                     7 : writeln('Niech zstapi Duch Twoj.'); 
+                     8 : writeln('Jestem z Wami');
+                     9 : writeln('Wyplywajcie na glebie.');
+                    10 : writeln('Nie boj sie, nie lekaj! Wyplyn na głebie!');
+                    11 : writeln('Bywa nieraz, ze stajemy w obliczu prawd, dla ktorych brakuje slow');
+                    12 : writeln('Szukalem was, teraz Wy mnie znalezliście.');
+                    13 : writeln('Nie wystarczy przekroczyc prog, trzeba isc w glab.');
+                    14 : writeln('Czujesz sie osamotniony. Postaraj sie odwiedzic kogoś, kto jest jeszcze bardziej samotny.');
+                    15 : writeln('Dlonie sa krajobrazem serca.');
+                    16 : writeln('Wymagajcie od siebie chocby inni od was nie wymagali.');
                 end;
                 TextColor(th.ColorReset);
             end;
@@ -361,6 +368,16 @@ begin
             end;
             '\loveyou' : begin
                 writeln('I love you too. <3');
+                TextColor(th.ColorReset);
+            end;
+            '\szpinak' : begin
+                writeln('"Szpinak? Jak mi dadza, to jem."');
+                writeln('~ Jan Pawel II, 1991');
+                TextColor(th.ColorReset);
+            end;
+            '\spinach' : begin
+                writeln('"I''m strong to the finish cause I eats me spinach!"');
+                writeln('~ Popeye the Sailor');
                 TextColor(th.ColorReset);
             end;
             '\reset' : begin
@@ -416,7 +433,7 @@ begin
                     env.runFromString(input);
                     //env.executePSCode(fun);
                     if (stack_size(env.Stack[env.Settings.StackPointer]) > maxdisp) and (maxdisp <> 0) 
-                        then res := '<Stack of '+IntToStr(stack_size(env.Stack[env.Settings.StackPointer]))+' elements>'
+                        then res := '<Stack of '+IntToStr(stack_size(env.Stack[env.Settings.StackPointer]))+' entities>'
                         else res := stack_show(env.Stack[env.Settings.StackPointer], env.Settings.Mask);
                     if not (env.Settings.Prevent) then 
                     begin
