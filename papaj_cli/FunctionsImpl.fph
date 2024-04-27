@@ -875,34 +875,72 @@ begin
             	index := index + 1;
             end;
         end;
+        //'gseq' : begin
+        //    // todo: optimize it maybe
+        //    // a_n = a_1 * q^{n-1}
+        //    // q^{n-1} = a_n - a_1
+        //    // n - 1 = log_q (a_n - a_1)
+        //    // n = log_q (a_n - a_1) + 1
+        //  	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+        //    z := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+        //    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+        //    y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+        //    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+        //    x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+        //    if (x.Re <= z.Re) then
+        //    begin
+        //      while (x.Re <= z.Re) do 
+        //      begin
+        //        //checkSIGINT();
+        //        stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+        //        x := x * y;
+        //      end;
+        //    end else begin
+        //      while (x.Re >= z.Re) do 
+        //      begin
+        //        //checkSIGINT();
+        //        stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
+        //        x := x / y;
+        //      end;
+        //    end;
+        //end;
         'gseq' : begin
             // todo: optimize it maybe
             // a_n = a_1 * q^{n-1}
-            // q^{n-1} = a_n - a_1
-            // n - 1 = log_q (a_n - a_1)
-            // n = log_q (a_n - a_1) + 1
+            // q^{n-1} = a_n / a_1
+            // n - 1 = log_q (a_n / a_1)
+            // n = log_q (a_n / a_1) + 1
+            // n = log_q (a_n) - log_q (a_1) + 1
           	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             z := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            IntEax := Length(env.Stack[env.Settings.StackPointer].Values);
+            // todo: inspect this floor
+            if (x.Re <= z.Re) 
+                then Size := floor(system.ln(system.abs(z.Re/x.Re))/system.ln(system.abs(y.Re)))+1
+                else Size := floor(system.ln(system.abs(x.Re/z.Re))/system.ln(system.abs(y.Re)))+1;
+            SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + Size);
+            index := 0;
             if (x.Re <= z.Re) then
             begin
-              while (x.Re <= z.Re) do 
-              begin
-                //checkSIGINT();
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-                x := x * y;
-              end;
+            	while (index < size) and (x.Re <= z.Re) do 
+            	begin
+            		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
+            		x := x * y;
+                    index := index + 1;
+            	end;
             end else begin
-              while (x.Re >= z.Re) do 
-              begin
-                //checkSIGINT();
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x));
-                x := x / y;
-              end;
+            	while (index < size) and (x.Re >= z.Re) do 
+            	begin
+            		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
+            		x := x / y;
+                    index := index + 1;
+            	end;
             end;
+            SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + index);
         end;
         'gseql' : begin
           	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
