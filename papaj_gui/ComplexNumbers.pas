@@ -75,6 +75,7 @@ operator / (a : ComplexType; b : ComplexType) res : ComplexType;
 
 function Abs(a : ComplexType) : RealType;
 function Arg(a : ComplexType) : RealType;
+function Arg2(a : ComplexType) : RealType;
 function Conj(a : ComplexType) : ComplexType;
 function RePart(a : ComplexType) : RealType;
 function ImPart(a : ComplexType) : RealType;
@@ -531,6 +532,22 @@ begin
             Result := Math.arccos(a.Re / Abs(a));
         end else begin
             Result := -Math.arccos(a.Re / Abs(a));
+        end;
+        //Result := system.arctan(a.Im/a.Re);
+    end;
+end;
+
+function Arg2(a : ComplexType) : RealType;
+begin
+    if (Abs(a) = 0) then
+    begin
+        Result := NaN;
+    end else begin
+        if (a.Im >= 0) then
+        begin
+            Result := Math.arccos(a.Re / Abs(a));
+        end else begin
+            Result := 2*C_PI-Math.arccos(a.Re / Abs(a));
         end;
     end;
 end;
