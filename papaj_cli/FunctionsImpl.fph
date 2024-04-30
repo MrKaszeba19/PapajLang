@@ -797,6 +797,7 @@ begin
 // [ 8.5 8.25 8 7.75 7.5 7.25 7 6.75 6.5 6.25 6 5.75 5.5 5.25 5 4.75 4.5 4.25 4 3.75 3.5 3.25 ]
 // ./papaj do '[7.5 0.25 2.1 seq] function(x){$x ++} map println' -L
 // EAccessViolation: Access violation
+// fixed somehow by itself, pay attention for this piece
         // todo: check for memory leakages
         // todo: try to work with complex numbers
         'seq' : begin
@@ -807,28 +808,35 @@ begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             IntEax := Length(env.Stack[env.Settings.StackPointer].Values);
-            Size := floor(system.abs(z.Re - x.Re)/system.abs(y.Re)) + 1;
-            SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + Size);
-            index := 0;
-            if (x.Re <= z.Re) then
+            if (y = 0) and (x = z) then
             begin
-            	while (index < size) and (x.Re <= z.Re) do 
-            	begin
-                    //checkSIGINT();
-            		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
-            		x := x + y;
-                    index := index + 1;
-            	end;
+                SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + 2);
+                env.Stack[env.Settings.StackPointer].Values[IntEax] := buildNumber(x);
+                env.Stack[env.Settings.StackPointer].Values[IntEax + 1] := buildNumber(x);
             end else begin
-            	while (index < size) and (x.Re >= z.Re) do 
-            	begin
-                    //checkSIGINT();
-            		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
-            		x := x - y;
-                    index := index + 1;
-            	end;
+                Size := floor(system.abs(z.Re - x.Re)/system.abs(y.Re)) + 1;
+                SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + Size);
+                index := 0;
+                if (x.Re <= z.Re) then
+                begin
+                	while (index < size) and (x.Re <= z.Re) do 
+                	begin
+                        //checkSIGINT();
+                		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
+                		x := x + y;
+                        index := index + 1;
+                	end;
+                end else begin
+                	while (index < size) and (x.Re >= z.Re) do 
+                	begin
+                        //checkSIGINT();
+                		env.Stack[env.Settings.StackPointer].Values[IntEax + index] := buildNumber(x);
+                		x := x - y;
+                        index := index + 1;
+                	end;
+                end;
+                SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + index);
             end;
-            SetLength(env.Stack[env.Settings.StackPointer].Values, IntEax + index);
         end;
         'seql' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
@@ -1406,7 +1414,6 @@ begin
 			if (env.Settings.StrictType) and (assertNotNegativeRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             z := rgamma1(Real(x), Real(y));
-            //z := rgengamma(0, 1/y, x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Math.genGamma' : begin
@@ -1418,12 +1425,7 @@ begin
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             for index := 1 to Int(x) do
             begin
-                //checkSIGINT();
-                //w := rgengamma(1/z, y, 1);
                 w := rgamma1(Real(y), Real(z));
-                //{wasgood} w := rgengamma(0, 1/z, y);
-                //w := rgengamma(z, y, 1);
-                // do poprawki
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
             end;
         end;
@@ -1432,7 +1434,6 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
 			if (env.Settings.StrictType) and (assertNotNegativeRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            //w := fgamma(Real(x), Real(y)/2, 0.5);
             w := fchisq(Real(x), Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
         end;
@@ -1441,7 +1442,6 @@ begin
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
 			if (env.Settings.StrictType) and (assertNotNegativeRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            //w := dgamma(Real(x), Real(y)/2, 0.5);
             w := dchisq(Real(x), Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
         end;

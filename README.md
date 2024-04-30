@@ -2,8 +2,8 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-April 28, 2024  
-by Paul Lipkowski (RooiGevaar19)
+April 30, 2024  
+by Paul Lipkowski (MrKaszëba)
 
 Since November 24, 2017 written in FreePascal. :smile:
 
@@ -36,9 +36,9 @@ Since November 24, 2017 written in FreePascal. :smile:
     * **Linux** (32 and 64 bit)
     * **Windows** (32 and 64 bit) – full support for both GUI and console apps is provided for Windows 2000 and newer OSes. 
     * **FreeBSD** (64 bit)
-    * **MacOS** (64 bit) - partial GUI app support
+    * **MacOS** (ARM64) - partial GUI app support for Apple chips
 - Have installed
-    * **Lazarus IDE** (version 1.6 or higher recommended – I use Lazarus 2.2.0 as of now) 
+    * **Lazarus IDE** (version 1.6 or higher recommended) 
     * or just **FreePascal Compiler (FPC)** (3.0.4 or newer recommended) in order ot compile just Console app
     * if you use a non-Debian-like Linux, then **xterm** *might be recommended* 
     * **bash** shell, if you use Linux or FreeBSD
@@ -101,8 +101,7 @@ Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/Pap
 - :it: **Italian** (Italiano)
 - :black_heart::yellow_heart: **Kashubian** (Kaszëbsczi) - standard and alternative orthographies (both Latin and Cyrilic)
 - :macedonia: **Macedonian** (Македонски)
-- :norway: **Norwegian** (Norsk bokmål)
-- :norway: **Norwegian** (Norsk nynorsk)
+- :norway: **Norwegian** (Norsk) - both bokmål and nynorsk
 - :poland: **Polish** (Polski)
 - :portugal: **Portuguese** (Português)
 - :brazil: **Brazilian Portuguese** (Português do Brasil)
