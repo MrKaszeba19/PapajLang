@@ -1539,161 +1539,161 @@ function DetermineLanguage() : Language;
 begin
     // https://docs.moodle.org/dev/Table_of_locales
     case (GetLocaleLanguage) of
-        'af_ZA.UTF-8' : Result := L_AFR;
-        'af_ZA.utf8' : Result := L_AFR;
-        'Afrikaans_South Africa.1252' : Result := L_AFR;
-        'Afrikaans' : Result := L_AFR;
-        'Afrikaans (South Africa)' : Result := L_AFR;
+        'af_ZA.UTF-8',
+        'af_ZA.utf8',
+        'Afrikaans_South Africa.1252',
+        'Afrikaans',
+        'Afrikaans (South Africa)',
         'Afrikaans (Namibia)' : Result := L_AFR;
-        'hr_HR.UTF-8' : Result := L_CRO;
-        'hr_HR.utf8' : Result := L_CRO;
-        'Croatian_Croatia.1250' : Result := L_CRO;
+        'hr_HR.UTF-8',
+        'hr_HR.utf8',
+        'Croatian_Croatia.1250',
         'Croatian' : Result := L_CRO;
-        'csb.UTF-8' : Result := L_CSB;
-        'csb_PL.UTF-8' : Result := L_CSB;
-        'csb.utf8' : Result := L_CSB;
+        'csb.UTF-8',
+        'csb_PL.UTF-8',
+        'csb.utf8',
         'csb_PL.utf8' : Result := L_CSB;
-        'da_DK.UTF-8' : Result := L_DEN;
-        'da_DK.utf8' : Result := L_DEN;
-        'Danish_Denmark.1252' : Result := L_DEN;
+        'da_DK.UTF-8',
+        'da_DK.utf8',
+        'Danish_Denmark.1252',
         'Danish' : Result := L_DEN;
-        'en.UTF-8' : Result := L_ENG;
-        'en_AG.UTF-8' : Result := L_ENG;
-        'en_AU.UTF-8' : Result := L_ENG;
-        'en_BW.UTF-8' : Result := L_ENG;
-        'en_CA.UTF-8' : Result := L_ENG;
-        'en_DK.UTF-8' : Result := L_ENG;
-        'en_GB.UTF-8' : Result := L_ENG;
-        'en_HK.UTF-8' : Result := L_ENG;
-        'en_IE.UTF-8' : Result := L_ENG;
-        'en_IL.UTF-8' : Result := L_ENG;
-        'en_IN.UTF-8' : Result := L_ENG;
-        'en_NG.UTF-8' : Result := L_ENG;
-        'en_NZ.UTF-8' : Result := L_ENG;
-        'en_PH.UTF-8' : Result := L_ENG;
-        'en_SG.UTF-8' : Result := L_ENG;
-        'en_US.UTF-8' : Result := L_ENG;
-        'en_ZA.UTF-8' : Result := L_ENG;
-        'en_ZM.UTF-8' : Result := L_ENG;
-        'en_ZW.UTF-8' : Result := L_ENG;
-        'en_AG.utf8' : Result := L_ENG;
-        'en_AU.utf8' : Result := L_ENG;
-        'en_BW.utf8' : Result := L_ENG;
-        'en_CA.utf8' : Result := L_ENG;
-        'en_DK.utf8' : Result := L_ENG;
-        'en_GB.utf8' : Result := L_ENG;
-        'en_HK.utf8' : Result := L_ENG;
-        'en_IE.utf8' : Result := L_ENG;
-        'en_IL.utf8' : Result := L_ENG;
-        'en_IN.utf8' : Result := L_ENG;
-        'en_NG.utf8' : Result := L_ENG;
-        'en_NZ.utf8' : Result := L_ENG;
-        'en_PH.utf8' : Result := L_ENG;
-        'en_SG.utf8' : Result := L_ENG;
-        'en_US.utf8' : Result := L_ENG;
-        'en_ZA.utf8' : Result := L_ENG;
-        'en_ZM.utf8' : Result := L_ENG;
-        'en_ZW.utf8' : Result := L_ENG;
-        'en.utf8' : Result := L_ENG;
-        'English_Australia.1252' : Result := L_ENG;
+        'en.UTF-8',
+        'en_AG.UTF-8',
+        'en_AU.UTF-8',
+        'en_BW.UTF-8',
+        'en_CA.UTF-8',
+        'en_DK.UTF-8',
+        'en_GB.UTF-8',
+        'en_HK.UTF-8',
+        'en_IE.UTF-8',
+        'en_IL.UTF-8',
+        'en_IN.UTF-8',
+        'en_NG.UTF-8',
+        'en_NZ.UTF-8',
+        'en_PH.UTF-8',
+        'en_SG.UTF-8',
+        'en_US.UTF-8',
+        'en_ZA.UTF-8',
+        'en_ZM.UTF-8',
+        'en_ZW.UTF-8',
+        'en_AG.utf8',
+        'en_AU.utf8',
+        'en_BW.utf8',
+        'en_CA.utf8',
+        'en_DK.utf8',
+        'en_GB.utf8',
+        'en_HK.utf8',
+        'en_IE.utf8',
+        'en_IL.utf8',
+        'en_IN.utf8',
+        'en_NG.utf8',
+        'en_NZ.utf8',
+        'en_PH.utf8',
+        'en_SG.utf8',
+        'en_US.utf8',
+        'en_ZA.utf8',
+        'en_ZM.utf8',
+        'en_ZW.utf8',
+        'en.utf8',
+        'English_Australia.1252',
         'English' : Result := L_ENG;
-        'French' : Result := L_FRA;
-        'French (Canada)' : Result := L_FRA;
-        'fr.UTF-8' : Result := L_FRA;
-        'fr_FR.UTF-8' : Result := L_FRA;
-        'fr_BE.UTF-8' : Result := L_FRA;
-        'fr_CH.UTF-8' : Result := L_FRA;
-        'fr_LU.UTF-8' : Result := L_FRA;
-        'fr_CA.UTF-8' : Result := L_FRA;
-        'fr.utf8' : Result := L_FRA;
-        'fr_FR.utf8' : Result := L_FRA;
-        'fr_BE.utf8' : Result := L_FRA;
-        'fr_CH.utf8' : Result := L_FRA;
-        'fr_LU.utf8' : Result := L_FRA;
-        'fr_CA.utf8' : Result := L_FRA;
+        'French',
+        'French (Canada)',
+        'fr.UTF-8',
+        'fr_FR.UTF-8',
+        'fr_BE.UTF-8',
+        'fr_CH.UTF-8',
+        'fr_LU.UTF-8',
+        'fr_CA.UTF-8',
+        'fr.utf8',
+        'fr_FR.utf8',
+        'fr_BE.utf8',
+        'fr_CH.utf8',
+        'fr_LU.utf8',
+        'fr_CA.utf8',
         'French_France.1252' : Result := L_FRA;
-        'de_DE.UTF-8' : Result := L_GER;
-        'de_DE.utf8' : Result := L_GER;
-        'de_AT.UTF-8' : Result := L_GER;
-        'de_AT.utf8' : Result := L_GER;
-        'de_CH.UTF-8' : Result := L_GER;
-        'de_CH.utf8' : Result := L_GER;
-        'German_Germany.1252' : Result := L_GER;
+        'de_DE.UTF-8',
+        'de_AT.UTF-8',
+        'de_CH.UTF-8',
+        'de_DE.utf8',
+        'de_AT.utf8',
+        'de_CH.utf8',
+        'German_Germany.1252',
         'German' : Result := L_GER;
-        'he_IL.utf8' : Result := L_HBR;
-        'he_IL.UTF-8' : Result := L_HBR;
-        'Hebrew_Israel.1255' : Result := L_HBR;
+        'he_IL.utf8',
+        'he_IL.UTF-8',
+        'Hebrew_Israel.1255',
         'Hebrew' : Result := L_HBR;
-        'it_IT.UTF-8' : Result := L_ITA;
-        'it_IT.utf8' : Result := L_ITA;
-        'Italian_Italy.1252' : Result := L_ITA;
+        'it_IT.UTF-8',
+        'it_IT.utf8',
+        'Italian_Italy.1252',
         'Italian' : Result := L_ITA;
-        'mk_MK.UTF-8' : Result := L_MKD;
-        'mk_MK.utf8' : Result := L_MKD;
-        'Macedonian_Macedonia.1251' : Result := L_MKD;
-        'Macedonian' : Result := L_MKD;
-        'Macedonian (Macedonia)' : Result := L_MKD;
-        'Macedonian (FYROM)' : Result := L_MKD;
+        'mk_MK.UTF-8',
+        'mk_MK.utf8',
+        'Macedonian_Macedonia.1251',
+        'Macedonian',
+        'Macedonian (Macedonia)',
+        'Macedonian (FYROM)',
         'Macedonian (North Macedonia)' : Result := L_MKD;
-        'nl_NL.UTF-8' : Result := L_NED;
-        'nl_NL.utf8' : Result := L_NED;
-        'Dutch_Netherlands.1252' : Result := L_NED;
+        'nl_NL.UTF-8',
+        'nl_NL.utf8',
+        'Dutch_Netherlands.1252',
         'Dutch' : Result := L_NED;
-        'no_NO.UTF-8' : Result := L_NOR;
-        'no_NO.utf8' : Result := L_NOR;
-        'Norwegian_Norway.1252' : Result := L_NOR;
+        'no_NO.UTF-8',
+        'no_NO.utf8',
+        'Norwegian_Norway.1252',
         'Norwegian' : Result := L_NOR;
-        'nn_NO.UTF-8' : Result := L_NOR2;
-        'nn_NO.utf8' : Result := L_NOR2;
-        'Norwegian-Nynorsk_Norway.1252' : Result := L_NOR2;
-        'Norwegian-Nynorsk' : Result := L_NOR2;
-        'Norwegian (Nynorsk)' : Result := L_NOR2;
+        'nn_NO.UTF-8',
+        'nn_NO.utf8',
+        'Norwegian-Nynorsk_Norway.1252',
+        'Norwegian-Nynorsk',
+        'Norwegian (Nynorsk)',
         'Nynorsk' : Result := L_NOR2;
-        'pl.UTF-8' : Result := L_POL;
-        'pl_PL.UTF-8' : Result := L_POL;
-        'pl.utf8' : Result := L_POL;
-        'pl_PL.utf8' : Result := L_POL;
-        'Polish_Poland.1250' : Result := L_POL;
-        'Polish' : Result := L_POL; 
+        'pl.UTF-8',
+        'pl_PL.UTF-8',
+        'pl.utf8',
+        'pl_PL.utf8',
+        'Polish_Poland.1250',
+        'Polish',
         'Polish (Poland)' : Result := L_POL;  
-        'pt_PT.UTF-8' : Result := L_POR;
-        'pt_PT.utf8' : Result := L_POR;
-        'Portuguese_Portugal.1252' : Result := L_POR;
-        'Portuguese' : Result := L_POR;
+        'pt_PT.UTF-8',
+        'pt_PT.utf8',
+        'Portuguese_Portugal.1252',
+        'Portuguese',
         'Portuguese (Portugal)' : Result := L_POR;  
-        'pt_BR.UTF-8' : Result := L_POR2;
-        'pt_BR.utf8' : Result := L_POR2;
-        'Portuguese_Brazil.1252' : Result := L_POR2;
+        'pt_BR.UTF-8',
+        'pt_BR.utf8',
+        'Portuguese_Brazil.1252',
         'Portuguese (Brazil)' : Result := L_POR2;  
-        'ru_RU.UTF-8' : Result := L_RUS;
-        'ru_RU.utf8' : Result := L_RUS;
-        'Russian_Russia.1251' : Result := L_RUS;
-        'Russian' : Result := L_RUS; 
+        'ru_RU.UTF-8',
+        'ru_RU.utf8',
+        'Russian_Russia.1251',
+        'Russian', 
         'Russian (Russia)' : Result := L_RUS; 
-        'sl_SI.UTF-8' : Result := L_SLO;
-        'sl_SI.utf8' : Result := L_SLO;
-        'Slovenian_Slovenia.1250' : Result := L_SLO;
-        'Slovenian' : Result := L_SLO;
+        'sl_SI.UTF-8',
+        'sl_SI.utf8',
+        'Slovenian_Slovenia.1250',
+        'Slovenian',
         'Slovene' : Result := L_SLO; 
-        'sr_CS.UTF-8' : Result := L_SRB;
-        'sr_CS.utf8' : Result := L_SRB;
-        'sr_RS.UTF-8' : Result := L_SRB;
+        'sr_CS.UTF-8',
+        'sr_CS.utf8',
+        'sr_RS.UTF-8',
         'sr_RS.utf8' : Result := L_SRB;
-        'sr_CS.UTF-8@latin' : Result := L_SRB2;
-        'sr_CS.utf8@latin' : Result := L_SRB2;
-        'sr_RS.UTF-8@latin' : Result := L_SRB2;
+        'sr_CS.UTF-8@latin',
+        'sr_CS.utf8@latin',
+        'sr_RS.UTF-8@latin',
         'sr_RS.utf8@latin' : Result := L_SRB2;
-        'Serbian_Serbia.1251' : Result := L_SRB;
-        'Serbian' : Result := L_SRB;  
+        'Serbian_Serbia.1251',
+        'Serbian',  
         'Serbian (Cyrilic)' : Result := L_SRB;  
         'Serbian (Latin)' : Result := L_SRB2; 
         'Serbian (Cyrilic, Serbia)' : Result := L_SRB;  
         'Serbian (Latin, Serbia)' : Result := L_SRB2;  
-        'sv_SE.UTF-8' : Result := L_SWE;
-        'sv_SE.utf8' : Result := L_SWE;
-        'Swedish_Sweden.1252' : Result := L_SWE;
-        'Swedish' : Result := L_SWE;  
-        'Swedish (Sweden)' : Result := L_SWE;  
+        'sv_SE.UTF-8',
+        'sv_SE.utf8',
+        'Swedish_Sweden.1252',
+        'Swedish',  
+        'Swedish (Sweden)',  
         'Swedish (Finland)' : Result := L_SWE;  
         else Result := L_ENG;
     end;
