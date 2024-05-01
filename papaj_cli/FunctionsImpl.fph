@@ -1182,7 +1182,7 @@ begin
           stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EulerMascheroni()));
         end;
 
-        // Statistics
+        // useful functions
 		'Math.gamma' : begin
           	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -1195,6 +1195,38 @@ begin
             z := GammaLn(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Math.sinc' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := Sinc(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.tanc' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := Tanc(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.dirichletEta' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := DirichletEta(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.riemannZeta' : begin
+          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := RiemannZeta(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.bernoulliNum' : begin
+          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := bernoulli_num(Int(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+
+        // Statistics
 		'Math.distNormStd' : begin
           	if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;

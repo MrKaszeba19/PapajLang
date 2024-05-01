@@ -46,12 +46,11 @@ Additional units of rpn_gui
 
 === REPORTED FLAWS AND ISSUES
 – Windows systems' shell usage does not work
-– Chi-squared generator fails for big sample data when df = 1
 – Gamma and Beta distributions may not work (fix is being tested)
 – Breaks and continues do not work (fix is being tested)
-– Polynomial root finding function solves only some particular polynomial cases (fix is being tested)
+– Bernoulli numbers generator may produce wrong data when n>=40
 
 
 ===========================================
 Papaj – PapajScript Interpreter
-Paul Lipkowski, 2024-03-19
+Paul Lipkowski, 2024-05-01
