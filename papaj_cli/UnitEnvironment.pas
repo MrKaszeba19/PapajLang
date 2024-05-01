@@ -611,18 +611,26 @@ var
 begin
     if Length(Params) > 0 then
     begin
-        stack_push(Stack[Settings.StackPointer], buildNewEmptyArray(Stack, Settings));
+        ArrEcx := buildNewEmptyArray(Stack, Settings);
+        stack_push(Stack[Settings.StackPointer], ArrEcx);
         ArrEcx := stack_pop(Stack[Settings.StackPointer]);
         stk := Settings.StackPointer;
         Settings.StackPointer := ArrEcx.Num2;
+        //for i := 0 to Length(Params)-1 do
+        //begin
+        //    stack_push(Stack[Settings.StackPointer], buildString(string_fromC(Params[i])));
+        //end;
+        SetLength(Stack[Settings.StackPointer].Values, Length(Params));
         for i := 0 to Length(Params)-1 do
         begin
-            stack_push(Stack[Settings.StackPointer], buildString(string_fromC(Params[i])));
+            Stack[Settings.StackPointer].Values[i] := buildString(string_fromC(Params[i]));
         end;
         Variables.setLocalVariable('Params', ArrEcx);
         Settings.StackPointer := stk;
     end else begin
-        Variables.setLocalVariable('Params', buildNewEmptyArray(Stack, Settings));
+        ArrEcx := buildNewEmptyArray(Stack, Settings);
+        Variables.setLocalVariable('Params', ArrEcx);
+        //Variables.setLocalVariable('Params', buildNewEmptyArray(Stack, Settings));
     end;
 end;
 

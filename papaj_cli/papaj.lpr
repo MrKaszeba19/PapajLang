@@ -97,7 +97,7 @@ begin
     writeln('Run ''papaj repl'' to run a REPL for PapajScript');
     writeln('Run ''papaj version'' to display the app version');
     writeln('');
-    writeln('More help at github.com/RooiGevaar19/RPNCalculator');
+    writeln('More help at github.com/MrKaszeba19/PapajLang');
 end;
 
 procedure show_expressions;

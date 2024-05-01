@@ -2,12 +2,12 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-April 30, 2024  
+May 1, 2024  
 by Paul Lipkowski (MrKaszëba)
 
 Since November 24, 2017 written in FreePascal. :smile:
 
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of Papaj (**v.0.5.3**, nickname Mem) [here](https://github.com/RooiGevaar19/PapajLang/releases).
+**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of Papaj (**v.0.5.3**, nickname Mem) [here](https://github.com/MrKaszeba19/PapajLang/releases).
 
 ## How to use it
 
@@ -68,11 +68,11 @@ The entities are put on the stack and may be used from the semi-stack, however w
 Everything comes around the semi-stack and the entities. The entities may be numbers, text strings, logical expressions, functions, arrays or exceptions.  
 The future enhancements of the language include an introduction of OOP and better file management.
 
-Find more about the language in this [wiki](https://github.com/RooiGevaar19/PapajLang/wiki).
+Find more about the language in this [wiki](https://github.com/MrKaszeba19/PapajLang/wiki).
 
-Find basic functions [here](https://github.com/RooiGevaar19/PapajLang/wiki/Vanilla).
+Find basic functions [here](https://github.com/MrKaszeba19/PapajLang/wiki/Vanilla).
 
-Find the examples of PapajScript code [here](https://github.com/RooiGevaar19/PapajLang/tree/leviathan/scripts).
+Find the examples of PapajScript code [here](https://github.com/MrKaszeba19/PapajLang/tree/leviathan/scripts).
 
 ## REPL Commands
 - `\` at the very end of the input line allows for multi-line commands 
