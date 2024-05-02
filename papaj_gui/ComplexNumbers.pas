@@ -1224,7 +1224,7 @@ function LogGamma_real(z : ComplexType) : ComplexType;
 var
     j              : IntegerType;
     x, y, tmp, ser : ComplexType;
-    cof            : Array of ComplexType;
+    cof            : Array[0..13] of ComplexType;
 begin
     //cof := [57.1562356658629235, -59.5979603554754912, 14.1360979747417471,
     //-0.491913816097620199,0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4,
@@ -1385,7 +1385,6 @@ begin
     else
     if (s = 1) then
     begin
-        writeln('hello');
         Result := 1.0 - Exp(-x);
     end else if (x = 0) then begin
         Result := 0;
