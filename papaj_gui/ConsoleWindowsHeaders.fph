@@ -1,3 +1,0 @@
-function getCPUName(index : LongInt) : String;
-function getRealCPUThreads() : LongInt;
-function getCPUBaseFreq(index : LongInt) : Extended;

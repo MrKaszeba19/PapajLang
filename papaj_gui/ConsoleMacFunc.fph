@@ -1,3 +1,0 @@
-'Console.DarwinVersion' : begin
-    stack_push(env.Stack[env.Settings.StackPointer], buildString(getDarwinVersion()));
-end;

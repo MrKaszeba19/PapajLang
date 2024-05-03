@@ -62,9 +62,9 @@ echo "Compiling..."
 mv papaj.lpr papaj.pas
 
 if [[ $assembler -lt 1 ]] ; then
-	fpc papaj.pas -o"papaj" $optimize $debug
+	fpc papaj.pas -o"papaj" -Fu"../lang_units" $optimize $debug
 else
-	fpc papaj.pas -o"papaj" -a $optimize $debug
+	fpc papaj.pas -o"papaj" -Fu"../lang_units" -a $optimize $debug
 fi
 
 # ------ If compiled
