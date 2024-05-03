@@ -1225,6 +1225,63 @@ begin
             z := bernoulli_num(Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Math.Si',
+        'Math.sinInt' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := SinInt(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.sinInt2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := SinInt2(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.Ci',
+        'Math.cosInt' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := CosInt(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.Cin',
+        'Math.cosInt2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := CosInt2(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.li',
+        'Math.logInt' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LogInt(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.Li',
+        'Math.logInt2' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LogInt2(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.Ei',
+        'Math.ExpInt' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ExpInt(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.En',
+        'Math.ExpIntN' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := ExpIntC(y, Int(x));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
 
         // Statistics
 		'Math.distNormStd' : begin
