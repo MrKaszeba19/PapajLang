@@ -23,8 +23,8 @@ Since November 24, 2017 written in FreePascal. :smile:
 - If you need app version, you can type `papaj version`, `papaj -v` or `papaj --version`.
 
 ### GUI Application
-- Open an app executable.
-- In order to compute an PS expression, just type it in the upper text box and click the "Count it!" button. The result appears in the result box below.
+- Open the app executable.
+- In order to compute a simple PS expression, just type it in the upper text box and click the "Count it!" button. The result appears in the result box below.
 - There is also a simple script running engine – just paste your PS script or load it from file and click "Run script" to see its result.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - There is a possibility of executing the PS script in an external terminal window (it is an experimental feature)
