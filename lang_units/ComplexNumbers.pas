@@ -1825,7 +1825,9 @@ end;
 // Eisenstein (1844)
 function InfPowerTower(z : ComplexType) : ComplexType;
 begin
-    Result := LambertW(-Ln(z))/Ln(z);
+         if (z = 1) then Result := 1
+    else if (z = 0) then Result := 0
+    else Result := -LambertW(-Ln(z))/Ln(z);
 end;
 
 end.

@@ -1284,6 +1284,12 @@ begin
             z := LambertW(y, Int(x));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Math.infPowerTower' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := InfPowerTower(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
 
         // Statistics
 		'Math.distNormStd' : begin
