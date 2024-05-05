@@ -1715,7 +1715,7 @@ begin
         w0 := (w0)/(1+w0) * (1 + system.ln(z/w0));
         n := n + 1;
     end;
-    if (n = limit) // for some reason newton2 either does its job in 3-5 steps, or it can't finish within 10000 steps
+    if (n < limit) // for some reason newton2 either does its job in 3-5 steps, or it can't finish within 10000 steps
         then Result := w0
         else Result := LambertW0_realapprox(z, 1, C_EXP); // this approximation takes at most 50 steps in general
 end;
