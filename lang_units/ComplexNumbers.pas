@@ -24,6 +24,7 @@ const
     C_PHI      = 1.6180339887498948482045868343656;       // phi - Golden ratio
     C_EM       = 0.5772156649015328606065120900824;       // Euler-Mascheroni constant
     C_OMEGA    = 0.56714329040978387299996866221035554;   // Omega constant
+    C_EXPTOXP1 = 41.193555674716123563188287684364331978; // e^(e+1)
 
 type ComplexType = record
     Re : RealType;
@@ -167,6 +168,12 @@ function bernoulli_num(n : IntegerType) : ComplexType;
 function Newton(n, k : ComplexType) : ComplexType;
 function DirichletEta(z : ComplexType) : ComplexType;
 function RiemannZeta(z : ComplexType) : ComplexType;
+
+function LambertW0(z : ComplexType) : ComplexType; // W_0
+function LambertWn1(z : ComplexType) : ComplexType; // W_-1
+function LambertW(z : ComplexType; k : IntegerType = 0) : ComplexType; // W_k
+
+function InfPowerTower(z : ComplexType) : ComplexType; // h(z) = z^z^z^...
 
 implementation
 
@@ -586,19 +593,22 @@ end;
 
 function Pi() : RealType;
 begin
-    Result := 3.1415926535897932384626433832795;
+    //Result := 3.1415926535897932384626433832795;
     //Result := Arg(-1);
     //Result := system.Pi;
+    Result := C_PI;
 end;
 
 function GoldenNum() : RealType;
 begin
-    Result := 1.6180339887498948482045868343656;
+    //Result := 1.6180339887498948482045868343656;
+    Result := C_PHI;
 end;
 
 function EulerMascheroni() : RealType;
 begin
-    Result := 0.5772156649015328606065120900824;
+    //Result := 0.5772156649015328606065120900824;
+    Result := C_EM;
 end;
 
 function Sqr(z : ComplexType) : ComplexType;
@@ -1064,9 +1074,9 @@ begin
 end;
 
 function LogInt(z : ComplexType) : ComplexType; // li(z)
-var
-    sum : ComplexType;
-    n   : IntegerType = 50;
+//var
+//    sum : ComplexType;
+//    n   : IntegerType = 50;
 begin
     if (z = 0) then Result := 0
     else if (z = 1) then Result := -Infinity
@@ -1226,10 +1236,6 @@ var
     x, y, tmp, ser : ComplexType;
     cof            : Array[0..13] of ComplexType;
 begin
-    //cof := [57.1562356658629235, -59.5979603554754912, 14.1360979747417471,
-    //-0.491913816097620199,0.339946499848118887e-4, 0.465236289270485756e-4, -0.983744753048795646e-4,
-    //0.158088703224912494e-3, -0.210264441724104883e-3, 0.217439618115212643e-3,-0.164318106536763890e-3,
-    //0.844182239838527433e-4,-0.261908384015814087e-4,0.368991826595316234e-5];
     cof[0] := 57.1562356658629235;
     cof[1] := -59.5979603554754912;
     cof[2] := 14.1360979747417471;
@@ -1244,7 +1250,6 @@ begin
     cof[11] := 0.844182239838527433e-4;
     cof[12] := -0.261908384015814087e-4;
     cof[13] := 0.368991826595316234e-5;
-    //if (xx <= 0) throw('bad arg in gammln');
     x := z;
     y := x;
     tmp := x + 5.24218750000000000; //rational 671/128.
@@ -1495,7 +1500,6 @@ var
     s    : ComplexType;
     B    : array of ComplexType;
 begin
-    //writeln('ber');
     if (n > 10)
         then SetLength(B, n+1)
         else SetLength(B, 10+1);
@@ -1521,13 +1525,10 @@ begin
             s := 0.0;
             for k := 0 to i-1 do
                 s := s + 1.0 * B[k] * newton_intt(i,k) / (i - k + 1.0);
-            //B[i] := 1-s;
             B[i] := 1-s;
-            //writeln(#9, 'b(',i,') = ', AnsiString(B[i]));
             i := i+2;
         end;
     end;
-    //writeln('bernoulli(',n,') = ', AnsiString(B[n]));
     Result := B[n];
 end;
 
@@ -1573,12 +1574,6 @@ begin
 end;
 
 function RiemannZeta(z : ComplexType) : ComplexType;
-var
-    //limit, n : IntegerType;
-    sum      : ComplexType;
-    sum2     : ComplexType;
-    limit, n, k : IntegerType;
-    //sum1, sum2  : ComplexType;
 begin
          if (z = -1) then Result := -1/12
     else if (z = 0) then Result := -1.0/2
@@ -1594,6 +1589,244 @@ begin
     end;
 end;
 
+// --------------------------------------------------------
+// lambert lambert ty k
+// W function
+
+// helpers
+
+function LambertW0_exp(z : ComplexType) : ComplexType;
+var
+    sum : ComplexType;
+    n   : IntegerType = 100;
+begin
+    sum := z/Exp(z);
+    while (n >= 0) do
+    begin
+        sum := z/Exp(sum);
+        n := n-1;
+    end;
+    Result := sum;
+end;
+
+function LambertW0_ln(z : ComplexType) : ComplexType;
+var
+    sum : ComplexType;
+    n   : IntegerType = 100;
+begin
+    sum := Ln(z);
+    while (n >= 0) do
+    begin
+        sum := Ln(z/sum);
+        n := n-1;
+    end;
+    Result := sum;
+end;
+
+
+function xex(x : RealType) : RealType;
+begin
+    Result := x * system.exp(x);
+end;
+
+function xex(x : ComplexType) : ComplexType;
+begin
+    Result := x * Exp(x);
+end;
+
+function xexd(x : ComplexType) : ComplexType;
+begin
+    Result := (x+1) * Exp(x);
+end;
+
+function xexdd(x : ComplexType) : ComplexType;
+begin
+    Result := (x+2) * Exp(x);
+end;
+
+// approx for reals between e and e^(1+e)
+function LambertW0_realapprox(z, a, b : RealType) : RealType;
+var
+    res, dif : RealType;
+    res0     : RealType = 0;
+    epsilon  : RealType = 0.000000000000001;
+    n        : IntegerType = 1000;
+begin
+    dif := 2137;
+    res := 1;
+    while (n > 0) 
+    and (dif >= epsilon) 
+    do
+    begin
+        if (xex(a) = z) then
+        begin
+            res := a;
+            dif := 0;
+        end else if (xex(b) = z) then
+        begin
+            res := b;
+            dif := 0;
+        end else begin
+            res := (a+b)/2;
+            if (xex(res) = z) then
+            begin
+                dif := 0;
+            end else if (xex(res) > z) then
+            begin
+                b := res;
+                dif := system.abs(res - res0);
+                res0 := res;
+            end else begin
+                a := res;
+                dif := system.abs(res - res0);
+                res0 := res;
+            end;
+        end;
+        n := n-1;
+    end;
+    Result := res;
+end;
+
+// approximation for complex numbers
+function LambertW_newtonHailey(z : ComplexType; w0 : ComplexType) : ComplexType;
+var
+    n       : IntegerType = 10000;
+    epsilon : RealType = 0.000000000000001;
+begin
+    while (n > 0) and (Abs(xex(w0) - z) > epsilon) do
+    begin
+        w0 := w0 - (xex(w0) - z)/(xexd(w0) - ((xexdd(w0) - z*(w0+2)))/(2*w0+2));
+        n := n - 1;
+    end;
+    Result := w0;
+end;
+
+function LambertW0_newton2(z : RealType) : RealType;
+const
+    limit = 10;
+var
+    w0      : RealType;
+    n       : IntegerType = 0;
+    epsilon : RealType = 0.000000000000001;
+begin
+    w0 := system.ln(z) - system.ln(system.ln(z));
+    while (n < limit) and (system.abs(xex(w0) - z) > epsilon) do
+    begin
+        w0 := (w0)/(1+w0) * (1 + system.ln(z/w0));
+        n := n + 1;
+    end;
+    if (n = limit) // for some reason newton2 either does its job in 3-5 steps, or it can't finish within 10000 steps
+        then Result := w0
+        else Result := LambertW0_realapprox(z, 1, C_EXP); // this approximation takes at most 50 steps in general
+end;
+
+function LambertWn1_realnewton(z : RealType) : RealType;
+const
+    limit = 10000;
+var
+    w0      : RealType;
+    n       : IntegerType = 0;
+    epsilon : RealType = 0.000000000000001;
+begin
+    if (z <= -0.25) 
+        then w0 := -1 - system.sqrt(2)*system.sqrt(1 + C_EXP*z)
+        else w0 := system.ln(-z) - system.ln(-system.ln(-z));
+    while (n < limit) and (system.abs(xex(w0) - z) > epsilon) do
+    begin
+        w0 := (w0)/(1+w0) * (1 + system.ln(z/w0));
+        n := n + 1;
+    end;
+    Result := w0;
+end;
+
+// huge koszonom to Istvan Mezo
+// https://github.com/IstvanMezo/LambertW-function/blob/master/complex%20Lambert.cpp
+function LW_InitPoint(z : ComplexType; k : IntegerType) : ComplexType;
+var
+    ip, p : ComplexType;
+    two_pi_k_I : ComplexType;
+begin
+	two_pi_k_I := ComplexNum(0, 2 * C_PI * k);
+	ip := Ln(z) + two_pi_k_I - Ln(Ln(z) + two_pi_k_I);
+	p := Sqrt(2 * (C_EXP * z + 1));
+
+	if (Abs(z - (-exp(-1))) <= 1) then
+	begin
+		if (k = 0) 
+            then ip := -1 + p - Sqr(p)/3 + 11./72. * Cub(p);
+		if ((k = 1) and (z.Im < 0))
+		or ((k = -1) and (z.Im > 0)) 
+            then ip := -1 - p - Sqr(p)/3 - 11*Cub(p)/72;
+	end;
+
+	if  (k = 0) 
+    and (Abs(z - 0.5) <= 0.5)
+    then ip := (0.35173371 * (0.1237166 + 7.061302897 * z)) / (2.827184 * (2*z + 1));
+
+	if (k = -1) and (Abs(z - 0.5) <= 0.5) 
+    then ip := -(((2.2591588985 + Imag(4.22096)) * ((-14.073271 - Imag(33.767687754)) 
+            * z - (12.7127 - Imag(19.071643)) * (2*z + 1))) 
+            / (2.0 - (17.23103 - Imag(10.629721)) * (2*z + 1)));
+
+	Result := ip;
+end;
+
+// lambert W function main definitions
+
+function LambertW0(z : ComplexType) : ComplexType;
+begin
+         if (z = 0) then Result := 0
+    else if (z = 1) then Result := C_OMEGA
+    else if (z = C_EXP) then Result := 1
+    else if (z = Exp(1+C_EXP)) then Result := C_EXP
+    else if (z = Sqrt(C_EXP)/2) then Result := 0.5
+    else if (z = 2*C_LN2) then Result := C_LN2
+    else if (z = -Inv(C_EXP)) then Result := -1
+    else if (z = -C_HALFPI) then Result := Imag(C_HALFPI)
+    else if (Abs(z) > C_EXPTOXP1) then Result := LambertW0_ln(z)
+    else if (
+        (not ((isReal(z)) and (z.Re <= -Inv(C_EXP).Re))) 
+        and (Abs(z) < C_EXP) 
+        ) then Result := LambertW0_exp(z)
+    else if ((isReal(z)) and (z.Re > C_EXP) and (z.Re < C_EXPTOXP1)) then Result := LambertW0_newton2(z.Re)
+    else Result := LambertW_newtonHailey(z, Ln(z));
+end;
+
+function LambertWn1(z : ComplexType) : ComplexType;
+begin
+         if (z = -Inv(C_EXP)) then Result := -1
+    else if (z = 0) then Result := -Infinity
+    else if (isReal(z)) and (z.Re > -Inv(C_EXP).Re) and (z.Re < 0) then
+    begin
+        Result := LambertWn1_realnewton(z.Re)
+    end else begin
+        Result := LambertW_newtonHailey(z, LW_InitPoint(z,-1));
+    end;
+end;
+
+// Lambert W function for all branches
+function LambertW(z : ComplexType; k : IntegerType = 0) : ComplexType;
+begin
+    if (z = 0) then 
+    begin
+        if (k = 0) then Result := 0 else Result := -Infinity; 
+    end 
+    else if (z = -Inv(C_EXP)) and ((k = 0) or (k = -1)) then Result := -1
+	else if (z = C_EXP) and (k = 0) then Result := 1
+    else case k of
+        -1 : Result := LambertWn1(z);
+        0  : Result := LambertW0(z);
+        else Result := LambertW_newtonHailey(z, LW_InitPoint(z,k));
+    end;
+end;
+
+// -----------------------------------------------------------
+// Euler power tower h(x) = x^x^x^x^...
+// Eisenstein (1844)
+function InfPowerTower(z : ComplexType) : ComplexType;
+begin
+    Result := LambertW(-Ln(z))/Ln(z);
+end;
 
 end.
 

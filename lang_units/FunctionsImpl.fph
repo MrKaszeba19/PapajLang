@@ -1257,11 +1257,31 @@ begin
         end;
         'Math.En',
         'Math.expIntN' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             z := ExpIntC(y, Int(x));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.lambertW0' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LambertW(y, 0);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.lambertWn1' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LambertW(y, -1);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.lambertW' : begin
+            if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LambertW(y, Int(x));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
 

@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-May 3, 2024  
+May 5, 2024  
 by Paul Lipkowski (MrKaszëba)
 
 Since November 24, 2017 written in FreePascal. :smile:
@@ -138,5 +138,6 @@ Version | Version Name | Date of Release | Improvements
 0.5.1 | Khaf | 2021-03-21 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | 2021-12-18 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
 0.5.3 | Mem | 2023-04-08 | Locales, number systems, environment optimization
-0.5.4 | Nun | soon | Dataframes, complex numbers, polynomials, files management, memory management, new name
+0.5.4 | Nun | by the end of 2024 | Complex numbers, polynomials, memory management, new name
+0.5.5 | Samech | soon | Dataframes, matrices, files management
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
