@@ -25,15 +25,15 @@ if /i "%processor_architecture%"=="x86" GOTO x86
     echo Looking for fpc %ver%...
 	echo Attempting to install from Lazarus FPC executable...
 	echo C:\lazarus\fpc\%ver%\bin\%arch%\fpc.exe
-	call C:\lazarus\fpc\%ver%\bin\%arch%\fpc.exe papaj.pas
+	call C:\lazarus\fpc\%ver%\bin\%arch%\fpc.exe papaj.pas -Fu"..\lang_units"
 	if %ERRORLEVEL% == 0 goto :next
 
 	echo Failed. Attempting to install from a non-Lazarus FPC executable...
-	call C:\fpc\%ver%\bin\%arch%\fpc.exe papaj.pas
+	call C:\fpc\%ver%\bin\%arch%\fpc.exe papaj.pas -Fu"..\lang_units"
 	if %ERRORLEVEL% == 0 goto :next
 
 	echo Failed. Maybe there is FPC in Windows PATH...
-	fpc.exe rpn.pas
+	fpc.exe rpn.pas -Fu"..\lang_units"
 	if %ERRORLEVEL% == 0 goto :next
 
 	echo Failed. Could not find a FPC in the %ver% version.
