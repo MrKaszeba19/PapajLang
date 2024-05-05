@@ -33,51 +33,13 @@ procedure polynomial_roots(var poly : TEntities; var res : TEntities; distinct :
 //procedure polynomial_roots(poly : TEntities; var res : TEntities; distinct : Boolean = True; realonly : Boolean = False);
 
 function polynomial_derivative(poly : TEntities; grade : LongInt = 1) : TEntities;
+function polynomial_integral(poly : TEntities; grade : LongInt = 1) : TEntities;
 
 implementation
 
 uses MathUtils, Math;
 
 const C_EPS15 = 0.000000000000001;
-
-//function generateIntegerDivisors(x : ComplexType) : TEntities;
-//var
-//    res  : TEntities;
-//    i, j : LongInt;
-//    size : LongInt = 0;
-//begin
-//    if x = 1 then
-//    begin
-//        SetLength(Result, 2);
-//        Result[0] := buildNumber(1);
-//        Result[1] := buildNumber(-1);
-//        //Result := res;
-//    end else begin
-//        SetLength(res, size);
-//        i := 1;
-//        j := Int(x);
-//        while (i*i <= j) do
-//        begin
-//            if (divides(j, i)) then 
-//            begin
-//                writeln(size);
-//                SetLength(res, size+2);
-//                writeln(size);
-//                res[size]   := buildNumber(i);
-//                res[size+1] := buildNumber(-i);
-//                size := size+2;
-//                writeln(size);
-//                if (i*i <> j) then begin 
-//                    res[size] := buildNumber(j div i);
-//                    res[size+1] := buildNumber(-(j div i));
-//                    size := size+2;
-//                end;
-//            end;
-//            i := i + 1;
-//        end;
-//        Result := res;
-//    end;
-//end;
 
 procedure genIntegerDivisors(var res : TEntities; x : ComplexType);
 var
@@ -970,25 +932,63 @@ begin
     begin
         SetLength(res, 0);
         Result := res;
-        Exit;
-    end;
-    n := polynomial_degree(poly);
-    SetLength(res, n+1);
-    for i := n downto 0 do
-        res[i] := poly[i];
-    while (grade >= 1) do
+    end else if grade < 0 then
     begin
-        i := 1;
-        while (i <= n) do
+        Result := polynomial_integral(poly, -grade);
+    end else begin
+        n := polynomial_degree(poly);
+        SetLength(res, n+1);
+        for i := n downto 0 do
+            res[i] := poly[i];
+        while (grade >= 1) do
         begin
-            res[i-1] := buildNumber(res[i].Num * ComplexNum(i, 0));
-            i := i + 1;
+            i := 1;
+            while (i <= n) do
+            begin
+                res[i-1] := buildNumber(res[i].Num * ComplexNum(i, 0));
+                i := i + 1;
+            end;
+            SetLength(res, n);
+            grade := grade - 1;
         end;
-        SetLength(res, n);
-        grade := grade - 1;
+        polynomial_truncate(res);
+        Result := res;
     end;
-    polynomial_truncate(res);
-    Result := res;
+end;
+
+function polynomial_integral(poly : TEntities; grade : LongInt = 1) : TEntities;
+var
+    res  : TEntities;
+    i, n : LongInt;
+begin
+    if polynomial_degree(poly) < 0 then
+    begin
+        SetLength(res, 1);
+        res[0] := buildNumber(0);
+        Result := res;
+    end else if grade < 0 then
+    begin
+        Result := polynomial_derivative(poly, -grade);
+    end else begin
+        n := polynomial_degree(poly);
+        SetLength(res, n+1);
+        for i := n downto 0 do
+            res[i] := poly[i];
+        while (grade >= 1) do
+        begin
+            SetLength(res, n+2);
+            i := n+1;
+            while (i > 0) do
+            begin
+                res[i] := buildNumber(res[i-1].Num / ComplexNum(i, 0));
+                i := i - 1;
+            end;
+            res[i] := buildNumber(0);
+            grade := grade - 1;
+        end;
+        polynomial_truncate(res);
+        Result := res;
+    end;
 end;
 
 end.
