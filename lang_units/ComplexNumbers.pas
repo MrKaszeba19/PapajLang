@@ -152,6 +152,9 @@ function SinInt2(z : ComplexType) : ComplexType; // si(z)
 function CosInt(z : ComplexType) : ComplexType; // Ci(z)
 function CosInt2(z : ComplexType) : ComplexType; // Cin(z)
 
+function FresnelC(z : ComplexType) : ComplexType; // Fresnel integral C(x)
+function FresnelS(z : ComplexType) : ComplexType; // Fresnel integral S(x)
+
 function Gamma(z : ComplexType) : ComplexType;
 function GammaLn(z : ComplexType) : ComplexType;
 function Erf(z : ComplexType) : ComplexType;
@@ -174,6 +177,25 @@ function LambertWn1(z : ComplexType) : ComplexType; // W_-1
 function LambertW(z : ComplexType; k : IntegerType = 0) : ComplexType; // W_k
 
 function InfPowerTower(z : ComplexType) : ComplexType; // h(z) = z^z^z^...
+
+function isInfinite(z : ComplexType) : Boolean; 
+function isReInfinite(z : ComplexType) : Boolean; 
+function isImInfinite(z : ComplexType) : Boolean; 
+function isTotalInfinite(z : ComplexType) : Boolean;     // is like inf+inf*i 
+function isFinite(z : ComplexType) : Boolean; 
+function RePosInfinity(im : RealType = 0) : ComplexType; // inf + im*i
+function ReNegInfinity(im : RealType = 0) : ComplexType; // -inf + im*i
+function ImPosInfinity(re : RealType = 0) : ComplexType; // re + inf*i
+function ImNegInfinity(re : RealType = 0) : ComplexType; // re - inf*i
+function ComplexInfinity1() : ComplexType;               // inf + inf*i
+function ComplexInfinity2() : ComplexType;               // -inf + inf*i
+function ComplexInfinity3() : ComplexType;               // -inf - inf*i
+function ComplexInfinity4() : ComplexType;               // inf - inf*i
+
+function ComplexRound(z : ComplexType) : ComplexType;
+function ComplexTrunc(z : ComplexType) : ComplexType;
+function ComplexFloor(z : ComplexType) : ComplexType;
+function ComplexCeil(z : ComplexType) : ComplexType;
 
 implementation
 
@@ -1491,6 +1513,25 @@ begin
     else Result := IncBeta(x, a, b)/Beta(a, b);
 end;
 
+// --------------------------------------------------------
+// Fresnel integrals
+
+function FresnelC(z : ComplexType) : ComplexType;
+begin
+    if (isReal(z))
+        then Result := ((Imag+1)/2 * Erf(C_SQRTPI/2 * z * (1-Imag))).Re
+        else Result := (1-Imag)/4 * (Erf(C_SQRTPI*z*(1+Imag)/2) + Imag(Erf(C_SQRTPI*z*(1-Imag)/2)));
+end;
+
+function FresnelS(z : ComplexType) : ComplexType;
+begin
+    if (isReal(z))
+        then Result := ((Imag+1)/2 * Erf(C_SQRTPI/2 * z * (1-Imag))).Im
+        else Result := (1+Imag)/4 * (Erf(C_SQRTPI*z*(1+Imag)/2) - Imag(Erf(C_SQRTPI*z*(1-Imag)/2)));
+end;
+
+
+// --------------------------------------------------------
 // riemann zeta function
 
 // compute Bernoulli number B_n - works badly on large ones
@@ -1830,5 +1871,107 @@ begin
     else Result := -LambertW(-Ln(z))/Ln(z);
 end;
 
-end.
+// -----------------------------------------------------------
+// infinities
 
+function isInfinite(z : ComplexType) : Boolean; 
+begin
+    Result := (Math.isInfinite(z.Re)) or (Math.isInfinite(z.Im));
+end;
+
+function isReInfinite(z : ComplexType) : Boolean; 
+begin
+    Result := (Math.isInfinite(z.Re));
+end;
+
+function isImInfinite(z : ComplexType) : Boolean; 
+begin
+    Result := (Math.isInfinite(z.Im));
+end;
+
+function isTotalInfinite(z : ComplexType) : Boolean; 
+begin
+    Result := (Math.isInfinite(z.Re)) and (Math.isInfinite(z.Im));
+end;
+
+function isFinite(z : ComplexType) : Boolean; 
+begin
+    Result := not (isInfinite(z));
+end;
+
+function RePosInfinity(im : RealType = 0) : ComplexType;
+begin
+    Result.Re := Infinity;
+    Result.Im := im;
+end;
+
+function ReNegInfinity(im : RealType = 0) : ComplexType;
+begin
+    Result.Re := -Infinity;
+    Result.Im := im;
+end;
+
+function ImPosInfinity(re : RealType = 0) : ComplexType;
+begin
+    Result.Re := re;
+    Result.Im := Infinity;
+end;
+
+function ImNegInfinity(re : RealType = 0) : ComplexType;
+begin
+    Result.Re := re;
+    Result.Im := -Infinity;
+end;
+
+function ComplexInfinity1() : ComplexType;
+begin
+    Result.Re := Infinity;
+    Result.Im := Infinity;
+end;
+
+function ComplexInfinity2() : ComplexType;
+begin
+    Result.Re := -Infinity;
+    Result.Im := Infinity;
+end;
+
+function ComplexInfinity3() : ComplexType;
+begin
+    Result.Re := -Infinity;
+    Result.Im := -Infinity;
+end;
+
+function ComplexInfinity4() : ComplexType;
+begin
+    Result.Re := Infinity;
+    Result.Im := -Infinity;
+end;
+
+// --------------------------------------------------------
+// rounds
+
+function ComplexRound(z : ComplexType) : ComplexType;
+begin
+    Result.Re := Round(z.Re);
+    Result.Im := Round(z.Im);
+end;
+
+function ComplexTrunc(z : ComplexType) : ComplexType;
+begin
+    Result.Re := Trunc(z.Re);
+    Result.Im := Trunc(z.Im);
+end;
+
+function ComplexFloor(z : ComplexType) : ComplexType;
+begin
+    Result.Re := Floor(z.Re);
+    Result.Im := Floor(z.Im);
+end;
+
+function ComplexCeil(z : ComplexType) : ComplexType;
+begin
+    Result.Re := Ceil(z.Re);
+    Result.Im := Ceil(z.Im);
+end;
+
+end.
