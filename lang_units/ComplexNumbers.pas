@@ -1868,6 +1868,7 @@ function InfPowerTower(z : ComplexType) : ComplexType;
 begin
          if (z = 1) then Result := 1
     else if (z = 0) then Result := 0
+    else if (z = Pow(C_EXP, Inv(C_EXP))) then Result := C_EXP
     else Result := -LambertW(-Ln(z))/Ln(z);
 end;
 

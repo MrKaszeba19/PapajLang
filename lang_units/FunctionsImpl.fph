@@ -1177,6 +1177,64 @@ begin
             z := GammaLn(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Math.lowerGamma' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            // todo: change to positive complex
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LowerGamma(x,y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.upperGamma' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            // todo: change to positive complex
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := UpperGamma(x,y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.lowerRegGamma' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            // todo: change to positive complex
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := LowerRegGamma(x,y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.fBeta' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            // todo: change to positive complex
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := Beta(x,y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.incBeta' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            w := IncBeta(x,y,z);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+        end;
+        'Math.regIncBeta' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            w := RegIncBeta(x,y,z);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(w));
+        end;
+
+
         'Math.sinc' : begin
           	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -1290,6 +1348,19 @@ begin
             z := InfPowerTower(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Math.fresnelC' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := FresnelC(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        'Math.fresnelS' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := FresnelS(y);
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
+        
 
         // Statistics
 		'Math.distNormStd' : begin

@@ -130,14 +130,6 @@ end;
 
 type PSListOfCommands = array of PSCommand;
 
-//type PSConditional = object
-//    public
-//        Condition   : LongInt;
-//        Instruction : LongInt;
-//        constructor Create();
-//        destructor Destroy();
-//end;
-
 type PSConditional = record
     Condition   : LongInt;
     Instruction : LongInt;
@@ -511,19 +503,6 @@ end;
 
 // constructors and destructors
 
-// to remove
-//constructor PSConditional.Create();
-//begin
-//    SetLength(Condition, 0);
-//    SetLength(Instruction, 0);
-//end;
-//
-//destructor PSConditional.Destroy();
-//begin
-//    SetLength(Condition, 0);
-//    SetLength(Instruction, 0);
-//end;
-
 constructor PSListOfConditionals.Create();
 begin
     //SetLength(ElseItem, 0);
@@ -616,10 +595,6 @@ begin
         ArrEcx := stack_pop(Stack[Settings.StackPointer]);
         stk := Settings.StackPointer;
         Settings.StackPointer := ArrEcx.Num2;
-        //for i := 0 to Length(Params)-1 do
-        //begin
-        //    stack_push(Stack[Settings.StackPointer], buildString(string_fromC(Params[i])));
-        //end;
         SetLength(Stack[Settings.StackPointer].Values, Length(Params));
         for i := 0 to Length(Params)-1 do
         begin
@@ -630,7 +605,6 @@ begin
     end else begin
         ArrEcx := buildNewEmptyArray(Stack, Settings);
         Variables.setLocalVariable('Params', ArrEcx);
-        //Variables.setLocalVariable('Params', buildNewEmptyArray(Stack, Settings));
     end;
 end;
 
@@ -918,8 +892,10 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
+	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+    LogEax := EntEax.Num = 0;
+	LogEbx := EntEbx.Num = 0;
 	LogEcx := LogEax and LogEbx;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
 end;
@@ -931,8 +907,10 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
+	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+    LogEax := EntEax.Num = 0;
+	LogEbx := EntEbx.Num = 0;
 	LogEcx := LogEax or LogEbx;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
 end;
@@ -944,8 +922,10 @@ var
 begin
 	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
+	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
+    LogEax := EntEax.Num = 0;
+	LogEbx := EntEbx.Num = 0;
 	LogEcx := LogEax xor LogEbx;
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
 end;
@@ -956,8 +936,8 @@ var
 	LogEax, LogEcx : Boolean;
 begin
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	LogEcx := not LogEax;
+	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
+	LogEcx := not (EntEax.Num = 0);
 	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
 end;
 
@@ -969,11 +949,11 @@ var
     ArrEcx : Entity;
 begin
     stk := Settings.StackPointer;
-    stack_push(Stack[Settings.StackPointer], buildNewEmptyArray(Stack, Settings));
+    ArrEcx := buildNewEmptyArray(Stack, Settings);
+    stack_push(Stack[Settings.StackPointer], ArrEcx);
     ArrEcx := stack_pop(Stack[Settings.StackPointer]);
     Settings.StackPointer := ArrEcx.Num2;
     executeSet(db, at);
-    //writeln(stack_size(Stack[Settings.StackPointer]));
     Settings.StackPointer := stk;
     stack_push(Stack[Settings.StackPointer], ArrEcx);
 end;
@@ -1133,13 +1113,6 @@ begin
     end;
 end;
 
-//procedure PSEnvironment.doFunction(var db : PSCommandDB; at : LongInt);
-//begin
-//    Variables.addLayer();
-//    executeSet(db, at);
-//    Variables.removeLayer();
-//end;
-
 procedure PSEnvironment.doFunction(at : LongInt);
 begin
     Variables.addLayer();
@@ -1173,14 +1146,12 @@ var
 begin
     Steps := 1;
 
-    //checkExceptionsOld(Stack, Settings);
     if (LeftStr(input, 1) = '"') and (RightStr(input, 1) = '"') then
 	begin
         StrEcx := input.Substring(1, input.Length - 2);
         if Settings.stringmode = MCLIKE then StrEcx := string_fromC(StrEcx);
         stack_push(Stack[Settings.StackPointer], buildString(StrEcx));
 	end else begin
-        //if not (Settings.CaseSensitive) then input := LowerCase(input);
     	Val(input, Im, Code);
         if Code <> 0 then
         begin
@@ -1220,7 +1191,6 @@ begin
             end;
         end;
     end;
-    //checkExceptionsOld(Stack, Settings);
 end;
 
 
