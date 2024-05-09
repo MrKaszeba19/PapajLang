@@ -458,6 +458,18 @@ begin
                     end else begin
                         db.Commands[x][y] := buildCmdEval(StrEax);
                     end;
+                end else if (L[index] = 'poly') then begin
+                    L[index] := RightStr(L[index], Length(L[index])-4);
+                    while (L[index] = '') do index := index + 1; 
+                    z := Length(db.Commands);
+                    if (LeftStr(L[index], 1) = '{') and (RightStr(L[index], 1) = '}') then
+                    begin
+                        db := buildCommands(trimBraces(L[index]), db);
+                    end else begin
+                        db := buildCommands(L[index], db);
+                    end;
+                    db.Commands[x][y] := buildCreatePolynomial(z);
+                // todo: check checkword for errors when accessing variables
                 end else if checkWord(L[index], 'times', 5) then begin
                     L[index] := RightStr(L[index], Length(L[index])-5);
                     while (L[index] = '') do index := index + 1; 

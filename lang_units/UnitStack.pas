@@ -37,6 +37,7 @@ function stack_showFull(poc : TStack) : String;
 function stack_showArray(poc : TStack; mask : String) : String;
 function stack_showArrayPS(poc : TStack; db : StackDB; mask : String) : String;
 function stack_showArrayFull(poc : TStack; db : StackDB; mask : String) : String;
+function stack_showPolyPS(poc : TStack; db : StackDB; mask : String) : String;
 function stack_reverse(poc : TStack) : TStack;
 
 function stack_searchException(poc : TStack) : Boolean;
@@ -241,12 +242,13 @@ begin
         end;
         z := z + printEntityValue(poc.Values[Length(poc.Values)-1], mask) + '] ';
         z := LeftStr(z, Length(z)-1);
-        stack_showArray := z;
+        Result := z;
     end else begin
-        stack_showArray := '[]';
+        Result := '[]';
     end;
 end;
 
+{*
 function stack_showArrayPS(poc : TStack; db : StackDB; mask : String) : String;
 var
   z : String;
@@ -260,9 +262,67 @@ begin
         end;
         z := z + '] ';
         z := LeftStr(z, Length(z)-1);
-        stack_showArrayPS := z;
+        Result := z;
     end else begin
-        stack_showArrayPS := '[]';
+        Result := '[]';
+    end;
+end;
+
+function stack_showPolyPS(poc : TStack; db : StackDB; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := 'poly{ ';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-1 do
+        begin
+            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+        end;
+        z := z + '} ';
+        z := LeftStr(z, Length(z)-1);
+        Result := z;
+    end else begin
+        Result := 'poly{}';
+    end;
+end;
+*}
+
+function stack_showArrayPS(poc : TStack; db : StackDB; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := '[';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-2 do
+        begin
+            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+        end;
+        z := z + printEntityValueFull(poc.Values[Length(poc.Values)-1], db, mask) + '] ';
+        z := LeftStr(z, Length(z)-1);
+        Result := z;
+    end else begin
+        Result := '[]';
+    end;
+end;
+
+function stack_showPolyPS(poc : TStack; db : StackDB; mask : String) : String;
+var
+  z : String;
+  i : LongInt;
+begin
+    z := 'poly{';
+    if (Length(poc.Values) > 0) then begin
+        for i := 0 to Length(poc.Values)-2 do
+        begin
+            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+        end;
+        z := z + printEntityValueFull(poc.Values[Length(poc.Values)-1], db, mask) + '} ';
+        z := LeftStr(z, Length(z)-1);
+        Result := z;
+    end else begin
+        Result := 'poly{}';
     end;
 end;
 

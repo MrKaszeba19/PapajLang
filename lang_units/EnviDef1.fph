@@ -60,6 +60,13 @@ begin
     Result.IntParam := input;
 end;
 
+function buildCreatePolynomial(input : LongInt) : PSCommand;
+begin
+    Result.Name     := _CREATE;
+    Result.Name2    := _POLY;
+    Result.IntParam := input;
+end;
+
 function buildCreateFunction(input : LongInt) : PSCommand;
 begin
     Result.Name     := _CREATE;

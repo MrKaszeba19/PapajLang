@@ -55,6 +55,12 @@ type PSCmdType = (
     _TEST,
     _SCAN,
     _CLONE,
+    _ADDR,
+    _LENGTH, // to implement
+    _STACK, // to implement
+    _GENERATE, // to implement
+    _GETCHAR, // to implement
+    _FRONTREM, // to implement
     _QSHIFT,
     _PRINT,
     _SIZE,
@@ -68,10 +74,32 @@ type PSCmdType2 = (
     _GVAR,
     _CONTINUE,
     _BREAK,
-    _EXC,
-    _ARRAY,
-    _FUNC,
-    _EXPR,
+    _EXC,      // types for future
+    _ARRAY,    // types for future
+    _POLY,     // types for future
+    _FUNC,     // types for future
+    _EXPR,     // types for future
+    _NUMBER,   // types for future
+    _STRING,   // types for future
+    _BOOL,     // types for future
+    _DATETIME, // types for future
+    _FILE,     // types for future
+    _DATAFR,   // types for future
+    _MATRIX,   // types for future
+    _OBJECT,   // types for future
+    _NULL,     // types for future
+    _ENTTYPE,  // types for future
+    _SEQ, // to implement
+    _SEQL, // to implement
+    _GSEQ, // to implement
+    _GSEQL, // to implement
+    _ICOPY, // to implement
+    _MCOPY, // to implement
+    _REV, // to implement
+    _SORT, // to implement
+    _NUMSORT, // to implement
+    _STRSORT, // to implement
+    _KEEP, // to implement
     _IF,
     _FOR,
     _FOR2,
@@ -170,7 +198,7 @@ type PSEnvironment = object
         //function buildCommands(input : String; Args : TStringArray = Default(TStringArray)) : PSCommandDB;
         function makeListOfCommands(L : TStringArray; db : PSCommandDB; Args : TStringArray = Default(TStringArray)) : PSCommandDB;
         function buildCommands(input : String; db : PSCommandDB; Args : TStringArray = Default(TStringArray)) : PSCommandDB;
-        procedure wrapArray(var db : PSCommandDB; at : LongInt);
+        procedure wrapArray(var db : PSCommandDB; at : LongInt; array_type : TEntityType = TVEC);
         procedure variablePutOrRun(guess : String; var db : PSCommandDB);
         procedure doIf(var db : PSCommandDB; at : LongInt);
         procedure doTimes(var db : PSCommandDB; at : LongInt; n : LongInt);
@@ -283,12 +311,13 @@ function searchThroughNamespacesExplicit(i : String; var env : PSEnvironment; va
 begin
     Result := False;
     case getPackage(i) of
-        'Array'   : if (env.Settings.Packages.UseArray)   then Result := lib_arrays(i, env, db);
-        'Console' : if (env.Settings.Packages.UseConsole) then Result := lib_consolemanipulators(i, env, db);
-        'Date'    : if (env.Settings.Packages.UseDate)    then Result := lib_datetime(i, env, db);
-        'Math'    : if (env.Settings.Packages.UseMath)    then Result := lib_math(i, env, db);
-        'Number'  : if (env.Settings.Packages.UseNumber)  then Result := lib_numbers(i, env, db);
-        'String'  : if (env.Settings.Packages.UseString)  then Result := lib_strings(i, env, db);
+        'Array'      : if (env.Settings.Packages.UseArray)      then Result := lib_arrays(i, env, db);
+        'Console'    : if (env.Settings.Packages.UseConsole)    then Result := lib_consolemanipulators(i, env, db);
+        'Date'       : if (env.Settings.Packages.UseDate)       then Result := lib_datetime(i, env, db);
+        'Math'       : if (env.Settings.Packages.UseMath)       then Result := lib_math(i, env, db);
+        'Number'     : if (env.Settings.Packages.UseNumber)     then Result := lib_numbers(i, env, db);
+        'String'     : if (env.Settings.Packages.UseString)     then Result := lib_strings(i, env, db);
+        'Polynomial' : if (env.Settings.Packages.UsePolynomial) then Result := lib_polynomials(i, env, db);
         //else begin
         //    Result := vardb.isVarAssigned(i);
         //    if Result then runFromString(i, pocz, Steps, sets, vardb);
@@ -301,11 +330,12 @@ function searchThroughNamespacesImplicit(i : String; var env : PSEnvironment; va
 begin
     Result := True;
     if (not env.Settings.Packages.UseNumber) or (not lib_numbers(concat('Number.',i), env, db)) then
-    if (not env.Settings.Packages.UseMath) or (not lib_math(concat('Math.',i), env, db)) then
+    if (not env.Settings.Packages.UseMath)   or (not lib_math(concat('Math.',i), env, db)) then
     if (not env.Settings.Packages.UseString) or (not lib_strings(concat('String.',i), env, db)) then
     if (not env.Settings.Packages.UseArray) or (not lib_arrays(concat('Array.',i), env, db)) then
     if (not env.Settings.Packages.UseConsole) or (not lib_consolemanipulators(concat('Console.',i), env, db)) then
     if (not env.Settings.Packages.UseDate) or (not lib_datetime(concat('Date.',i), env, db)) then
+    if (not env.Settings.Packages.UsePolynomial) or (not lib_polynomials(concat('Polynomial.',i), env, db)) then
         Result := False;
 end;
 
@@ -943,7 +973,7 @@ end;
 
 // structures
 
-procedure PSEnvironment.wrapArray(var db : PSCommandDB; at : LongInt);
+procedure PSEnvironment.wrapArray(var db : PSCommandDB; at : LongInt; array_type : TEntityType = TVEC);
 var
     stk    : LongInt;
     ArrEcx : Entity;
@@ -955,6 +985,7 @@ begin
     Settings.StackPointer := ArrEcx.Num2;
     executeSet(db, at);
     Settings.StackPointer := stk;
+    ArrEcx.EntityType := array_type;
     stack_push(Stack[Settings.StackPointer], ArrEcx);
 end;
 
@@ -1229,6 +1260,9 @@ begin
                         //{debug-exec-func} write(#9, db.Commands[at][i].IntParam);
                         stack_push(Stack[Settings.StackPointer], buildFunction(db.Commands[at][i].IntParam));
                     end;
+                    _POLY : begin
+                        wrapArray(db, db.Commands[at][i].IntParam, TPLY);
+                    end;
                 end;
             end;
             _DO : begin
@@ -1352,6 +1386,7 @@ begin
                         case EntEax.EntityType of
                             TNUM : writeOnConsole(toStringFormat(EntEax.Num, Settings.Mask));
                             TVEC : writeOnConsole(stack_showArrayPS(Stack[EntEax.Num2], Stack, Settings.Mask));
+                            TPLY : writeOnConsole(stack_showPolyPS(Stack[EntEax.Num2], Stack, Settings.Mask)); // todo: change
                             else   writeOnConsole(EntEax.Str);
                         end;
                     end;
@@ -1360,6 +1395,7 @@ begin
                         case EntEax.EntityType of
                             TNUM : writelnOnConsole(toStringFormat(EntEax.Num, Settings.Mask));
                             TVEC : writelnOnConsole(stack_showArrayPS(Stack[EntEax.Num2], Stack, Settings.Mask));
+                            TPLY : writelnOnConsole(stack_showPolyPS(Stack[EntEax.Num2], Stack, Settings.Mask)); // todo: change
                             else   writelnOnConsole(EntEax.Str);
                         end;
                     end;

@@ -17,3 +17,4 @@ function lib_exceptions(i : String; var env : PSEnvironment; var db : PSCommandD
 function lib_arrays(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_files(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
 function lib_datetime(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
+function lib_polynomials(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;

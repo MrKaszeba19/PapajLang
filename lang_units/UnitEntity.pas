@@ -38,18 +38,20 @@ type TEntityType = (
     TPLY,   // polynomial
     TMAT,   // matrix
     TDTF,   // dataframe
+    TTYP,   // entity type
     TDAY,   // date
     TTIM   // time
 );
 
 type TPackages = record
-	UseAnything : Boolean;
-	UseMath     : Boolean;
-	UseString   : Boolean;
-    UseArray    : Boolean;
-    UseConsole  : Boolean;
-    UseDate     : Boolean;
-    UseNumber   : Boolean;
+	UseAnything   : Boolean;
+	UseMath       : Boolean;
+	UseString     : Boolean;
+    UseArray      : Boolean;
+    UseConsole    : Boolean;
+    UseDate       : Boolean;
+    UseNumber     : Boolean;
+    UsePolynomial : Boolean;
 end;
 
 type TSettings = record
@@ -164,7 +166,7 @@ uses UnixCrt,
 
 function verifyPackages(var L : TPackages) : Boolean;
 begin
-	verifyPackages := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate or L.UseNumber;
+	Result := L.UseMath or L.UseString or L.UseArray or L.UseConsole or L.UseDate or L.UseNumber or L.UsePolynomial;
 end;
 
 function default_packages(LoadAll : Boolean = False) : TPackages;
@@ -177,6 +179,7 @@ begin
     pom.UseConsole := LoadAll;
     pom.UseDate := LoadAll;
     pom.UseNumber := LoadAll;
+    pom.UsePolynomial := LoadAll;
 	Result := pom;
 end;
 
