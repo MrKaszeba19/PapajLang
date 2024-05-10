@@ -50,7 +50,8 @@ type PSCmdType = (
     _GET,
     _KILL,
     _CREATE,
-    _CAST,
+    _TCAST,
+    _TCHECK,
     _CALC,
     _TEST,
     _SCAN,
@@ -657,319 +658,9 @@ begin
 	end;
 end;
 
-procedure doCalcAdd(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax + EntEbx);
-end;
+// instructions
 
-procedure doCalcSub(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (not env.Settings.InfMode) or (EntEax.EntityType <> TNUM) or (EntEbx.EntityType <> TNUM) then
-    begin
-        stack_push(env.Stack[env.Settings.StackPointer], EntEax - EntEbx);    
-    end else begin
-        if ((EntEax.Num = Infinity) or (EntEbx.Num = -Infinity)) and ((EntEbx.Num = Infinity) or (EntEax.Num = -Infinity)) then
-        begin
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(NaN));
-        end else begin
-            stack_push(env.Stack[env.Settings.StackPointer], EntEax - EntEbx);
-        end;
-    end;
-end;
-
-procedure doCalcInc(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax + buildNumber(1));
-end;
-
-procedure doCalcDec(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax - buildNumber(1));
-end;
-
-procedure doCalcMul(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax * EntEbx);
-end;
-
-procedure doCalcDiv(var env : PSEnvironment);
-const CmdLabel = '/';
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (not env.Settings.InfMode) then
-    begin
-        if isZero(EntEbx)
-            then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-            else stack_push(env.Stack[env.Settings.StackPointer], EntEax / EntEbx);
-    end else begin
-        if isNumber(EntEbx) then
-        begin
-            if isZero(EntEbx) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], EntEax * buildNumber(Infinity));
-            end else if isZero(EntEbx) and isZero(EntEax) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(NaN));
-            end else if isAnyInfinity(EntEbx) and isAnyInfinity(EntEax) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(NaN));
-            end else if isPosInfinity(EntEbx) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(0));
-            end else if isNegInfinity(EntEbx) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(0));
-            end else begin
-                stack_push(env.Stack[env.Settings.StackPointer], EntEax / EntEbx);
-            end;
-        end else begin
-            stack_push(env.Stack[env.Settings.StackPointer], EntEax / EntEbx);
-        end;
-    end;
-end;
-
-procedure doCalcIntegerDiv(var env : PSEnvironment);
-const CmdLabel = 'div';
-var
-    EntEax, EntEbx : Entity;
-begin
-    // todo: do it for complex ones maybe
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if isZero(EntEbx)
-        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fdiv(Real(EntEax.Num), Real(EntEbx.Num))));
-end;
-
-procedure doCalcMod(var env : PSEnvironment);
-const CmdLabel = 'mod';
-var
-    EntEax, EntEbx : Entity;
-begin
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if isZero(EntEbx)
-        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fmod(Real(EntEax.Num), Real(EntEbx.Num))));
-end;
-
-// TODO
-// add support for real numbers (if possible)
-procedure doCalcIntegerDiv2(var env : PSEnvironment);
-const CmdLabel = 'cdiv';
-var
-    EntEax, EntEbx : Entity;
-begin
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertRealLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit; 
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if isZero(EntEbx)
-        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ffloor(Real(EntEax.Num / EntEbx.Num))));
-end;
-
-// TODO
-// add support for real numbers (if possible)
-procedure doCalcMod2(var env : PSEnvironment);
-const CmdLabel = 'cmod';
-var
-    EntEax, EntEbx : Entity;
-    x, y, z        : LongInt;
-begin
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if isZero(EntEbx)
-        then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
-        else begin
-            x := Int(EntEax.Num);
-            y := Int(EntEbx.Num);
-            if (x > 0) and (y < 0) then begin
-            	z := ((x mod y) + y + y) mod y;
-            end else if (x < 0) and (y > 0) then begin
-            	z := ((x mod y) + y) mod y;
-            end else begin
-            	z := x mod y;
-            end;
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-end;
-
-// TODO
-// move everything to 64bit
-procedure doCalcShl(var env : PSEnvironment);
-const CmdLabel = 'shl';
-var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
-begin
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shl y));
-end;
-
-// TODO
-// move everything to 64bit
-procedure doCalcShr(var env : PSEnvironment);
-const CmdLabel = 'shr';
-var x, y : {$IFDEF cpu64} Int64 {$ELSE} LongInt {$ENDIF};
-begin
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    y := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-    if (env.Settings.StrictType) and (assertIntegerLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), CmdLabel)) then Exit;
-    x := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shr y));
-end;
-
-procedure doTestEq(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := (EntEax.Str = EntEbx.Str) and (EntEax.Num = EntEbx.Num);
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-procedure doTestNeq(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := not ((EntEax.Str = EntEbx.Str) and (EntEax.Num = EntEbx.Num));
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-// todo: make exception for complex numbers
-procedure doTestGt(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num.Re > EntEbx.Num.Re;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-procedure doTestLt(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num.Re < EntEbx.Num.Re;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-procedure doTestLe(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num.Re <= EntEbx.Num.Re;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-procedure doTestGe(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax         : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	LogEax := EntEax.Num.Re >= EntEbx.Num.Re;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEax));
-end;
-
-procedure doTestAnd(var env : PSEnvironment);
-var
-    EntEax, EntEbx         : Entity;
-	LogEax, LogEbx, LogEcx : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    LogEax := EntEax.Num = 0;
-	LogEbx := EntEbx.Num = 0;
-	LogEcx := LogEax and LogEbx;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-end;
-
-procedure doTestOr(var env : PSEnvironment);
-var
-    EntEax, EntEbx         : Entity;
-	LogEax, LogEbx, LogEcx : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    LogEax := EntEax.Num = 0;
-	LogEbx := EntEbx.Num = 0;
-	LogEcx := LogEax or LogEbx;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-end;
-
-procedure doTestXor(var env : PSEnvironment);
-var
-    EntEax, EntEbx         : Entity;
-	LogEax, LogEbx, LogEcx : Boolean;
-begin
-	EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	//if EntEbx.Num = 0 then LogEbx := true else LogEbx := false;
-    LogEax := EntEax.Num = 0;
-	LogEbx := EntEbx.Num = 0;
-	LogEcx := LogEax xor LogEbx;
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-end;
-
-procedure doTestNot(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-	LogEax, LogEcx : Boolean;
-begin
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-	//if EntEax.Num = 0 then LogEax := true else LogEax := false;
-	LogEcx := not (EntEax.Num = 0);
-	stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(LogEcx));
-end;
+{$I EnviDef2.fph}
 
 // structures
 
@@ -1152,6 +843,7 @@ begin
     if (Status = STAT_CONTINUE) then begin Status := STAT_OK; end;
     Variables.removeLayer();
 end;
+
 
 // complicated evaluations
 
@@ -1418,6 +1110,44 @@ begin
                         //{debug-exec-func} write(#9, db.Commands[at][i].IntParam);
                         //stack_push(Stack[Settings.StackPointer], buildFunction(db.Commands[at][i].IntParam));
                     end;
+                end;
+            end;
+            _TCAST : begin
+                case db.Commands[at][i].Name2 of
+                    _STRING   : begin {* *} end;
+                    _ARRAY    : begin {* *} end;
+                    _POLY     : begin {* *} end;
+                    _NUMBER   : begin {* *} end;
+                    _FUNC     : begin {* *} end;
+                    _BOOL     : begin {* *} end;
+                    _DATETIME : begin {* *} end;
+                    _NULL     : begin {* *} end;
+                    _EXPR     : begin {* *} end;
+                    //_FILE     : begin {* *} end;
+                    //_DATAFR   : begin {* *} end;
+                    //_MATRIX   : begin {* *} end;
+                    //_OBJECT   : begin {* *} end;
+                    //_ENTTYPE  : begin {* *} end;
+                    //_EXC      : begin {* *} end;
+                end;
+            end;
+            _TCHECK : begin
+                case db.Commands[at][i].Name2 of
+                    _STRING   : begin doTypeCheck(Self, TSTR); end;
+                    _ARRAY    : begin doTypeCheck(Self, TVEC); end;
+                    _POLY     : begin doTypeCheck(Self, TPLY); end;
+                    _NUMBER   : begin doTypeCheck(Self, TNUM); end;
+                    _FUNC     : begin doTypeCheck(Self, TFUN); end;
+                    _BOOL     : begin doTypeCheck(Self, TBOO); end;
+                    _DATETIME : begin doTypeCheck(Self, TDAT); end;
+                    _NULL     : begin doTypeCheck(Self, TNIL); end;
+                    _EXPR     : begin doTypeCheck(Self, TEXP); end;
+                    _EXC      : begin doTypeCheck(Self, TEXC); end;
+                    //_FILE     : begin {* *} end;
+                    //_DATAFR   : begin {* *} end;
+                    //_MATRIX   : begin {* *} end;
+                    //_OBJECT   : begin {* *} end;
+                    //_ENTTYPE  : begin {* *} end;
                 end;
             end;
         end;

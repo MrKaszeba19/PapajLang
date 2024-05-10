@@ -339,60 +339,6 @@ begin
             StrEcx := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Ord(StrEcx[1])));
         end;
-        'isNumber' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TNUM 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isBoolean' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TBOO
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isString' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TSTR 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isArray' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TVEC 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isNull' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TNIL 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isException' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TEXC 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isLogicalExpression' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TEXP 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isFunction' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TFUN 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
-        'isDateTime' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if EntEax.EntityType = TDAT 
-                then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-                else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
-        end;
         // todo: move out of eval
         'length' : begin
             if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, TVEC, i)) then Exit; 
@@ -5394,6 +5340,7 @@ var
 begin
 	Found := true;
 	case i of
+        // todo: rewmove it in favour of typecast
         'Date.toDateTime' : begin
             if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TNUM) then
             begin

@@ -325,3 +325,15 @@ begin
     Result.Name     := _SIGNAL;
     Result.Name2    := _CONTINUE;
 end;
+
+function buildTypeCast(t : PSCmdType2) : PSCommand;
+begin
+    Result.Name     := _TCAST;
+    Result.Name2    := t;
+end;
+
+function buildTypeCheck(t : PSCmdType2) : PSCommand;
+begin
+    Result.Name     := _TCHECK;
+    Result.Name2    := t;
+end;
