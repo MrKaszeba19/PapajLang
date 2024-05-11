@@ -357,6 +357,14 @@ begin
     stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(EntEax.Num = 0));
 end;
 
+procedure doTypeCastNull(var env : PSEnvironment);
+var
+    EntEax : Entity;
+begin
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNull());
+end;
+
 procedure doTypeCastDateTime(var env : PSEnvironment);
 var
     ExtEax : Extended;

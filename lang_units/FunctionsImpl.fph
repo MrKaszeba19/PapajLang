@@ -288,35 +288,6 @@ begin
         end;
 
         // casting types
-        'toString' : begin
-          	EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if (EntEax.EntityType = TVEC) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildString(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask))); 
-            end else if (EntEax.EntityType = TNUM) then
-            begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildString(toStringFormat(EntEax.Num, env.Settings.Mask)));
-            end else begin
-                stack_push(env.Stack[env.Settings.StackPointer], buildString(EntEax.Str));
-            end;
-        end;
-        'toNumber' : begin
-            //if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit; 
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            Val(EntEax.Str, ExtEax, IntEax2); 
-            if (IntEax2 = 0) then begin
-             	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ExtEax));
-            end else begin
-            	if (env.Settings.StrictType) and (EntEax.EntityType <> TBOO) and (EntEax.EntityType <> TDAT) 
-                    then stack_push(env.Stack[env.Settings.StackPointer], buildException('EType:CNonNumeric: Got a non-numeric entity at "toNumber".'))
-            	    else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num));
-            end;
-        end;
-        'toBoolean' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            //if EntEax.Num = 0 then LogEax := true else LogEax := false;
-            stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(EntEax.Num = 0));
-        end;
         // todo: make casts: 
         //     - polynomial -> array
         //     - array -> polynomial

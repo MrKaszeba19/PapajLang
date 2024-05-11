@@ -1114,15 +1114,15 @@ begin
             end;
             _TCAST : begin
                 case db.Commands[at][i].Name2 of
-                    _STRING   : begin {* *} end;
-                    _ARRAY    : begin {* *} end;
-                    _POLY     : begin {* *} end;
-                    _NUMBER   : begin {* *} end;
-                    _FUNC     : begin {* *} end;
-                    _BOOL     : begin {* *} end;
-                    _DATETIME : begin {* *} end;
-                    _NULL     : begin {* *} end;
-                    _EXPR     : begin {* *} end;
+                    _STRING   : begin doTypeCastString(Self); end;
+                    _NUMBER   : begin doTypeCastNumber(Self); end;
+                    _DATETIME : begin doTypeCastDateTime(Self); end;
+                    _BOOL     : begin doTypeCastBoolean(Self); end;
+                    _NULL     : begin doTypeCastNull(Self); end;
+                    // todo: _EXPR     : begin {* *} end;
+                    // todo: _ARRAY    : begin {* *} end;
+                    // todo: _POLY     : begin {* *} end;
+                    // todo: _FUNC     : begin {* *} end;
                     //_FILE     : begin {* *} end;
                     //_DATAFR   : begin {* *} end;
                     //_MATRIX   : begin {* *} end;

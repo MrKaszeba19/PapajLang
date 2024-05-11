@@ -358,14 +358,20 @@ begin
             'call'     : db.Commands[x][y] := buildCallFunction();
             'break'    : db.Commands[x][y] := buildCmdBreak();
             'continue' : db.Commands[x][y] := buildCmdContinue();
+            // typecast
+            'toNull' : db.Commands[x][y] := buildTypeCast(_NULL);
+            'toString' : db.Commands[x][y] := buildTypeCast(_STRING);
+            'toNumber' : db.Commands[x][y] := buildTypeCast(_NUMBER);
+            'toBoolean' : db.Commands[x][y] := buildTypeCast(_BOOL);
+            'toDateTime' : db.Commands[x][y] := buildTypeCast(_DATETIME);
             // typecheck
             'isNull' : db.Commands[x][y] := buildTypeCheck(_NULL);
-            'isFunc' : db.Commands[x][y] := buildTypeCheck(_FUNC);
             'isArray' : db.Commands[x][y] := buildTypeCheck(_ARRAY);
             'isString' : db.Commands[x][y] := buildTypeCheck(_STRING);
             'isNumber' : db.Commands[x][y] := buildTypeCheck(_NUMBER);
             'isBoolean' : db.Commands[x][y] := buildTypeCheck(_BOOL);
             'isDateTime' : db.Commands[x][y] := buildTypeCheck(_DATETIME);
+            'isFunction' : db.Commands[x][y] := buildTypeCheck(_FUNC);
             'isException' : db.Commands[x][y] := buildTypeCheck(_EXC);
             'isPolynomial' : db.Commands[x][y] := buildTypeCheck(_POLY);
             'isLogicalExpression' : db.Commands[x][y] := buildTypeCheck(_EXPR);
