@@ -63,7 +63,7 @@
         <UnitName Value="Unit1"/>
       </Unit1>
       <Unit2>
-        <Filename Value="unit2.pas"/>
+        <Filename Value="../lang_units/unit2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
       </Unit2>
