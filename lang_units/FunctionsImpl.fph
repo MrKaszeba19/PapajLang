@@ -1880,7 +1880,10 @@ begin
             index := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             while (index > 1) do
             begin
-                if (isPrime(index)) then
+                if (index in [0, 1]) then
+                begin
+                    stack_push(env.Stack[env.Settings.StackPointer], buildNull());
+                end else if (isPrime(index)) then
                 begin
                     stack_push(env.Stack[env.Settings.StackPointer], buildNumber(index));
                     //stack_push(env.Stack[env.Settings.StackPointer], buildNumber(1));
@@ -1896,7 +1899,10 @@ begin
         'Math.leastPrimeDivisor' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             index := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
-            if (isPrime(index)) then
+            if (index in [0, 1]) then
+            begin
+                stack_push(env.Stack[env.Settings.StackPointer], buildNull());
+            end else if (isPrime(index)) then
             begin
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(index));
             end else begin
@@ -1908,7 +1914,10 @@ begin
         'Math.factorize' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             index := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
-            if (isPrime(index)) then
+            if (index in [0, 1]) then
+            begin
+                stack_push(env.Stack[env.Settings.StackPointer], buildNumber(index));
+            end else if (isPrime(index)) then
             begin
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(index));
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(1));
@@ -5311,17 +5320,6 @@ var
 begin
 	Found := true;
 	case i of
-        // todo: rewmove it in favour of typecast
-        'Date.toDateTime' : begin
-            if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TNUM) then
-            begin
-                ExtEax := Real(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
-                stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(UnixTSToDateTime(ExtEax)));
-            end else begin
-                StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
-                stack_push(env.Stack[env.Settings.StackPointer], buildDateTime(StringYMDToDateTime(StrEax)));
-            end;
-        end; 
         'Date.YMDtoDateTime' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit;
             StrEax := stack_pop(env.Stack[env.Settings.StackPointer]).Str;
