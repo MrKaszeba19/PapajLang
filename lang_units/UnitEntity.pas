@@ -527,7 +527,7 @@ end;
 
 function raiseInvalidTypecast(twrong, tgood : TEntityType) : Entity;
 begin
-    Result := raiseException('EInput:CCast: Invalid typecase: '+getEntityTypeName(twrong)+' -> '+getEntityTypeName(tgood)+'.');
+    Result := raiseException('EInput:CCast: Invalid typecast: '+getEntityTypeName(twrong)+' -> '+getEntityTypeName(tgood)+'.');
 end;
 
 function raiseSetInvalidVariable(operand : String; str : String) : Entity;
