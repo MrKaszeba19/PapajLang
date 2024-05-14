@@ -360,6 +360,7 @@ begin
             'continue' : db.Commands[x][y] := buildCmdContinue();
             // typecast
             'toNull' : db.Commands[x][y] := buildTypeCast(_NULL);
+            'toArray' : db.Commands[x][y] := buildTypeCast(_ARRAY);
             'toString' : db.Commands[x][y] := buildTypeCast(_STRING);
             'toNumber' : db.Commands[x][y] := buildTypeCast(_NUMBER);
             'toBoolean' : db.Commands[x][y] := buildTypeCast(_BOOL);

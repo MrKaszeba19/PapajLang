@@ -257,6 +257,7 @@ begin
         end;
 
         // single operands
+        // todo: to be removed
         'scannum' : begin
             EntEax := scan_number();
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
@@ -293,13 +294,13 @@ begin
         //     - array -> polynomial
         //     - string -> array
         //     - array -> string
-        'toArray' : begin
-            if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-            // expection about boundaries
-            if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
-            stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
-        end;
+        //'toArray' : begin
+        //    if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+        //    IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
+        //    // expection about boundaries
+        //    if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
+        //    stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
+        //end;
         'makeChar' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -324,24 +325,8 @@ begin
                 stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Length(StrEbx)));
             end;
         end;
-        'rprint' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if (EntEax.EntityType = TBOO) then writeOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TNUM) then writeOnConsole(toStringFormat(EntEax.Num, env.Settings.Mask));
-            if (EntEax.EntityType = TSTR) then writeOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TNIL) then writeOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then writeOnConsole(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask));
-            if (EntEax.EntityType = TDAT) then writeOnConsole(EntEax.Str);
-        end;
-        'rprintln' : begin
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            if (EntEax.EntityType = TBOO) then writelnOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TNUM) then writelnOnConsole(toStringFormat(EntEax.Num, env.Settings.Mask));
-            if (EntEax.EntityType = TSTR) then writelnOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TNIL) then writelnOnConsole(EntEax.Str);
-            if (EntEax.EntityType = TVEC) then writelnOnConsole(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask));
-            if (EntEax.EntityType = TDAT) then writelnOnConsole(EntEax.Str);
-        end;
+        // removed rprint, rprintln 
+        // todo: remove, rework or move these 2 below
         'colprint' : begin
         	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;  
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -350,6 +335,7 @@ begin
             if (EntEax.EntityType = TNUM) then write(toStringFormat(EntEax.Num, env.Settings.Mask) : Int(y));
             if (EntEax.EntityType = TSTR) then write(EntEax.Str : Int(y));
             if (EntEax.EntityType = TNIL) then write(EntEax.Str : Int(y));
+            if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
             if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
             if (EntEax.EntityType = TDAT) then write(EntEax.Str : Int(y));
         end;

@@ -129,6 +129,8 @@ function raiseNumRangeConstraint(operand : String; x, y : Extended) : Entity;
 function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 function raiseStringSameLength(operand : String) : Entity;
 function raiseDivisionZero(operand : String) : Entity;
+function raiseInvalidTypecast(twrong, tgood : TEntityType) : Entity;
+function raiseNonNumericTypecast(operand : String) : Entity;
 function raiseSetInvalidVariable(operand : String; str : String) : Entity;
 function raiseSetUnnamedVariable() : Entity;
 function raiseGetUnnamedVariable() : Entity;
@@ -518,6 +520,16 @@ begin
     Result := raiseException('EInput:CNumRange: Number must be within a range of ['+FormatFloat('0.###############', x)+', '+FormatFloat('0.###############', y)+'] at "'+operand+'".');
 end;
 
+function raiseNonNumericTypecast(operand : String) : Entity;
+begin
+    Result := raiseException('EType:CNonNumeric: Got a non-numeric entity at "'+operand+'".');
+end;
+
+function raiseInvalidTypecast(twrong, tgood : TEntityType) : Entity;
+begin
+    Result := raiseException('EInput:CCast: Invalid typecase: '+getEntityTypeName(twrong)+' -> '+getEntityTypeName(tgood)+'.');
+end;
+
 function raiseSetInvalidVariable(operand : String; str : String) : Entity;
 begin
     Result := raiseException('EVariable:CSetInvalid: Invalid variable string of "'+str+'" at "'+operand+'"');
@@ -532,6 +544,7 @@ function raiseGetUnnamedVariable() : Entity;
 begin
     Result := raiseException('EVariable:CSetUnnamed: Attempt of getting an unnamed variable.');
 end;
+
 
 // exceed boundaries
 // not null

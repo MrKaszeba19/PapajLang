@@ -343,9 +343,14 @@ begin
     if (IntEax2 = 0) then begin
      	stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ExtEax));
     end else begin
-    	if (env.Settings.StrictType) and (EntEax.EntityType <> TBOO) and (EntEax.EntityType <> TDAT) 
-            then stack_push(env.Stack[env.Settings.StackPointer], buildException('EType:CNonNumeric: Got a non-numeric entity at "toNumber".'))
-    	    else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num));
+    	//if (env.Settings.StrictType) and (EntEax.EntityType <> TBOO) and (EntEax.EntityType <> TDAT) 
+        //    then stack_push(env.Stack[env.Settings.StackPointer], buildException('EType:CNonNumeric: Got a non-numeric entity at "toNumber".'))
+    	//    else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num));
+        case EntEax.EntityType of
+            TBOO, 
+            TDAT : stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num));
+            else stack_push(env.Stack[env.Settings.StackPointer], raiseNonNumericTypecast('toNumber'));
+        end;
     end;
 end;
 
@@ -380,13 +385,41 @@ begin
     end;
 end; 
 
+// casting types
+// todo: make casts:
+//     - number -> array - done 
+//     - polynomial -> array
+//     - array -> polynomial
+//     - string -> array
+//     - array -> string
+//     - poly -> string
+procedure doTypeCastArray(var env : PSEnvironment);
+var
+    EntEax : Entity;
+    IntEax : LongInt;
+begin
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    case EntEax.EntityType of
+        TNUM : begin
+            IntEax := Int(EntEax.Num);
+            // expection about boundaries
+            if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
+        end;
+        //TPLY : begin
+        //end;
+        //TSTR : begin
+        //end;
+        else begin
+            stack_push(env.Stack[env.Settings.StackPointer], raiseInvalidTypecast(EntEax.EntityType, TVEC));
+        end;
+    end;
+end;
+
 procedure doTypeCheck(var env : PSEnvironment; guess : TEntityType);
 var
     EntEax : Entity;
 begin
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
     stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(EntEax.EntityType = guess));
-    //if EntEax.EntityType = guess
-    //    then stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(True))
-    //    else stack_push(env.Stack[env.Settings.StackPointer], buildBoolean(False));
 end;
