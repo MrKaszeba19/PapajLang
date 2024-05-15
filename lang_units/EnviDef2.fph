@@ -388,30 +388,90 @@ end;
 // casting types
 // todo: make casts:
 //     - number -> array - done 
-//     - polynomial -> array
+//     - polynomial -> array : done
 //     - array -> polynomial
-//     - string -> array
-//     - array -> string
-//     - poly -> string
+//     - string -> array : done
+//     - array -> string?
+//     - poly -> string?
 procedure doTypeCastArray(var env : PSEnvironment);
 var
     EntEax : Entity;
+    ArrEax : Entity;
     IntEax : LongInt;
+    index  : LongInt;
 begin
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
     case EntEax.EntityType of
+        TVEC : begin
+            stack_push(env.Stack[env.Settings.StackPointer], EntEax);
+        end;
         TNUM : begin
             IntEax := Int(EntEax.Num);
             // expection about boundaries
             if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
             stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
         end;
-        //TPLY : begin
-        //end;
-        //TSTR : begin
-        //end;
+        TPLY : begin
+            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            IntEax := Length(env.Stack[EntEax.Num2].Values);
+            // todo: review following two lines of code
+            //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+            //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            SetLength(env.Stack[ArrEax.Num2].Values, IntEax);
+            for index := 0 to IntEax-1 do
+            begin
+                env.Stack[ArrEax.Num2].Values[index] := env.Stack[EntEax.Num2].Values[index];
+            end;
+            ArrEax.EntityType := TVEC;
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        TSTR : begin
+            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            // todo: review following two lines of code
+            //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+            //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            SetLength(env.Stack[ArrEax.Num2].Values, Length(EntEax.Str));
+            for index := 0 to Length(EntEax.Str)-1 do
+            begin
+                env.Stack[ArrEax.Num2].Values[index] := buildString(EntEax.Str[index+1]);
+            end;
+            ArrEax.EntityType := TVEC;
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
         else begin
             stack_push(env.Stack[env.Settings.StackPointer], raiseInvalidTypecast(EntEax.EntityType, TVEC));
+        end;
+    end;
+end;
+
+procedure doTypeCastPolynomial(var env : PSEnvironment);
+var
+    EntEax : Entity;
+    ArrEax : Entity;
+    IntEax : LongInt;
+    index  : LongInt;
+begin
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    case EntEax.EntityType of
+        TPLY : begin
+            stack_push(env.Stack[env.Settings.StackPointer], EntEax);
+        end;
+        TVEC : begin
+            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            IntEax := Length(env.Stack[EntEax.Num2].Values);
+            // todo: review following two lines of code
+            //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+            //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+            SetLength(env.Stack[ArrEax.Num2].Values, IntEax);
+            for index := 0 to IntEax-1 do
+            begin
+                env.Stack[ArrEax.Num2].Values[index] := env.Stack[EntEax.Num2].Values[index];
+            end;
+            ArrEax.EntityType := TPLY;
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
+        else begin
+            stack_push(env.Stack[env.Settings.StackPointer], raiseInvalidTypecast(EntEax.EntityType, TPLY));
         end;
     end;
 end;

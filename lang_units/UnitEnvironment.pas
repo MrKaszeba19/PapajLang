@@ -1120,8 +1120,8 @@ begin
                     _BOOL     : begin doTypeCastBoolean(Self); end;
                     _NULL     : begin doTypeCastNull(Self); end;
                     _ARRAY    : begin doTypeCastArray(Self); end;
+                    _POLY     : begin doTypeCastPolynomial(Self); end;
                     // todo: _EXPR     : begin {* *} end;
-                    // todo: _POLY     : begin {* *} end;
                     // todo: _FUNC     : begin {* *} end;
                     //_FILE     : begin {* *} end;
                     //_DATAFR   : begin {* *} end;

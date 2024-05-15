@@ -365,6 +365,7 @@ begin
             'toNumber' : db.Commands[x][y] := buildTypeCast(_NUMBER);
             'toBoolean' : db.Commands[x][y] := buildTypeCast(_BOOL);
             'toDateTime' : db.Commands[x][y] := buildTypeCast(_DATETIME);
+            'toPolynomial' : db.Commands[x][y] := buildTypeCast(_POLY);
             // typecheck
             'isNull' : db.Commands[x][y] := buildTypeCheck(_NULL);
             'isArray' : db.Commands[x][y] := buildTypeCheck(_ARRAY);
