@@ -477,7 +477,7 @@ begin
                     end else begin
                         db.Commands[x][y] := buildCmdEval(StrEax);
                     end;
-                end else if (L[index] = 'poly') then begin
+                end else if (L[index] = 'Poly') then begin
                     L[index] := RightStr(L[index], Length(L[index])-4);
                     while (L[index] = '') do index := index + 1; 
                     z := Length(db.Commands);
@@ -488,6 +488,33 @@ begin
                         db := buildCommands(L[index], db);
                     end;
                     db.Commands[x][y] := buildCreatePolynomial(z);
+                end else if (L[index] = 'Date') then begin
+                    L[index] := RightStr(L[index], Length(L[index])-4);
+                    while (L[index] = '') do index := index + 1; 
+                    z := Length(db.Commands);
+                    if (LeftStr(L[index], 1) = '{') and (RightStr(L[index], 1) = '}') then
+                    begin
+                        StrEax := L[index];
+                        StrEax := StrEax.Substring(2, StrEax.Length - 4);
+                        if Settings.stringmode = MCLIKE then StrEax := string_fromC(StrEax);
+                        Val(StrEax, Num, Code);
+                        if Code <> 0 then
+                        begin
+                            SetLength(db.Commands[x], y+2);
+                            db.Commands[x][y] := buildCmdPush(buildString(StrEax));
+                            db.Commands[x][y+1] := buildTypeCast(_DATETIME);
+                            y := y+1;
+                        end else begin
+                            SetLength(db.Commands[x], y+2);
+                            db.Commands[x][y] := buildCmdPush(buildNumber(Num));
+                            db.Commands[x][y+1] := buildTypeCast(_DATETIME);
+                            y := y+1;
+                        end;
+                    end else begin
+                        // syntax error
+                        //db := buildCommands(L[index], db);
+                        raiserror('ESyntax:CDoLoop: Invalid syntax of a DO-WHILE/DO-UNTIL loop');
+                    end;
                 // todo: check checkword for errors when accessing variables
                 end else if checkWord(L[index], 'times', 5) then begin
                     L[index] := RightStr(L[index], Length(L[index])-5);

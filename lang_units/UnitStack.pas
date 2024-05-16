@@ -163,7 +163,7 @@ begin
             TSTR : z := z + '"' + i.Str + '" ';
             TNIL : z := z + i.Str + ' ';
             TBOO : z := z + i.Str + ' ';
-            TDAT : z := z + '"' + i.Str + '" ';
+            TDAT : z := z + 'Date{' + i.Str + '} ';
             TVEC : z := z + '<Array> ';
             TOBJ : z := z + '<Object> ';
             TFUN : z := z + '<Function> '; 
@@ -201,7 +201,7 @@ begin
         if (i.EntityType = TSTR) then z := z + '"' + PadLeft(i.Str, col) + '" ';
         if (i.EntityType = TNIL) then z := z + PadLeft(i.Str, col) + ' ';
         if (i.EntityType = TBOO) then z := z + PadLeft(i.Str, col) + ' ';
-        if (i.EntityType = TDAT) then z := z + '"' + PadLeft(i.Str, col) + '" ';
+        if (i.EntityType = TDAT) then z := z + 'Date{' + PadLeft(i.Str, col) + '} ';
     end;
     z := LeftStr(z, Length(z)-1);
     stack_showBeautiful := z;
@@ -215,7 +215,7 @@ begin
     case x.EntityType of 
         TNUM : z := toStringFormat(x.Num, mask);
         TSTR : z := '"' + x.Str + '"';
-        TDAT : z := '"' + x.Str + '"';
+        TDAT : z := 'Date{' + x.Str + '}';
         TNIL : z := x.Str;
         TBOO : z := x.Str;
         TVEC : z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask);
@@ -312,7 +312,7 @@ var
   z : String;
   i : LongInt;
 begin
-    z := 'poly{';
+    z := 'Poly{';
     if (Length(poc.Values) > 0) then begin
         for i := 0 to Length(poc.Values)-2 do
         begin
@@ -322,7 +322,7 @@ begin
         z := LeftStr(z, Length(z)-1);
         Result := z;
     end else begin
-        Result := 'poly{}';
+        Result := 'Poly{}';
     end;
 end;
 
