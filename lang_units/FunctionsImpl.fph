@@ -256,18 +256,6 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
 
-        // single operands
-        // todo: to be removed
-        'scannum' : begin
-            EntEax := scan_number();
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            stack_push(env.Stack[env.Settings.StackPointer], EntEax);
-        end;
-        'scanstr' : begin
-            EntEax := scan_string();
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TSTR, i)) then Exit; 
-            stack_push(env.Stack[env.Settings.StackPointer], EntEax);
-        end;
         //'tilleof' : begin
         //  	Steps := -1;
         //end;
@@ -288,19 +276,6 @@ begin
             swapEntities(env.Stack[env.Settings.StackPointer].Values[IntEax], env.Stack[env.Settings.StackPointer].Values[index]);
         end;
 
-        // casting types
-        // todo: make casts: 
-        //     - polynomial -> array
-        //     - array -> polynomial
-        //     - string -> array
-        //     - array -> string
-        //'toArray' : begin
-        //    if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-        //    IntEax := trunc(stack_pop(env.Stack[env.Settings.StackPointer]).Num.Re);
-        //    // expection about boundaries
-        //    if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
-        //    stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
-        //end;
         'makeChar' : begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;

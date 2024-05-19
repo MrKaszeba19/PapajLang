@@ -312,19 +312,18 @@ function searchThroughNamespacesExplicit(i : String; var env : PSEnvironment; va
 begin
     Result := False;
     case getPackage(i) of
-        'Array'      : if (env.Settings.Packages.UseArray)      then Result := lib_arrays(i, env, db);
-        'Console'    : if (env.Settings.Packages.UseConsole)    then Result := lib_consolemanipulators(i, env, db);
-        'Date'       : if (env.Settings.Packages.UseDate)       then Result := lib_datetime(i, env, db);
-        'Math'       : if (env.Settings.Packages.UseMath)       then Result := lib_math(i, env, db);
-        'Number'     : if (env.Settings.Packages.UseNumber)     then Result := lib_numbers(i, env, db);
-        'String'     : if (env.Settings.Packages.UseString)     then Result := lib_strings(i, env, db);
-        'Polynomial' : if (env.Settings.Packages.UsePolynomial) then Result := lib_polynomials(i, env, db);
+        'Array'      : {* if (env.Settings.Packages.UseArray)      then *} Result := lib_arrays(i, env, db);
+        'Console'    : {* if (env.Settings.Packages.UseConsole)    then *} Result := lib_consolemanipulators(i, env, db);
+        'Date'       : {* if (env.Settings.Packages.UseDate)       then *} Result := lib_datetime(i, env, db);
+        'Math'       : {* if (env.Settings.Packages.UseMath)       then *} Result := lib_math(i, env, db);
+        'Number'     : {* if (env.Settings.Packages.UseNumber)     then *} Result := lib_numbers(i, env, db);
+        'String'     : {* if (env.Settings.Packages.UseString)     then *} Result := lib_strings(i, env, db);
+        'Polynomial' : {* if (env.Settings.Packages.UsePolynomial) then *} Result := lib_polynomials(i, env, db);
         //else begin
         //    Result := vardb.isVarAssigned(i);
         //    if Result then runFromString(i, pocz, Steps, sets, vardb);
         //end;
-    end;
-    
+    end;   
 end;
 
 function searchThroughNamespacesImplicit(i : String; var env : PSEnvironment; var db : PSCommandDB) : Boolean;
