@@ -9,7 +9,9 @@ uses UnitEntity, ComplexNumbers,
      Classes, SysUtils;
 
 type TStack = record
-  Values : TEntities;
+    RefCount : LongInt;
+    VarAddr  : LongInt;
+    Values   : TEntities;
 end;
 
 type StackDB = array of TStack;
@@ -677,6 +679,8 @@ begin
     memsize := Length(db);
     SetLength(db, memsize+1);
     stack_pushCollection(db[memsize], pom);
+    db[memsize].RefCount := 1;
+    db[memsize].VarAddr := -1;
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(count);
@@ -692,6 +696,8 @@ begin
     memsize := Length(db);
     SetLength(db, memsize+1);
     stack_pushCollection(db[memsize], pom);
+    db[memsize].RefCount := 1;
+    db[memsize].VarAddr := -1;
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(Length(pom));
@@ -709,6 +715,8 @@ begin
     SetLength(db, memsize+1);
     for i := 0 to count-1 do
         stack_push(db[memsize], buildNull());
+    db[memsize].RefCount := 1;
+    db[memsize].VarAddr := -1;
 
 	ent.EntityType := TVEC;
 	ent.Str := IntToStr(count);

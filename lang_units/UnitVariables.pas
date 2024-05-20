@@ -9,6 +9,7 @@ uses
     UnitEntity;
 
 type Variable = record 
+	VarID     : LongInt;
 	VarName   : String;
 	StoredVar : Entity;
 end;
@@ -24,6 +25,7 @@ end;
 
 type VariableDB = object
     private
+		NextID : LongInt;
         Layers : array of VariableLayer;
     public
         constructor Create;
@@ -55,6 +57,7 @@ implementation
 
 constructor VariableDB.Create;
 begin
+	NextID := 0;
     SetLength(Layers, 1);
     SetLength(Layers[0].Content, 0);
 end;
@@ -119,8 +122,10 @@ begin
 	begin
 		i := Length(Layers[latest].Content);
 		SetLength(Layers[latest].Content, i+1);
+		Layers[latest].Content[i].VarID := NextID;
 		Layers[latest].Content[i].VarName := newname;
 		Layers[latest].Content[i].StoredVar := newvalue;
+		Inc(NextID);
 	end;
 end;
 
@@ -168,8 +173,10 @@ begin
 	begin
 		i := Length(Layers[0].Content);
 		SetLength(Layers[0].Content, i+1);
+		Layers[0].Content[i].VarID := NextID;
 		Layers[0].Content[i].VarName := newname;
 		Layers[0].Content[i].StoredVar := newvalue;
+		Inc(NextID);
 	end;
 end;
 
@@ -194,8 +201,10 @@ begin
 	begin
 		i := Length(Layers[latest].Content);
 		SetLength(Layers[latest].Content, i+1);
+		Layers[latest].Content[i].VarID := NextID;
 		Layers[latest].Content[i].VarName := newname;
 		Layers[latest].Content[i].StoredVar := newvalue;
+		Inc(NextID);
 	end;
 end;
 
