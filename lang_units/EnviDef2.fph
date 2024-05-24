@@ -1,21 +1,43 @@
 procedure doCalcAdd(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;
+    ArrEax         : Entity;
 begin
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax + EntEbx);
+    if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
+    begin
+        // make assert for array of numbers
+        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax.EntityType := TPLY;
+        //stack_push(env.Stack[env.Settings.StackPointer], EntEbx);
+        //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+        env.Stack[ArrEax.Num2].Values := polynomial_sum(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
+        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+    end else begin
+        stack_push(env.Stack[env.Settings.StackPointer], EntEax + EntEbx);
+    end;
 end;
 
 procedure doCalcSub(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;
+    ArrEax         : Entity;
 begin
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    if (not env.Settings.InfMode) or (EntEax.EntityType <> TNUM) or (EntEbx.EntityType <> TNUM) then
+    //if (not env.Settings.InfMode) or (EntEax.EntityType <> TNUM) or (EntEbx.EntityType <> TNUM) then
+    //begin
+    //    stack_push(env.Stack[env.Settings.StackPointer], EntEax - EntEbx);   
+    //end else 
+    if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
     begin
-        stack_push(env.Stack[env.Settings.StackPointer], EntEax - EntEbx);    
+        //writeln('hello');
+        // make assert for array of numbers
+        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax.EntityType := TPLY;
+        env.Stack[ArrEax.Num2].Values := polynomial_diff(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
+        stack_push(env.Stack[env.Settings.StackPointer], ArrEax); 
     end else begin
         if ((EntEax.Num = Infinity) or (EntEbx.Num = -Infinity)) and ((EntEbx.Num = Infinity) or (EntEax.Num = -Infinity)) then
         begin
@@ -42,13 +64,48 @@ begin
     stack_push(env.Stack[env.Settings.StackPointer], EntEax - buildNumber(1));
 end;
 
+// todo: check
+//       papaj do 'Poly{"a" "b"} Poly{"c" "d"} * println'
 procedure doCalcMul(var env : PSEnvironment);
+var
+    EntEax, EntEbx : Entity;
+    ArrEax         : Entity;
+begin
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
+    begin
+        // make assert for array of numbers
+        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax.EntityType := TPLY;
+        env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
+        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+    end else if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TNUM) then
+    begin
+        // make assert for array of numbers
+        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax.EntityType := TPLY;
+        env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEax.Num2].Values, EntEbx);
+        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+    end else if (EntEax.EntityType = TNUM) and (EntEbx.EntityType = TPLY) then
+    begin
+        // make assert for array of numbers
+        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax.EntityType := TPLY;
+        env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEbx.Num2].Values, EntEax);
+        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+    end else begin
+        stack_push(env.Stack[env.Settings.StackPointer], EntEax * EntEbx);
+    end;
+end;
+
+procedure doCalcInv(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;
 begin
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax * EntEbx);
+    stack_push(env.Stack[env.Settings.StackPointer], EntEax * buildNumber(-1));
 end;
 
 procedure doCalcDiv(var env : PSEnvironment);

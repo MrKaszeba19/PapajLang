@@ -12,6 +12,7 @@ uses
 function buildLinearPoly(x : ComplexType) : TEntities;
 
 function polynomial_value(poly : TEntities; x : ComplexType) : ComplexType;
+function polynomial_value(poly : TEntities; x : Entity) : Entity;
 function polynomial_degree(poly : TEntities) : LongInt;
 procedure polynomial_truncate(var poly : TEntities);
 function polynomial_isofIntegerCoefs(poly : TEntities) : Boolean;
@@ -25,6 +26,7 @@ function polynomial_mul(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_div(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_mod(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_mul(poly : TEntities; x : ComplexType) : TEntities;
+function polynomial_mul(poly : TEntities; x : Entity) : TEntities;
 function polynomial_pow(poly : TEntities; grade : LongInt) : TEntities;
 function polynomial_hornerdiv(poly : TEntities; x : ComplexType) : TEntities;
 
@@ -124,6 +126,31 @@ begin
             while (i >= 0) do
             begin
                 res := res * x + poly[i].Num;
+                i := i-1;
+            end;
+            Result := res;
+        end;
+    end;
+end;
+
+function polynomial_value(poly : TEntities; x : Entity) : Entity;
+var
+    res : Entity;
+    i   : LongInt;
+begin
+    case polynomial_degree(poly) of
+        -1 : begin
+            Result := buildNumber(0);
+        end;
+        0 : begin
+            Result := poly[0]; 
+        end;
+        else begin
+            res := poly[Length(poly)-1];
+            i := Length(poly)-2;
+            while (i >= 0) do
+            begin
+                res := res * x + poly[i];
                 i := i-1;
             end;
             Result := res;
@@ -297,14 +324,17 @@ begin
     end; 
     SetLength(res, mx);
     for i := 0 to mn-1 do
-        res[i] := buildNumber(poly1[i].Num + poly2[i].Num);
+        //res[i] := buildNumber(poly1[i].Num + poly2[i].Num);
+        res[i] := poly1[i] + poly2[i];
     if flag = 0 then
     begin
         for i := mn to mx-1 do
-            res[i] := buildNumber(poly1[i].Num);
+            //res[i] := buildNumber(poly1[i].Num);
+            res[i] := poly1[i];
     end else begin
         for i := mn to mx-1 do
-            res[i] := buildNumber(poly2[i].Num);
+            //res[i] := buildNumber(poly2[i].Num);
+            res[i] := poly2[i];
     end;
     polynomial_truncate(res);
     Result := res;
@@ -329,14 +359,17 @@ begin
     end; 
     SetLength(res, mx);
     for i := 0 to mn-1 do
-        res[i] := buildNumber(poly1[i].Num - poly2[i].Num);
+        //res[i] := buildNumber(poly1[i].Num - poly2[i].Num);
+        res[i] := poly1[i] - poly2[i];
     if flag = 0 then
     begin
         for i := mn to mx-1 do
-            res[i] := buildNumber(poly1[i].Num);
+            //res[i] := buildNumber(poly1[i].Num);
+            res[i] := poly1[i];
     end else begin
         for i := mn to mx-1 do
-            res[i] := buildNumber(-poly2[i].Num);
+            //res[i] := buildNumber(-poly2[i].Num);
+            res[i] := poly2[i] * buildNumber(-1);
     end;
     polynomial_truncate(res);
     Result := res;
@@ -354,11 +387,13 @@ begin
     m2 := Length(poly2);
     mx := m1 + m2 - 1;
     SetLength(res, mx);
+    // todo: examine for other entities
     for i := 0 to mx-1 do
         res[i] := buildNumber(0);
     for i := 0 to m1-1 do
         for j := 0 to m2-1 do
-            res[i+j] := buildNumber(res[i+j].Num + poly1[i].Num * poly2[j].Num);
+            //res[i+j] := buildNumber(res[i+j].Num + poly1[i].Num * poly2[j].Num);
+            res[i+j] := res[i+j] + poly1[i] * poly2[j];
     polynomial_truncate(res);
     Result := res;
 end;
@@ -421,6 +456,20 @@ begin
     for i := 0 to n do
     begin
         res[i] := buildNumber(poly[i].Num * x);
+    end;
+    Result := res;
+end;
+
+function polynomial_mul(poly : TEntities; x : Entity) : TEntities;
+var
+    res  : TEntities;
+    i, n : LongInt;
+begin
+    n := polynomial_degree(poly);
+    SetLength(res, n+1);
+    for i := 0 to n do
+    begin
+        res[i] := poly[i] * x;
     end;
     Result := res;
 end;
