@@ -154,7 +154,6 @@ var
     EntEax, EntEbx : Entity;
     ArrEax         : Entity;
 begin
-    writeln('div');
     // todo: do it for complex numbers maybe
     EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
     EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
