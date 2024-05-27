@@ -15,6 +15,7 @@ function polynomial_value(poly : TEntities; x : ComplexType) : ComplexType;
 function polynomial_value(poly : TEntities; x : Entity) : Entity;
 function polynomial_degree(poly : TEntities) : LongInt;
 procedure polynomial_truncate(var poly : TEntities);
+function polynomial_isofNumberCoefs(poly : TEntities) : Boolean;
 function polynomial_isofIntegerCoefs(poly : TEntities) : Boolean;
 function polynomial_isofIntegerComplexCoefs(poly : TEntities) : Boolean;
 function polynomial_isTrivial(poly : TEntities) : Boolean;
@@ -182,13 +183,26 @@ begin
     SetLength(poly, n+1);
 end;
 
+function polynomial_isofNumberCoefs(poly : TEntities) : Boolean;
+var
+    i   : LongInt;
+begin
+    Result := True;
+    for i := 0 to polynomial_degree(poly) do
+        if not (poly[i].EntityType = TNUM) then 
+        begin
+            Result := False;
+            break;
+        end;
+end;
+
 function polynomial_isofIntegerCoefs(poly : TEntities) : Boolean;
 var
     i   : LongInt;
 begin
     Result := True;
     for i := 0 to polynomial_degree(poly) do
-        if not (isInteger(poly[i].Num)) then 
+        if not (isInteger(poly[i].Num) and (poly[i].EntityType = TNUM)) then 
         begin
             Result := False;
             break;
@@ -201,7 +215,7 @@ var
 begin
     Result := True;
     for i := 0 to polynomial_degree(poly) do
-        if not (isReal(poly[i].Num)) then 
+        if not (isReal(poly[i].Num) and (poly[i].EntityType = TNUM)) then 
         begin
             Result := False;
             break;
@@ -214,7 +228,7 @@ var
 begin
     Result := True;
     for i := 0 to polynomial_degree(poly) do
-        if not (isIntegerComplex(poly[i].Num)) then 
+        if not (isIntegerComplex(poly[i].Num) and (poly[i].EntityType = TNUM)) then 
         begin
             Result := False;
             break;
@@ -228,7 +242,7 @@ var
 begin
     Result := True;
     for i := 1 to polynomial_degree(poly)-1 do
-        if not (ComplexNumbers.isZero(poly[i].Num)) then 
+        if not (ComplexNumbers.isZero(poly[i].Num) and (poly[i].EntityType = TNUM)) then 
         begin
             Result := False;
             break;

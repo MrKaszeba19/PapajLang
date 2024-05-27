@@ -128,9 +128,11 @@ function raiseSyntaxErrorExpression(operand : String) : Entity;
 function raiseNumRangeConstraint(operand : String; x, y : Extended) : Entity;
 function raiseStringMaxLength(operand : String; str : String; MaxLength : LongInt) : Entity;
 function raiseStringSameLength(operand : String) : Entity;
+function raiseImpossibleArithmetics(ent1, ent2 : Entity; operand : String) : Entity;
 function raiseDivisionZero(operand : String) : Entity;
 function raiseInvalidTypecast(twrong, tgood : TEntityType) : Entity;
 function raiseNonNumericTypecast(operand : String) : Entity;
+function raiseNonNumericArrayLike(operand : String) : Entity;
 function raiseSetInvalidVariable(operand : String; str : String) : Entity;
 function raiseSetUnnamedVariable() : Entity;
 function raiseGetUnnamedVariable() : Entity;
@@ -523,6 +525,11 @@ end;
 function raiseNonNumericTypecast(operand : String) : Entity;
 begin
     Result := raiseException('EType:CNonNumeric: Got a non-numeric entity at "'+operand+'".');
+end;
+
+function raiseNonNumericArrayLike(operand : String) : Entity;
+begin
+    Result := raiseException('EType:CNonNumericArray: Got a non-numeric array or polynomial at "'+operand+'".');
 end;
 
 function raiseInvalidTypecast(twrong, tgood : TEntityType) : Entity;

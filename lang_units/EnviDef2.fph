@@ -66,6 +66,7 @@ end;
 
 // todo: check
 //       papaj do 'Poly{"a" "b"} Poly{"c" "d"} * println'
+// todo: add Array Number * maybe 
 procedure doCalcMul(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;
@@ -160,10 +161,16 @@ begin
     // todo: check empty strings division
     if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
     begin
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
-        ArrEax.EntityType := TPLY;
-        env.Stack[ArrEax.Num2].Values := polynomial_div(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
-        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        if (not (polynomial_isofNumberCoefs(env.Stack[EntEax.Num2].Values))) 
+        or (not (polynomial_isofNumberCoefs(env.Stack[EntEbx.Num2].Values)))
+        then begin 
+            stack_push(env.Stack[env.Settings.StackPointer], raiseNonNumericArrayLike(CmdLabel))
+        end else begin
+            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax.EntityType := TPLY;
+            env.Stack[ArrEax.Num2].Values := polynomial_div(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
     end else if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
         else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fdiv(Real(EntEax.Num), Real(EntEbx.Num))));
@@ -180,10 +187,16 @@ begin
     // todo: check empty string division
     if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
     begin
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
-        ArrEax.EntityType := TPLY;
-        env.Stack[ArrEax.Num2].Values := polynomial_mod(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
-        stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        if (not (polynomial_isofNumberCoefs(env.Stack[EntEax.Num2].Values))) 
+        or (not (polynomial_isofNumberCoefs(env.Stack[EntEbx.Num2].Values)))
+        then begin 
+            stack_push(env.Stack[env.Settings.StackPointer], raiseNonNumericArrayLike(CmdLabel))
+        end else begin
+            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax.EntityType := TPLY;
+            env.Stack[ArrEax.Num2].Values := polynomial_mod(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
+            stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
+        end;
     end else if isZero(EntEbx)
         then stack_push(env.Stack[env.Settings.StackPointer], raiseDivisionZero(CmdLabel))
         else stack_push(env.Stack[env.Settings.StackPointer], buildNumber(fmod(Real(EntEax.Num), Real(EntEbx.Num))));
