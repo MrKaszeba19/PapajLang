@@ -625,6 +625,12 @@ var
 begin
     size := Length(res);
 
+    if not polynomial_isofNumberCoefs(poly) then
+    begin
+        SetLength(res, size);
+        Exit;
+    end;
+
     //writePoly(poly);
     //writeln('scale: ', polynomial_scalableToIntegers(poly));
     //writeln('gcd  : ', AnsiString(getPolyGCD(poly)));
