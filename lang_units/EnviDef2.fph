@@ -101,14 +101,21 @@ begin
 end;
 
 // todo: add to main interpreter
-procedure doCalcInv(var env : PSEnvironment);
-var
-    EntEax, EntEbx : Entity;
-begin
-    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
-    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-    stack_push(env.Stack[env.Settings.StackPointer], EntEax * buildNumber(-1));
-end;
+//procedure doCalcSinv(var env : PSEnvironment);
+//var
+//    EntEax : Entity;
+//begin
+//    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+//    stack_push(env.Stack[env.Settings.StackPointer], EntEax * buildNumber(-1));
+//end;
+//
+//procedure doCalcInv(var env : PSEnvironment);
+//var
+//    EntEax : Entity;
+//begin
+//    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+//    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(1) / EntEax);
+//end;
 
 procedure doCalcDiv(var env : PSEnvironment);
 const CmdLabel = '/';

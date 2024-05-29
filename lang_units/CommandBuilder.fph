@@ -326,6 +326,7 @@ begin
             '-'   : db.Commands[x][y] := buildCalcSub();
             '++'  : db.Commands[x][y] := buildCalcInc();
             '--'  : db.Commands[x][y] := buildCalcDec();
+            '-*'  : db.Commands[x][y] := buildCalcSinv();
             '*'   : db.Commands[x][y] := buildCalcMul();
             '/'   : db.Commands[x][y] := buildCalcDiv();
             '='   : db.Commands[x][y] := buildTestEq();
@@ -336,6 +337,7 @@ begin
 		    '>='  : db.Commands[x][y] := buildTestGe();
             'mod' : db.Commands[x][y] := buildCalcMod();
             'div' : db.Commands[x][y] := buildCalcIntegerDiv();
+            'inv' : db.Commands[x][y] := buildCalcInv();
             'shl' : db.Commands[x][y] := buildCalcShl();
             'shr' : db.Commands[x][y] := buildCalcShr();
 		    'and' : db.Commands[x][y] := buildTestAnd();

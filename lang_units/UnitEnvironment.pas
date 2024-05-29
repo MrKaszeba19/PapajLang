@@ -111,6 +111,8 @@ type PSCmdType2 = (
     _DUNTIL,
     _ADD,
     _SUB,
+    _INV,
+    _SINV,
     _MUL,
     _DIV,
     _IDIV,
@@ -1043,6 +1045,15 @@ begin
                     _SHR   : doCalcShr(Self);
                     _CMOD  : doCalcMod2(Self);
                     _CIDIV : doCalcIntegerDiv2(Self);
+                    _SINV  : begin
+                        stack_push(Stack[Settings.StackPointer], buildNumber(-1));
+                        doCalcMul(Self);
+                    end;
+                    _INV   : begin
+                        stack_push(Stack[Settings.StackPointer], buildNumber(1));
+                        stack_reverseCollection(Stack[Settings.StackPointer], 2);
+                        doCalcDiv(Self);
+                    end;
                 end;
             end;
             _TEST : begin

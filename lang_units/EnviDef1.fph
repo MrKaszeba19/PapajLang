@@ -242,6 +242,18 @@ begin
     Result.Name2 := _CMOD;
 end;
 
+function buildCalcSinv() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _SINV;
+end;
+
+function buildCalcInv() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _INV;
+end;
+
 function buildCalcShl() : PSCommand;
 begin
     Result.Name  := _CALC;
