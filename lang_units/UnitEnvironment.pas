@@ -55,16 +55,13 @@ type PSCmdType = (
     _CALC,
     _TEST,
     _SCAN,
-    _CLONE,
     _ADDR,
     _LENGTH, // to implement
     _STACK, // to implement
     _GENERATE, // to implement
     _GETCHAR, // to implement
     _FRONTREM, // to implement
-    _QSHIFT,
     _PRINT,
-    _SIZE,
     _SIGNAL,
     _EXIT
 );
@@ -101,6 +98,10 @@ type PSCmdType2 = (
     _NUMSORT, // to implement
     _STRSORT, // to implement
     _KEEP, // to implement
+    _SWAP, // to implement
+    _QSHIFT,
+    _CLONE,
+    _SIZE,
     _IF,
     _FOR,
     _FOR2,
@@ -1074,12 +1075,6 @@ begin
             _SCAN : begin
                 stack_push(Stack[Settings.StackPointer], scan_value());
             end;
-            _CLONE : begin
-                stack_push(Stack[Settings.StackPointer], stack_get(Stack[Settings.StackPointer]));
-            end;
-            _QSHIFT : begin
-                stack_push(Stack[Settings.StackPointer], stack_firstpop(Stack[Settings.StackPointer]));
-            end;
             _PRINT : begin
                 //{debug-exec} write(#9, db.Commands[at][i].Name2);
                 case db.Commands[at][i].Name2 of
@@ -1103,8 +1098,14 @@ begin
                     end;
                 end;
             end;
-            _SIZE : begin
-          	    stack_push(Stack[Settings.StackPointer], buildNumber(stack_size(Stack[Settings.StackPointer])));
+            _STACK : begin
+                //{debug-exec} write(#9, db.Commands[at][i].Name2);
+                case db.Commands[at][i].Name2 of
+                    _SWAP   : stack_reverseCollection(Stack[Settings.StackPointer], 2);
+                    _CLONE  : stack_push(Stack[Settings.StackPointer], stack_get(Stack[Settings.StackPointer]));
+                    _QSHIFT : stack_push(Stack[Settings.StackPointer], stack_firstpop(Stack[Settings.StackPointer]));
+                    _SIZE   : stack_push(Stack[Settings.StackPointer], buildNumber(stack_size(Stack[Settings.StackPointer])));
+                end;
             end;
             _SIGNAL : begin
                 //{debug-exec} write(#9, db.Commands[at][i].Name2);

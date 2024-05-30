@@ -21,16 +21,6 @@ begin
     Result.Name := _POP;
 end;
 
-function buildCmdClone() : PSCommand;
-begin
-    Result.Name := _CLONE;
-end;
-
-function buildCmdQShift() : PSCommand;
-begin
-    Result.Name := _QSHIFT;
-end;
-
 function buildCmdPrint() : PSCommand;
 begin
     Result.Name     := _PRINT;
@@ -46,11 +36,6 @@ end;
 function buildCmdScan() : PSCommand;
 begin
     Result.Name := _SCAN;
-end;
-
-function buildCmdSize() : PSCommand;
-begin
-    Result.Name := _SIZE;
 end;
 
 function buildCreateArray(input : LongInt) : PSCommand;
@@ -348,4 +333,28 @@ function buildTypeCheck(t : PSCmdType2) : PSCommand;
 begin
     Result.Name     := _TCHECK;
     Result.Name2    := t;
+end;
+
+function buildCmdStackSwap() : PSCommand;
+begin
+    Result.Name     := _STACK;
+    Result.Name2    := _SWAP;
+end;
+
+function buildCmdSize() : PSCommand;
+begin
+    Result.Name  := _STACK;
+    Result.Name2 := _SIZE;
+end;
+
+function buildCmdClone() : PSCommand;
+begin
+    Result.Name  := _STACK;
+    Result.Name2 := _CLONE;
+end;
+
+function buildCmdQShift() : PSCommand;
+begin
+    Result.Name  := _STACK;
+    Result.Name2 := _QSHIFT;
 end;
