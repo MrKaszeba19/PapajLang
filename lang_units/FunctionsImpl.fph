@@ -150,11 +150,12 @@ begin
 
         // String operations
         
-        'call' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TFUN, i)) then Exit;  
-            EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-            env.doFunction(EntEax.Num2);
-        end;
+        //'call' : begin
+        //    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TFUN, i)) then Exit;  
+        //    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+        //    env.doFunction(EntEax.Num2);
+        //end;
+        // todo: to remove all those unnecessary loops
         'callIf' : begin
             if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TFUN, TBOO, i)) then Exit; 
             if (stack_get(env.Stack[env.Settings.StackPointer]).EntityType = TFUN) then
@@ -311,7 +312,7 @@ begin
             if (EntEax.EntityType = TSTR) then write(EntEax.Str : Int(y));
             if (EntEax.EntityType = TNIL) then write(EntEax.Str : Int(y));
             if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
-            if (EntEax.EntityType = TVEC) then write(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
+            if (EntEax.EntityType = TPLY) then write(stack_showPolyPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
             if (EntEax.EntityType = TDAT) then write(EntEax.Str : Int(y));
         end;
         'colprintln' : begin
@@ -323,6 +324,7 @@ begin
             if (EntEax.EntityType = TNIL) then writeln(EntEax.Str : Int(y));
             if (EntEax.EntityType = TBOO) then writeln(EntEax.Str : Int(y));
             if (EntEax.EntityType = TVEC) then writeln(stack_showArrayPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
+            if (EntEax.EntityType = TPLY) then writeln(stack_showPolyPS(env.Stack[EntEax.Num2], env.Stack, env.Settings.Mask) : Int(y));
             if (EntEax.EntityType = TDAT) then writeln(EntEax.Str : Int(y));
         end;
         'newln' : begin
@@ -352,6 +354,7 @@ begin
         'clear' : begin
         	stack_clear(env.Stack[env.Settings.StackPointer]);
         end;
+        // todo: to optimize and move to main
         'keep' : begin
           	if (env.Settings.StrictType) and (assertPositiveNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
           	y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -429,6 +432,7 @@ begin
                 SetLength(HelpETable, 0);
             end;
         end;
+        // todo: move both to main
         'reverse' : begin
             env.Stack[env.Settings.StackPointer] := stack_reverse(env.Stack[env.Settings.StackPointer]);
         end;
@@ -437,9 +441,9 @@ begin
             size := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (size >= 0) then stack_reverseCollection(env.Stack[env.Settings.StackPointer], size);
         end;
-        'swap' : begin
-            stack_reverseCollection(env.Stack[env.Settings.StackPointer], 2);
-        end;             
+        //'swap' : begin
+        //    stack_reverseCollection(env.Stack[env.Settings.StackPointer], 2);
+        //end;             
 
         // stack operands
         'sum' : begin
