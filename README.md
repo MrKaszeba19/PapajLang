@@ -2,7 +2,7 @@
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
 Version X.X.X (Leviathan)  
-May 31, 2024  
+June 1, 2024  
 by Paul Lipkowski (MrKaszëba)
 
 Since November 24, 2017 written in FreePascal. :smile:
@@ -12,7 +12,7 @@ Since November 24, 2017 written in FreePascal. :smile:
 ## How to use it
 
 ### Console application
-- Execute a command **papaj do** with a quoted PS expression (e.g. `papaj do "2 3 + 4 *"`). More info about expressions in `papaj expression` and `papaj functions`.
+- Execute a command **papaj do** with a quoted PS expression (e.g. `papaj do '2 3 + 4 *'`). More info about expressions in `papaj expression` and `papaj functions`.
 - Remember that all values and operands must be delimited with at least 1 whitespace char (e.g. space bar).
 - If you need help, you can type `papaj help`, `papaj -h` or `papaj --help`.
 - If you want to run an PS script file, then execute `papaj FILENAME` or `papaj run FILENAME`. 
@@ -46,9 +46,10 @@ Since November 24, 2017 written in FreePascal. :smile:
     * if you have Lazarus IDE and you use the GUI app,  
     then compile it by clicking "Run" or "Compile"
     * if you have Lazarus IDE and you are on a command shell or you don't use the GUI app,  
-    then simply run `compile.sh` (in Linux and FreeBSD) or `compile.bat` (in Windows) to compile the project
+    then simply run `compile.sh` (in Linux and FreeBSD) or `compile.bat` (in Windows) to compile the project.
+    If you use MacOS, then it is recommended to compile Papaj GUI app by running `compileMac.sh`. 
     * if you don't have Lazarus IDE,  
-    then you may compile the **console app** project using `compileWithFPC.sh` (Linux or FreeBSD with Bash shell) or `compileWithFPC.bat` (Windows). 
+    then you may compile the **console app** project using `compileWithFPC.sh` (Linux, MacOS or FreeBSD with Bash shell) or `compileWithFPC.bat` (Windows). 
 - You can make a Desktop shortcut to a Papaj REPL by running `installREPL.sh` (Linux, FreeBSD) or `installREPL.bat` (Windows)
 - (for Linux/FreeBSD users) If you want to have `papaj` available in your shell, you can either
     * modify your shell $PATH
