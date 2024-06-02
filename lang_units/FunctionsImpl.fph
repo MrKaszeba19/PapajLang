@@ -148,13 +148,6 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
 
-        // String operations
-        
-        //'call' : begin
-        //    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TFUN, i)) then Exit;  
-        //    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
-        //    env.doFunction(EntEax.Num2);
-        //end;
         // todo: to remove all those unnecessary loops
         'callIf' : begin
             if (env.Settings.StrictType) and (assertEitherLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TFUN, TBOO, i)) then Exit; 
@@ -440,10 +433,7 @@ begin
             if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit; 
             size := Int(stack_pop(env.Stack[env.Settings.StackPointer]).Num);
             if (size >= 0) then stack_reverseCollection(env.Stack[env.Settings.StackPointer], size);
-        end;
-        //'swap' : begin
-        //    stack_reverseCollection(env.Stack[env.Settings.StackPointer], 2);
-        //end;             
+        end;           
 
         // stack operands
         'sum' : begin
