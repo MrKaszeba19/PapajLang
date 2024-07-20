@@ -5858,6 +5858,12 @@ begin
             z := fact(Int(y));
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Number.subfactorial' : begin
+          	if (env.Settings.StrictType) and (assertNaturalLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            z := subfact(Int(y));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
+        end;
         'Number.minusOneTo' : begin
           	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;

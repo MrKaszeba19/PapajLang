@@ -15,6 +15,7 @@ procedure swapNumbers(var e1 : Extended; var e2 : Extended);
 function fmod(x, y : Extended) : Extended;
 function fdiv(x, y : Extended) : Extended;
 function fact(x : Extended) : Extended;
+function subfact(x : Extended) : Extended;
 function minusOneTo(x : LongInt) : LongInt;
 
 function ftrunc(x : Extended) : Extended;
@@ -209,6 +210,13 @@ begin
         i := i + 1;
     end;
     Result := s;
+end;
+
+function subfact(x : Extended) : Extended;
+begin
+    if x = 0 
+        then Result := 1
+        else Result := ffloor(fact(x)/system.exp(1) + 0.5);
 end;
 
 function minusOneTo(x : LongInt) : LongInt;
