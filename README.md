@@ -1,13 +1,11 @@
 # Papaj
 **Reversed Polish Notation Calculator**
 and interpreter of **PapajScript**  
-Version X.X.X (Leviathan)  
-September 14, 2024  
+Version 0.5.4 (Nun)  
+December 14, 2024  
 by Paul Lipkowski (MrKaszëba)
 
 Since November 24, 2017 written in FreePascal. :smile:
-
-**Note**: The Leviathan version is a development one. It may be sometimes pretty unstable. The stable releases are found in other Git branches. You can obtain the latest version of Papaj (**v.0.5.3**, nickname Mem) [here](https://github.com/MrKaszeba19/PapajLang/releases).
 
 ## How to use it
 
@@ -139,6 +137,6 @@ Version | Version Name | Date of Release | Improvements
 0.5.1 | Khaf | 2021-03-21 | Array mapping and reducing, Date/time namagement, Mathematical utilities, eliminating bugs and more
 0.5.2 | Lamed | 2021-12-18 | Rebuild of PS Environment, more GUI languages, runtime arguments, Mathematical and Console utilities, fix bugs
 0.5.3 | Mem | 2023-04-08 | Locales, number systems, environment optimization
-0.5.4 | Nun | by the end of 2024 | Complex numbers, polynomials, memory management, new name
-0.5.5 | Samech | soon | Dataframes, matrices, files management
+0.5.4 | Nun | 2024-12-14 | Complex numbers, polynomials, new name
+0.5.5 | Samech | soon | Dataframes, matrices, memory management, files management
 X.X.X | Leviathan | one eternity later | Development Edition, may be sometimes pretty unstable
