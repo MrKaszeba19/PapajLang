@@ -713,7 +713,9 @@ end;
 
 function Ln(z : ComplexType) : ComplexType;
 begin
-    if (z.Im = 0) and (z.Re > 0)
+    if (z = 0) 
+        then Result := ReNegInfinity()
+    else if (z.Im = 0) and (z.Re > 0)
         then Result := system.ln(z.Re)
         else Result := system.ln(Abs(z)) + Imag(Arg(z));
 end;
@@ -1639,7 +1641,7 @@ end;
 function LambertW0_exp(z : ComplexType) : ComplexType;
 var
     sum : ComplexType;
-    n   : IntegerType = 100;
+    n   : IntegerType = 300;
 begin
     sum := z/Exp(z);
     while (n >= 0) do
@@ -1829,6 +1831,7 @@ begin
         (not ((isReal(z)) and (z.Re <= -Inv(C_EXP).Re))) 
         and (Abs(z) < C_EXP) 
         ) then Result := LambertW0_exp(z)
+        //) then Result := LambertW0_realapprox(z.Re, -Inv(C_EXP).Re, C_EXP)
     else if ((isReal(z)) and (z.Re > C_EXP) and (z.Re < C_EXPTOXP1)) then Result := LambertW0_newton2(z.Re)
     else Result := LambertW_newtonHailey(z, Ln(z));
 end;
