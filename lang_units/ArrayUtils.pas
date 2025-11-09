@@ -57,6 +57,9 @@ function table_filterNumbers(tab : TEntities) : TEntities;
 function table_filterReals(tab : TEntities) : TEntities;
 function table_filterStrings(tab : TEntities) : TEntities;
 
+function table_anyItemOf(tab : TEntities; item : Entity) : Boolean;
+function table_allItemOf(tab : TEntities; item : Entity) : Boolean;
+
 implementation
 
 uses MathUtils, Math;
@@ -811,6 +814,45 @@ begin
         end;
     end;
     Result := res;
+end;
+
+function table_anyItemOf(tab : TEntities; item : Entity) : Boolean;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    Result := False;
+    index := 0; 
+    while index < Length(tab) do
+    begin
+        if tab[index] = item then
+        begin
+            Result := True;
+            break;
+        end;
+        index := index + 1;
+    end;
+end;
+
+function table_allItemOf(tab : TEntities; item : Entity) : Boolean;
+var
+    res   : TEntities;
+    index : LongInt;
+    size  : LongInt = 0;
+begin
+    Result := True;
+    if Length(tab) = 0 then Result := False;
+    index := 0; 
+    while index < Length(tab) do
+    begin
+        if not (tab[index] = item) then
+        begin
+            Result := False;
+            break;
+        end;
+        index := index + 1;
+    end;
 end;
 
 

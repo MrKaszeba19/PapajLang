@@ -5884,6 +5884,23 @@ begin
             z := ImagTo(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
+        'Number.hypot' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ComplexNumbers.Hypot(x,y)));
+        end;
+        'Number.hypot3',
+        'Number.hypot3D' : begin
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            z := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
+            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
+            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(ComplexNumbers.Hypot(x,y,z)));
+        end;
 
         // approximations
         // todo: improve to complex nubers maybe
