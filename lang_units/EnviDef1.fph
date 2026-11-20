@@ -251,6 +251,36 @@ begin
     Result.Name2 := _SHR;
 end;
 
+function buildCalcExp() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _EXP;
+end;
+
+function buildCalcLogN() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _LN;
+end;
+
+function buildCalcEml() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _EML;
+end;
+
+function buildCalcRePart() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _RE;
+end;
+
+function buildCalcImPart() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _IM;
+end;
+
 function buildTestEq() : PSCommand;
 begin
     Result.Name  := _TEST;

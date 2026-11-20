@@ -262,6 +262,62 @@ begin
     stack_push(env.Stack[env.Settings.StackPointer], buildNumber(x shr y));
 end;
 
+procedure doCalcExp(var env : PSEnvironment);
+const CmdLabel = 'exp';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Exp(EntEax.Num)));
+end;
+
+procedure doCalcLogN(var env : PSEnvironment);
+const CmdLabel = 'ln';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Ln(EntEax.Num)));
+end;
+
+procedure doCalcEml(var env : PSEnvironment);
+const CmdLabel = 'eml';
+var
+    EntEax, EntEbx : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEbx := stack_pop(env.Stack[env.Settings.StackPointer]);
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Eml(EntEax.Num, EntEbx.Num)));
+end;
+
+procedure doCalcRePart(var env : PSEnvironment);
+const CmdLabel = 'exp';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num.Re));
+end;
+
+procedure doCalcImPart(var env : PSEnvironment);
+const CmdLabel = 'im';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num.Im));
+end;
+
+
+// --------------------------------------------------
+// logical procedures
+
 procedure doTestEq(var env : PSEnvironment);
 var
     EntEax, EntEbx : Entity;

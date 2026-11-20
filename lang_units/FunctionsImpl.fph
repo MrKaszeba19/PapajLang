@@ -70,18 +70,6 @@ begin
             z := ln(x)/ln(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
-        'exp' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := exp(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'ln' : begin
-            if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := ln(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
         'realroot' : begin
             // todo: change exception to real numbers
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;

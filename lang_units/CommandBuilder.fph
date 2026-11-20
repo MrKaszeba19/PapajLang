@@ -338,6 +338,11 @@ begin
             'mod' : db.Commands[x][y] := buildCalcMod();
             'div' : db.Commands[x][y] := buildCalcIntegerDiv();
             'inv' : db.Commands[x][y] := buildCalcInv();
+            'exp' : db.Commands[x][y] := buildCalcExp();
+            'ln'  : db.Commands[x][y] := buildCalcLogN();
+            'eml' : db.Commands[x][y] := buildCalcEml();
+            're'  : db.Commands[x][y] := buildCalcRePart();
+            'im'  : db.Commands[x][y] := buildCalcImPart();
             'shl' : db.Commands[x][y] := buildCalcShl();
             'shr' : db.Commands[x][y] := buildCalcShr();
 		    'and' : db.Commands[x][y] := buildTestAnd();

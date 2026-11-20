@@ -105,6 +105,7 @@ function Inv(z : ComplexType) : ComplexType;
 function Exp(z : ComplexType) : ComplexType;
 function Ln(z : ComplexType) : ComplexType;
 function Log(a,b : ComplexType) : ComplexType;
+function Eml(a,b : ComplexType) : ComplexType;
 function IntPow(x : ComplexType; y : IntegerType) : ComplexType;
 function Pow(a,b : ComplexType) : ComplexType;
 function RealRoot(a,b : RealType) : ComplexType;
@@ -725,6 +726,11 @@ end;
 function Log(a,b : ComplexType) : ComplexType;
 begin
     Result := Ln(b)/Ln(a);
+end;
+
+function Eml(a,b : ComplexType) : ComplexType;
+begin
+    Result := Exp(a) - Ln(b);
 end;
 
 function IntPow(x : ComplexType; y : IntegerType) : ComplexType;
