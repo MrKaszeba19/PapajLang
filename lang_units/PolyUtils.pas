@@ -503,19 +503,27 @@ begin
     end;
 end;
 
+// ---------------------------------------------------------------------------
 // finding roots
 
+// get the closest coefficient to zero
 function getClosestToZero(a : TEntities) : LongInt;
 var
     res, i : LongInt;
 begin
-    res := 0;
+    if a[0].Num = 0 
+        then res := 1
+        else res := 0;
     for i := 1 to Length(a)-1 do
+    begin
+        if a[i].Num = 0 then continue;
         if 
         //(Abs(a[i].Num) > 0) 
         (Abs(a[i].Num) > C_EPS15)
         and (Abs(a[i].Num) < Abs(a[res].Num)) then
             res := i;
+    end;
+    writeln('get closest ', res);
     Result := res;
 end;
 
@@ -643,7 +651,7 @@ begin
     //    //Exit;
     //end;
 
-    if (polynomial_degree(poly) >= 2) then begin
+    if (polynomial_degree(poly) > 2) then begin
         n := polynomial_scalableToIntegers(poly);
         if (n > 0) then
         begin
@@ -657,7 +665,9 @@ begin
         end;
     end;
 
-    if (polynomial_degree(poly) >= 2) and (poly[0].Num = 0) then
+    //writeln('past scale');
+
+    if (polynomial_degree(poly) > 2) and (poly[0].Num = 0) then
     begin
         repeat
             SetLength(res, size+1);
