@@ -19,7 +19,7 @@ function polynomial_isofNumberCoefs(poly : TEntities) : Boolean;
 function polynomial_isofIntegerCoefs(poly : TEntities) : Boolean;
 function polynomial_isofIntegerComplexCoefs(poly : TEntities) : Boolean;
 function polynomial_isTrivial(poly : TEntities) : Boolean;
-function polynomial_isPowerOfPoly(poly : TEntities) : LongInt;
+function polynomial_isPoweredPoly(poly : TEntities; grade : LongInt = 2) : LongInt;
 
 function polynomial_sum(poly1 : TEntities; poly2 : TEntities) : TEntities;
 function polynomial_diff(poly1 : TEntities; poly2 : TEntities) : TEntities;
@@ -249,19 +249,22 @@ begin
         end;
 end;
 
-// is like ax^2n + bx^n + c
-function polynomial_isPowerOfPoly(poly : TEntities) : LongInt;
+// is like ax^2n + bx^n + c (grade = 2)
+// is like ax^3n + bx^2n + bx^n + c (grade = 3)
+// is like ax^4n + bx^3n + cx^2n + dx^n + e (grade = 4)
+// etc
+function polynomial_isPoweredPoly(poly : TEntities; grade : LongInt = 2) : LongInt;
 var
     i, n : LongInt;
 begin
-    n := polynomial_degree(poly) div 2;
+    n := polynomial_degree(poly) div grade;
     if (i = 0) then 
     begin
         Result := -1;
         Exit;
     end;
     Result := n;
-    for i := 1 to 2*n do
+    for i := 1 to grade*n do
     begin
         if ((i mod n = 0) and (poly[i].Num = 0)) 
         or ((i mod n <> 0) and (poly[i].Num <> 0))
@@ -509,12 +512,20 @@ end;
 // get the closest non-zero coefficient to zero
 function getClosestToZero(a : TEntities) : LongInt;
 var
-    res, i : LongInt;
+    res, i, start : LongInt;
 begin
-    if a[0].Num = 0 
-        then res := 1
-        else res := 0;
-    for i := 1 to Length(a)-1 do
+    res := 0;
+    for i := 0 to Length(a)-1 do
+    begin
+        if a[i].Num <> 0 then
+        begin
+            res := i;
+            start := i;
+            break;
+        end;
+    end;
+
+    for i := start+1 to Length(a)-1 do
     begin
         if a[i].Num = 0 then continue;
         if 
@@ -664,8 +675,6 @@ begin
         end;
     end;
 
-    //writeln('past scale');
-
     if (polynomial_degree(poly) > 2) and (poly[0].Num = 0) then
     begin
         repeat
@@ -673,6 +682,7 @@ begin
             res[size] := buildNumber(0);
             a := buildLinearPoly(0);
             poly := polynomial_div(poly, a);
+            Inc(size);
         until (poly[0].Num <> 0);
         polynomial_roots(poly, res, distinct, realonly); 
         Exit;
@@ -693,8 +703,9 @@ begin
         if (Length(res) > 0) and (realonly) then
             res := table_filterReals(res); 
         Exit;
-    end else if (polynomial_degree(poly) >= 4) and (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPowerOfPoly(poly) > -1) then begin
-        n := polynomial_isPowerOfPoly(poly);
+    end else if (polynomial_degree(poly) >= 4) and (polynomial_degree(poly) mod 2 = 0) and (polynomial_isPoweredPoly(poly, 2) > -1) then begin
+        // build parametrized polynomial, where t = x^n
+        n := polynomial_isPoweredPoly(poly, 2);
         poly[0] := buildNumber(poly[0].Num);
         poly[1] := buildNumber(poly[n].Num);
         poly[2] := buildNumber(poly[2*n].Num);
@@ -707,6 +718,7 @@ begin
         SetLength(res, size+2*n-2);
         //res[size-2] := buildNumber(Sqrt(res[size-2].Num));
         //res[size-1] := buildNumber(Sqrt(res[size-1].Num));
+        // put roots
         if (isReal(poly[0].Num)) and (isReal(poly[1].Num)) and (isReal(poly[2].Num)) then 
         begin
             res[size-2] := buildNumber(RealRoot(Real(res[size-2].Num), n));
@@ -715,7 +727,7 @@ begin
             res[size-2] := buildNumber(Root(res[size-2].Num, n));
             res[size-1] := buildNumber(Root(res[size-1].Num, n));
         end;
-        e := ComplexNumPolar(1, 2*C_PI/n);
+        e := ComplexNumPolar(1, 2*C_PI/n); // vector of 360/n degrees
         for i := 1 to n-1 do
         begin
             res[size+2*i-2] := buildNumber(res[size+2*i-4].Num * e);
@@ -726,7 +738,9 @@ begin
         if (Length(res) > 0) and (realonly) then
             res := table_filterReals(res); 
         Exit;
-    // todo: maybe scale polynomials to integers, e.g. 2.5x^2 + x + 126 to 5x^2 + 2x + 252 
+    // todo: maybe scale polynomials to integers, e.g. 2.5x^2 + x + 126 to 5x^2 + 2x + 252 (solved)
+    //
+    // check integer and rational roots 
     end else if (polynomial_degree(poly) >= 3) 
     //and (polynomial_isofIntegerCoefs(poly)) 
     and (polynomial_isofIntegerComplexCoefs(poly)) 
@@ -823,7 +837,7 @@ begin
         end;
         1 : begin
             SetLength(res, size+1);
-            res[0] := buildNumber(-poly[0].Num/poly[1].Num);
+            res[size] := buildNumber(-poly[0].Num/poly[1].Num);
         end;
         2 : begin
             delta := Sqr(poly[1].Num) - 4 * poly[2].Num * poly[0].Num;
