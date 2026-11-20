@@ -506,7 +506,7 @@ end;
 // ---------------------------------------------------------------------------
 // finding roots
 
-// get the closest coefficient to zero
+// get the closest non-zero coefficient to zero
 function getClosestToZero(a : TEntities) : LongInt;
 var
     res, i : LongInt;
@@ -523,7 +523,6 @@ begin
         and (Abs(a[i].Num) < Abs(a[res].Num)) then
             res := i;
     end;
-    writeln('get closest ', res);
     Result := res;
 end;
 
