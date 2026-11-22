@@ -367,6 +367,7 @@ begin
             'qshift' : db.Commands[x][y] := buildCmdQShift();
             'size'   : db.Commands[x][y] := buildCmdSize();
             'all'    : db.Commands[x][y] := buildCmdSize();
+            '@gc'    : db.Commands[x][y] := buildCmdGarbageCollect();
             // typecast
             'toNull' : db.Commands[x][y] := buildTypeCast(_NULL);
             'toArray' : db.Commands[x][y] := buildTypeCast(_ARRAY);

@@ -353,6 +353,12 @@ begin
     Result.Name2    := _CONTINUE;
 end;
 
+function buildCmdGarbageCollect() : PSCommand;
+begin
+    Result.Name     := _SIGNAL;
+    Result.Name2    := _GC;
+end;
+
 function buildTypeCast(t : PSCmdType2) : PSCommand;
 begin
     Result.Name     := _TCAST;

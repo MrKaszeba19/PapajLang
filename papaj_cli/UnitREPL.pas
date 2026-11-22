@@ -412,6 +412,9 @@ begin
                 blueTheme(th);
             end;
 
+            '\gc' : begin
+                env.runGarbageCollector(True);
+            end;
             '\history' : begin
                 for i := 0 to Length(history)-1 do
                 begin

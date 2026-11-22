@@ -1,0 +1,105 @@
+@silent
+@use(Array)
+@use(String)
+
+"=== PapajScript GC stress test ===" println
+
+// ---------- 1. Basic temporary arrays ----------
+"1. Creating many temporary arrays..." println
+1000 times {
+  [ 50 times { 100 random } ]
+}
+"   temporary arrays created" println
+//gc
+"   gc #1 done" println
+
+// ---------- 2. Arrays kept in variables (must survive) ----------
+"2. Arrays stored in variables..." println
+[ 1 1 10 seq ] -> kept1
+[ 100 times { 5 random } ] -> kept2
+[ [ 1 2 3 ] [ 4 5 6 ] [ 7 8 9 ] ] -> nested
+
+"   kept1 size: " $kept1 length toString concat println
+"   kept2 size: " $kept2 length toString concat println
+//gc
+"   gc #2 done (variables must still be alive)" println
+"   kept1 after gc: " $kept1 toString concat println
+"   nested after gc: " $nested toString concat println
+"   nested after gc: " print $nested println
+
+// ---------- 3. Nested + overwritten variables ----------
+"3. Overwriting variables..." println
+[ 200 times { 50 random } ] -> temp
+$temp -> temp
+[ 10 times { [ 20 times { 40 random } ] } ] -> temp
+//gc
+"   gc #3 done" println
+"   temp after overwrite+gc: " $temp size toString println
+
+// ---------- 4. Loop that creates and drops arrays ----------
+"4. Loop creating/dropping arrays..." println
+1 -> i
+while ( $i 200 <= ) {
+  [ $i times { 5 random } ] -> discard
+  $i ++ -> i
+}
+//gc
+"   gc #4 done" println
+
+// ---------- 5. Functions returning arrays ----------
+"5. Functions returning arrays..." println
+function (n) {
+  [ n times { 1000 random } ]
+} -> makeArr
+
+50 times {
+  30 makeArr
+}
+//gc
+"   gc #5 done" println
+
+// ---------- 6. Deep nesting ----------
+"6. Deep nesting..." println
+[ 1 ] -> deep
+20 times {
+  [ $deep $deep $deep ]
+  -> deep
+}
+"   deep nesting created" println
+//gc
+"   gc #6 done" println
+"   deep still reachable: " $deep size toString println
+
+// ---------- 7. Mix of stack and variables ----------
+"7. Mixed stack + variables..." println
+[ 5 times { [ 10 times { 5 random } ] } ] -> mix
+$mix $mix join -> mix
+100 times { [ 10 random ] }
+//gc
+"   gc #7 done" println
+"   mix size after gc: " $mix size toString println
+
+// ---------- 8. Clear some variables then gc ----------
+"8. Destroying variables..." println
+~kept1
+~kept2
+~temp
+//gc
+"   gc #8 done (destroyed variables should be collected)" println
+
+// ---------- 9. Final heavy allocation + multiple gc ----------
+"9. Final heavy run..." println
+500 times {
+  [ 100 times { 5 random } ]
+  if ( 10 random 2 < ) {
+    -> survivor
+  }
+}
+//gc
+//gc
+@gc
+"   three final gc calls done" println
+
+"=== GC stress test finished ===" println
+"If you still see the 'survivor' variable and no crashes, GC is behaving." println
+$survivor size toString " (survivor size)" concat println

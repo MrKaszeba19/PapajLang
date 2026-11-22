@@ -26,8 +26,8 @@ end;
 type VariableDB = object
     private
 		NextID : LongInt;
-        Layers : array of VariableLayer;
     public
+        Layers : array of VariableLayer;
         constructor Create;
         destructor Destroy;
         function getGlobalLayer() : VariableLayer;

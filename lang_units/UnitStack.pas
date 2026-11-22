@@ -8,6 +8,13 @@ interface
 uses UnitEntity, ComplexNumbers, 
      Classes, SysUtils;
 
+// list of free memory stacks
+type TFreeList = record
+    Indices : array of LongInt;
+    Count   : LongInt;
+end;
+
+// memory stack
 type TStack = record
     RefCount : LongInt;
     VarAddr  : LongInt;
@@ -16,13 +23,10 @@ end;
 
 type StackDB = array of TStack;
 
-//type EntMemory = object
-//    private
-//        Layers : array of VariableLayer;
-//    public
-//        constructor Create;
-//        destructor Destroy;      
-//end;
+procedure freeListInit(var fl: TFreeList);
+procedure freeListPush(var fl: TFreeList; index: LongInt);
+function freeListPop(var fl: TFreeList): LongInt;   // returns -1 if empty
+function freeListEmpty(const fl: TFreeList): Boolean;
 
 function stack_null() : TStack;
 procedure stack_push(var pocz:TStack; node : Entity);
@@ -71,9 +75,15 @@ function assertNonZeroLocated(var stack : TStack; val : Entity; operand : String
 function assertPositiveNaturalLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 function assertCharLocated(var stack : TStack; val : Entity; operand : String) : Boolean;
 
-function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
-function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
-function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt = 0) : Entity;
+function allocateStackSlot(var db: StackDB; var freelist: TFreeList): LongInt;
+
+//function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
+//function buildNewArray(var db : StackDB; sets : TSettings; pom : TEntities) : Entity;
+//function buildNewEmptyArray(var db : StackDB; sets : TSettings; count : LongInt = 0) : Entity;
+
+function buildNewArray(var db: StackDB; var freelist: TFreeList; var sets: TSettings; count: LongInt) : Entity;
+function buildNewArray(var db : StackDB; var freelist: TFreeList; var sets : TSettings; pom : TEntities) : Entity;
+function buildNewEmptyArray(var db : StackDB; var freelist: TFreeList; var sets : TSettings; count : LongInt = 0) : Entity;
 
 implementation
 
@@ -92,6 +102,37 @@ begin
         s := Length(tab[i].Str);
     end; 
     find_maxStrlen := s;
+end;
+
+// FREELIST OPERATIONS
+
+procedure freeListInit(var fl: TFreeList);
+begin
+    SetLength(fl.Indices, 0);
+    fl.Count := 0;
+end;
+
+procedure freeListPush(var fl: TFreeList; index: LongInt);
+begin
+    if fl.Count >= Length(fl.Indices) then
+        SetLength(fl.Indices, fl.Count + 16);  // grow by chunks
+    fl.Indices[fl.Count] := index;
+    Inc(fl.Count);
+end;
+
+function freeListPop(var fl: TFreeList): LongInt;
+begin
+    if fl.Count = 0 then
+        Result := -1
+    else begin
+        Dec(fl.Count);
+        Result := fl.Indices[fl.Count];
+    end;
+end;
+
+function freeListEmpty(const fl: TFreeList): Boolean;
+begin
+    Result := (fl.Count = 0);
 end;
 
 // STACK OPERATIONS
@@ -172,6 +213,7 @@ begin
             TEXC : z := z + '<Exception> '; 
             TEXP : z := z + '<LogicalExpression> '; 
             TPLY : z := z + '<Polynomial> '; 
+            TTYP : z := z + '<Meta>';
             else z := z + '<Unknown> ';
         end; 
         //if (i.EntityType = TNUM) then z := z + toStringFormat(i.Num, mask) + ' ';
@@ -225,7 +267,8 @@ begin
         TFUN : z := '<Function>'; 
         TEXC : z := '<Exception>'; 
         TEXP : z := '<LogicalExpression>'; 
-        TPLY : z := stack_showArrayPS(db[trunc(x.Num.Re)], db, mask); // todo: change to polynomial output
+        TTYP : z := '<Meta:' + x.Str + '>';
+        TPLY : z := stack_showPolyPS(db[trunc(x.Num.Re)], db, mask); // todo: change to polynomial output
         else z := '<Unknown>';
     end;
     Result := z;
@@ -297,12 +340,16 @@ var
 begin
     z := '[';
     if (Length(poc.Values) > 0) then begin
-        for i := 0 to Length(poc.Values)-2 do
+        for i := 0 to Length(poc.Values)-1 do
         begin
-            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+            case poc.Values[i].EntityType of
+                TVEC : z := z + stack_showArrayPS(db[poc.Values[i].Num2], db, mask) + ' ';
+                TPLY : z := z + stack_showPolyPS(db[poc.Values[i].Num2], db, mask) + ' ';
+                else z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+            end;
         end;
-        z := z + printEntityValueFull(poc.Values[Length(poc.Values)-1], db, mask) + '] ';
         z := LeftStr(z, Length(z)-1);
+        z := z + ']';
         Result := z;
     end else begin
         Result := '[]';
@@ -318,10 +365,14 @@ begin
     if (Length(poc.Values) > 0) then begin
         for i := 0 to Length(poc.Values)-2 do
         begin
-            z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+            case poc.Values[i].EntityType of
+                TVEC : z := z + stack_showArrayPS(db[poc.Values[i].Num2], db, mask) + ' ';
+                TPLY : z := z + stack_showPolyPS(db[poc.Values[i].Num2], db, mask) + ' ';
+                else z := z + printEntityValueFull(poc.Values[i], db, mask) + ' ';
+            end;
         end;
-        z := z + printEntityValueFull(poc.Values[Length(poc.Values)-1], db, mask) + '} ';
         z := LeftStr(z, Length(z)-1);
+        z := '}';
         Result := z;
     end else begin
         Result := 'Poly{}';
@@ -667,8 +718,32 @@ begin
     end else assertCharLocated := false;
 end;
 
+// ============= Allocating stack slots
+
+function AllocateStackSlot(var db: StackDB; var freelist: TFreeList): LongInt;
+var
+    idx: LongInt;
+begin
+    idx := FreeListPop(freelist);
+    if idx >= 0 then
+    begin
+        // Reuse existing slot
+        SetLength(db[idx].Values, 0);
+        db[idx].RefCount := 0;
+        db[idx].VarAddr := -1;
+        Result := idx;
+    end else begin
+        // Grow StackDB
+        idx := Length(db);
+        SetLength(db, idx + 1);
+        db[idx] := stack_null();
+        Result := idx;
+    end;
+end;
+
 // ============= Arrays
 
+{*
 function buildNewArray(var db : StackDB; sets : TSettings; count : LongInt) : Entity;
 var
     pom     : TEntities;
@@ -723,20 +798,63 @@ begin
 	ent.Num2 := memsize;
 	Result := ent;
 end;
+*}
 
+// garbage collector aware
 
+function buildNewArray(var db: StackDB; var freelist: TFreeList; var sets: TSettings; count: LongInt): Entity;
+var
+    pom : TEntities;
+    idx : LongInt;
+    ent : Entity;
+begin
+    pom := stack_popCollection(db[sets.StackPointer], count);
+    idx := AllocateStackSlot(db, freelist); 
+    stack_pushCollection(db[idx], pom);
+    db[idx].RefCount := 1;
+    db[idx].VarAddr := -1;
 
-//function arrayTransfer(var db : StackDB; sets : TSettings; i, j : LongInt) : Entity;
-//var
-//    memsize : LongInt;
-//    index   : LongInt;
-//begin
-//    memsize := stack_size(db[i]);
-//    SetLength(db[j], i);
-//    for index := 0 to i-1 do
-//    begin
-//        db[j] := db[i];
-//    end;
-//end;
+    ent.EntityType := TVEC;
+    ent.Str := IntToStr(count);
+    ent.Num2 := idx;
+    Inc(sets.AllocSinceGC);
+    Result := ent;
+end;
+
+function buildNewArray(var db : StackDB; var freelist: TFreeList; var sets : TSettings; pom : TEntities) : Entity;
+var
+    idx : LongInt;
+    ent : Entity;
+begin
+    idx := AllocateStackSlot(db, freelist); 
+    stack_pushCollection(db[idx], pom);
+    db[idx].RefCount := 1;
+    db[idx].VarAddr := -1;
+
+	ent.EntityType := TVEC;
+	ent.Str := IntToStr(Length(pom));
+	ent.Num2 := idx;
+    Inc(sets.AllocSinceGC);
+	Result := ent;
+end;
+
+function buildNewEmptyArray(var db : StackDB; var freelist: TFreeList; var sets : TSettings; count : LongInt = 0) : Entity;
+var
+    i   : LongInt;
+    idx : LongInt;
+    ent : Entity;
+begin
+    idx := AllocateStackSlot(db, freelist); 
+    for i := 0 to count-1 do
+        stack_push(db[idx], buildNull());
+    db[idx].RefCount := 1;
+    db[idx].VarAddr := -1;
+
+	ent.EntityType := TVEC;
+	ent.Str := IntToStr(count);
+	ent.Num2 := idx;
+    Inc(sets.AllocSinceGC);
+	Result := ent;
+end;
 
 end.

@@ -8,7 +8,7 @@ begin
     if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
     begin
         // make assert for array of numbers
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
         ArrEax.EntityType := TPLY;
         //stack_push(env.Stack[env.Settings.StackPointer], EntEbx);
         //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
@@ -34,7 +34,7 @@ begin
     begin
         //writeln('hello');
         // make assert for array of numbers
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
         ArrEax.EntityType := TPLY;
         env.Stack[ArrEax.Num2].Values := polynomial_diff(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
         stack_push(env.Stack[env.Settings.StackPointer], ArrEax); 
@@ -77,21 +77,21 @@ begin
     if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TPLY) then
     begin
         // make assert for array of numbers
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
         ArrEax.EntityType := TPLY;
         env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
         stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
     end else if (EntEax.EntityType = TPLY) and (EntEbx.EntityType = TNUM) then
     begin
         // make assert for array of numbers
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
         ArrEax.EntityType := TPLY;
         env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEax.Num2].Values, EntEbx);
         stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
     end else if (EntEax.EntityType = TNUM) and (EntEbx.EntityType = TPLY) then
     begin
         // make assert for array of numbers
-        ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+        ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
         ArrEax.EntityType := TPLY;
         env.Stack[ArrEax.Num2].Values := polynomial_mul(env.Stack[EntEbx.Num2].Values, EntEax);
         stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
@@ -156,7 +156,7 @@ begin
         then begin 
             stack_push(env.Stack[env.Settings.StackPointer], raiseNonNumericArrayLike(CmdLabel))
         end else begin
-            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
             ArrEax.EntityType := TPLY;
             env.Stack[ArrEax.Num2].Values := polynomial_div(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
             stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
@@ -182,7 +182,7 @@ begin
         then begin 
             stack_push(env.Stack[env.Settings.StackPointer], raiseNonNumericArrayLike(CmdLabel))
         end else begin
-            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
             ArrEax.EntityType := TPLY;
             env.Stack[ArrEax.Num2].Values := polynomial_mod(env.Stack[EntEax.Num2].Values, env.Stack[EntEbx.Num2].Values);
             stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
@@ -538,10 +538,10 @@ begin
             IntEax := Int(EntEax.Num);
             // expection about boundaries
             if (IntEax > stack_size(env.Stack[env.Settings.StackPointer])) then IntEax := stack_size(env.Stack[env.Settings.StackPointer]); 
-            stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.Settings, IntEax));
+            stack_push(env.Stack[env.Settings.StackPointer], buildNewArray(env.Stack, env.FreeList, env.Settings, IntEax));
         end;
         TPLY : begin
-            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
             IntEax := Length(env.Stack[EntEax.Num2].Values);
             // todo: review following two lines of code
             //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
@@ -555,7 +555,7 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
         end;
         TSTR : begin
-            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
             // todo: review following two lines of code
             //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);
             //ArrEax := stack_pop(env.Stack[env.Settings.StackPointer]);
@@ -586,7 +586,7 @@ begin
             stack_push(env.Stack[env.Settings.StackPointer], EntEax);
         end;
         TVEC : begin
-            ArrEax := buildNewEmptyArray(env.Stack, env.Settings, 0);
+            ArrEax := buildNewEmptyArray(env.Stack, env.FreeList, env.Settings, 0);
             IntEax := Length(env.Stack[EntEax.Num2].Values);
             // todo: review following two lines of code
             //stack_push(env.Stack[env.Settings.StackPointer], ArrEax);

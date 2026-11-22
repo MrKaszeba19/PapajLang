@@ -99,6 +99,7 @@ type PSCmdType2 = (
     _STRSORT, // to implement
     _KEEP, // to implement
     _SWAP, // to implement
+    _GC,
     _QSHIFT,
     _CLONE,
     _SIZE,
@@ -193,8 +194,8 @@ type TParams = array of String;
 
 type PSEnvironment = object
     private
-        Scripts : array of PSCommandDB;
-        Status  : PSRunningState;
+        Scripts       : array of PSCommandDB;
+        Status        : PSRunningState;
         procedure checkExceptions(var db : PSCommandDB);
         procedure params_assign(Params : TParams = Default(TParams));   
         //procedure makeListOfCommands(L : TStringArray; var db : PSCommandDB; Args : TStringArray = Default(TStringArray));
@@ -223,8 +224,10 @@ type PSEnvironment = object
         procedure executeSet(var db : PSCommandDB; at : LongInt = 0);
         procedure executeCommands(cmds : PSCommandDB);
         procedure executePSCode(input : String);
+        procedure runMaybeAutoGC();
     public
         Stack     : StackDB;
+        FreeList  : TFreeList;
         Settings  : TSettings;
         Variables : VariableDB;
         AutoReset : Boolean;
@@ -234,6 +237,7 @@ type PSEnvironment = object
         procedure runFromString(input : String);
         procedure runFromFile(input : String);
         procedure assignParams(startFrom : LongInt = 0);
+        procedure runGarbageCollector(verbose : Boolean = False);
 end; 
 
 function cutCommentMultiline(input : String) : String;
@@ -263,6 +267,8 @@ var
 {$I FunctionsImpl.fph}
 
 {$I EnviDef1.fph}
+
+{$I GarbageCollector.fph}
 
 // HELPFUL THINGS
 
@@ -574,6 +580,7 @@ begin
     Self.Variables.Create;
     Self.AutoReset := False;
     Self.Status := STAT_OK;
+    FreeListInit(Self.FreeList);
 end;
 
 constructor PSEnvironment.Create(sets : TSettings);
@@ -585,6 +592,7 @@ begin
     Self.Variables.Create;
     Self.AutoReset := False;
     Self.Status := STAT_OK;
+    FreeListInit(Self.FreeList);
 end;
 
 destructor PSEnvironment.Destroy;
@@ -627,7 +635,7 @@ var
 begin
     if Length(Params) > 0 then
     begin
-        ArrEcx := buildNewEmptyArray(Stack, Settings);
+        ArrEcx := buildNewEmptyArray(Stack, FreeList, Settings);
         stack_push(Stack[Settings.StackPointer], ArrEcx);
         ArrEcx := stack_pop(Stack[Settings.StackPointer]);
         stk := Settings.StackPointer;
@@ -640,7 +648,7 @@ begin
         Variables.setLocalVariable('Params', ArrEcx);
         Settings.StackPointer := stk;
     end else begin
-        ArrEcx := buildNewEmptyArray(Stack, Settings);
+        ArrEcx := buildNewEmptyArray(Stack, FreeList, Settings);
         Variables.setLocalVariable('Params', ArrEcx);
     end;
 end;
@@ -676,7 +684,7 @@ var
     ArrEcx : Entity;
 begin
     stk := Settings.StackPointer;
-    ArrEcx := buildNewEmptyArray(Stack, Settings);
+    ArrEcx := buildNewEmptyArray(Stack, FreeList, Settings);
     stack_push(Stack[Settings.StackPointer], ArrEcx);
     ArrEcx := stack_pop(Stack[Settings.StackPointer]);
     Settings.StackPointer := ArrEcx.Num2;
@@ -1130,6 +1138,10 @@ begin
                         //{debug-exec-func} write(#9, db.Commands[at][i].IntParam);
                         //stack_push(Stack[Settings.StackPointer], buildFunction(db.Commands[at][i].IntParam));
                     end;
+                    _GC : begin
+                        runGarbageCollector();
+                        //{debug-exec} runGarbageCollector(True);
+                    end;
                 end;
             end;
             _TCAST : begin
@@ -1173,6 +1185,7 @@ begin
         end;
         checkExceptions(db);
     end;
+    if Settings.AutoGC > 0 then runMaybeAutoGC();
 end;
 
 procedure PSEnvironment.executeCommands(cmds : PSCommandDB);
@@ -1258,6 +1271,51 @@ begin
     end;
     closefile(fp);
     runFromString(fun);
+end;
+
+// garbage collector
+
+procedure PSEnvironment.runGarbageCollector(verbose : Boolean = False);
+var
+    before, after, before1: LongInt;
+begin
+    before := Length(Self.Stack);
+    before1 := Self.FreeList.Count;
+    collectGarbage(Self, Self.FreeList);
+    after := Length(Self.Stack); 
+    if verbose then begin
+        writeln('GC: stack before = ', before);
+        writeln('GC: stack after  = ', after);
+        writeln('GC: free slots before = ', before1);
+        writeln('GC: free slots after  = ', Self.FreeList.Count);
+    end;
+    Settings.AllocSinceGC := 0;
+end;
+
+procedure PSEnvironment.runMaybeAutoGC();
+
+var
+    freed: LongInt;
+begin
+    if Settings.AutoGC <= 0 then Exit;
+    if Settings.AllocSinceGC < Settings.GCThreshold then Exit;
+
+    // Optional: remember how many slots were free before
+    freed := FreeList.Count;
+
+    runGarbageCollector(False);
+    //writeln('auto');
+
+    // freed = how many new free slots appeared
+    freed := FreeList.Count - freed;
+
+    // adaptive adjustment
+    if freed < Settings.AllocSinceGC div 4 then
+        Settings.GCThreshold := Min(Settings.GCThreshold * 2, 80000000)
+    else if freed > Settings.AllocSinceGC div 2 then
+        Settings.GCThreshold := Max(Settings.GCThreshold div 2, 500);
+
+    Settings.AllocSinceGC := 0;
 end;
 
 end.

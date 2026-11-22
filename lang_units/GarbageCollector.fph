@@ -1,0 +1,82 @@
+// ================================
+//        GARBAGE COLLECTOR
+// ================================
+
+// ---------- Mark phase ----------
+
+procedure MarkEntity(const ent: Entity; var marks: array of Boolean; const db: StackDB);
+var
+    idx, i : LongInt;
+begin
+    case ent.EntityType of
+        TVEC, TPLY:  // todo: extend with TMAT, TDTF, etc. as needed
+        begin
+            idx := Trunc(ent.Num2);
+            if (idx >= 0) and (idx < Length(db)) and not marks[idx] then
+            begin
+                marks[idx] := True;
+                for i := 0 to High(db[idx].Values) do
+                    MarkEntity(db[idx].Values[i], marks, db);
+            end;
+        end;
+    end;
+end;
+
+procedure MarkAllRoots(const env: PSEnvironment; var marks: array of Boolean);
+var
+    i, j, sp : LongInt;
+begin
+    sp := env.Settings.StackPointer;
+
+    // protect the live stack slot itself
+    if (sp >= 0) and (sp < Length(env.Stack)) then
+        marks[sp] := True;
+
+    // mark everything reachable from its contents
+    for i := 0 to High(env.Stack[sp].Values) do
+        MarkEntity(env.Stack[sp].Values[i], marks, env.Stack);
+
+    // variables (unchanged)
+    for i := 0 to High(env.Variables.Layers) do
+        for j := 0 to High(env.Variables.Layers[i].Content) do
+            MarkEntity(env.Variables.Layers[i].Content[j].StoredVar, marks, env.Stack);
+
+    // protect Stack[0] if you use it as a permanent main stack
+    marks[0] := True;
+end;
+
+// ---------- Sweep + free list ----------
+
+procedure Sweep(var db: StackDB; const marks: array of Boolean; var freelist: TFreeList; activeStack: LongInt);
+var
+    i       : LongInt;
+    wasLive : Boolean;
+begin
+    for i := 0 to High(db) do
+    begin
+        if (i = activeStack) then Continue; 
+        if not marks[i] then
+        begin
+            wasLive := Length(db[i].Values) > 0;
+            SetLength(db[i].Values, 0);
+            db[i].RefCount := 0;
+            db[i].VarAddr := -1;
+            if wasLive then FreeListPush(freelist, i);
+        end;
+    end;
+end;
+
+// collector
+
+procedure collectGarbage(var env: PSEnvironment; var freelist: TFreeList);
+var
+    marks : array of Boolean;
+    i     : LongInt;
+begin
+    SetLength(marks, Length(env.Stack));
+    for i := 0 to High(marks) do
+        marks[i] := False;
+
+    MarkAllRoots(env, marks);
+    Sweep(env.Stack, marks, freelist, env.Settings.StackPointer);
+end;

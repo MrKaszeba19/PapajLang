@@ -38,7 +38,7 @@ type TEntityType = (
     TPLY,   // polynomial
     TMAT,   // matrix
     TDTF,   // dataframe
-    TTYP,   // entity type
+    TTYP,   // entity type (meta)
     TDAY,   // date
     TTIM   // time
 );
@@ -68,14 +68,23 @@ type TSettings = record
     StringStart   : ShortInt;
     StringMode    : ShortInt;
 	Packages      : TPackages;
+    AutoGC        : ShortInt; 
+    GCThreshold   : LongInt;
+    AllocSinceGC  : LongInt;
 end;
-// sorts
+// sorts (SortType)
 // 0 - bubblesort
 // 1 - quicksort
 // 2 - mergesort
 // 3 - bogosort
 
 // KeepWorking: 2 - do, 1 - continue, 0 - break
+
+// garbage collection (AutoGC)
+// 0 - manual (none unless you type @gc)
+// 1 - auto (with a threshold)
+// 2 - auto (being severe)
+// and more levels (maybe)
 
 type Entity = record
 	EntityType : TEntityType;
@@ -121,6 +130,7 @@ function buildDateTime(val : Extended) : Entity;
 //function buildDate(val : TDateTime) : Entity;
 //function buildTime(val : TDateTime) : Entity;
 function buildNull() : Entity;
+function buildMetaType(val : String) : Entity;
 
 function raiseExceptionUnknownCommand(operand : String) : Entity;
 function raiseExceptionUnknownArray(operand : String) : Entity;
@@ -145,6 +155,7 @@ function isNegInfinity(e : Entity) : Boolean;
 function isNull(e : Entity) : Boolean;
 function isEmptyString(e : Entity) : Boolean;
 function isString(e : Entity) : Boolean;
+function isMetaType(e : Entity) : Boolean;
 
 operator - (a : String; b : String) s : String; 
 operator - (a : String; b : LongInt) s : String; 
@@ -213,6 +224,9 @@ begin
         pom.Shell := SHELL_SH;
         {$ENDIF}
     {$ENDIF}
+    pom.AutoGC := 1;
+    pom.GCThreshold := 2000;
+    pom.AllocSinceGC := 0;
     Result := pom;
 end;
 
@@ -238,6 +252,7 @@ begin
         TFIL : Result := 'File';
         TDAT : Result := 'DateTime';
         TPLY : Result := 'Polynomial';
+        TTYP : Result := 'Meta';
         else Result := 'Unknown';
     end;
 end;
@@ -256,6 +271,7 @@ begin
         TFIL : Result := '<File>';
         TDAT : Result := '"' + x.Str + '" : <DateTime>';
         TPLY : Result := '<Polynomial>';
+        TTYP : Result := '<Meta>';
         else Result := '<Unknown>';
     end;
 end;
@@ -278,6 +294,7 @@ begin
         TEXP : z := '<LogicalExpression>';
         TDAT : z := x.Str;
         TPLY : z := '<Polynomial>';
+        TTYP : z := '<Meta>';
         else z := '<Unknown>'; 
     end;
     Result := z;
@@ -457,6 +474,17 @@ begin
 	Result := pom;
 end;
 
+function buildMetaType(val : String) : Entity;
+var
+    pom : Entity;
+begin
+	pom.EntityType := TTYP;
+	pom.Str := val;
+	pom.Num := 1;
+    pom.Num2 := 0;
+	Result := pom;
+end;
+
 //function buildDate(val : TDateTime) : Entity;
 //var
 //	pom : Entity;
@@ -598,6 +626,11 @@ end;
 function isString(e : Entity) : Boolean;
 begin
     Result := (e.EntityType = TSTR);
+end;
+
+function isMetaType(e : Entity) : Boolean;
+begin
+    Result := (e.EntityType = TTYP);
 end;
 
 // =============================================================================

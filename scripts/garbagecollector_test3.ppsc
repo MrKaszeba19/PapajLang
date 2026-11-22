@@ -1,0 +1,82 @@
+@silent
+@use(Array)
+@use(String)
+
+"=== INTENSE GC stress test (gc ON) ===" println
+
+// ---------- 1. Massive temporary arrays ----------
+"1. 5000 temporary arrays of 200 elements..." println
+5000 times {
+  [ 200 times { 10000 random } ]
+}
+@gc
+
+// ---------- 2. Variables that must survive ----------
+"2. Keeping several large arrays..." println
+[ 1 1 1000 seq ] -> kept1
+[ 2000 times { 100000 random } ] -> kept2
+[ 50 times { [ 100 times { 1000 random } ] } ] -> nested
+[ 100 times { [ 50 times { 500 random } ] } ] -> bigNested
+
+@gc
+"   kept1 size: " $kept1 length toString concat println
+"   kept2 size: " $kept2 length toString concat println
+"   nested size: " $nested length toString concat println
+
+// ---------- 3. Continuous allocation + occasional keep ----------
+"3. 10000 iterations with random survivors..." println
+1 -> i
+while ( $i 10000 <= ) {
+  [ 150 times { 10000 random } ] -> tmp
+  if ( 20 random 1 = ) {
+    $tmp -> survivor
+  }
+  $i ++ -> i
+}
+@gc
+
+// ---------- 4. Deep nesting explosion ----------
+"4. Deep nesting..." println
+[ 1 ] -> deep
+30 times {
+  [ $deep $deep $deep $deep ]
+  -> deep
+}
+@gc
+"   deep size: " $deep length toString concat println
+
+// ---------- 5. Function spam ----------
+"5. Function-generated arrays..." println
+function (n) {
+  [ n times { 100000 random } ]
+} -> makeArr
+
+200 times {
+  80 makeArr
+}
+@gc
+
+// ---------- 6. Overwrite + destroy cycles ----------
+"6. Overwrite / destroy cycles..." println
+100 times {
+  [ 300 times { 1000 random } ] -> cycle
+  [ 50 times { [ 20 times { 100 random } ] } ] -> cycle
+  ~cycle
+}
+@gc
+
+// ---------- 7. Final mixed burst ----------
+"7. Final burst..." println
+2000 times {
+  [ 100 times { 5000 random } ]
+  if ( 50 random 1 = ) {
+    -> finalSurvivor
+  }
+}
+@gc
+@gc
+@gc
+
+"=== INTENSE test finished (gc ON) ===" println
+"finalSurvivor size: " $finalSurvivor length toString concat println
+"kept2 still alive: " $kept2 length toString concat println
