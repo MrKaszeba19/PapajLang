@@ -1,6 +1,6 @@
 @use(Array)
 
-10 -> $n
+100 -> $n
 
 [ $n times rand ] -> $t
 

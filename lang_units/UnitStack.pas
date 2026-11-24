@@ -363,7 +363,7 @@ var
 begin
     z := 'Poly{';
     if (Length(poc.Values) > 0) then begin
-        for i := 0 to Length(poc.Values)-2 do
+        for i := 0 to Length(poc.Values)-1 do
         begin
             case poc.Values[i].EntityType of
                 TVEC : z := z + stack_showArrayPS(db[poc.Values[i].Num2], db, mask) + ' ';
@@ -372,7 +372,7 @@ begin
             end;
         end;
         z := LeftStr(z, Length(z)-1);
-        z := '}';
+        z := z + '}';
         Result := z;
     end else begin
         Result := 'Poly{}';
