@@ -314,6 +314,36 @@ begin
     stack_push(env.Stack[env.Settings.StackPointer], buildNumber(EntEax.Num.Im));
 end;
 
+procedure doCalcAbs(var env : PSEnvironment);
+const CmdLabel = 'abs';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Abs(EntEax.Num)));
+end;
+
+procedure doCalcArg(var env : PSEnvironment);
+const CmdLabel = 'arg';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Arg(EntEax.Num)));
+end;
+
+procedure doCalcArg2(var env : PSEnvironment);
+const CmdLabel = 'arg2';
+var
+    EntEax : Entity;
+begin
+    if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, CmdLabel)) then Exit;
+    EntEax := stack_pop(env.Stack[env.Settings.StackPointer]);
+    stack_push(env.Stack[env.Settings.StackPointer], buildNumber(Arg2(EntEax.Num)));
+end;
+
 
 // --------------------------------------------------
 // logical procedures

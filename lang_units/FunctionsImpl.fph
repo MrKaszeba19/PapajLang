@@ -36,14 +36,7 @@ var
 begin
 	Found := true;
 	case i of
-        '^' : begin
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := pow(x,y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
+        '^',
         'pow' : begin
             if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
             y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
@@ -85,24 +78,6 @@ begin
             if (isReal(x) and isReal(y))
             then z := realroot(x.Re,y.Re)
             else z := root(x,y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'abs' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := Abs(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'arg' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := Arg(y);
-            stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
-        end;
-        'arg2' : begin
-          	if (env.Settings.StrictType) and (assertEntityLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), TNUM, i)) then Exit;
-            y := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := Arg2(y);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
 
@@ -5790,7 +5765,7 @@ begin
             if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             //z := log2(x);
-            z := Log(2,y);
+            z := Log(2,x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.ldec',
@@ -5798,14 +5773,14 @@ begin
             if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
             //z := log10(x);
-            z := Log(10,y);
+            z := Log(10,x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.lhex',
         'Number.log16' : begin
             if (env.Settings.StrictType) and (assertComplexLocated(env.Stack[env.Settings.StackPointer], stack_get(env.Stack[env.Settings.StackPointer]), i)) then Exit;
             x := stack_pop(env.Stack[env.Settings.StackPointer]).Num;
-            z := Log(16,y);
+            z := Log(16,x);
             stack_push(env.Stack[env.Settings.StackPointer], buildNumber(z));
         end;
         'Number.cbrt' : begin

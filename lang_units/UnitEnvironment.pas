@@ -130,6 +130,9 @@ type PSCmdType2 = (
     _INC,
     _RE,
     _IM,
+    _ARG,
+    _ARG2,
+    _ABS,
     _EQ,
     _NEQ,
     _GT,
@@ -1059,6 +1062,9 @@ begin
                     _EML   : doCalcEml(Self);
                     _RE    : doCalcRePart(Self);
                     _IM    : doCalcImPart(Self);
+                    _ABS   : doCalcAbs(Self);
+                    _ARG   : doCalcArg(Self);
+                    _ARG2  : doCalcArg2(Self);
                     _SHL   : doCalcShl(Self);
                     _SHR   : doCalcShr(Self);
                     _CMOD  : doCalcMod2(Self);

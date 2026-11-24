@@ -281,6 +281,24 @@ begin
     Result.Name2 := _IM;
 end;
 
+function buildCalcArg() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _ARG;
+end;
+
+function buildCalcArg2() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _ARG2;
+end;
+
+function buildCalcAbs() : PSCommand;
+begin
+    Result.Name  := _CALC;
+    Result.Name2 := _ABS;
+end;
+
 function buildTestEq() : PSCommand;
 begin
     Result.Name  := _TEST;
