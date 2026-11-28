@@ -1,35 +1,41 @@
 
+// ============ PARSER
 
-// old 
-function checkLevelChar(input : Char) : Integer;
-begin
-         if (input = '{') then Result := 1
-    else if (input = '[') then Result := 1
-    else if (input = '(') then Result := 1
-	else if (input = '}') then Result := -1
-    else if (input = ']') then Result := -1
-    else if (input = ')') then Result := -1
-    else Result := 0;
-    //writeln(input, ': ', Result);
-end;
+// old
+//function checkLevelCharInc(input : Char) : Integer;
+//begin
+//         if (input = '{') then Result := 1
+//    else if (input = '[') then Result := 1
+//    else if (input = '(') then Result := 1
+//    else Result := 0;
+//    //writeln(input, ': ', Result);
+//end;
+//
+//function checkLevelCharDec(input : Char) : Integer;
+//begin
+//	     if (input = '}') then Result := 1
+//    else if (input = ']') then Result := 1
+//    else if (input = ')') then Result := 1
+//    else Result := 0;
+//end;
 
 // new
 function checkLevelCharInc(input : Char) : Integer;
 begin
-         if (input = '{') then Result := 1
-    else if (input = '[') then Result := 1
-    else if (input = '(') then Result := 1
-    else Result := 0;
+    if (input in ['{', '[', '(']) 
+        then Result := 1
+        else Result := 0;
     //writeln(input, ': ', Result);
 end;
 
 function checkLevelCharDec(input : Char) : Integer;
 begin
-	     if (input = '}') then Result := 1
-    else if (input = ']') then Result := 1
-    else if (input = ')') then Result := 1
-    else Result := 0;
+	if (input in ['}', ']', ')']) 
+        then Result := 1
+        else Result := 0;
 end;
+
+//
 
 function splitToWords(input : String) : TStringArray;
 var
